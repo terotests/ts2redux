@@ -1,0 +1,53 @@
+{
+  "name": "ts2redux",
+  "version": "0.0.1",
+  "description": "Convert TypeScript classes into Reducers",
+  "main": "dist/src/index.js",
+  "bin": {
+    "ts2swagger": "dist/src/cli.js"
+  },
+  "scripts": {
+    "build:frontend": "browserify ./dist/src/frontend/index.js -o ./public/index.js",
+    "rmandcompile": "find ./dist/ -name \"*.d.ts\" -delete && tsc",
+    "compile": "tsc",
+    "test": "npm run compile && node dist/src/tssimplec src/testinput.ts && npm run build:frontend && cp src/swagger/* dist/swagger/ && node dist/src/backend/index"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/terotests/ts2redux.git"
+  },
+  "keywords": [],
+  "author": "Tero Tolonen",
+  "license": "MIT",
+  "dependencies": {
+    "@types/chai": "^4.1.4",
+    "@types/express": "^4.16.0",
+    "@types/mocha": "^5.2.5",
+    "@types/node": "^10.9.4",
+    "axios": "^0.18.0",
+    "body-parser": "^1.18.3",
+    "express": "^4.16.3",
+    "express-http-context": "^1.1.0",
+    "json2yaml": "^1.1.0",
+    "react": "^16.5.2",
+    "react-redux": "^5.0.7",
+    "redux": "^4.0.0",
+    "robowr": "^1.0.5",
+    "swagger-ui-express": "^4.0.1",
+    "ts-simple-ast": "^14.4.3",
+    "tsc": "^1.20150623.0",
+    "typescript": "^3.1.1"
+  },
+  "devDependencies": {
+    "browserify": "^16.2.2",
+    "chai": "^4.1.2",
+    "mocha": "^5.2.0"
+  },
+  "bugs": {
+    "url": "https://github.com/terotests/ts2redux/issues"
+  },
+  "homepage": "https://github.com/terotests/ts2redux#readme",
+  "directories": {
+    "test": "test"
+  }
+}

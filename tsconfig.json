@@ -1,0 +1,29 @@
+{
+    "compilerOptions": {
+      "target": "es5",
+      "moduleResolution": "node",
+      "module": "commonjs",
+      "rootDir": ".",
+      "outDir": "dist",
+      "allowSyntheticDefaultImports" : true,
+      "sourceMap": true,
+      "inlineSources": true,    
+      "declaration": true,
+      "emitDecoratorMetadata": true,
+      "experimentalDecorators": true,
+      "removeComments": false,
+      "noImplicitAny": false,
+      "jsx": "react",
+      "lib": ["es6", "es2015","dom"]
+    },
+    "include": [
+        "./**/*",
+    ],  
+    "exclude": [
+      "dist/**/*",
+      "node_modules",
+      ".npm",
+      "docs",
+    ]  
+  }  
+  

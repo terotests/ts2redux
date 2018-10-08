@@ -1,0 +1,45 @@
+{
+  "swagger": "2.0",
+  "basePath": "/sometest/v1/",
+  "paths": {
+    "/hello/{id}": {
+      "get": {
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "description": "",
+        "summary": "",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        },
+        "tags": []
+      }
+    }
+  },
+  "definitions": {},
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "info": {
+    "version": "1.0.1  ",
+    "title": "JeeJee",
+    "description": "APIn kuvaus jne.",
+    "termsOfService": ""
+  },
+  "tags": []
+}

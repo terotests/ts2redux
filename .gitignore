@@ -1,0 +1,25 @@
+
+# Dependency directories
+node_modules/
+
+# folder files
+data_folder/
+
+# Image files
+*.jpg
+*.png
+
+# MacOS
+.DS_Store
+.idea/
+
+# TypeScript compiled .map files
+*.map  
+
+# Seems to work ok...
+
+
+
+
+
+

@@ -1,0 +1,125 @@
+{
+  "swagger": "2.0",
+  "basePath": "/sometest/v1/",
+  "paths": {
+    "/ping/{message}": {
+      "get": {
+        "parameters": [
+          {
+            "name": "message",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "description": "",
+        "summary": "",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        },
+        "tags": []
+      }
+    },
+    "/hello/{name}": {
+      "get": {
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "description": "",
+        "summary": "",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        },
+        "tags": []
+      }
+    },
+    "/getDevices": {
+      "get": {
+        "parameters": [],
+        "description": "",
+        "summary": "",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Device"
+              }
+            }
+          }
+        },
+        "tags": []
+      }
+    },
+    "/upload": {
+      "post": {
+        "parameters": [],
+        "description": "",
+        "summary": "",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "number"
+            }
+          }
+        },
+        "tags": []
+      }
+    }
+  },
+  "definitions": {
+    "Device": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number"
+        },
+        "name": {
+          "type": "string"
+        }
+      }
+    }
+  },
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "info": {
+    "version": "1.0.1  ",
+    "title": "The title of the Doc",
+    "description": "Freeform test of the API comes here",
+    "termsOfService": ""
+  },
+  "tags": []
+}

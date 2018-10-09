@@ -24,18 +24,12 @@ export interface ShopCartModel {
   items:ShopCartItem[]
 
   // Some tasks that can have RUNNING -> ERROR -> SUCCESS
-  fetchAll?: TaskState<ShopCartItem>   
+  fetchAll?: TaskState<ShopCartItem[]>   
   RequstAddNewItem?: TaskState<ShopCartItem>   
   AnyFn?: TaskState<ShopCartItem>
 }
 
-
-// would be easier to say it like this
-class CartModel {
-  items:ShopCartItem[] = []
-}
-
-export function InitShopCartModel() : ShopCartModel {
+export function initializeShopCart() : ShopCartModel {
   return {
     items : []
   }
@@ -49,20 +43,18 @@ export function updateItems(input:ShopCartModel, newItems:ShopCartItem[]) : Shop
 }
 
 /**
- * @reducer updateItems
+ * @taskfor updateItems
  */
 export async function fetchAll( dispatch:()=>void ) : Promise<ShopCartItem[]> {
   return [{name:'foo'}, {name:'bar'}]
 }
 
 /**
- * @reducer updateItems
+ * @taskfor updateItems
  */
 export async function getItemsFromCategory( id:number, dispatch:()=>void ) : Promise<ShopCartItem[]> {
   return [{name:'foo'}, {name:'bar'}]
 }
-
-
 
 export function AddItem(input:ShopCartModel, newItem:ShopCartItem) : ShopCartModel {
   return {
@@ -72,7 +64,7 @@ export function AddItem(input:ShopCartModel, newItem:ShopCartItem) : ShopCartMod
 }
 
 /**
- * @reducer AddItem
+ * @taskfor AddItem
  */
 export async function RequstAddNewItem(itemName:string) : Promise<ShopCartItem> {
   return {
@@ -81,7 +73,7 @@ export async function RequstAddNewItem(itemName:string) : Promise<ShopCartItem> 
 }
 
 /**
- * @reducer AddItem
+ * @taskfor AddItem
  */
 export async function AnyFn(itemName:string) : Promise<ShopCartItem> {
   return {
@@ -89,4 +81,44 @@ export async function AnyFn(itemName:string) : Promise<ShopCartItem> {
   }
 }
 
+
+/**
+* @redux model 
+*/
+export interface UserInfoModel {
+  logged: boolean
+  userId?: number
+  userName?: string
+}
+
+export interface UserInfoModelMsg extends UserInfoModel {}
+
+export function initUserModel() : UserInfoModel {
+  return {
+    logged: false
+  }
+}
+
+export function setUser(input:UserInfoModel, basicInfo:UserInfoModelMsg ) : UserInfoModel {
+  return {
+    ...input,
+    ...basicInfo
+  }
+}
+
+/**
+ * @taskfor setUser
+ */
+export async function loginUser(username:string, password:string) : Promise<UserInfoModelMsg> {
+  return {
+     logged: false
+  }
+}
+
+/*
+
+Yksi mahdollinen tapa voisi olla tehdä async -funktio, jota kutsutaan ensin ja joka sitten
+lopulta dispatchää uuden UserInfoModel tuloksen...
+
+ */
 

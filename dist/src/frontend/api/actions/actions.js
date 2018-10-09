@@ -40,6 +40,8 @@ var actionEnums_1 = require("../common/actionEnums");
 var state_1 = require("../../state");
 var state_2 = require("../../state");
 var state_3 = require("../../state");
+var state_4 = require("../../state");
+var state_5 = require("../../state");
 // Action which can be dispatched 
 exports.action_SHOPCARTMODEL_UPDATEITEMS = function (payload) {
     return {
@@ -69,6 +71,19 @@ exports.fetchAllDispatcher = function () { return function (dispatch) { return _
         }
     });
 }); }; };
+// function which is related to the action... 
+exports.getItemsFromCategoryDispatcher = function (id) { return function (dispatch) { return __awaiter(_this, void 0, void 0, function () {
+    var value;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0: return [4 /*yield*/, state_2.getItemsFromCategory(id, dispatch)];
+            case 1:
+                value = _a.sent();
+                dispatch(exports.action_SHOPCARTMODEL_UPDATEITEMS(value));
+                return [2 /*return*/];
+        }
+    });
+}); }; };
 // Action which can be dispatched 
 exports.action_SHOPCARTMODEL_ADDITEM = function (payload) {
     return {
@@ -84,7 +99,7 @@ exports.RequstAddNewItemDispatcher = function (itemName) { return function (disp
             case 0:
                 _a.trys.push([0, 2, , 3]);
                 dispatch({ type: 'RUNNONG_REQUSTADDNEWITEM' });
-                return [4 /*yield*/, state_2.RequstAddNewItem(itemName)];
+                return [4 /*yield*/, state_3.RequstAddNewItem(itemName)];
             case 1:
                 value = _a.sent();
                 dispatch(exports.action_SHOPCARTMODEL_ADDITEM(value));
@@ -106,7 +121,7 @@ exports.AnyFnDispatcher = function (itemName) { return function (dispatch) { ret
             case 0:
                 _a.trys.push([0, 2, , 3]);
                 dispatch({ type: 'RUNNONG_ANYFN' });
-                return [4 /*yield*/, state_3.AnyFn(itemName)];
+                return [4 /*yield*/, state_4.AnyFn(itemName)];
             case 1:
                 value = _a.sent();
                 dispatch(exports.action_SHOPCARTMODEL_ADDITEM(value));
@@ -120,4 +135,31 @@ exports.AnyFnDispatcher = function (itemName) { return function (dispatch) { ret
         }
     });
 }); }; };
+// Action which can be dispatched 
+exports.action_USERINFOMODEL_SETUSER = function (payload) {
+    return {
+        type: actionEnums_1.actionsEnums.ACTION_USERINFOMODEL_SETUSER,
+        payload: payload
+    };
+};
+// function which is related to the action... 
+exports.loginUserDispatcher = function (username, password) { return function (dispatch) { return __awaiter(_this, void 0, void 0, function () {
+    var value;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0: return [4 /*yield*/, state_5.loginUser(username, password)];
+            case 1:
+                value = _a.sent();
+                dispatch(exports.action_USERINFOMODEL_SETUSER(value));
+                return [2 /*return*/];
+        }
+    });
+}); }; };
+// Action which can be dispatched 
+exports.action_USERINFOMODEL_LOGINUSER = function (payload) {
+    return {
+        type: actionEnums_1.actionsEnums.ACTION_USERINFOMODEL_LOGINUSER,
+        payload: payload
+    };
+};
 //# sourceMappingURL=actions.js.map

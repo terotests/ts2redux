@@ -10,4 +10,6 @@ export declare const actionsEnums: {
     RUNNING_ANYFN: string;
     ERROR_ANYFN: string;
     SUCCESS_ANYFN: string;
+    ACTION_USERINFOMODEL_SETUSER: string;
+    ACTION_USERINFOMODEL_LOGINUSER: string;
 };

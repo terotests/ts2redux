@@ -53,25 +53,18 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-// would be easier to say it like this
-var CartModel = /** @class */ (function () {
-    function CartModel() {
-        this.items = [];
-    }
-    return CartModel;
-}());
-function InitShopCartModel() {
+function initializeShopCart() {
     return {
         items: []
     };
 }
-exports.InitShopCartModel = InitShopCartModel;
+exports.initializeShopCart = initializeShopCart;
 function updateItems(input, newItems) {
     return __assign({}, input, { items: newItems.slice() });
 }
 exports.updateItems = updateItems;
 /**
- * @reducer updateItems
+ * @taskfor updateItems
  */
 function fetchAll(dispatch) {
     return __awaiter(this, void 0, void 0, function () {
@@ -82,7 +75,7 @@ function fetchAll(dispatch) {
 }
 exports.fetchAll = fetchAll;
 /**
- * @reducer updateItems
+ * @taskfor updateItems
  */
 function getItemsFromCategory(id, dispatch) {
     return __awaiter(this, void 0, void 0, function () {
@@ -97,7 +90,7 @@ function AddItem(input, newItem) {
 }
 exports.AddItem = AddItem;
 /**
- * @reducer AddItem
+ * @taskfor AddItem
  */
 function RequstAddNewItem(itemName) {
     return __awaiter(this, void 0, void 0, function () {
@@ -110,7 +103,7 @@ function RequstAddNewItem(itemName) {
 }
 exports.RequstAddNewItem = RequstAddNewItem;
 /**
- * @reducer AddItem
+ * @taskfor AddItem
  */
 function AnyFn(itemName) {
     return __awaiter(this, void 0, void 0, function () {
@@ -122,4 +115,27 @@ function AnyFn(itemName) {
     });
 }
 exports.AnyFn = AnyFn;
+function initUserModel() {
+    return {
+        logged: false
+    };
+}
+exports.initUserModel = initUserModel;
+function setUser(input, basicInfo) {
+    return __assign({}, input, basicInfo);
+}
+exports.setUser = setUser;
+/**
+ * @taskfor setUser
+ */
+function loginUser(username, password) {
+    return __awaiter(this, void 0, void 0, function () {
+        return __generator(this, function (_a) {
+            return [2 /*return*/, {
+                    logged: false
+                }];
+        });
+    });
+}
+exports.loginUser = loginUser;
 //# sourceMappingURL=state.js.map

@@ -12,6 +12,12 @@ export interface GenerationOptions {
   path: string
 }
 
+export interface ModelDefinition { 
+  iface:InterfaceDeclaration,
+  file:SourceFile,
+  initFn?:FunctionDeclaration,
+}
+
 export async function createProject( settings:GenerationOptions) {
   const project = new Project();
 
@@ -25,10 +31,7 @@ export async function createProject( settings:GenerationOptions) {
   const services = webclient.getState().services = {}
   
   // Collection of all the UI state models in the system...
-  const reduxModels:{[key:string]:{
-    iface:InterfaceDeclaration,
-    file:SourceFile
-  }} = {}
+  const reduxModels:{[key:string]:ModelDefinition} = {}
 
   const ifaceHasKey = (iface:InterfaceDeclaration, name:string) : boolean => {
     return iface.getProperties().filter( p => p.getName() == name ).length > 0
@@ -43,7 +46,8 @@ export async function createProject( settings:GenerationOptions) {
       ).length > 0 ) {
         reduxModels[i.getName()] = {
           iface: i,
-          file: sourceFile 
+          file: sourceFile,
+          initFn: null,
         }
         // example of adding property to the interface...
         /*
@@ -80,11 +84,12 @@ export async function createProject( settings:GenerationOptions) {
   enums.out('}', true)  
 
   const writerCache:{[key:string]:R.CodeWriter} = {}
-  const createReducerFn = (modelName:string) : R.CodeWriter => {
+  const createReducerFn = (modelName:string, model:ModelDefinition) : R.CodeWriter => {
     if(writerCache[modelName]) return writerCache[modelName]
     // Reducer for some UI state is defined like this...
+    const initializer = model.initFn ? model.initFn.getName() + '()' : '{}'; 
     reducers.out('', true)
-    reducers.out(`export const ${modelName}Reducer = (state:${modelName} /* TODO: default state here*/, action) => {`, true)
+    reducers.out(`export const ${modelName}Reducer = (state:${modelName} = ${initializer}, action) => {`, true)
     reducers.indent(1)
       reducers.out(`switch (action.type) {`, true)
       const actionReducers = reducers.fork()
@@ -111,6 +116,14 @@ export async function createProject( settings:GenerationOptions) {
       // console.log(f.getName())
       // reduxModels
       const returnType = getTypePath(f.getReturnType()).pop()      
+
+      if( f.getParameters().length == 0 ) {
+        if(reduxModels[returnType]) {
+          // This is initializer function
+          reduxModels[returnType].initFn = f;
+        }
+      }
+
       const secondParam = f.getParameters()[1]
       if(!secondParam) return
       const payloadType = getTypeName(secondParam.getType())
@@ -132,7 +145,10 @@ export async function createProject( settings:GenerationOptions) {
         const functionFile = sourceFile.getFilePath();
         
         actionImports[returnType] = path.relative( actionsPath, path.dirname(modelFile)) + '/' + path.basename(modelFile, '.ts')
-        reducerImports[returnType] = path.relative( actionsPath, path.dirname(modelFile)) + '/' + path.basename(modelFile, '.ts')
+        reducerImports[returnType] = path.relative( reducersPath, path.dirname(modelFile)) + '/' + path.basename(modelFile, '.ts')
+        if(model.initFn) {
+          reducerImports[model.initFn.getName()] = path.relative( reducersPath, path.dirname(modelFile)) + '/' + path.basename(modelFile, '.ts')
+        }
 
         // the function is not actually needed to be imported here
         reducerImports[f.getName()] = path.relative( actionsPath, path.dirname(functionFile)) + '/' + path.basename(functionFile, '.ts')
@@ -141,7 +157,7 @@ export async function createProject( settings:GenerationOptions) {
           actionImports[payloadImportType] = path.relative( actionsPath, path.dirname(functionFile)) + '/' + path.basename(functionFile, '.ts')
         }
 
-        const actionReducers = createReducerFn(returnType)
+        const actionReducers = createReducerFn(returnType, model)
 
         actionReducers.indent(1)
         actionReducers.out(`case actionsEnums.${actionName}:`, true)
@@ -218,7 +234,7 @@ export async function createProject( settings:GenerationOptions) {
         const taskFn = sourceFile.getFunctions().filter( fn => {
             // const returnV = getTypePath( fn.getReturnType() ).pop()
             const isReducer = fn.getJsDocs().filter(
-              doc =>doc.getTags().filter( tag => tag.getName() === 'reducer' && tag.getComment()==f.getName() ).length > 0
+              doc =>doc.getTags().filter( tag => (tag.getName() === 'taskfor' || tag.getName() === 'reducer') && tag.getComment()==f.getName() ).length > 0
             ).length > 0
             return isReducer
           })

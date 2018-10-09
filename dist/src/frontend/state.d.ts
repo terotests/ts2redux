@@ -19,26 +19,42 @@ export interface TaskState<T> {
 */
 export interface ShopCartModel {
     items: ShopCartItem[];
-    fetchAll?: TaskState<ShopCartItem>;
+    fetchAll?: TaskState<ShopCartItem[]>;
     RequstAddNewItem?: TaskState<ShopCartItem>;
     AnyFn?: TaskState<ShopCartItem>;
 }
-export declare function InitShopCartModel(): ShopCartModel;
+export declare function initializeShopCart(): ShopCartModel;
 export declare function updateItems(input: ShopCartModel, newItems: ShopCartItem[]): ShopCartModel;
 /**
- * @reducer updateItems
+ * @taskfor updateItems
  */
 export declare function fetchAll(dispatch: () => void): Promise<ShopCartItem[]>;
 /**
- * @reducer updateItems
+ * @taskfor updateItems
  */
 export declare function getItemsFromCategory(id: number, dispatch: () => void): Promise<ShopCartItem[]>;
 export declare function AddItem(input: ShopCartModel, newItem: ShopCartItem): ShopCartModel;
 /**
- * @reducer AddItem
+ * @taskfor AddItem
  */
 export declare function RequstAddNewItem(itemName: string): Promise<ShopCartItem>;
 /**
- * @reducer AddItem
+ * @taskfor AddItem
  */
 export declare function AnyFn(itemName: string): Promise<ShopCartItem>;
+/**
+* @redux model
+*/
+export interface UserInfoModel {
+    logged: boolean;
+    userId?: number;
+    userName?: string;
+}
+export interface UserInfoModelMsg extends UserInfoModel {
+}
+export declare function initUserModel(): UserInfoModel;
+export declare function setUser(input: UserInfoModel, basicInfo: UserInfoModelMsg): UserInfoModel;
+/**
+ * @taskfor setUser
+ */
+export declare function loginUser(username: string, password: string): Promise<UserInfoModelMsg>;

@@ -5,6 +5,9 @@ import { fetchAll } from '../../state'
 import { getItemsFromCategory } from '../../state'
 import { RequstAddNewItem } from '../../state'
 import { AnyFn } from '../../state'
+import { UserInfoModel } from '../../state'
+import { UserInfoModelMsg } from '../../state'
+import { loginUser } from '../../state'
 
 // Action which can be dispatched 
 export const action_SHOPCARTMODEL_UPDATEITEMS = (payload:Array<ShopCartItem>) => { 
@@ -62,4 +65,18 @@ export const AnyFnDispatcher = (itemName:string) => async (dispatch) => {
   } catch(e) {
     dispatch({type:'ERROR_ANYFN', payload:e})
   }
+}
+
+// Action which can be dispatched 
+export const action_USERINFOMODEL_SETUSER = (payload:UserInfoModelMsg) => { 
+  return {
+    type : actionsEnums.ACTION_USERINFOMODEL_SETUSER,
+    payload
+  }
+}
+
+// function which is related to the action... 
+export const loginUserDispatcher = (username:string, password:string) => async (dispatch) => { 
+  const value = await loginUser(username, password)
+  dispatch( action_USERINFOMODEL_SETUSER( value ))
 }

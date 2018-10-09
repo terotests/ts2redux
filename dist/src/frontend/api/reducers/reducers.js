@@ -3,12 +3,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var actionEnums_1 = require("../common/actionEnums");
 var state_1 = require("../../state");
 var state_2 = require("../../state");
-exports.ShopCartModelReducer = function (state /* TODO: default state here*/, action) {
+var state_3 = require("../../state");
+exports.ShopCartModelReducer = function (state, action) {
+    if (state === void 0) { state = state_1.initializeShopCart(); }
     switch (action.type) {
         case actionEnums_1.actionsEnums.ACTION_SHOPCARTMODEL_UPDATEITEMS:
-            return state_1.updateItems(state, action.payload);
+            return state_2.updateItems(state, action.payload);
         case actionEnums_1.actionsEnums.ACTION_SHOPCARTMODEL_ADDITEM:
-            return state_2.AddItem(state, action.payload);
+            return state_3.AddItem(state, action.payload);
     }
     return state;
 };

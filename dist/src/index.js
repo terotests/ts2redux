@@ -60,7 +60,8 @@ function createProject(settings) {
                             if (i.getJsDocs().filter(function (doc) { return doc.getTags().filter(function (tag) { return tag.getName() === 'redux'; }).length > 0; }).length > 0) {
                                 reduxModels[i.getName()] = {
                                     iface: i,
-                                    file: sourceFile
+                                    file: sourceFile,
+                                    initFn: null,
                                 };
                                 // example of adding property to the interface...
                                 /*
@@ -90,12 +91,13 @@ function createProject(settings) {
                     enums.indent(-1);
                     enums.out('}', true);
                     writerCache = {};
-                    createReducerFn = function (modelName) {
+                    createReducerFn = function (modelName, model) {
                         if (writerCache[modelName])
                             return writerCache[modelName];
                         // Reducer for some UI state is defined like this...
+                        var initializer = model.initFn ? model.initFn.getName() + '()' : '{}';
                         reducers.out('', true);
-                        reducers.out("export const " + modelName + "Reducer = (state:" + modelName + " /* TODO: default state here*/, action) => {", true);
+                        reducers.out("export const " + modelName + "Reducer = (state:" + modelName + " = " + initializer + ", action) => {", true);
                         reducers.indent(1);
                         reducers.out("switch (action.type) {", true);
                         var actionReducers = reducers.fork();
@@ -119,6 +121,12 @@ function createProject(settings) {
                             // console.log(f.getName())
                             // reduxModels
                             var returnType = utils_1.getTypePath(f.getReturnType()).pop();
+                            if (f.getParameters().length == 0) {
+                                if (reduxModels[returnType]) {
+                                    // This is initializer function
+                                    reduxModels[returnType].initFn = f;
+                                }
+                            }
                             var secondParam = f.getParameters()[1];
                             if (!secondParam)
                                 return;
@@ -138,13 +146,16 @@ function createProject(settings) {
                                 var modelFile = model_1.file.getFilePath();
                                 var functionFile_1 = sourceFile.getFilePath();
                                 actionImports[returnType] = path.relative(actionsPath_1, path.dirname(modelFile)) + '/' + path.basename(modelFile, '.ts');
-                                reducerImports[returnType] = path.relative(actionsPath_1, path.dirname(modelFile)) + '/' + path.basename(modelFile, '.ts');
+                                reducerImports[returnType] = path.relative(reducersPath, path.dirname(modelFile)) + '/' + path.basename(modelFile, '.ts');
+                                if (model_1.initFn) {
+                                    reducerImports[model_1.initFn.getName()] = path.relative(reducersPath, path.dirname(modelFile)) + '/' + path.basename(modelFile, '.ts');
+                                }
                                 // the function is not actually needed to be imported here
                                 reducerImports[f.getName()] = path.relative(actionsPath_1, path.dirname(functionFile_1)) + '/' + path.basename(functionFile_1, '.ts');
                                 if (!isSimpleType(payloadImportType)) {
                                     actionImports[payloadImportType] = path.relative(actionsPath_1, path.dirname(functionFile_1)) + '/' + path.basename(functionFile_1, '.ts');
                                 }
-                                var actionReducers = createReducerFn(returnType);
+                                var actionReducers = createReducerFn(returnType, model_1);
                                 actionReducers.indent(1);
                                 actionReducers.out("case actionsEnums." + actionName + ":", true);
                                 actionReducers.indent(1);
@@ -206,7 +217,7 @@ function createProject(settings) {
                                 };
                                 var taskFn = sourceFile.getFunctions().filter(function (fn) {
                                     // const returnV = getTypePath( fn.getReturnType() ).pop()
-                                    var isReducer = fn.getJsDocs().filter(function (doc) { return doc.getTags().filter(function (tag) { return tag.getName() === 'reducer' && tag.getComment() == f.getName(); }).length > 0; }).length > 0;
+                                    var isReducer = fn.getJsDocs().filter(function (doc) { return doc.getTags().filter(function (tag) { return (tag.getName() === 'taskfor' || tag.getName() === 'reducer') && tag.getComment() == f.getName(); }).length > 0; }).length > 0;
                                     return isReducer;
                                 })
                                     .forEach(createTaskFor);

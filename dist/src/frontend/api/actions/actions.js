@@ -55,7 +55,7 @@ exports.fetchAllDispatcher = function () { return function (dispatch) { return _
             case 0:
                 _a.trys.push([0, 2, , 3]);
                 dispatch({ type: 'RUNNONG_FETCHALL' });
-                return [4 /*yield*/, state_1.fetchAll()];
+                return [4 /*yield*/, state_1.fetchAll(dispatch)];
             case 1:
                 value = _a.sent();
                 dispatch(exports.action_SHOPCARTMODEL_UPDATEITEMS(value));

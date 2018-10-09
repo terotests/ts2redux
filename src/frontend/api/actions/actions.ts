@@ -2,6 +2,7 @@ import { actionsEnums } from '../common/actionEnums'
 import { ShopCartModel } from '../../state'
 import { ShopCartItem } from '../../state'
 import { fetchAll } from '../../state'
+import { getItemsFromCategory } from '../../state'
 import { RequstAddNewItem } from '../../state'
 import { AnyFn } from '../../state'
 
@@ -17,12 +18,18 @@ export const action_SHOPCARTMODEL_UPDATEITEMS = (payload:Array<ShopCartItem>) =>
 export const fetchAllDispatcher = () => async (dispatch) => { 
   try {
     dispatch({type:'RUNNONG_FETCHALL'})
-    const value = await fetchAll()
+    const value = await fetchAll(dispatch)
     dispatch( action_SHOPCARTMODEL_UPDATEITEMS( value ))
     dispatch({type:'SUCCESS_FETCHALL', payload:value})
   } catch(e) {
     dispatch({type:'ERROR_FETCHALL', payload:e})
   }
+}
+
+// function which is related to the action... 
+export const getItemsFromCategoryDispatcher = (id:number) => async (dispatch) => { 
+  const value = await getItemsFromCategory(id, dispatch)
+  dispatch( action_SHOPCARTMODEL_UPDATEITEMS( value ))
 }
 
 // Action which can be dispatched 

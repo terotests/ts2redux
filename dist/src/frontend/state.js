@@ -73,7 +73,7 @@ exports.updateItems = updateItems;
 /**
  * @reducer updateItems
  */
-function fetchAll() {
+function fetchAll(dispatch) {
     return __awaiter(this, void 0, void 0, function () {
         return __generator(this, function (_a) {
             return [2 /*return*/, [{ name: 'foo' }, { name: 'bar' }]];
@@ -81,6 +81,17 @@ function fetchAll() {
     });
 }
 exports.fetchAll = fetchAll;
+/**
+ * @reducer updateItems
+ */
+function getItemsFromCategory(id, dispatch) {
+    return __awaiter(this, void 0, void 0, function () {
+        return __generator(this, function (_a) {
+            return [2 /*return*/, [{ name: 'foo' }, { name: 'bar' }]];
+        });
+    });
+}
+exports.getItemsFromCategory = getItemsFromCategory;
 function AddItem(input, newItem) {
     return __assign({}, input, { items: input.items.concat([newItem]) });
 }

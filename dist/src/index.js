@@ -46,7 +46,7 @@ function createProject(settings) {
             switch (_a.label) {
                 case 0:
                     project = new ts_simple_ast_1.default();
-                    project.addExistingSourceFiles([settings.path + "/**/*.ts"]); // , "!**/*.d.ts"
+                    project.addExistingSourceFiles([settings.path + "/**/*.ts", settings.path + "/**/*.tsx"]); // , "!**/*.d.ts"
                     RFs = new R.CodeFileSystem();
                     webclient = RFs.getFile('/src/frontend/api/', 'index.ts').getWriter();
                     services = webclient.getState().services = {};
@@ -54,6 +54,7 @@ function createProject(settings) {
                     ifaceHasKey = function (iface, name) {
                         return iface.getProperties().filter(function (p) { return p.getName() == name; }).length > 0;
                     };
+                    // https://dsherret.github.io/ts-simple-ast/details/interfaces
                     project.getSourceFiles().forEach(function (sourceFile) {
                         sourceFile.getInterfaces().forEach(function (i) {
                             if (i.getJsDocs().filter(function (doc) { return doc.getTags().filter(function (tag) { return tag.getName() === 'redux'; }).length > 0; }).length > 0) {
@@ -61,6 +62,12 @@ function createProject(settings) {
                                     iface: i,
                                     file: sourceFile
                                 };
+                                // example of adding property to the interface...
+                                /*
+                                if(i.getName() == 'ShopCartModel') {
+                                  i.addProperty({ name: "helloWorld?", type: "TaskState<ShopCartItem>" })
+                                }
+                                */
                             }
                         });
                     });
@@ -101,6 +108,13 @@ function createProject(settings) {
                     };
                     // mapeservice classes to the properties
                     project.getSourceFiles().forEach(function (sourceFile) {
+                        /*
+                        sourceFile.getVariableDeclarations().forEach( d => {
+                          console.log('Variable ', d.getName())
+                          console.log( getTypeName( d.getInitializer().getType()));
+                          // console.log( getTypeName( d.getInit().getType()));
+                        })
+                        */
                         sourceFile.getFunctions().forEach(function (f) {
                             // console.log(f.getName())
                             // reduxModels
@@ -154,7 +168,8 @@ function createProject(settings) {
                                     var taskName = taskFn.getName();
                                     console.log('Found Task ', taskFn.getName());
                                     actionImports[taskName] = path.relative(actionsPath_1, path.dirname(functionFile_1)) + '/' + path.basename(functionFile_1, '.ts');
-                                    var paramStr = taskFn.getParameters().map(function (p) { return p.getName() + ':' + utils_1.getTypeName(p.getType()); }).join(', ');
+                                    var filteredParams = taskFn.getParameters().filter(function (p) { return p.getName() != 'dispatch'; });
+                                    var paramStr = filteredParams.map(function (p) { return p.getName() + ':' + utils_1.getTypeName(p.getType()); }).join(', ');
                                     var params = taskFn.getParameters().map(function (p) { return p.getName(); }).join(', ');
                                     var hasState = false;
                                     if (ifaceHasKey(model_1.iface, taskName)) {

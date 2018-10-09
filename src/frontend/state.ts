@@ -26,8 +26,9 @@ export interface ShopCartModel {
   // Some tasks that can have RUNNING -> ERROR -> SUCCESS
   fetchAll?: TaskState<ShopCartItem>   
   RequstAddNewItem?: TaskState<ShopCartItem>   
-  AnyFn?: TaskState<ShopCartItem> 
+  AnyFn?: TaskState<ShopCartItem>
 }
+
 
 // would be easier to say it like this
 class CartModel {
@@ -50,7 +51,14 @@ export function updateItems(input:ShopCartModel, newItems:ShopCartItem[]) : Shop
 /**
  * @reducer updateItems
  */
-export async function fetchAll() : Promise<ShopCartItem[]> {
+export async function fetchAll( dispatch:()=>void ) : Promise<ShopCartItem[]> {
+  return [{name:'foo'}, {name:'bar'}]
+}
+
+/**
+ * @reducer updateItems
+ */
+export async function getItemsFromCategory( id:number, dispatch:()=>void ) : Promise<ShopCartItem[]> {
   return [{name:'foo'}, {name:'bar'}]
 }
 

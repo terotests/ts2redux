@@ -28,7 +28,11 @@ export declare function updateItems(input: ShopCartModel, newItems: ShopCartItem
 /**
  * @reducer updateItems
  */
-export declare function fetchAll(): Promise<ShopCartItem[]>;
+export declare function fetchAll(dispatch: () => void): Promise<ShopCartItem[]>;
+/**
+ * @reducer updateItems
+ */
+export declare function getItemsFromCategory(id: number, dispatch: () => void): Promise<ShopCartItem[]>;
 export declare function AddItem(input: ShopCartModel, newItem: ShopCartItem): ShopCartModel;
 /**
  * @reducer AddItem

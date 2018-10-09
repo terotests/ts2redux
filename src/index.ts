@@ -15,7 +15,7 @@ export interface GenerationOptions {
 export async function createProject( settings:GenerationOptions) {
   const project = new Project();
 
-  project.addExistingSourceFiles([`${settings.path}/**/*.ts`]); // , "!**/*.d.ts"
+  project.addExistingSourceFiles([`${settings.path}/**/*.ts`,`${settings.path}/**/*.tsx`]); // , "!**/*.d.ts"
   const RFs = new R.CodeFileSystem()
   
   // create one dummy file for setting the context for the services
@@ -34,6 +34,8 @@ export async function createProject( settings:GenerationOptions) {
     return iface.getProperties().filter( p => p.getName() == name ).length > 0
   }
 
+  // https://dsherret.github.io/ts-simple-ast/details/interfaces
+
   project.getSourceFiles().forEach( sourceFile => {
     sourceFile.getInterfaces().forEach( i => {
       if( i.getJsDocs().filter(
@@ -43,6 +45,12 @@ export async function createProject( settings:GenerationOptions) {
           iface: i,
           file: sourceFile 
         }
+        // example of adding property to the interface...
+        /*
+        if(i.getName() == 'ShopCartModel') {
+          i.addProperty({ name: "helloWorld?", type: "TaskState<ShopCartItem>" })
+        }
+        */
       }       
     })
   })
@@ -90,6 +98,15 @@ export async function createProject( settings:GenerationOptions) {
 
   // mapeservice classes to the properties
   project.getSourceFiles().forEach( sourceFile => {
+
+    /*
+    sourceFile.getVariableDeclarations().forEach( d => {
+      console.log('Variable ', d.getName())
+      console.log( getTypeName( d.getInitializer().getType()));
+      // console.log( getTypeName( d.getInit().getType()));
+    })
+    */
+
     sourceFile.getFunctions().forEach( f => {
       // console.log(f.getName())
       // reduxModels
@@ -153,8 +170,10 @@ export async function createProject( settings:GenerationOptions) {
           const taskName = taskFn.getName()
           console.log('Found Task ', taskFn.getName())
           actionImports[taskName] = path.relative( actionsPath, path.dirname(functionFile)) + '/' + path.basename(functionFile, '.ts')          
-        
-          const paramStr = taskFn.getParameters().map(
+          
+          const filteredParams = taskFn.getParameters().filter( p => p.getName() != 'dispatch' );
+
+          const paramStr = filteredParams.map(
             p => p.getName() + ':' + getTypeName( p.getType() )
           ).join(', ');
           const params = taskFn.getParameters().map(

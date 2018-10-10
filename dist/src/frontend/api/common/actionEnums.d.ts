@@ -11,5 +11,4 @@ export declare const actionsEnums: {
     ERROR_ANYFN: string;
     SUCCESS_ANYFN: string;
     ACTION_USERINFOMODEL_SETUSER: string;
-    ACTION_USERINFOMODEL_LOGINUSER: string;
 };

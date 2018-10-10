@@ -58,3 +58,10 @@ export declare function setUser(input: UserInfoModel, basicInfo: UserInfoModelMs
  * @taskfor setUser
  */
 export declare function loginUser(username: string, password: string): Promise<UserInfoModelMsg>;
+/**
+ *
+ * @param username
+ * @param password
+ * @reduxfn true
+ */
+export declare function loginUser2(username: string, password: string): Promise<(state: UserInfoModelMsg) => UserInfoModelMsg>;

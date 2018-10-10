@@ -155,11 +155,4 @@ exports.loginUserDispatcher = function (username, password) { return function (d
         }
     });
 }); }; };
-// Action which can be dispatched 
-exports.action_USERINFOMODEL_LOGINUSER = function (payload) {
-    return {
-        type: actionEnums_1.actionsEnums.ACTION_USERINFOMODEL_LOGINUSER,
-        payload: payload
-    };
-};
 //# sourceMappingURL=actions.js.map

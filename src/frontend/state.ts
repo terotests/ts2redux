@@ -115,10 +115,31 @@ export async function loginUser(username:string, password:string) : Promise<User
   }
 }
 
+
 /*
 
 Yksi mahdollinen tapa voisi olla tehdä async -funktio, jota kutsutaan ensin ja joka sitten
 lopulta dispatchää uuden UserInfoModel tuloksen...
 
+export async function loginUser(username:string, password:string) : Promise<UserInfoModelMsg> {
+  return {
+     logged: false
+  }
+}
+*/
+
+/**
+ * 
+ * @param username 
+ * @param password 
+ * @reduxfn true
  */
+export async function loginUser2(username:string, password:string) : Promise< (state:UserInfoModelMsg) => UserInfoModelMsg> {
+  // Do something and then return the data... 
+  return (state:UserInfoModelMsg) => {
+    return {
+     logged: false
+    }
+  }
+}
 

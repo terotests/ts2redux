@@ -138,4 +138,34 @@ function loginUser(username, password) {
     });
 }
 exports.loginUser = loginUser;
+/*
+
+Yksi mahdollinen tapa voisi olla tehdä async -funktio, jota kutsutaan ensin ja joka sitten
+lopulta dispatchää uuden UserInfoModel tuloksen...
+
+export async function loginUser(username:string, password:string) : Promise<UserInfoModelMsg> {
+  return {
+     logged: false
+  }
+}
+*/
+/**
+ *
+ * @param username
+ * @param password
+ * @reduxfn true
+ */
+function loginUser2(username, password) {
+    return __awaiter(this, void 0, void 0, function () {
+        return __generator(this, function (_a) {
+            // Do something and then return the data... 
+            return [2 /*return*/, function (state) {
+                    return {
+                        logged: false
+                    };
+                }];
+        });
+    });
+}
+exports.loginUser2 = loginUser2;
 //# sourceMappingURL=state.js.map

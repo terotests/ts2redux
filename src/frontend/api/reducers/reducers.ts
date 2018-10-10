@@ -9,6 +9,8 @@ import { setUser } from '../../state'
 
 export const ShopCartModelReducer = (state:ShopCartModel = initializeShopCart(), action) => {
   switch (action.type) {
+    case actionsEnums.ACTION_SHOPCARTMODEL_FN:
+      return action.payload(state) 
     case actionsEnums.ACTION_SHOPCARTMODEL_UPDATEITEMS:
       return updateItems(state, action.payload) 
     case actionsEnums.ACTION_SHOPCARTMODEL_ADDITEM:
@@ -19,6 +21,8 @@ export const ShopCartModelReducer = (state:ShopCartModel = initializeShopCart(),
 
 export const UserInfoModelReducer = (state:UserInfoModel = initUserModel(), action) => {
   switch (action.type) {
+    case actionsEnums.ACTION_USERINFOMODEL_FN:
+      return action.payload(state) 
     case actionsEnums.ACTION_USERINFOMODEL_SETUSER:
       return setUser(state, action.payload) 
   }

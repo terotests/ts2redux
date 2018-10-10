@@ -101,6 +101,14 @@ function createProject(settings) {
                         reducers.indent(1);
                         reducers.out("switch (action.type) {", true);
                         var actionReducers = reducers.fork();
+                        var actionFn = "ACTION_" + modelName.toUpperCase() + "_FN";
+                        actionEnums.out(actionFn + " : \"" + actionFn + "\",", true);
+                        actionReducers.indent(1);
+                        actionReducers.out("case actionsEnums." + actionFn + ":", true);
+                        actionReducers.indent(1);
+                        actionReducers.out("return action.payload(state) ", true);
+                        actionReducers.indent(-1);
+                        actionReducers.indent(-1);
                         reducers.out('}', true);
                         reducers.out('return state', true);
                         reducers.indent(-1);
@@ -217,7 +225,7 @@ function createProject(settings) {
                                 };
                                 var taskFn = sourceFile.getFunctions().filter(function (fn) {
                                     // const returnV = getTypePath( fn.getReturnType() ).pop()
-                                    var isReducer = fn.getJsDocs().filter(function (doc) { return doc.getTags().filter(function (tag) { return (tag.getName() === 'taskfor' || tag.getName() === 'reducer') && tag.getComment() == f.getName(); }).length > 0; }).length > 0;
+                                    var isReducer = fn.getJsDocs().filter(function (doc) { return doc.getTags().filter(function (tag) { return (tag.getName() === 'taskfor') && tag.getComment() == f.getName(); }).length > 0; }).length > 0;
                                     return isReducer;
                                 })
                                     .forEach(createTaskFor);

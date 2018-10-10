@@ -1,3 +1,4 @@
+/// <reference types="react" />
 /**
 * @redux model
 */
@@ -17,4 +18,4 @@ export interface Props {
      */
     loadMembers: () => any;
 }
-export declare const MemberAreaComponent: (props: Props) => any;
+export declare const MemberAreaComponent: (props: Props) => JSX.Element;

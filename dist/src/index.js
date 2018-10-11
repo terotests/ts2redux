@@ -39,9 +39,10 @@ var ts_simple_ast_1 = require("ts-simple-ast");
 var R = require("robowr");
 var utils_1 = require("./utils");
 var path = require("path");
+var ts_simple_ast_2 = require("ts-simple-ast");
 function createProject(settings) {
     return __awaiter(this, void 0, void 0, function () {
-        var project, RFs, webclient, services, reduxModels, ifaceHasKey, ACTIONS_PATH, REDUCERS_PATH, enums, actions, reducers, actionImportFork, reducerImportFork, actionImports, reducerImports, actionEnums, writerCache, createReducerFn;
+        var project, RFs, webclient, services, reduxModels, ifaceHasKey, ACTIONS_PATH, REDUCERS_PATH, ng, enums, actions, reducers, actionImportFork, reducerImportFork, actionImports, reducerImports, actionEnums, writerCache, createReducerFn;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -74,6 +75,7 @@ function createProject(settings) {
                     });
                     ACTIONS_PATH = '/src/frontend/api/actions/';
                     REDUCERS_PATH = '/src/frontend/api/reducers/';
+                    ng = RFs.getFile('/src/frontend/', 'ng.ts').getWriter();
                     enums = RFs.getFile('/src/frontend/api/common/', 'actionEnums.ts').getWriter();
                     actions = RFs.getFile('/src/frontend/api/actions/', 'actions.ts').getWriter();
                     reducers = RFs.getFile('/src/frontend/api/reducers/', 'reducers.ts').getWriter();
@@ -118,6 +120,8 @@ function createProject(settings) {
                     };
                     // mapeservice classes to the properties
                     project.getSourceFiles().forEach(function (sourceFile) {
+                        if (path.basename(sourceFile.getFilePath()) == 'ng.ts')
+                            return;
                         /*
                         sourceFile.getVariableDeclarations().forEach( d => {
                           console.log('Variable ', d.getName())
@@ -229,44 +233,122 @@ function createProject(settings) {
                                     return isReducer;
                                 })
                                     .forEach(createTaskFor);
-                                /*
-                                actions.out('', true)
-                                actions.out('// function which is related to the action... ', true)
-                                actions.out(`export const fn_${actionID} = (payload:${getTypeName(secondParam.getType())}) => (dispatcher) => { `, true)
-                                actions.indent(1);
-                                  // Call the actual function
-                                  actions.out('return {', true)
-                                  actions.indent(1)
-                                    actions.out('type : actionsEnums.' + actionName +',', true)
-                                    actions.out('payload',true)
-                                  actions.indent(-1);
-                                  actions.out('}', true)
-                                actions.indent(-1);
-                                actions.out('}', true)
-                                */
-                                /*
-                                const actionMapping = {
-                                  [LOAD_REQUEST]: loadRequest,
-                                  [LOAD_SUCCESS]: loadSuccess,
-                                  [LOAD_SINGLE_REQUEST]: loadSingleRequest,
-                                  [LOAD_SINGLE_SUCCESS]: loadSingleSuccess,
-                                  [LOAD_NEW]: loadNewSuccess,
-                                  [LOAD_ERROR]: loadError,
-                                
-                                  [CREATE_REQUEST]: createRequest,
-                                  [CREATE_SUCCESS]: createSuccess,
-                                  [CREATE_ERROR]: createError,
-                                */
                             }
-                            /*
-                            export const memberRequestCompleted = (members: MemberEntity[]) => {
-                              return {
-                                type: actionsEnums.MEMBER_REQUEST_COMPLETED,
-                                payload: members
-                              }
-                            }*/
                         });
                         sourceFile.getClasses().forEach(function (c) {
+                            console.log(c.getName());
+                            if (c.getJsDocs().filter(function (doc) { return doc.getTags().filter(function (tag) { return tag.getName() === 'simpleredux'; }).length > 0; }).length > 0) {
+                                ng.raw(sourceFile.getText(), true);
+                                ng.out("import * as immer from 'immer'", true);
+                                // Create model of all the variables...
+                                ng.out('export interface I' + c.getName() + ' {', true);
+                                ng.indent(1);
+                                c.getProperties().forEach(function (p) {
+                                    ng.out(ts_simple_ast_2.printNode(p.getNameNode().compilerNode) + ': ' + ts_simple_ast_2.printNode(p.getTypeNode().compilerNode), true);
+                                    //ng.out('/*', true)
+                                    // ng.out(printNode(p.compilerNode), true)
+                                    // ng.out(printNode(p.getTypeNode().compilerNode), true)
+                                    //ng.out('*/', true)
+                                });
+                                ng.indent(-1);
+                                ng.out('}', true);
+                                // Create model of all the variables...
+                                ng.out('class R' + c.getName() + ' {', true);
+                                ng.indent(1);
+                                ng.out('private _inReducer = false', true);
+                                var body_1 = ng.fork();
+                                ng.indent(-1);
+                                ng.out('}', true);
+                                ng.out('', true);
+                                ng.out("export const " + c.getName() + "Enums = {", true);
+                                ng.indent(1);
+                                var ng_enums_1 = ng.fork();
+                                ng.indent(-1);
+                                ng.out('}', true);
+                                ng.out('', true);
+                                ng.out("export const " + c.getName() + "Reducer = (state:I" + c.getName() + " /* todo: init*/, action) => {", true);
+                                ng.indent(1);
+                                ng.out('return immer.produce(state, draft => {', true);
+                                ng.indent(1);
+                                ng.out("switch (action.type) {", true);
+                                ng.indent(1);
+                                var ng_reducers_1 = ng.fork();
+                                ng.indent(-1);
+                                ng.out('}', true);
+                                ng.indent(-1);
+                                ng.out('})', true);
+                                ng.indent(-1);
+                                ng.out('}', true);
+                                body_1.out('private _state?: I' + c.getName(), true);
+                                body_1.out('private _dispatch?: (action:any)=>void', true);
+                                body_1.out("constructor(state?: I" + c.getName() + ", dispatch?:(action:any)=>void) {", true);
+                                body_1.indent(1);
+                                body_1.out('this._state = state', true);
+                                body_1.out('this._dispatch = dispatch', true);
+                                body_1.indent(-1);
+                                body_1.out('}', true);
+                                /*c.getProperties().forEach( p => {
+                                  body.out('private _' + p.getName()+': ' + printNode(p.getTypeNode().compilerNode), true)
+                                })
+                                */
+                                /*
+                                export const ShopCartModelReducer = (state:ITestModel = {}, action) => {
+                                  switch (action.type) {
+                                    (new TestModel(state)).
+                                  }
+                                }
+                                */
+                                c.getProperties().forEach(function (p) {
+                                    var r_name = c.getName() + "_" + p.getName();
+                                    body_1.out('get ' + p.getName() + '() : ' + ts_simple_ast_2.printNode(p.getTypeNode().compilerNode) + '{', true);
+                                    body_1.indent(1);
+                                    body_1.out('return this._state.' + p.getName(), true);
+                                    body_1.indent(-1);
+                                    body_1.out('}', true);
+                                    body_1.out('set ' + p.getName() + '(value:' + ts_simple_ast_2.printNode(p.getTypeNode().compilerNode) + ') {', true);
+                                    body_1.indent(1);
+                                    body_1.out('if(this._state) {', true);
+                                    body_1.indent(1);
+                                    body_1.out("this._state." + p.getName() + " = value", true);
+                                    body_1.indent(-1);
+                                    body_1.out('} else {', true);
+                                    body_1.indent(1);
+                                    body_1.out("// dispatch change for item " + p.getName(), true);
+                                    body_1.out("this._dispatch({type:'" + r_name + "', payload:value})", true);
+                                    body_1.indent(-1);
+                                    body_1.out('}', true);
+                                    // body.out('this._'+p.getName()+' = value', true)
+                                    body_1.indent(-1);
+                                    body_1.out('}', true);
+                                    ng_enums_1.out(r_name + " : '" + r_name + "',", true);
+                                    ng_reducers_1.out("case " + c.getName() + "Enums." + r_name + ": ", true);
+                                    ng_reducers_1.indent(1);
+                                    ng_reducers_1.out("(new R" + c.getName() + "(draft))." + p.getName() + " = action.payload", true);
+                                    ng_reducers_1.out('break;', true);
+                                    ng_reducers_1.indent(-1);
+                                    // ng_reducers
+                                });
+                                body_1.out('', true);
+                                c.getMethods().forEach(function (m) {
+                                    if (m.isAsync()) {
+                                        body_1.out('// is task', true);
+                                    }
+                                    else {
+                                        body_1.out('// is a reducer', true);
+                                        var r_name = c.getName() + "_" + m.getName();
+                                        var param_name = m.getParameters().length > 0 ? 'action.payload' : '';
+                                        ng_enums_1.out(r_name + " : '" + r_name + "',", true);
+                                        ng_reducers_1.out("case " + c.getName() + "Enums." + r_name + ": ", true);
+                                        ng_reducers_1.indent(1);
+                                        ng_reducers_1.out("(new R" + c.getName() + "(draft))." + m.getName() + "(" + param_name + ")", true);
+                                        ng_reducers_1.out('break;', true);
+                                        ng_reducers_1.indent(-1);
+                                    }
+                                    body_1.raw(ts_simple_ast_2.printNode(m.compilerNode), true);
+                                    m.getBody().forEachChild(function (n) {
+                                    });
+                                });
+                            }
                         });
                         /*
                         sourceFile.getClasses().forEach( c=>{

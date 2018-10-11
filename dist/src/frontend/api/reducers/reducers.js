@@ -9,6 +9,8 @@ var state_5 = require("../../state");
 exports.ShopCartModelReducer = function (state, action) {
     if (state === void 0) { state = state_1.initializeShopCart(); }
     switch (action.type) {
+        case actionEnums_1.actionsEnums.ACTION_SHOPCARTMODEL_FN:
+            return action.payload(state);
         case actionEnums_1.actionsEnums.ACTION_SHOPCARTMODEL_UPDATEITEMS:
             return state_2.updateItems(state, action.payload);
         case actionEnums_1.actionsEnums.ACTION_SHOPCARTMODEL_ADDITEM:
@@ -19,6 +21,8 @@ exports.ShopCartModelReducer = function (state, action) {
 exports.UserInfoModelReducer = function (state, action) {
     if (state === void 0) { state = state_4.initUserModel(); }
     switch (action.type) {
+        case actionEnums_1.actionsEnums.ACTION_USERINFOMODEL_FN:
+            return action.payload(state);
         case actionEnums_1.actionsEnums.ACTION_USERINFOMODEL_SETUSER:
             return state_5.setUser(state, action.payload);
     }

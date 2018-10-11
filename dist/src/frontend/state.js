@@ -168,4 +168,40 @@ function loginUser2(username, password) {
     });
 }
 exports.loginUser2 = loginUser2;
+/*
+// Miten haluaisin kirjoittaa oikeasti...
+class TestModel {
+
+  private _items:ShopCartItem[]
+
+  // These could be one variable ...
+  private _addingItem = false
+  private itemAddSuccess = false
+
+  get addingItem():boolean {
+    return this._addingItem;
+  }
+
+  set addingItem(v:boolean) {
+    this._addingItem = v
+  }
+
+  async addItem(newItem:ShopCartItem) {
+    // This would be dispatching some stuff...
+    this.addingItem = true
+    // this creates a reducer
+    this.items.push( newItem )
+    this.itemAddSuccess = true
+  }
+
+  get items():ShopCartItem[]  {
+    return this.items;
+  }
+  set items(value:ShopCartItem[]) {
+    this.items = value;
+  }
+}
+*/
+// this.items.push( ) --> 
+// Would result as reducer for this.items.push( newItem )
 //# sourceMappingURL=state.js.map

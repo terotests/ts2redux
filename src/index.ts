@@ -8,6 +8,9 @@ import {getFunctionDoc, getPropertyTypeName, getTypeName, getTypePath} from './u
 import * as path from 'path'
 import { getJSDocTypeParameterTags } from "typescript";
 
+import { printNode } from "ts-simple-ast";
+import * as immer from 'immer'
+
 export interface GenerationOptions {
   path: string
 }
@@ -63,6 +66,8 @@ export async function createProject( settings:GenerationOptions) {
   const ACTIONS_PATH =  '/src/frontend/api/actions/';
   const REDUCERS_PATH =  '/src/frontend/api/reducers/';
 
+  const ng = RFs.getFile('/src/frontend/', 'ng.ts').getWriter()
+
   const enums = RFs.getFile('/src/frontend/api/common/', 'actionEnums.ts').getWriter()
   const actions = RFs.getFile('/src/frontend/api/actions/', 'actions.ts').getWriter()
   const reducers = RFs.getFile('/src/frontend/api/reducers/', 'reducers.ts').getWriter()
@@ -113,6 +118,8 @@ export async function createProject( settings:GenerationOptions) {
 
   // mapeservice classes to the properties
   project.getSourceFiles().forEach( sourceFile => {
+
+    if(path.basename(sourceFile.getFilePath()) == 'ng.ts') return;
 
     /*
     sourceFile.getVariableDeclarations().forEach( d => {
@@ -248,51 +255,141 @@ export async function createProject( settings:GenerationOptions) {
             ).length > 0
             return isReducer
           })
-          .forEach(createTaskFor)        
-
-        /*
-        actions.out('', true)
-        actions.out('// function which is related to the action... ', true)
-        actions.out(`export const fn_${actionID} = (payload:${getTypeName(secondParam.getType())}) => (dispatcher) => { `, true)
-        actions.indent(1);
-          // Call the actual function
-          actions.out('return {', true)
-          actions.indent(1)
-            actions.out('type : actionsEnums.' + actionName +',', true)
-            actions.out('payload',true)
-          actions.indent(-1);
-          actions.out('}', true)
-        actions.indent(-1);
-        actions.out('}', true)  
-        */        
-
-
-/*
-const actionMapping = {
-  [LOAD_REQUEST]: loadRequest,
-  [LOAD_SUCCESS]: loadSuccess,
-  [LOAD_SINGLE_REQUEST]: loadSingleRequest,
-  [LOAD_SINGLE_SUCCESS]: loadSingleSuccess,
-  [LOAD_NEW]: loadNewSuccess,
-  [LOAD_ERROR]: loadError,
-
-  [CREATE_REQUEST]: createRequest,
-  [CREATE_SUCCESS]: createSuccess,
-  [CREATE_ERROR]: createError,
-*/
-
+          .forEach(createTaskFor)               
 
       }
-      /*
-      export const memberRequestCompleted = (members: MemberEntity[]) => {
-        return {
-          type: actionsEnums.MEMBER_REQUEST_COMPLETED,
-          payload: members
-        }
-      }*/
     })
     sourceFile.getClasses().forEach( c=>{
-      
+      console.log(c.getName())
+      if( c.getJsDocs().filter(
+        doc =>doc.getTags().filter( tag => tag.getName() === 'simpleredux' ).length > 0
+      ).length > 0 ) {      
+        ng.raw(sourceFile.getText(), true)
+        ng.out(`import * as immer from 'immer'`, true)
+        // Create model of all the variables...
+        ng.out('export interface I' + c.getName()+ ' {', true)
+        ng.indent(1)
+          c.getProperties().forEach( p => {
+            ng.out(printNode(p.getNameNode().compilerNode)+': ' + printNode( p.getTypeNode().compilerNode ), true)
+            //ng.out('/*', true)
+            // ng.out(printNode(p.compilerNode), true)
+            // ng.out(printNode(p.getTypeNode().compilerNode), true)
+            //ng.out('*/', true)
+          })
+        ng.indent(-1)
+        ng.out('}', true)
+
+        // Create model of all the variables...
+        ng.out('class R' + c.getName()+ ' {', true)
+        ng.indent(1)
+        ng.out('private _inReducer = false', true)
+        const body = ng.fork()
+        ng.indent(-1)
+        ng.out('}', true) 
+
+        ng.out('', true)
+        ng.out(`export const ${c.getName()}Enums = {`, true)
+        ng.indent(1)
+        const ng_enums = ng.fork()
+        ng.indent(-1)
+        ng.out('}', true) 
+        ng.out('', true)
+
+
+        ng.out(`export const ${c.getName()}Reducer = (state:I${c.getName()} /* todo: init*/, action) => {`, true)
+        ng.indent(1)
+          ng.out('return immer.produce(state, draft => {', true)
+          ng.indent(1)
+            ng.out(`switch (action.type) {`, true)
+            ng.indent(1)
+            const ng_reducers = ng.fork()
+            ng.indent(-1)
+            ng.out('}', true)
+          ng.indent(-1)
+          ng.out('})', true)
+        ng.indent(-1)
+        ng.out('}', true)   
+            
+        
+
+          body.out('private _state?: I'+c.getName(), true)
+          body.out('private _dispatch?: (action:any)=>void', true)
+
+          body.out(`constructor(state?: I${c.getName()}, dispatch?:(action:any)=>void) {`, true)
+            body.indent(1)
+            body.out('this._state = state', true)
+            body.out('this._dispatch = dispatch', true)
+            body.indent(-1)
+          body.out('}', true)
+          /*c.getProperties().forEach( p => {
+            body.out('private _' + p.getName()+': ' + printNode(p.getTypeNode().compilerNode), true)
+          })
+          */
+/*
+export const ShopCartModelReducer = (state:ITestModel = {}, action) => {
+  switch (action.type) {
+    (new TestModel(state)).
+  }
+}
+*/
+          c.getProperties().forEach( p => {
+            const r_name = `${c.getName()}_${p.getName()}`
+            body.out('get ' + p.getName()+'() : ' + printNode(p.getTypeNode().compilerNode) + '{', true)
+            body.indent(1)
+            body.out('return this._state.'+p.getName(), true)
+            body.indent(-1)
+            body.out('}', true)
+            body.out('set ' + p.getName()+'(value:' + printNode(p.getTypeNode().compilerNode) + ') {', true)
+            body.indent(1)
+            body.out('if(this._state) {', true)
+              body.indent(1)
+              body.out(`this._state.${p.getName()} = value`, true)
+              body.indent(-1)
+            body.out('} else {', true)
+              body.indent(1)
+              body.out(`// dispatch change for item ${p.getName()}`, true)
+              body.out(`this._dispatch({type:'${r_name}', payload:value})`, true)
+              body.indent(-1)
+            body.out('}', true)
+            // body.out('this._'+p.getName()+' = value', true)
+            body.indent(-1)
+            body.out('}', true)
+            ng_enums.out(`${r_name} : '${r_name}',`, true)
+
+            ng_reducers.out(`case ${c.getName()}Enums.${r_name}: `, true)
+            ng_reducers.indent(1)
+            ng_reducers.out(`(new R${c.getName()}(draft)).${p.getName()} = action.payload`, true);
+            ng_reducers.out('break;', true)
+            ng_reducers.indent(-1)
+          
+            // ng_reducers
+          })
+
+          body.out('', true)
+          c.getMethods().forEach( m => {
+            if(m.isAsync()) {
+              body.out('// is task', true)
+            } else {
+              body.out('// is a reducer', true)
+              const r_name = `${c.getName()}_${m.getName()}`
+              const param_name = m.getParameters().length > 0 ? 'action.payload' : '';
+              ng_enums.out(`${r_name} : '${r_name}',`, true)              
+              ng_reducers.out(`case ${c.getName()}Enums.${r_name}: `, true)
+              ng_reducers.indent(1)
+              ng_reducers.out(`(new R${c.getName()}(draft)).${m.getName()}(${param_name})`, true);
+              ng_reducers.out('break;', true)
+              ng_reducers.indent(-1)
+
+            }
+            body.raw( printNode(m.compilerNode) , true)            
+            m.getBody().forEachChild( n => {
+              
+            })
+          })
+          
+       
+
+      }
     })  
     /*
     sourceFile.getClasses().forEach( c=>{

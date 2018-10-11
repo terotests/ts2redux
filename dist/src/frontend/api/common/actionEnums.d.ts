@@ -1,5 +1,6 @@
 export declare const actionsEnums: {
     ACTION_SHOPCARTMODEL_UPDATEITEMS: string;
+    ACTION_SHOPCARTMODEL_FN: string;
     RUNNING_FETCHALL: string;
     ERROR_FETCHALL: string;
     SUCCESS_FETCHALL: string;
@@ -11,4 +12,5 @@ export declare const actionsEnums: {
     ERROR_ANYFN: string;
     SUCCESS_ANYFN: string;
     ACTION_USERINFOMODEL_SETUSER: string;
+    ACTION_USERINFOMODEL_FN: string;
 };

@@ -10,7 +10,6 @@ export interface ShopCartItem {
   name: string
 }
 
-const CNT = 2
 /**
  * @simpleredux true
  */
@@ -19,10 +18,12 @@ class TestModel {
   cnt:number = 0
 
   add( item:ShopCartItem) {
-    this.items = [...this.items, item]
+    this.items.push(item)
+    // typical reducer would do it like...
+    // this.items = [...this.items, item]
   }
   inc() {
-    this.cnt = this.cnt + CNT
+    this.cnt++
   }
   async jee(someName:string) {
     const item = { name: someName };

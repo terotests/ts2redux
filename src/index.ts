@@ -282,7 +282,6 @@ export async function createProject( settings:GenerationOptions) {
         // Create model of all the variables...
         ng.out('class R' + c.getName()+ ' {', true)
         ng.indent(1)
-        ng.out('private _inReducer = false', true)
         const body = ng.fork()
         ng.indent(-1)
         ng.out('}', true) 
@@ -369,6 +368,7 @@ export const ShopCartModelReducer = (state:ITestModel = {}, action) => {
           c.getMethods().forEach( m => {
             if(m.isAsync()) {
               body.out('// is task', true)
+              body.raw( printNode(m.compilerNode) , true)    
             } else {
               body.out('// is a reducer', true)
               const r_name = `${c.getName()}_${m.getName()}`
@@ -379,9 +379,32 @@ export const ShopCartModelReducer = (state:ITestModel = {}, action) => {
               ng_reducers.out(`(new R${c.getName()}(draft)).${m.getName()}(${param_name})`, true);
               ng_reducers.out('break;', true)
               ng_reducers.indent(-1)
+              
+              body.raw( m.getModifiers().map( mod => printNode(mod.compilerNode) ).join(' ') )
+              body.out( m.getName() + '(' +  m.getParameters().map( mod => printNode(mod.compilerNode) ).join(', ') + ')')
+              if(m.getReturnTypeNode()) body.out( ': ' + printNode( m.getReturnTypeNode().compilerNode ) )
+              body.out( '{', true)
+                body.indent(1)
+                body.out('if(this._state) {', true)
+                  body.indent(1)
+                  m.getBody().forEachChild( ch => {
+                    body.out(printNode(ch.compilerNode), true)
+                  })
+                  body.indent(-1)
+                body.out('} else {', true)
+                  const firstParam = m.getParameters().filter( (a,i) => i<1).map( mod => mod.getName() ).join('')
+                  const fpCode = firstParam.length > 0 ? `,payload: ${firstParam} ` : '';
+                  body.indent(1)
+                  body.out(`this._dispatch({type:'${r_name}'${fpCode}})`, true)    
+                  body.indent(-1)
+                  body.out('}', true)
+                body.indent(-1)
+              body.out('}', true)
+              // body.raw( printNode(m.compilerNode) , true)    
+
 
             }
-            body.raw( printNode(m.compilerNode) , true)            
+                    
             m.getBody().forEachChild( n => {
               
             })

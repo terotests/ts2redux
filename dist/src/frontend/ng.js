@@ -64,7 +64,6 @@ var TestModel = /** @class */ (function () {
 var immer = require("immer");
 var RTestModel = /** @class */ (function () {
     function RTestModel(state, dispatch) {
-        this._inReducer = false;
         this._state = state;
         this._dispatch = dispatch;
     }
@@ -102,11 +101,21 @@ var RTestModel = /** @class */ (function () {
     });
     // is a reducer
     RTestModel.prototype.add = function (item) {
-        this.items = this.items.concat([item]);
+        if (this._state) {
+            this.items = this.items.concat([item]);
+        }
+        else {
+            this._dispatch({ type: 'TestModel_add', payload: item });
+        }
     };
     // is a reducer
     RTestModel.prototype.inc = function () {
-        this.cnt = this.cnt + CNT;
+        if (this._state) {
+            this.cnt = this.cnt + CNT;
+        }
+        else {
+            this._dispatch({ type: 'TestModel_inc' });
+        }
     };
     // is task
     RTestModel.prototype.jee = function (someName) {

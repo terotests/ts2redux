@@ -2,7 +2,6 @@ export interface ShopCartItem {
   name: string
 }
 
-const CNT = 2
 /**
  * @simpleredux true
  */
@@ -11,10 +10,12 @@ class TestModel {
   cnt:number = 0
 
   add( item:ShopCartItem) {
-    this.items = [...this.items, item]
+    this.items.push(item)
+    // typical reducer would do it like...
+    // this.items = [...this.items, item]
   }
   inc() {
-    this.cnt = this.cnt + CNT
+    this.cnt++
   }
   async jee(someName:string) {
     const item = { name: someName };
@@ -28,7 +29,6 @@ export interface ITestModel {
   cnt: number
 }
 class RTestModel {
-  private _inReducer = false
   private _state?: ITestModel
   private _dispatch?: (action:any)=>void
   constructor(state?: ITestModel, dispatch?:(action:any)=>void) {
@@ -59,12 +59,20 @@ class RTestModel {
   }
   
   // is a reducer
-  add(item: ShopCartItem) {
-      this.items = [...this.items, item];
+  add(item: ShopCartItem){
+    if(this._state) {
+      this.items.push(item);
+    } else {
+      this._dispatch({type:'TestModel_add',payload: item })
+    }
   }
   // is a reducer
-  inc() {
-      this.cnt = this.cnt + CNT;
+  inc(){
+    if(this._state) {
+      this.cnt++;
+    } else {
+      this._dispatch({type:'TestModel_inc'})
+    }
   }
   // is task
   async jee(someName: string) {

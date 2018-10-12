@@ -42,7 +42,6 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var CNT = 2;
 /**
  * @simpleredux true
  */
@@ -51,10 +50,12 @@ var TestModel = /** @class */ (function () {
         this.cnt = 0;
     }
     TestModel.prototype.add = function (item) {
-        this.items = this.items.concat([item]);
+        this.items.push(item);
+        // typical reducer would do it like...
+        // this.items = [...this.items, item]
     };
     TestModel.prototype.inc = function () {
-        this.cnt = this.cnt + CNT;
+        this.cnt++;
     };
     TestModel.prototype.jee = function (someName) {
         return __awaiter(this, void 0, void 0, function () {

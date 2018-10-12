@@ -255,7 +255,6 @@ function createProject(settings) {
                                 // Create model of all the variables...
                                 ng.out('class R' + c.getName() + ' {', true);
                                 ng.indent(1);
-                                ng.out('private _inReducer = false', true);
                                 var body_1 = ng.fork();
                                 ng.indent(-1);
                                 ng.out('}', true);
@@ -332,6 +331,7 @@ function createProject(settings) {
                                 c.getMethods().forEach(function (m) {
                                     if (m.isAsync()) {
                                         body_1.out('// is task', true);
+                                        body_1.raw(ts_simple_ast_2.printNode(m.compilerNode), true);
                                     }
                                     else {
                                         body_1.out('// is a reducer', true);
@@ -343,8 +343,29 @@ function createProject(settings) {
                                         ng_reducers_1.out("(new R" + c.getName() + "(draft))." + m.getName() + "(" + param_name + ")", true);
                                         ng_reducers_1.out('break;', true);
                                         ng_reducers_1.indent(-1);
+                                        body_1.raw(m.getModifiers().map(function (mod) { return ts_simple_ast_2.printNode(mod.compilerNode); }).join(' '));
+                                        body_1.out(m.getName() + '(' + m.getParameters().map(function (mod) { return ts_simple_ast_2.printNode(mod.compilerNode); }).join(', ') + ')');
+                                        if (m.getReturnTypeNode())
+                                            body_1.out(': ' + ts_simple_ast_2.printNode(m.getReturnTypeNode().compilerNode));
+                                        body_1.out('{', true);
+                                        body_1.indent(1);
+                                        body_1.out('if(this._state) {', true);
+                                        body_1.indent(1);
+                                        m.getBody().forEachChild(function (ch) {
+                                            body_1.out(ts_simple_ast_2.printNode(ch.compilerNode), true);
+                                        });
+                                        body_1.indent(-1);
+                                        body_1.out('} else {', true);
+                                        var firstParam = m.getParameters().filter(function (a, i) { return i < 1; }).map(function (mod) { return mod.getName(); }).join('');
+                                        var fpCode = firstParam.length > 0 ? ",payload: " + firstParam + " " : '';
+                                        body_1.indent(1);
+                                        body_1.out("this._dispatch({type:'" + r_name + "'" + fpCode + "})", true);
+                                        body_1.indent(-1);
+                                        body_1.out('}', true);
+                                        body_1.indent(-1);
+                                        body_1.out('}', true);
+                                        // body.raw( printNode(m.compilerNode) , true)    
                                     }
-                                    body_1.raw(ts_simple_ast_2.printNode(m.compilerNode), true);
                                     m.getBody().forEachChild(function (n) {
                                     });
                                 });

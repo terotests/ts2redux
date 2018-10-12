@@ -252,8 +252,22 @@ function createProject(settings) {
                                 });
                                 ng.indent(-1);
                                 ng.out('}', true);
+                                ng.out('', true);
                                 // Create model of all the variables...
-                                ng.out('class R' + c.getName() + ' {', true);
+                                ng.out('const init_' + c.getName() + ' = () => {', true);
+                                ng.indent(1);
+                                ng.out('const o = new ' + c.getName() + '();', true);
+                                ng.out('return {', true);
+                                ng.indent(1);
+                                c.getProperties().forEach(function (p) {
+                                    ng.out(p.getName() + ': o.' + p.getName() + ',', true);
+                                });
+                                ng.indent(-1);
+                                ng.out('}', true);
+                                ng.indent(-1);
+                                ng.out('}', true);
+                                // Create model of all the variables...
+                                ng.out('export class R' + c.getName() + ' {', true);
                                 ng.indent(1);
                                 var body_1 = ng.fork();
                                 ng.indent(-1);
@@ -265,7 +279,7 @@ function createProject(settings) {
                                 ng.indent(-1);
                                 ng.out('}', true);
                                 ng.out('', true);
-                                ng.out("export const " + c.getName() + "Reducer = (state:I" + c.getName() + " /* todo: init*/, action) => {", true);
+                                ng.out("export const " + c.getName() + "Reducer = (state:I" + c.getName() + " = init_" + c.getName() + "(), action) => {", true);
                                 ng.indent(1);
                                 ng.out('return immer.produce(state, draft => {', true);
                                 ng.indent(1);
@@ -280,10 +294,12 @@ function createProject(settings) {
                                 ng.out('}', true);
                                 body_1.out('private _state?: I' + c.getName(), true);
                                 body_1.out('private _dispatch?: (action:any)=>void', true);
-                                body_1.out("constructor(state?: I" + c.getName() + ", dispatch?:(action:any)=>void) {", true);
+                                body_1.out('private _getState?: ()=>any', true); // I'+c.getName(), true)
+                                body_1.out("constructor(state?: I" + c.getName() + ", dispatch?:(action:any)=>void, getState?:()=>I" + c.getName() + ") {", true);
                                 body_1.indent(1);
                                 body_1.out('this._state = state', true);
                                 body_1.out('this._dispatch = dispatch', true);
+                                body_1.out('this._getState = getState', true);
                                 body_1.indent(-1);
                                 body_1.out('}', true);
                                 /*c.getProperties().forEach( p => {
@@ -301,7 +317,16 @@ function createProject(settings) {
                                     var r_name = c.getName() + "_" + p.getName();
                                     body_1.out('get ' + p.getName() + '() : ' + ts_simple_ast_2.printNode(p.getTypeNode().compilerNode) + '{', true);
                                     body_1.indent(1);
+                                    body_1.out('if(this._getState) {', true);
+                                    body_1.indent(1);
+                                    var stateName = c.getName() + 'Reducer';
+                                    body_1.out('return this._getState().' + stateName + '.' + p.getName(), true);
+                                    body_1.indent(-1);
+                                    body_1.out('} else {', true);
+                                    body_1.indent(1);
                                     body_1.out('return this._state.' + p.getName(), true);
+                                    body_1.indent(-1);
+                                    body_1.out('}', true);
                                     body_1.indent(-1);
                                     body_1.out('}', true);
                                     body_1.out('set ' + p.getName() + '(value:' + ts_simple_ast_2.printNode(p.getTypeNode().compilerNode) + ') {', true);
@@ -332,6 +357,23 @@ function createProject(settings) {
                                     if (m.isAsync()) {
                                         body_1.out('// is task', true);
                                         body_1.raw(ts_simple_ast_2.printNode(m.compilerNode), true);
+                                        body_1.out('', true);
+                                        // static version
+                                        body_1.out('static ');
+                                        body_1.out(m.getModifiers().filter(function (mod) { return mod.getText() != 'async'; }).map(function (mod) { return ts_simple_ast_2.printNode(mod.compilerNode) + ' '; }).join(''));
+                                        body_1.out(m.getName() + '(' + m.getParameters().map(function (mod) { return ts_simple_ast_2.printNode(mod.compilerNode); }).join(', ') + ')');
+                                        if (m.getReturnTypeNode())
+                                            body_1.out(': ' + ts_simple_ast_2.printNode(m.getReturnTypeNode().compilerNode));
+                                        body_1.out('{', true);
+                                        body_1.indent(1);
+                                        body_1.out("return (dispatcher, getState) => {", true);
+                                        body_1.indent(1);
+                                        var pName = m.getParameters().filter(function (a, i) { return i < 1; }).map(function (mod) { return mod.getName(); }).join('');
+                                        body_1.out("(new R" + c.getName() + "(null, dispatcher, getState))." + m.getName() + "(" + pName + ")", true);
+                                        body_1.indent(-1);
+                                        body_1.out('}', true);
+                                        body_1.indent(-1);
+                                        body_1.out('}', true);
                                     }
                                     else {
                                         body_1.out('// is a reducer', true);
@@ -343,7 +385,7 @@ function createProject(settings) {
                                         ng_reducers_1.out("(new R" + c.getName() + "(draft))." + m.getName() + "(" + param_name + ")", true);
                                         ng_reducers_1.out('break;', true);
                                         ng_reducers_1.indent(-1);
-                                        body_1.raw(m.getModifiers().map(function (mod) { return ts_simple_ast_2.printNode(mod.compilerNode); }).join(' '));
+                                        body_1.raw(m.getModifiers().map(function (mod) { return ts_simple_ast_2.printNode(mod.compilerNode) + ' '; }).join(''));
                                         body_1.out(m.getName() + '(' + m.getParameters().map(function (mod) { return ts_simple_ast_2.printNode(mod.compilerNode); }).join(', ') + ')');
                                         if (m.getReturnTypeNode())
                                             body_1.out(': ' + ts_simple_ast_2.printNode(m.getReturnTypeNode().compilerNode));
@@ -366,6 +408,26 @@ function createProject(settings) {
                                         body_1.out('}', true);
                                         // body.raw( printNode(m.compilerNode) , true)    
                                     }
+                                    // TODO:
+                                    /*
+                                      // static member function...
+                                      static jee(someName: string) {
+                                        return () => (dispatcher, getState) => {
+                                    
+                                        }
+                                      }
+                                    */
+                                    /*
+                        export const memberRequest = () => (dispatcher) => {
+                          const promise = memberAPI.getAllMembers();
+                        
+                          promise.then(
+                            (data) => dispatcher(memberRequestCompleted(data))
+                          );
+                        
+                          return promise;
+                        }
+                                    */
                                     m.getBody().forEachChild(function (n) {
                                     });
                                 });

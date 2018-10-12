@@ -7,7 +7,7 @@
     "ts2swagger": "dist/src/cli.js"
   },
   "scripts": {
-    "build:frontend": "browserify ./dist/src/frontend/index.js -o ./public/index.js",
+    "build:frontend": "browserify ./dist/src/frontend/main.js -o ./public/index.js",
     "rmandcompile": "find ./dist/ -name \"*.d.ts\" -delete && tsc",
     "compile": "tsc",
     "test": "npm run compile && node dist/src/tssimplec src/testinput.ts && npm run build:frontend && cp src/swagger/* dist/swagger/ && node dist/src/backend/index"
@@ -32,8 +32,10 @@
     "json2yaml": "^1.1.0",
     "prettier": "^1.14.3",
     "react": "^16.5.2",
+    "react-dom": "^16.5.2",
     "react-redux": "^5.0.7",
     "redux": "^4.0.0",
+    "redux-thunk": "^2.3.0",
     "robowr": "^1.0.5",
     "swagger-ui-express": "^4.0.1",
     "ts-simple-ast": "^14.4.3",

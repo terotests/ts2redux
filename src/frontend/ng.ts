@@ -1,42 +1,87 @@
+import { setTimeout } from "timers";
+
+/**
+ * User Interface State 
+ */
+
 export interface ShopCartItem {
+  id?: number
   name: string
 }
 
+export enum TaskState {
+  UNDEFINED,
+  RUNNING,
+  ERROR,
+  SUCCESS,
+}
+
+const MSG = 'STATE IS NOW'
+const MSG2 = 'AFTER DISPATH STATE IS'
+const DELAY = 1000
 /**
  * @simpleredux true
  */
 class TestModel {
-  items:ShopCartItem[] 
-  cnt:number = 0
+  // model with initializer
+  items:ShopCartItem[] = []
+  maxId:number = 1
 
-  add( item:ShopCartItem) {
-    this.items.push(item)
-    // typical reducer would do it like...
-    // this.items = [...this.items, item]
+  shopState:TaskState = TaskState.UNDEFINED
+  // reducer
+  add( item:ShopCartItem ) {
+    console.log(this.maxId)
+    this.items.push({
+      ...item,
+      id : this.maxId++      
+    })
   }
-  inc() {
-    this.cnt++
-  }
-  async jee(someName:string) {
-    const item = { name: someName };
-    this.add(item);
+  // action
+  async createItem(someName:string) {
+    console.log(MSG, this.shopState)
+    if(this.shopState == TaskState.RUNNING) {
+      return
+    }
+    this.shopState = TaskState.RUNNING
+    await new Promise( res=> {
+      setTimeout(res, DELAY)
+    })
+    console.log(MSG2, this.shopState)
+    this.add({name:someName})
+    this.shopState = TaskState.SUCCESS
   }
 }
 
 import * as immer from 'immer'
 export interface ITestModel {
   items: ShopCartItem[]
-  cnt: number
+  maxId: number
+  shopState: TaskState
 }
-class RTestModel {
+
+const init_TestModel = () => {
+  const o = new TestModel();
+  return {
+    items: o.items,
+    maxId: o.maxId,
+    shopState: o.shopState,
+  }
+}
+export class RTestModel {
   private _state?: ITestModel
   private _dispatch?: (action:any)=>void
-  constructor(state?: ITestModel, dispatch?:(action:any)=>void) {
+  private _getState?: ()=>any
+  constructor(state?: ITestModel, dispatch?:(action:any)=>void, getState?:()=>ITestModel) {
     this._state = state
     this._dispatch = dispatch
+    this._getState = getState
   }
   get items() : ShopCartItem[]{
-    return this._state.items
+    if(this._getState) {
+      return this._getState().TestModelReducer.items
+    } else {
+      return this._state.items
+    }
   }
   set items(value:ShopCartItem[]) {
     if(this._state) {
@@ -46,62 +91,91 @@ class RTestModel {
       this._dispatch({type:'TestModel_items', payload:value})
     }
   }
-  get cnt() : number{
-    return this._state.cnt
-  }
-  set cnt(value:number) {
-    if(this._state) {
-      this._state.cnt = value
+  get maxId() : number{
+    if(this._getState) {
+      return this._getState().TestModelReducer.maxId
     } else {
-      // dispatch change for item cnt
-      this._dispatch({type:'TestModel_cnt', payload:value})
+      return this._state.maxId
+    }
+  }
+  set maxId(value:number) {
+    if(this._state) {
+      this._state.maxId = value
+    } else {
+      // dispatch change for item maxId
+      this._dispatch({type:'TestModel_maxId', payload:value})
+    }
+  }
+  get shopState() : TaskState{
+    if(this._getState) {
+      return this._getState().TestModelReducer.shopState
+    } else {
+      return this._state.shopState
+    }
+  }
+  set shopState(value:TaskState) {
+    if(this._state) {
+      this._state.shopState = value
+    } else {
+      // dispatch change for item shopState
+      this._dispatch({type:'TestModel_shopState', payload:value})
     }
   }
   
   // is a reducer
   add(item: ShopCartItem){
     if(this._state) {
-      this.items.push(item);
+      console.log(this.maxId);
+      this.items.push({
+      ...item, id: this.maxId++
+      });
     } else {
       this._dispatch({type:'TestModel_add',payload: item })
     }
   }
-  // is a reducer
-  inc(){
-    if(this._state) {
-      this.cnt++;
-    } else {
-      this._dispatch({type:'TestModel_inc'})
-    }
-  }
   // is task
-  async jee(someName: string) {
-      const item = { name: someName };
-      this.add(item);
+  async createItem(someName: string) {
+      console.log(MSG, this.shopState);
+      if (this.shopState == TaskState.RUNNING) {
+          return;
+      }
+      this.shopState = TaskState.RUNNING;
+      await new Promise(res => {
+          setTimeout(res, DELAY);
+      });
+      console.log(MSG2, this.shopState);
+      this.add({ name: someName });
+      this.shopState = TaskState.SUCCESS;
+  }
+  
+  static createItem(someName: string){
+    return (dispatcher, getState) => {
+      (new RTestModel(null, dispatcher, getState)).createItem(someName)
+    }
   }
 }
 
 export const TestModelEnums = {
   TestModel_items : 'TestModel_items',
-  TestModel_cnt : 'TestModel_cnt',
+  TestModel_maxId : 'TestModel_maxId',
+  TestModel_shopState : 'TestModel_shopState',
   TestModel_add : 'TestModel_add',
-  TestModel_inc : 'TestModel_inc',
 }
 
-export const TestModelReducer = (state:ITestModel /* todo: init*/, action) => {
+export const TestModelReducer = (state:ITestModel = init_TestModel(), action) => {
   return immer.produce(state, draft => {
     switch (action.type) {
       case TestModelEnums.TestModel_items: 
         (new RTestModel(draft)).items = action.payload
         break;
-      case TestModelEnums.TestModel_cnt: 
-        (new RTestModel(draft)).cnt = action.payload
+      case TestModelEnums.TestModel_maxId: 
+        (new RTestModel(draft)).maxId = action.payload
+        break;
+      case TestModelEnums.TestModel_shopState: 
+        (new RTestModel(draft)).shopState = action.payload
         break;
       case TestModelEnums.TestModel_add: 
         (new RTestModel(draft)).add(action.payload)
-        break;
-      case TestModelEnums.TestModel_inc: 
-        (new RTestModel(draft)).inc()
         break;
     }
   })

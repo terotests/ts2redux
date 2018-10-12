@@ -1,53 +1,28 @@
 
 import * as React from 'react';
-/*
-import {MemberTableComponent} from './components/memberTable';
-import {MemberEntity} from '../../model/member'
-*/
+import { ShopCartItem } from '../ng';
 
-/**
-* @redux model 
-*/
-export interface CustomUIState {
-  membersList: MemberEntity[];
-}
-
-export interface MemberEntity {
-  name: string
-}
-
-// simple function to manipulate the data...
-function loadMembers(input:CustomUIState) : CustomUIState {
-  return {
-    ...input,
-    membersList : [{name:'User 1'}, {name:'User 2'}]
-  }
-}
-
-
+// Component having some redux state in their props...
 export interface Props {
-  /**
-   * @from MembersModel.membersList
-   */
-  members: Array<MemberEntity>;
-  /**
-   * @to MembersModel.loadMembers
-   */  
+  taskState: number
+  members: Array<ShopCartItem>;
   loadMembers: () => any;
 }
 
 export const MemberAreaComponent = (props : Props) => {
   return (
   <div>
-      {props.members.map( m => {
-        return <div>{m.name}</div>;
-      })}
-      <br/>
       <input type="submit"
               value="load"
               className="btn btn-default"
               onClick={() => props.loadMembers()}
       />
+      <div>
+        <div>{props.taskState}</div>
+        {props.members.map( m => {
+          return <div key={m.id}>{m.name}</div>;
+        })}        
+      </div>
   </div>
   );
 }

@@ -1,11 +1,15 @@
 "use strict";
-/**
- * User Interface State
- *
- * Nice links btw.
- * https://github.com/gcanti/fp-ts/issues/251
- * https://jaysoo.ca/2017/05/10/learn-fp-with-react-part-2/
- */
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
@@ -42,28 +46,53 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+var timers_1 = require("timers");
+var TaskState;
+(function (TaskState) {
+    TaskState[TaskState["UNDEFINED"] = 0] = "UNDEFINED";
+    TaskState[TaskState["RUNNING"] = 1] = "RUNNING";
+    TaskState[TaskState["ERROR"] = 2] = "ERROR";
+    TaskState[TaskState["SUCCESS"] = 3] = "SUCCESS";
+})(TaskState = exports.TaskState || (exports.TaskState = {}));
+var MSG = 'STATE IS NOW';
+var MSG2 = 'AFTER DISPATH STATE IS';
+var DELAY = 1000;
 /**
  * @simpleredux true
  */
 var TestModel = /** @class */ (function () {
     function TestModel() {
-        this.cnt = 0;
+        // model with initializer
+        this.items = [];
+        this.maxId = 1;
+        this.shopState = TaskState.UNDEFINED;
     }
+    // reducer
     TestModel.prototype.add = function (item) {
-        this.items.push(item);
-        // typical reducer would do it like...
-        // this.items = [...this.items, item]
+        console.log(this.maxId);
+        this.items.push(__assign({}, item, { id: this.maxId++ }));
     };
-    TestModel.prototype.inc = function () {
-        this.cnt++;
-    };
-    TestModel.prototype.jee = function (someName) {
+    // action
+    TestModel.prototype.createItem = function (someName) {
         return __awaiter(this, void 0, void 0, function () {
-            var item;
             return __generator(this, function (_a) {
-                item = { name: someName };
-                this.add(item);
-                return [2 /*return*/];
+                switch (_a.label) {
+                    case 0:
+                        console.log(MSG, this.shopState);
+                        if (this.shopState == TaskState.RUNNING) {
+                            return [2 /*return*/];
+                        }
+                        this.shopState = TaskState.RUNNING;
+                        return [4 /*yield*/, new Promise(function (res) {
+                                timers_1.setTimeout(res, DELAY);
+                            })];
+                    case 1:
+                        _a.sent();
+                        console.log(MSG2, this.shopState);
+                        this.add({ name: someName });
+                        this.shopState = TaskState.SUCCESS;
+                        return [2 /*return*/];
+                }
             });
         });
     };

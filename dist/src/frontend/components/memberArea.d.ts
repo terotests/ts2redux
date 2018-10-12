@@ -1,20 +1,8 @@
-/**
-* @redux model
-*/
-export interface CustomUIState {
-    membersList: MemberEntity[];
-}
-export interface MemberEntity {
-    name: string;
-}
+/// <reference types="react" />
+import { ShopCartItem } from '../ng';
 export interface Props {
-    /**
-     * @from MembersModel.membersList
-     */
-    members: Array<MemberEntity>;
-    /**
-     * @to MembersModel.loadMembers
-     */
+    taskState: number;
+    members: Array<ShopCartItem>;
     loadMembers: () => any;
 }
-export declare const MemberAreaComponent: (props: Props) => any;
+export declare const MemberAreaComponent: (props: Props) => JSX.Element;

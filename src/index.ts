@@ -279,8 +279,23 @@ export async function createProject( settings:GenerationOptions) {
         ng.indent(-1)
         ng.out('}', true)
 
+        ng.out('', true)
         // Create model of all the variables...
-        ng.out('class R' + c.getName()+ ' {', true)
+        ng.out('const init_' + c.getName()+ ' = () => {', true)
+          ng.indent(1)
+          ng.out('const o = new '+c.getName()+'();', true);
+          ng.out('return {', true)
+            ng.indent(1)
+            c.getProperties().forEach( p => {
+              ng.out(p.getName() + ': o.' + p.getName()  + ',', true)
+            })
+            ng.indent(-1)
+          ng.out('}', true)
+          ng.indent(-1)
+        ng.out('}', true)
+
+        // Create model of all the variables...
+        ng.out('export class R' + c.getName()+ ' {', true)
         ng.indent(1)
         const body = ng.fork()
         ng.indent(-1)
@@ -295,7 +310,7 @@ export async function createProject( settings:GenerationOptions) {
         ng.out('', true)
 
 
-        ng.out(`export const ${c.getName()}Reducer = (state:I${c.getName()} /* todo: init*/, action) => {`, true)
+        ng.out(`export const ${c.getName()}Reducer = (state:I${c.getName()} = init_${c.getName()}(), action) => {`, true)
         ng.indent(1)
           ng.out('return immer.produce(state, draft => {', true)
           ng.indent(1)
@@ -313,11 +328,13 @@ export async function createProject( settings:GenerationOptions) {
 
           body.out('private _state?: I'+c.getName(), true)
           body.out('private _dispatch?: (action:any)=>void', true)
+          body.out('private _getState?: ()=>any', true); // I'+c.getName(), true)
 
-          body.out(`constructor(state?: I${c.getName()}, dispatch?:(action:any)=>void) {`, true)
+          body.out(`constructor(state?: I${c.getName()}, dispatch?:(action:any)=>void, getState?:()=>I${c.getName()}) {`, true)
             body.indent(1)
             body.out('this._state = state', true)
             body.out('this._dispatch = dispatch', true)
+            body.out('this._getState = getState', true)
             body.indent(-1)
           body.out('}', true)
           /*c.getProperties().forEach( p => {
@@ -335,7 +352,16 @@ export const ShopCartModelReducer = (state:ITestModel = {}, action) => {
             const r_name = `${c.getName()}_${p.getName()}`
             body.out('get ' + p.getName()+'() : ' + printNode(p.getTypeNode().compilerNode) + '{', true)
             body.indent(1)
-            body.out('return this._state.'+p.getName(), true)
+            body.out('if(this._getState) {', true)
+              body.indent(1)
+              const stateName = c.getName() + 'Reducer'
+              body.out('return this._getState().' + stateName +'.' + p.getName(), true)
+              body.indent(-1)
+            body.out('} else {', true) 
+              body.indent(1) 
+              body.out('return this._state.'+p.getName(), true)
+              body.indent(-1)
+            body.out('}', true)              
             body.indent(-1)
             body.out('}', true)
             body.out('set ' + p.getName()+'(value:' + printNode(p.getTypeNode().compilerNode) + ') {', true)
@@ -369,6 +395,23 @@ export const ShopCartModelReducer = (state:ITestModel = {}, action) => {
             if(m.isAsync()) {
               body.out('// is task', true)
               body.raw( printNode(m.compilerNode) , true)    
+
+              body.out('', true)
+              // static version
+              body.out('static ')
+              body.out( m.getModifiers().filter(mod => mod.getText() != 'async').map( mod => printNode(mod.compilerNode)+' ' ).join('') )
+              body.out( m.getName() + '(' +  m.getParameters().map( mod => printNode(mod.compilerNode) ).join(', ') + ')')
+              if(m.getReturnTypeNode()) body.out( ': ' + printNode( m.getReturnTypeNode().compilerNode ) )
+              body.out( '{', true)
+                body.indent(1)
+                body.out(`return (dispatcher, getState) => {`, true)
+                  body.indent(1)
+                  const pName = m.getParameters().filter( (a,i) => i<1).map( mod => mod.getName() ).join('')
+                  body.out(`(new R${c.getName()}(null, dispatcher, getState)).${m.getName()}(${pName})`, true);
+                  body.indent(-1)
+                body.out('}', true)
+                body.indent(-1)
+              body.out('}', true)
             } else {
               body.out('// is a reducer', true)
               const r_name = `${c.getName()}_${m.getName()}`
@@ -380,7 +423,7 @@ export const ShopCartModelReducer = (state:ITestModel = {}, action) => {
               ng_reducers.out('break;', true)
               ng_reducers.indent(-1)
               
-              body.raw( m.getModifiers().map( mod => printNode(mod.compilerNode) ).join(' ') )
+              body.raw( m.getModifiers().map( mod => printNode(mod.compilerNode)+' ' ).join('') )
               body.out( m.getName() + '(' +  m.getParameters().map( mod => printNode(mod.compilerNode) ).join(', ') + ')')
               if(m.getReturnTypeNode()) body.out( ': ' + printNode( m.getReturnTypeNode().compilerNode ) )
               body.out( '{', true)
@@ -401,9 +444,29 @@ export const ShopCartModelReducer = (state:ITestModel = {}, action) => {
                 body.indent(-1)
               body.out('}', true)
               // body.raw( printNode(m.compilerNode) , true)    
-
-
             }
+// TODO:
+/*
+  // static member function...
+  static jee(someName: string) {
+    return () => (dispatcher, getState) => {
+
+    }
+  }
+*/
+
+
+            /*
+export const memberRequest = () => (dispatcher) => {
+  const promise = memberAPI.getAllMembers();
+
+  promise.then(
+    (data) => dispatcher(memberRequestCompleted(data))
+  );
+
+  return promise;
+}            
+            */
                     
             m.getBody().forEachChild( n => {
               

@@ -5,9 +5,8 @@ import { createStore, applyMiddleware, compose } from 'redux';
 // import { syncHistoryWithStore } from 'react-router-redux'
 import reduxThunk from 'redux-thunk';
 import { Provider } from 'react-redux';
-import {reducers} from './redux'
-import {MembersAreaContainer} from './components/memberAreaContainer';
-
+import { reducers } from './models/reducers/'
+import { MemberArea } from './components/memberArea';
 
 let store = createStore(
   reducers,
@@ -23,7 +22,7 @@ ReactDOM.render(
   <Provider store={store}>
     <div>
       <div><b>This is the JSX area</b></div>
-      <MembersAreaContainer/>
+      <MemberArea/>
     </div>
   </Provider>,
   document.getElementById('root')

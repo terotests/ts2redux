@@ -37,12 +37,10 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var ts_simple_ast_1 = require("ts-simple-ast");
 var R = require("robowr");
-var utils_1 = require("./utils");
 var path = require("path");
-var ts_simple_ast_2 = require("ts-simple-ast");
 function createProject(settings) {
     return __awaiter(this, void 0, void 0, function () {
-        var project, RFs, webclient, services, reduxModels, ifaceHasKey, ACTIONS_PATH, REDUCERS_PATH, ng, enums, actions, reducers, actionImportFork, reducerImportFork, actionImports, reducerImports, actionEnums, writerCache, createReducerFn;
+        var project, RFs, webclient, targetFiles, syncInterfaces, modelsList, generatedFiles, dirReducers, ng, JSTags;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -50,248 +48,183 @@ function createProject(settings) {
                     project.addExistingSourceFiles([settings.path + "/**/*.ts", settings.path + "/**/*.tsx"]); // , "!**/*.d.ts"
                     RFs = new R.CodeFileSystem();
                     webclient = RFs.getFile('/src/frontend/api/', 'index.ts').getWriter();
-                    services = webclient.getState().services = {};
-                    reduxModels = {};
-                    ifaceHasKey = function (iface, name) {
-                        return iface.getProperties().filter(function (p) { return p.getName() == name; }).length > 0;
+                    targetFiles = {};
+                    syncInterfaces = [];
+                    modelsList = [];
+                    generatedFiles = [];
+                    dirReducers = {};
+                    ng = RFs.getFile('/src/frontend/', 'ng.ts').getWriter();
+                    JSTags = function (c, name) {
+                        var res = [];
+                        c.getJsDocs().forEach(function (doc) { return doc.getTags().forEach(function (tag) {
+                            if (tag.getName() === name)
+                                res.push(tag.getComment());
+                        }); });
+                        return res;
                     };
-                    // https://dsherret.github.io/ts-simple-ast/details/interfaces
                     project.getSourceFiles().forEach(function (sourceFile) {
+                        sourceFile.getClasses().forEach(function (c) {
+                            JSTags(c, 'generated').forEach(function (model) {
+                                generatedFiles.push({
+                                    name: '',
+                                    iface: c,
+                                    file: sourceFile
+                                });
+                            });
+                            JSTags(c, 'simpleredux').forEach(function (model) {
+                                modelsList.push({
+                                    name: model,
+                                    iface: c,
+                                    file: sourceFile
+                                });
+                            });
+                        });
                         sourceFile.getInterfaces().forEach(function (i) {
-                            if (i.getJsDocs().filter(function (doc) { return doc.getTags().filter(function (tag) { return tag.getName() === 'redux'; }).length > 0; }).length > 0) {
-                                reduxModels[i.getName()] = {
+                            JSTags(i, 'sync').forEach(function (model) {
+                                console.log('Syncing ', model);
+                                syncInterfaces.push({
+                                    name: model,
                                     iface: i,
-                                    file: sourceFile,
-                                    initFn: null,
-                                };
-                                // example of adding property to the interface...
-                                /*
-                                if(i.getName() == 'ShopCartModel') {
-                                  i.addProperty({ name: "helloWorld?", type: "TaskState<ShopCartItem>" })
-                                }
-                                */
-                            }
+                                    file: sourceFile
+                                });
+                            });
                         });
                     });
-                    ACTIONS_PATH = '/src/frontend/api/actions/';
-                    REDUCERS_PATH = '/src/frontend/api/reducers/';
-                    ng = RFs.getFile('/src/frontend/', 'ng.ts').getWriter();
-                    enums = RFs.getFile('/src/frontend/api/common/', 'actionEnums.ts').getWriter();
-                    actions = RFs.getFile('/src/frontend/api/actions/', 'actions.ts').getWriter();
-                    reducers = RFs.getFile('/src/frontend/api/reducers/', 'reducers.ts').getWriter();
-                    // TODO:
-                    // - the model AND the function must be imported...
-                    reducers.out("import { actionsEnums } from '../common/actionEnums'", true);
-                    actions.out("import { actionsEnums } from '../common/actionEnums'", true);
-                    actionImportFork = actions.fork();
-                    reducerImportFork = reducers.fork();
-                    actionImports = {};
-                    reducerImports = {};
-                    enums.out('export const actionsEnums = {', true);
-                    enums.indent(1);
-                    actionEnums = enums.fork();
-                    enums.indent(-1);
-                    enums.out('}', true);
-                    writerCache = {};
-                    createReducerFn = function (modelName, model) {
-                        if (writerCache[modelName])
-                            return writerCache[modelName];
-                        // Reducer for some UI state is defined like this...
-                        var initializer = model.initFn ? model.initFn.getName() + '()' : '{}';
-                        reducers.out('', true);
-                        reducers.out("export const " + modelName + "Reducer = (state:" + modelName + " = " + initializer + ", action) => {", true);
-                        reducers.indent(1);
-                        reducers.out("switch (action.type) {", true);
-                        var actionReducers = reducers.fork();
-                        var actionFn = "ACTION_" + modelName.toUpperCase() + "_FN";
-                        actionEnums.out(actionFn + " : \"" + actionFn + "\",", true);
-                        actionReducers.indent(1);
-                        actionReducers.out("case actionsEnums." + actionFn + ":", true);
-                        actionReducers.indent(1);
-                        actionReducers.out("return action.payload(state) ", true);
-                        actionReducers.indent(-1);
-                        actionReducers.indent(-1);
-                        reducers.out('}', true);
-                        reducers.out('return state', true);
-                        reducers.indent(-1);
-                        reducers.out('}', true);
-                        writerCache[modelName] = actionReducers;
-                        return actionReducers;
-                    };
                     // mapeservice classes to the properties
                     project.getSourceFiles().forEach(function (sourceFile) {
-                        if (path.basename(sourceFile.getFilePath()) == 'ng.ts')
+                        // do not process target files
+                        if (generatedFiles.filter(function (m) { return m.file.getFilePath() == sourceFile.getFilePath(); }).length > 0) {
                             return;
-                        /*
-                        sourceFile.getVariableDeclarations().forEach( d => {
-                          console.log('Variable ', d.getName())
-                          console.log( getTypeName( d.getInitializer().getType()));
-                          // console.log( getTypeName( d.getInit().getType()));
-                        })
-                        */
-                        sourceFile.getFunctions().forEach(function (f) {
-                            // console.log(f.getName())
-                            // reduxModels
-                            var returnType = utils_1.getTypePath(f.getReturnType()).pop();
-                            if (f.getParameters().length == 0) {
-                                if (reduxModels[returnType]) {
-                                    // This is initializer function
-                                    reduxModels[returnType].initFn = f;
-                                }
-                            }
-                            var secondParam = f.getParameters()[1];
-                            if (!secondParam)
-                                return;
-                            var payloadType = utils_1.getTypeName(secondParam.getType());
-                            var payloadTypePath = utils_1.getTypePath(secondParam.getType());
-                            var payloadImportType = payloadTypePath[payloadTypePath.length - 1];
-                            var isSimpleType = function (name) {
-                                return name === 'string' || name === 'number' || name === 'boolean';
-                            };
-                            if (reduxModels[returnType]) {
-                                var model_1 = reduxModels[returnType];
-                                var actionID_1 = (returnType + '_' + f.getName()).toUpperCase();
-                                var actionName = 'ACTION_' + actionID_1;
-                                actionEnums.out(actionName + " : \"" + actionName + "\",", true);
-                                var actionsPath_1 = path.normalize(__dirname.replace('dist/src', '') + ACTIONS_PATH);
-                                var reducersPath = path.normalize(__dirname.replace('dist/src', '') + REDUCERS_PATH);
-                                var modelFile = model_1.file.getFilePath();
-                                var functionFile_1 = sourceFile.getFilePath();
-                                actionImports[returnType] = path.relative(actionsPath_1, path.dirname(modelFile)) + '/' + path.basename(modelFile, '.ts');
-                                reducerImports[returnType] = path.relative(reducersPath, path.dirname(modelFile)) + '/' + path.basename(modelFile, '.ts');
-                                if (model_1.initFn) {
-                                    reducerImports[model_1.initFn.getName()] = path.relative(reducersPath, path.dirname(modelFile)) + '/' + path.basename(modelFile, '.ts');
-                                }
-                                // the function is not actually needed to be imported here
-                                reducerImports[f.getName()] = path.relative(actionsPath_1, path.dirname(functionFile_1)) + '/' + path.basename(functionFile_1, '.ts');
-                                if (!isSimpleType(payloadImportType)) {
-                                    actionImports[payloadImportType] = path.relative(actionsPath_1, path.dirname(functionFile_1)) + '/' + path.basename(functionFile_1, '.ts');
-                                }
-                                var actionReducers = createReducerFn(returnType, model_1);
-                                actionReducers.indent(1);
-                                actionReducers.out("case actionsEnums." + actionName + ":", true);
-                                actionReducers.indent(1);
-                                actionReducers.out("return " + f.getName() + "(state, action.payload) ", true);
-                                actionReducers.indent(-1);
-                                actionReducers.indent(-1);
-                                actions.out('', true);
-                                actions.out('// Action which can be dispatched ', true);
-                                actions.out("export const action_" + actionID_1 + " = (payload:" + utils_1.getTypeName(secondParam.getType()) + ") => { ", true);
-                                actions.indent(1);
-                                actions.out('return {', true);
-                                actions.indent(1);
-                                actions.out('type : actionsEnums.' + actionName + ',', true);
-                                actions.out('payload', true);
-                                actions.indent(-1);
-                                actions.out('}', true);
-                                actions.indent(-1);
-                                actions.out('}', true);
-                                // Call the function which modifies the state...
-                                var createTaskFor = function (taskFn) {
-                                    var taskName = taskFn.getName();
-                                    console.log('Found Task ', taskFn.getName());
-                                    actionImports[taskName] = path.relative(actionsPath_1, path.dirname(functionFile_1)) + '/' + path.basename(functionFile_1, '.ts');
-                                    var filteredParams = taskFn.getParameters().filter(function (p) { return p.getName() != 'dispatch'; });
-                                    var paramStr = filteredParams.map(function (p) { return p.getName() + ':' + utils_1.getTypeName(p.getType()); }).join(', ');
-                                    var params = taskFn.getParameters().map(function (p) { return p.getName(); }).join(', ');
-                                    var hasState = false;
-                                    if (ifaceHasKey(model_1.iface, taskName)) {
-                                        console.log('MODEL has key ', taskName);
-                                        var upper = taskName.toUpperCase();
-                                        actionEnums.out("RUNNING_" + upper + " : \"RUNNING_" + upper + "\",", true);
-                                        actionEnums.out("ERROR_" + upper + " : \"ERROR_" + upper + "\",", true);
-                                        actionEnums.out("SUCCESS_" + upper + " : \"SUCCESS_" + upper + "\",", true);
-                                        hasState = true;
-                                    }
-                                    actions.out('', true);
-                                    actions.out('// function which is related to the action... ', true);
-                                    actions.out("export const " + taskName + "Dispatcher = (" + paramStr + ") => async (dispatch) => { ", true);
-                                    actions.indent(1);
-                                    if (hasState) {
-                                        actions.out('try {', true);
-                                        actions.indent(1);
-                                        actions.out("dispatch({type:'RUNNONG_" + taskName.toUpperCase() + "'})", true);
-                                    }
-                                    // Call the actual function
-                                    actions.out("const value = await " + taskName + "(" + params + ")", true);
-                                    actions.out("dispatch( action_" + actionID_1 + "( value ))", true);
-                                    if (hasState) {
-                                        actions.out("dispatch({type:'SUCCESS_" + taskName.toUpperCase() + "', payload:value})", true);
-                                        actions.indent(-1);
-                                        actions.out('} catch(e) {', true);
-                                        actions.indent(1);
-                                        actions.out("dispatch({type:'ERROR_" + taskName.toUpperCase() + "', payload:e})", true);
-                                        actions.indent(-1);
-                                        actions.out('}', true);
-                                    }
-                                    actions.indent(-1);
-                                    actions.out('}', true);
-                                };
-                                var taskFn = sourceFile.getFunctions().filter(function (fn) {
-                                    // const returnV = getTypePath( fn.getReturnType() ).pop()
-                                    var isReducer = fn.getJsDocs().filter(function (doc) { return doc.getTags().filter(function (tag) { return (tag.getName() === 'taskfor') && tag.getComment() == f.getName(); }).length > 0; }).length > 0;
-                                    return isReducer;
-                                })
-                                    .forEach(createTaskFor);
-                            }
-                        });
+                        }
                         sourceFile.getClasses().forEach(function (c) {
-                            console.log(c.getName());
                             if (c.getJsDocs().filter(function (doc) { return doc.getTags().filter(function (tag) { return tag.getName() === 'simpleredux'; }).length > 0; }).length > 0) {
-                                ng.raw(sourceFile.getText(), true);
-                                ng.out("import * as immer from 'immer'", true);
-                                // Create model of all the variables...
-                                ng.out('export interface I' + c.getName() + ' {', true);
-                                ng.indent(1);
-                                c.getProperties().forEach(function (p) {
-                                    ng.out(ts_simple_ast_2.printNode(p.getNameNode().compilerNode) + ': ' + ts_simple_ast_2.printNode(p.getTypeNode().compilerNode), true);
-                                    //ng.out('/*', true)
-                                    // ng.out(printNode(p.compilerNode), true)
-                                    // ng.out(printNode(p.getTypeNode().compilerNode), true)
-                                    //ng.out('*/', true)
+                                var sourceDir = path.normalize(path.relative(process.cwd(), path.dirname(sourceFile.getFilePath())));
+                                console.log('sourceDir', sourceDir);
+                                var reducerFileName = sourceDir + '/reducers/' + c.getName() + '.ts';
+                                var ng_1 = RFs.getFile(sourceDir + '/reducers/', c.getName() + '.ts').getWriter();
+                                if (!dirReducers[sourceDir])
+                                    dirReducers[sourceDir] = [];
+                                // in the end create index.ts for each reducer
+                                dirReducers[sourceDir].push({
+                                    name: c.getName(),
+                                    writer: ng_1,
+                                    writerMainDir: sourceDir,
+                                    writerReducerDir: sourceDir + '/reducers/',
+                                    fileName: reducerFileName
                                 });
-                                ng.indent(-1);
-                                ng.out('}', true);
-                                ng.out('', true);
+                                ng_1.raw(sourceFile.getText(), true);
+                                ng_1.out("import * as immer from 'immer'", true);
+                                ng_1.out("import { connect } from 'react-redux'", true);
+                                ng_1.out("import { State } from './index'", true);
                                 // Create model of all the variables...
-                                ng.out('const init_' + c.getName() + ' = () => {', true);
-                                ng.indent(1);
-                                ng.out('const o = new ' + c.getName() + '();', true);
-                                ng.out('return {', true);
-                                ng.indent(1);
+                                ng_1.out("", true);
+                                ng_1.out("export interface ContainerPropsMethods {", true);
+                                ng_1.indent(1);
+                                var propsMethods_1 = ng_1.fork();
+                                ng_1.indent(-1);
+                                ng_1.out("}", true);
+                                ng_1.out('export interface I' + c.getName() + ' {', true);
+                                ng_1.indent(1);
                                 c.getProperties().forEach(function (p) {
-                                    ng.out(p.getName() + ': o.' + p.getName() + ',', true);
+                                    ng_1.out(p.getNameNode().print() + ': ' + p.getTypeNode().print(), true);
                                 });
-                                ng.indent(-1);
-                                ng.out('}', true);
-                                ng.indent(-1);
-                                ng.out('}', true);
+                                ng_1.indent(-1);
+                                ng_1.out('}', true);
+                                ng_1.out('', true);
+                                ng_1.out("export interface ContainerPropsState extends I" + c.getName() + " {}", true);
+                                ng_1.out("export interface Props extends I" + c.getName() + ", ContainerPropsMethods {}", true);
+                                ng_1.out('const mapStateToProps = (state : State) : ContainerPropsState => {', true);
+                                ng_1.indent(1);
+                                ng_1.out('return {', true);
+                                ng_1.indent(1);
+                                c.getProperties().forEach(function (p) {
+                                    ng_1.out(p.getName() + (": state." + c.getName() + ".") + p.getName() + ',', true);
+                                });
+                                ng_1.indent(-1);
+                                ng_1.out('}', true);
+                                ng_1.indent(-1);
+                                ng_1.out('}', true);
+                                ng_1.out('const mapDispatchToProps = (dispatch) : ContainerPropsMethods => {', true);
+                                ng_1.indent(1);
+                                ng_1.out('return {', true);
+                                ng_1.indent(1);
+                                var dispatchMethods_1 = ng_1.fork();
+                                ng_1.indent(-1);
+                                ng_1.out('}', true);
+                                ng_1.indent(-1);
+                                ng_1.out('}', true);
+                                ng_1.out("export const StateConnector = connect( mapStateToProps, mapDispatchToProps);", true);
+                                /*
+                                const mapStateToProps = (state : State) : ContainerPropsState => {
+                                  return {
+                                    taskState : state.TestModelReducer.shopState,
+                                    members: state.TestModelReducer.items
+                                  };
+                                }
+                                const mapDispatchToProps = (dispatch) : ContainerPropsMethods => {
+                                  return {
+                                    loadMembers: () => {
+                                      return dispatch(RTestModel.createItem('Jeee!!!'))
+                                    },
+                                    fillSomeFriends: () => {
+                                      return dispatch(RTestModel.fillSomeFriends())
+                                    },
+                                    createItem: (name:string) => {
+                                      return dispatch(RTestModel.createItem(name))
+                                    },
+                                    ChangeLastItem: () => {
+                                      return dispatch(RTestModel.ChangeLastItem())
+                                    },
+                                    addToCartRandom: () => {
+                                      return dispatch(RTestModel.addToCartRandom())
+                                    },
+                                    addCart: () => {
+                                      return dispatch(RTestModel.addCart())
+                                    }
+                                  };
+                                }
+                                */
+                                ng_1.out('', true);
                                 // Create model of all the variables...
-                                ng.out('export class R' + c.getName() + ' {', true);
-                                ng.indent(1);
-                                var body_1 = ng.fork();
-                                ng.indent(-1);
-                                ng.out('}', true);
-                                ng.out('', true);
-                                ng.out("export const " + c.getName() + "Enums = {", true);
-                                ng.indent(1);
-                                var ng_enums_1 = ng.fork();
-                                ng.indent(-1);
-                                ng.out('}', true);
-                                ng.out('', true);
-                                ng.out("export const " + c.getName() + "Reducer = (state:I" + c.getName() + " = init_" + c.getName() + "(), action) => {", true);
-                                ng.indent(1);
-                                ng.out('return immer.produce(state, draft => {', true);
-                                ng.indent(1);
-                                ng.out("switch (action.type) {", true);
-                                ng.indent(1);
-                                var ng_reducers_1 = ng.fork();
-                                ng.indent(-1);
-                                ng.out('}', true);
-                                ng.indent(-1);
-                                ng.out('})', true);
-                                ng.indent(-1);
-                                ng.out('}', true);
+                                ng_1.out('const init_' + c.getName() + ' = () => {', true);
+                                ng_1.indent(1);
+                                ng_1.out('const o = new ' + c.getName() + '();', true);
+                                ng_1.out('return {', true);
+                                ng_1.indent(1);
+                                c.getProperties().forEach(function (p) {
+                                    ng_1.out(p.getName() + ': o.' + p.getName() + ',', true);
+                                });
+                                ng_1.indent(-1);
+                                ng_1.out('}', true);
+                                ng_1.indent(-1);
+                                ng_1.out('}', true);
+                                // Create model of all the variables...
+                                ng_1.raw("\n/**\n * @generated true\n */", true);
+                                ng_1.out('export class R' + c.getName() + ' {', true);
+                                ng_1.indent(1);
+                                var body_1 = ng_1.fork();
+                                ng_1.indent(-1);
+                                ng_1.out('}', true);
+                                ng_1.out('', true);
+                                ng_1.out("export const " + c.getName() + "Enums = {", true);
+                                ng_1.indent(1);
+                                var ng_enums_1 = ng_1.fork();
+                                ng_1.indent(-1);
+                                ng_1.out('}', true);
+                                ng_1.out('', true);
+                                ng_1.out("export const " + c.getName() + "Reducer = (state:I" + c.getName() + " = init_" + c.getName() + "(), action) => {", true);
+                                ng_1.indent(1);
+                                ng_1.out('return immer.produce(state, draft => {', true);
+                                ng_1.indent(1);
+                                ng_1.out("switch (action.type) {", true);
+                                ng_1.indent(1);
+                                var ng_reducers_1 = ng_1.fork();
+                                ng_1.indent(-1);
+                                ng_1.out('}', true);
+                                ng_1.indent(-1);
+                                ng_1.out('})', true);
+                                ng_1.indent(-1);
+                                ng_1.out('}', true);
                                 body_1.out('private _state?: I' + c.getName(), true);
                                 body_1.out('private _dispatch?: (action:any)=>void', true);
                                 body_1.out('private _getState?: ()=>any', true); // I'+c.getName(), true)
@@ -315,11 +248,11 @@ function createProject(settings) {
                                 */
                                 c.getProperties().forEach(function (p) {
                                     var r_name = c.getName() + "_" + p.getName();
-                                    body_1.out('get ' + p.getName() + '() : ' + ts_simple_ast_2.printNode(p.getTypeNode().compilerNode) + '{', true);
+                                    body_1.out('get ' + p.getName() + '() : ' + p.getTypeNode().print() + '{', true);
                                     body_1.indent(1);
                                     body_1.out('if(this._getState) {', true);
                                     body_1.indent(1);
-                                    var stateName = c.getName() + 'Reducer';
+                                    var stateName = c.getName();
                                     body_1.out('return this._getState().' + stateName + '.' + p.getName(), true);
                                     body_1.indent(-1);
                                     body_1.out('} else {', true);
@@ -329,7 +262,7 @@ function createProject(settings) {
                                     body_1.out('}', true);
                                     body_1.indent(-1);
                                     body_1.out('}', true);
-                                    body_1.out('set ' + p.getName() + '(value:' + ts_simple_ast_2.printNode(p.getTypeNode().compilerNode) + ') {', true);
+                                    body_1.out('set ' + p.getName() + '(value:' + p.getTypeNode().print() + ') {', true);
                                     body_1.indent(1);
                                     body_1.out('if(this._state) {', true);
                                     body_1.indent(1);
@@ -354,26 +287,10 @@ function createProject(settings) {
                                 });
                                 body_1.out('', true);
                                 c.getMethods().forEach(function (m) {
+                                    var pName = m.getParameters().filter(function (a, i) { return i < 1; }).map(function (mod) { return mod.getName(); }).join('');
                                     if (m.isAsync()) {
                                         body_1.out('// is task', true);
-                                        body_1.raw(ts_simple_ast_2.printNode(m.compilerNode), true);
-                                        body_1.out('', true);
-                                        // static version
-                                        body_1.out('static ');
-                                        body_1.out(m.getModifiers().filter(function (mod) { return mod.getText() != 'async'; }).map(function (mod) { return ts_simple_ast_2.printNode(mod.compilerNode) + ' '; }).join(''));
-                                        body_1.out(m.getName() + '(' + m.getParameters().map(function (mod) { return ts_simple_ast_2.printNode(mod.compilerNode); }).join(', ') + ')');
-                                        if (m.getReturnTypeNode())
-                                            body_1.out(': ' + ts_simple_ast_2.printNode(m.getReturnTypeNode().compilerNode));
-                                        body_1.out('{', true);
-                                        body_1.indent(1);
-                                        body_1.out("return (dispatcher, getState) => {", true);
-                                        body_1.indent(1);
-                                        var pName = m.getParameters().filter(function (a, i) { return i < 1; }).map(function (mod) { return mod.getName(); }).join('');
-                                        body_1.out("(new R" + c.getName() + "(null, dispatcher, getState))." + m.getName() + "(" + pName + ")", true);
-                                        body_1.indent(-1);
-                                        body_1.out('}', true);
-                                        body_1.indent(-1);
-                                        body_1.out('}', true);
+                                        body_1.raw(m.print(), true);
                                     }
                                     else {
                                         body_1.out('// is a reducer', true);
@@ -385,16 +302,16 @@ function createProject(settings) {
                                         ng_reducers_1.out("(new R" + c.getName() + "(draft))." + m.getName() + "(" + param_name + ")", true);
                                         ng_reducers_1.out('break;', true);
                                         ng_reducers_1.indent(-1);
-                                        body_1.raw(m.getModifiers().map(function (mod) { return ts_simple_ast_2.printNode(mod.compilerNode) + ' '; }).join(''));
-                                        body_1.out(m.getName() + '(' + m.getParameters().map(function (mod) { return ts_simple_ast_2.printNode(mod.compilerNode); }).join(', ') + ')');
+                                        body_1.raw(m.getModifiers().map(function (mod) { return mod.print() + ' '; }).join(''));
+                                        body_1.out(m.getName() + '(' + m.getParameters().map(function (mod) { return mod.print(); }).join(', ') + ')');
                                         if (m.getReturnTypeNode())
-                                            body_1.out(': ' + ts_simple_ast_2.printNode(m.getReturnTypeNode().compilerNode));
+                                            body_1.out(': ' + m.getReturnTypeNode().print());
                                         body_1.out('{', true);
                                         body_1.indent(1);
                                         body_1.out('if(this._state) {', true);
                                         body_1.indent(1);
                                         m.getBody().forEachChild(function (ch) {
-                                            body_1.out(ts_simple_ast_2.printNode(ch.compilerNode), true);
+                                            body_1.out(ch.print(), true);
                                         });
                                         body_1.indent(-1);
                                         body_1.out('} else {', true);
@@ -406,72 +323,92 @@ function createProject(settings) {
                                         body_1.out('}', true);
                                         body_1.indent(-1);
                                         body_1.out('}', true);
-                                        // body.raw( printNode(m.compilerNode) , true)    
                                     }
-                                    // TODO:
-                                    /*
-                                      // static member function...
-                                      static jee(someName: string) {
-                                        return () => (dispatcher, getState) => {
-                                    
-                                        }
-                                      }
-                                    */
-                                    /*
-                        export const memberRequest = () => (dispatcher) => {
-                          const promise = memberAPI.getAllMembers();
-                        
-                          promise.then(
-                            (data) => dispatcher(memberRequestCompleted(data))
-                          );
-                        
-                          return promise;
-                        }
-                                    */
-                                    m.getBody().forEachChild(function (n) {
-                                    });
+                                    // generate the static version
+                                    body_1.out('', true);
+                                    body_1.out('static ');
+                                    body_1.out(m.getModifiers().filter(function (mod) { return mod.getText() != 'async'; }).map(function (mod) { return mod.print() + ' '; }).join(''));
+                                    body_1.out(m.getName() + '(' + m.getParameters().map(function (mod) { return mod.print(); }).join(', ') + ')');
+                                    propsMethods_1.out(m.getName() + '? : (' + m.getParameters().map(function (mod) { return mod.print(); }).join(', ') + ') => any', true);
+                                    dispatchMethods_1.out(m.getName() + ' : (' + m.getParameters().map(function (mod) { return mod.print(); }).join(', ') + ') => {', true);
+                                    dispatchMethods_1.indent(1);
+                                    dispatchMethods_1.out("return dispatch(R" + c.getName() + "." + m.getName() + "(" + pName + "))", true);
+                                    dispatchMethods_1.indent(-1);
+                                    dispatchMethods_1.out('},', true);
+                                    if (m.getReturnTypeNode())
+                                        body_1.out(': ' + m.getReturnTypeNode().print());
+                                    body_1.out('{', true);
+                                    body_1.indent(1);
+                                    body_1.out("return (dispatcher, getState) => {", true);
+                                    body_1.indent(1);
+                                    body_1.out("(new R" + c.getName() + "(null, dispatcher, getState))." + m.getName() + "(" + pName + ")", true);
+                                    body_1.indent(-1);
+                                    body_1.out('}', true);
+                                    body_1.indent(-1);
+                                    body_1.out('}', true);
+                                });
+                                // NOTE: sync is not used ATM.
+                                syncInterfaces.forEach(function (decl) {
+                                    console.log('SYNC', decl.name);
+                                    if (decl.name == c.getName()) {
+                                        console.log("Syncing " + c.getName() + " -> " + decl.iface.getName());
+                                        decl.iface.getProperties().forEach(function (p) {
+                                            console.log(' *)', p.getName());
+                                        });
+                                        c.getProperties().forEach(function (p) {
+                                            var has = decl.iface.getProperties().filter(function (ip) { return ip.getName() == p.getName(); });
+                                            if (has.length == 0) {
+                                                var imports = decl.file.getImportDeclarations();
+                                                var hadImport_1 = false;
+                                                imports.forEach(function (i) {
+                                                    // i
+                                                    console.log('NameSpace getModuleSpecifierValue', i.getModuleSpecifierValue());
+                                                    var ns = i.getNamespaceImport();
+                                                    if (ns) {
+                                                        console.log('NameSpace import', ns.getText());
+                                                        if (ns.getText() == 'TestModelModule')
+                                                            hadImport_1 = true;
+                                                    }
+                                                    var named = i.getNamedImports();
+                                                    named.forEach(function (n) {
+                                                        console.log(' - ', n.getText());
+                                                    });
+                                                });
+                                                if (!hadImport_1) {
+                                                    var n = { moduleSpecifier: 'jee' };
+                                                    decl.file.addImportDeclaration({
+                                                        namespaceImport: 'TestModelModule',
+                                                        moduleSpecifier: "../ng"
+                                                    });
+                                                }
+                                            }
+                                        });
+                                    }
                                 });
                             }
                         });
-                        /*
-                        sourceFile.getClasses().forEach( c=>{
-                          if( services[c.getName()] ) {
-                            const serviceinfo:any = services[c.getName()]
-                            ProgrammerBase.initSwagger( webclient, serviceinfo )
-                            const injectWriter = new R.CodeWriter();
-                            c.getMethods().forEach( m => {
-                              ProgrammerBase.WriteEndpoint( injectWriter, project, c, m )
-                              // if(clientWriter) ProgrammerBase.WriteClientEndpoint( clientWriter, project, c, m )
-                            })
-                            // inject declaration to some function...
-                            project.getSourceFiles().forEach( s => {
-                              s.getFunctions().forEach( f => {
-                                const info = getFunctionDoc(f)
-                                // console.log(f.getName(), info)
-                                if(info.tags.service === serviceinfo.service ) {
-                                  f.setBodyText(writer => {
-                                    writer.setIndentationLevel('  ').write(injectWriter.getCode())
-                                  })
-                                }
-                              })
-                            })
-                            // create swagger file
-                            const swaggerPath:any = serviceinfo.swagger;
-                            if( swaggerPath ) {
-                              const swagger = RFs.getFile(path.dirname(swaggerPath), path.basename(swaggerPath)).getWriter()
-                              swagger.raw( JSON.stringify( swagger.getState().swagger, null, 2 ) )
-                            }
-                          }
-                        })
-                        */
                     });
-                    Object.keys(actionImports).forEach(function (im) {
-                        var pathName = actionImports[im];
-                        actionImportFork.out("import { " + im + " } from '" + pathName + "'", true);
-                    });
-                    Object.keys(reducerImports).forEach(function (im) {
-                        var pathName = reducerImports[im];
-                        reducerImportFork.out("import { " + im + " } from '" + pathName + "'", true);
+                    Object.keys(dirReducers).forEach(function (dirName) {
+                        var list = dirReducers[dirName];
+                        var wr = RFs.getFile(dirName + '/reducers/', 'index.ts').getWriter();
+                        wr.out("import * as redux from 'redux';", true);
+                        list.forEach(function (m) {
+                            wr.out("import { " + m.name + "Reducer, I" + m.name + " } from './" + m.name + "';", true);
+                        });
+                        wr.out("export interface State {", true);
+                        wr.indent(1);
+                        list.forEach(function (m) {
+                            wr.out(m.name + ": I" + m.name, true);
+                        });
+                        wr.indent(-1);
+                        wr.out('}', true);
+                        wr.out("export const reducers = redux.combineReducers<State>({", true);
+                        wr.indent(1);
+                        list.forEach(function (m) {
+                            wr.out(m.name + ": " + m.name + "Reducer,", true);
+                        });
+                        wr.indent(-1);
+                        wr.out('})', true);
                     });
                     return [4 /*yield*/, RFs.saveTo('./', false)];
                 case 1:

@@ -14,6 +14,18 @@ export declare enum TaskState {
     ERROR = 2,
     SUCCESS = 3
 }
+export interface ContainerPropsMethods {
+    addCart?: () => any;
+    addToCart?: (adding: {
+        cartId: string;
+        item: ShopCartItem;
+    }) => any;
+    addToCartRandom?: () => any;
+    createItem?: (someName: string) => any;
+    addOneFriend?: (name: any) => any;
+    fillSomeFriends?: () => any;
+    ChangeLastItem?: () => any;
+}
 export interface ITestModel {
     items: ShopCartItem[];
     maxId: number;
@@ -23,6 +35,11 @@ export interface ITestModel {
         [key: string]: ShopCart;
     };
 }
+export interface ContainerPropsState extends ITestModel {
+}
+export interface Props extends ITestModel, ContainerPropsMethods {
+}
+export declare const StateConnector: any;
 /**
  * @generated true
  */
@@ -54,6 +71,8 @@ export declare class RTestModel {
     renameLast(newName: string): void;
     createItem(someName: string): Promise<void>;
     static createItem(someName: string): (dispatcher: any, getState: any) => void;
+    addOneFriend(name: any): Promise<void>;
+    static addOneFriend(name: any): (dispatcher: any, getState: any) => void;
     fillSomeFriends(): Promise<void>;
     static fillSomeFriends(): (dispatcher: any, getState: any) => void;
     ChangeLastItem(): Promise<void>;
@@ -69,34 +88,3 @@ export declare const TestModelEnums: {
     TestModel_renameLast: string;
 };
 export declare const TestModelReducer: (state: ITestModel, action: any) => ITestModel;
-export interface IUserState {
-    logged: boolean;
-    username: string;
-    firstName: string;
-    lastName: string;
-}
-export declare class RUserState {
-    private _state?;
-    private _dispatch?;
-    private _getState?;
-    constructor(state?: IUserState, dispatch?: (action: any) => void, getState?: () => IUserState);
-    logged: boolean;
-    username: string;
-    firstName: string;
-    lastName: string;
-    login(loginInfo: {
-        username: string;
-        password: string;
-    }): Promise<void>;
-    static login(loginInfo: {
-        username: string;
-        password: string;
-    }): (dispatcher: any, getState: any) => void;
-}
-export declare const UserStateEnums: {
-    UserState_logged: string;
-    UserState_username: string;
-    UserState_firstName: string;
-    UserState_lastName: string;
-};
-export declare const UserStateReducer: (state: IUserState, action: any) => IUserState;

@@ -57,7 +57,6 @@ var TaskState;
 var MSG = 'STATE IS NOW';
 var MSG2 = 'AFTER DISPATH STATE IS';
 var DELAY = 1000;
-var ONE = 1;
 var LAST_NAME = 'I am the last item!!!!';
 var STR_CART = 'cart';
 var STR_ITEM = 'item';
@@ -120,7 +119,7 @@ var TestModel = /** @class */ (function () {
         });
     };
     TestModel.prototype.renameLast = function (newName) {
-        this.items[this.items.length - ONE].name = newName;
+        this.items[this.items.length - 1].name = newName;
     };
     // action
     TestModel.prototype.createItem = function (someName) {
@@ -146,6 +145,14 @@ var TestModel = /** @class */ (function () {
             });
         });
     };
+    TestModel.prototype.addOneFriend = function (name) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                this.add({ name: name });
+                return [2 /*return*/];
+            });
+        });
+    };
     TestModel.prototype.fillSomeFriends = function () {
         return __awaiter(this, void 0, void 0, function () {
             var _this = this;
@@ -167,4 +174,4 @@ var TestModel = /** @class */ (function () {
     };
     return TestModel;
 }());
-//# sourceMappingURL=state2.js.map
+//# sourceMappingURL=TestModel.js.map

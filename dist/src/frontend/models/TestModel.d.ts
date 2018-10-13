@@ -6,6 +6,7 @@ export interface ShopCartItem {
     name: string;
 }
 export interface ShopCart {
+    newItemName?: string;
     items: ShopCartItem[];
 }
 export declare enum TaskState {

@@ -145,6 +145,14 @@ var TestModel = /** @class */ (function () {
             });
         });
     };
+    TestModel.prototype.addOneFriend = function (name) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                this.add({ name: name });
+                return [2 /*return*/];
+            });
+        });
+    };
     TestModel.prototype.fillSomeFriends = function () {
         return __awaiter(this, void 0, void 0, function () {
             var _this = this;
@@ -166,6 +174,43 @@ var TestModel = /** @class */ (function () {
     };
     return TestModel;
 }());
+var immer = require("immer");
+var react_redux_1 = require("react-redux");
+var mapStateToProps = function (state) {
+    return {
+        items: state.TestModel.items,
+        maxId: state.TestModel.maxId,
+        cartId: state.TestModel.cartId,
+        shopState: state.TestModel.shopState,
+        carts: state.TestModel.carts,
+    };
+};
+var mapDispatchToProps = function (dispatch) {
+    return {
+        addCart: function () {
+            return dispatch(RTestModel.addCart());
+        },
+        addToCart: function (adding) {
+            return dispatch(RTestModel.addToCart(adding));
+        },
+        addToCartRandom: function () {
+            return dispatch(RTestModel.addToCartRandom());
+        },
+        createItem: function (someName) {
+            return dispatch(RTestModel.createItem(someName));
+        },
+        addOneFriend: function (name) {
+            return dispatch(RTestModel.addOneFriend(name));
+        },
+        fillSomeFriends: function () {
+            return dispatch(RTestModel.fillSomeFriends());
+        },
+        ChangeLastItem: function () {
+            return dispatch(RTestModel.ChangeLastItem());
+        },
+    };
+};
+exports.StateConnector = react_redux_1.connect(mapStateToProps, mapDispatchToProps);
 var init_TestModel = function () {
     var o = new TestModel();
     return {
@@ -188,7 +233,7 @@ var RTestModel = /** @class */ (function () {
     Object.defineProperty(RTestModel.prototype, "items", {
         get: function () {
             if (this._getState) {
-                return this._getState().TestModelReducer.items;
+                return this._getState().TestModel.items;
             }
             else {
                 return this._state.items;
@@ -209,7 +254,7 @@ var RTestModel = /** @class */ (function () {
     Object.defineProperty(RTestModel.prototype, "maxId", {
         get: function () {
             if (this._getState) {
-                return this._getState().TestModelReducer.maxId;
+                return this._getState().TestModel.maxId;
             }
             else {
                 return this._state.maxId;
@@ -230,7 +275,7 @@ var RTestModel = /** @class */ (function () {
     Object.defineProperty(RTestModel.prototype, "cartId", {
         get: function () {
             if (this._getState) {
-                return this._getState().TestModelReducer.cartId;
+                return this._getState().TestModel.cartId;
             }
             else {
                 return this._state.cartId;
@@ -251,7 +296,7 @@ var RTestModel = /** @class */ (function () {
     Object.defineProperty(RTestModel.prototype, "shopState", {
         get: function () {
             if (this._getState) {
-                return this._getState().TestModelReducer.shopState;
+                return this._getState().TestModel.shopState;
             }
             else {
                 return this._state.shopState;
@@ -272,7 +317,7 @@ var RTestModel = /** @class */ (function () {
     Object.defineProperty(RTestModel.prototype, "carts", {
         get: function () {
             if (this._getState) {
-                return this._getState().TestModelReducer.carts;
+                return this._getState().TestModel.carts;
             }
             else {
                 return this._state.carts;
@@ -391,6 +436,20 @@ var RTestModel = /** @class */ (function () {
         };
     };
     // is task
+    RTestModel.prototype.addOneFriend = function (name) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                this.add({ name: name });
+                return [2 /*return*/];
+            });
+        });
+    };
+    RTestModel.addOneFriend = function (name) {
+        return function (dispatcher, getState) {
+            (new RTestModel(null, dispatcher, getState)).addOneFriend(name);
+        };
+    };
+    // is task
     RTestModel.prototype.fillSomeFriends = function () {
         return __awaiter(this, void 0, void 0, function () {
             var _this = this;
@@ -461,158 +520,4 @@ exports.TestModelReducer = function (state, action) {
         }
     });
 };
-var UserState = /** @class */ (function () {
-    function UserState() {
-        this.logged = false;
-    }
-    UserState.prototype.login = function (loginInfo) {
-        return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                return [2 /*return*/];
-            });
-        });
-    };
-    return UserState;
-}());
-var immer = require("immer");
-var init_UserState = function () {
-    var o = new UserState();
-    return {
-        logged: o.logged,
-        username: o.username,
-        firstName: o.firstName,
-        lastName: o.lastName,
-    };
-};
-var RUserState = /** @class */ (function () {
-    function RUserState(state, dispatch, getState) {
-        this._state = state;
-        this._dispatch = dispatch;
-        this._getState = getState;
-    }
-    Object.defineProperty(RUserState.prototype, "logged", {
-        get: function () {
-            if (this._getState) {
-                return this._getState().UserStateReducer.logged;
-            }
-            else {
-                return this._state.logged;
-            }
-        },
-        set: function (value) {
-            if (this._state) {
-                this._state.logged = value;
-            }
-            else {
-                // dispatch change for item logged
-                this._dispatch({ type: 'UserState_logged', payload: value });
-            }
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(RUserState.prototype, "username", {
-        get: function () {
-            if (this._getState) {
-                return this._getState().UserStateReducer.username;
-            }
-            else {
-                return this._state.username;
-            }
-        },
-        set: function (value) {
-            if (this._state) {
-                this._state.username = value;
-            }
-            else {
-                // dispatch change for item username
-                this._dispatch({ type: 'UserState_username', payload: value });
-            }
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(RUserState.prototype, "firstName", {
-        get: function () {
-            if (this._getState) {
-                return this._getState().UserStateReducer.firstName;
-            }
-            else {
-                return this._state.firstName;
-            }
-        },
-        set: function (value) {
-            if (this._state) {
-                this._state.firstName = value;
-            }
-            else {
-                // dispatch change for item firstName
-                this._dispatch({ type: 'UserState_firstName', payload: value });
-            }
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(RUserState.prototype, "lastName", {
-        get: function () {
-            if (this._getState) {
-                return this._getState().UserStateReducer.lastName;
-            }
-            else {
-                return this._state.lastName;
-            }
-        },
-        set: function (value) {
-            if (this._state) {
-                this._state.lastName = value;
-            }
-            else {
-                // dispatch change for item lastName
-                this._dispatch({ type: 'UserState_lastName', payload: value });
-            }
-        },
-        enumerable: true,
-        configurable: true
-    });
-    // is task
-    RUserState.prototype.login = function (loginInfo) {
-        return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                return [2 /*return*/];
-            });
-        });
-    };
-    RUserState.login = function (loginInfo) {
-        return function (dispatcher, getState) {
-            (new RUserState(null, dispatcher, getState)).login(loginInfo);
-        };
-    };
-    return RUserState;
-}());
-exports.RUserState = RUserState;
-exports.UserStateEnums = {
-    UserState_logged: 'UserState_logged',
-    UserState_username: 'UserState_username',
-    UserState_firstName: 'UserState_firstName',
-    UserState_lastName: 'UserState_lastName',
-};
-exports.UserStateReducer = function (state, action) {
-    if (state === void 0) { state = init_UserState(); }
-    return immer.produce(state, function (draft) {
-        switch (action.type) {
-            case exports.UserStateEnums.UserState_logged:
-                (new RUserState(draft)).logged = action.payload;
-                break;
-            case exports.UserStateEnums.UserState_username:
-                (new RUserState(draft)).username = action.payload;
-                break;
-            case exports.UserStateEnums.UserState_firstName:
-                (new RUserState(draft)).firstName = action.payload;
-                break;
-            case exports.UserStateEnums.UserState_lastName:
-                (new RUserState(draft)).lastName = action.payload;
-                break;
-        }
-    });
-};
-//# sourceMappingURL=ng.js.map
+//# sourceMappingURL=TestModel.js.map

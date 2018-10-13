@@ -1,8 +1,6 @@
 /// <reference types="react" />
-import { ShopCartItem } from '../ng';
-export interface Props {
-    taskState: number;
-    members: Array<ShopCartItem>;
-    loadMembers: () => any;
+import * as container from '../models/reducers/TestModel';
+export interface Props extends container.Props {
 }
-export declare const MemberAreaComponent: (props: Props) => JSX.Element;
+export declare const AbstractMemberArea: (props: Props) => JSX.Element;
+export declare const MemberArea: any;

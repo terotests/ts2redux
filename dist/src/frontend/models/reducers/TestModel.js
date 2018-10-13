@@ -55,7 +55,7 @@ var TaskState;
     TaskState[TaskState["SUCCESS"] = 3] = "SUCCESS";
 })(TaskState = exports.TaskState || (exports.TaskState = {}));
 var MSG = 'STATE IS NOW';
-var MSG2 = 'AFTER DISPATH STATE IS';
+var MSG2 = 'AFTER DISPATCH STATE IS';
 var DELAY = 1000;
 var LAST_NAME = 'I am the last item!!!!';
 var STR_CART = 'cart';
@@ -79,43 +79,61 @@ var TestModel = /** @class */ (function () {
         this.shopState = TaskState.UNDEFINED;
         // my shopping carts
         this.carts = {};
+        // message to user
+        this.userMessage = '';
     }
+    // TODO:
+    // - ERROR / warning if there are no type initializers
+    // - ERROR if there are more than 2 parameters to a reducer
+    //   => or you could generate the protocol to be used for dispatching those values
+    // - setting value of simple property could be generated
+    TestModel.prototype.setUserMessage = function (value) {
+        this.userMessage = value;
+    };
     // reducer
     TestModel.prototype.add = function (item) {
         console.log(this.maxId);
         this.items.push(__assign({}, item, { id: this.maxId++ }));
     };
-    // Adding a new shopping cart
+    TestModel.prototype.removeFirst = function () {
+        this.items.splice(0, 1);
+    };
+    TestModel.prototype.sort = function () {
+        this.items.sort(function (a, b) {
+            return a.name.localeCompare(b.name);
+        });
+    };
+    /**
+     * Creates a new shopping cart
+     */
     TestModel.prototype.addCart = function () {
         return __awaiter(this, void 0, void 0, function () {
             var key;
             return __generator(this, function (_a) {
                 key = 'cart' + (this.cartId++);
                 this.carts[key] = {
-                    items: [{ name: STR_ITEM }]
+                    items: [{ id: this.maxId++, name: STR_ITEM }]
                 };
                 return [2 /*return*/];
             });
         });
     };
+    TestModel.prototype.addCartSync = function () {
+        var key = 'cart' + (this.cartId++);
+        this.carts[key] = {
+            items: [{ id: this.maxId++, name: STR_ITEM }]
+        };
+    };
     TestModel.prototype.addToCart = function (adding) {
-        return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                this.carts[adding.cartId].items.push(adding.item);
-                return [2 /*return*/];
-            });
-        });
+        this.carts[adding.cartId].items.push(__assign({}, adding.item, { id: this.maxId++ }));
+    };
+    TestModel.prototype.setCartNewItem = function (adding) {
+        this.carts[adding.cartId].newItemName = name;
     };
     TestModel.prototype.addToCartRandom = function () {
-        return __awaiter(this, void 0, void 0, function () {
-            var _this = this;
-            return __generator(this, function (_a) {
-                Object.keys(this.carts).forEach(function (cartKey) {
-                    if (Math.random() < PROB_50)
-                        _this.addToCart({ cartId: cartKey, item: { name: STR_ITEM + _this.maxId++ } });
-                });
-                return [2 /*return*/];
-            });
+        var _this = this;
+        Object.keys(this.carts).forEach(function (cartKey) {
+            _this.addToCart({ cartId: cartKey, item: { name: STR_ITEM + _this.maxId++ } });
         });
     };
     TestModel.prototype.renameLast = function (newName) {
@@ -145,6 +163,14 @@ var TestModel = /** @class */ (function () {
             });
         });
     };
+    TestModel.prototype.addOneFriend = function (name) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                this.add({ name: name });
+                return [2 /*return*/];
+            });
+        });
+    };
     TestModel.prototype.fillSomeFriends = function () {
         return __awaiter(this, void 0, void 0, function () {
             var _this = this;
@@ -166,6 +192,65 @@ var TestModel = /** @class */ (function () {
     };
     return TestModel;
 }());
+var immer = require("immer");
+var react_redux_1 = require("react-redux");
+var mapStateToProps = function (state) {
+    return {
+        items: state.TestModel.items,
+        maxId: state.TestModel.maxId,
+        cartId: state.TestModel.cartId,
+        shopState: state.TestModel.shopState,
+        carts: state.TestModel.carts,
+        userMessage: state.TestModel.userMessage,
+    };
+};
+var mapDispatchToProps = function (dispatch) {
+    return {
+        setUserMessage: function (value) {
+            return dispatch(RTestModel.setUserMessage(value));
+        },
+        add: function (item) {
+            return dispatch(RTestModel.add(item));
+        },
+        removeFirst: function () {
+            return dispatch(RTestModel.removeFirst());
+        },
+        sort: function () {
+            return dispatch(RTestModel.sort());
+        },
+        addCart: function () {
+            return dispatch(RTestModel.addCart());
+        },
+        addCartSync: function () {
+            return dispatch(RTestModel.addCartSync());
+        },
+        addToCart: function (adding) {
+            return dispatch(RTestModel.addToCart(adding));
+        },
+        setCartNewItem: function (adding) {
+            return dispatch(RTestModel.setCartNewItem(adding));
+        },
+        addToCartRandom: function () {
+            return dispatch(RTestModel.addToCartRandom());
+        },
+        renameLast: function (newName) {
+            return dispatch(RTestModel.renameLast(newName));
+        },
+        createItem: function (someName) {
+            return dispatch(RTestModel.createItem(someName));
+        },
+        addOneFriend: function (name) {
+            return dispatch(RTestModel.addOneFriend(name));
+        },
+        fillSomeFriends: function () {
+            return dispatch(RTestModel.fillSomeFriends());
+        },
+        ChangeLastItem: function () {
+            return dispatch(RTestModel.ChangeLastItem());
+        },
+    };
+};
+exports.StateConnector = react_redux_1.connect(mapStateToProps, mapDispatchToProps);
 var init_TestModel = function () {
     var o = new TestModel();
     return {
@@ -174,6 +259,7 @@ var init_TestModel = function () {
         cartId: o.cartId,
         shopState: o.shopState,
         carts: o.carts,
+        userMessage: o.userMessage,
     };
 };
 /**
@@ -188,7 +274,7 @@ var RTestModel = /** @class */ (function () {
     Object.defineProperty(RTestModel.prototype, "items", {
         get: function () {
             if (this._getState) {
-                return this._getState().TestModelReducer.items;
+                return this._getState().TestModel.items;
             }
             else {
                 return this._state.items;
@@ -209,7 +295,7 @@ var RTestModel = /** @class */ (function () {
     Object.defineProperty(RTestModel.prototype, "maxId", {
         get: function () {
             if (this._getState) {
-                return this._getState().TestModelReducer.maxId;
+                return this._getState().TestModel.maxId;
             }
             else {
                 return this._state.maxId;
@@ -230,7 +316,7 @@ var RTestModel = /** @class */ (function () {
     Object.defineProperty(RTestModel.prototype, "cartId", {
         get: function () {
             if (this._getState) {
-                return this._getState().TestModelReducer.cartId;
+                return this._getState().TestModel.cartId;
             }
             else {
                 return this._state.cartId;
@@ -251,7 +337,7 @@ var RTestModel = /** @class */ (function () {
     Object.defineProperty(RTestModel.prototype, "shopState", {
         get: function () {
             if (this._getState) {
-                return this._getState().TestModelReducer.shopState;
+                return this._getState().TestModel.shopState;
             }
             else {
                 return this._state.shopState;
@@ -272,7 +358,7 @@ var RTestModel = /** @class */ (function () {
     Object.defineProperty(RTestModel.prototype, "carts", {
         get: function () {
             if (this._getState) {
-                return this._getState().TestModelReducer.carts;
+                return this._getState().TestModel.carts;
             }
             else {
                 return this._state.carts;
@@ -290,6 +376,41 @@ var RTestModel = /** @class */ (function () {
         enumerable: true,
         configurable: true
     });
+    Object.defineProperty(RTestModel.prototype, "userMessage", {
+        get: function () {
+            if (this._getState) {
+                return this._getState().TestModel.userMessage;
+            }
+            else {
+                return this._state.userMessage;
+            }
+        },
+        set: function (value) {
+            if (this._state) {
+                this._state.userMessage = value;
+            }
+            else {
+                // dispatch change for item userMessage
+                this._dispatch({ type: 'TestModel_userMessage', payload: value });
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
+    // is a reducer
+    RTestModel.prototype.setUserMessage = function (value) {
+        if (this._state) {
+            this.userMessage = value;
+        }
+        else {
+            this._dispatch({ type: 'TestModel_setUserMessage', payload: value });
+        }
+    };
+    RTestModel.setUserMessage = function (value) {
+        return function (dispatcher, getState) {
+            (new RTestModel(null, dispatcher, getState)).setUserMessage(value);
+        };
+    };
     // is a reducer
     RTestModel.prototype.add = function (item) {
         if (this._state) {
@@ -300,15 +421,52 @@ var RTestModel = /** @class */ (function () {
             this._dispatch({ type: 'TestModel_add', payload: item });
         }
     };
+    RTestModel.add = function (item) {
+        return function (dispatcher, getState) {
+            (new RTestModel(null, dispatcher, getState)).add(item);
+        };
+    };
+    // is a reducer
+    RTestModel.prototype.removeFirst = function () {
+        if (this._state) {
+            this.items.splice(0, 1);
+        }
+        else {
+            this._dispatch({ type: 'TestModel_removeFirst' });
+        }
+    };
+    RTestModel.removeFirst = function () {
+        return function (dispatcher, getState) {
+            (new RTestModel(null, dispatcher, getState)).removeFirst();
+        };
+    };
+    // is a reducer
+    RTestModel.prototype.sort = function () {
+        if (this._state) {
+            this.items.sort(function (a, b) {
+                return a.name.localeCompare(b.name);
+            });
+        }
+        else {
+            this._dispatch({ type: 'TestModel_sort' });
+        }
+    };
+    RTestModel.sort = function () {
+        return function (dispatcher, getState) {
+            (new RTestModel(null, dispatcher, getState)).sort();
+        };
+    };
     // is task
-    // Adding a new shopping cart
+    /**
+     * Creates a new shopping cart
+     */
     RTestModel.prototype.addCart = function () {
         return __awaiter(this, void 0, void 0, function () {
             var key;
             return __generator(this, function (_a) {
                 key = 'cart' + (this.cartId++);
                 this.carts[key] = {
-                    items: [{ name: STR_ITEM }]
+                    items: [{ id: this.maxId++, name: STR_ITEM }]
                 };
                 return [2 /*return*/];
             });
@@ -319,32 +477,62 @@ var RTestModel = /** @class */ (function () {
             (new RTestModel(null, dispatcher, getState)).addCart();
         };
     };
-    // is task
+    // is a reducer
+    RTestModel.prototype.addCartSync = function () {
+        if (this._state) {
+            var key = 'cart' + (this.cartId++);
+            this.carts[key] = {
+                items: [{ id: this.maxId++, name: STR_ITEM }]
+            };
+        }
+        else {
+            this._dispatch({ type: 'TestModel_addCartSync' });
+        }
+    };
+    RTestModel.addCartSync = function () {
+        return function (dispatcher, getState) {
+            (new RTestModel(null, dispatcher, getState)).addCartSync();
+        };
+    };
+    // is a reducer
     RTestModel.prototype.addToCart = function (adding) {
-        return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                this.carts[adding.cartId].items.push(adding.item);
-                return [2 /*return*/];
-            });
-        });
+        if (this._state) {
+            this.carts[adding.cartId].items.push(__assign({}, adding.item, { id: this.maxId++ }));
+        }
+        else {
+            this._dispatch({ type: 'TestModel_addToCart', payload: adding });
+        }
     };
     RTestModel.addToCart = function (adding) {
         return function (dispatcher, getState) {
             (new RTestModel(null, dispatcher, getState)).addToCart(adding);
         };
     };
-    // is task
+    // is a reducer
+    RTestModel.prototype.setCartNewItem = function (adding) {
+        if (this._state) {
+            this.carts[adding.cartId].newItemName = name;
+        }
+        else {
+            this._dispatch({ type: 'TestModel_setCartNewItem', payload: adding });
+        }
+    };
+    RTestModel.setCartNewItem = function (adding) {
+        return function (dispatcher, getState) {
+            (new RTestModel(null, dispatcher, getState)).setCartNewItem(adding);
+        };
+    };
+    // is a reducer
     RTestModel.prototype.addToCartRandom = function () {
-        return __awaiter(this, void 0, void 0, function () {
-            var _this = this;
-            return __generator(this, function (_a) {
-                Object.keys(this.carts).forEach(function (cartKey) {
-                    if (Math.random() < PROB_50)
-                        _this.addToCart({ cartId: cartKey, item: { name: STR_ITEM + _this.maxId++ } });
-                });
-                return [2 /*return*/];
+        var _this = this;
+        if (this._state) {
+            Object.keys(this.carts).forEach(function (cartKey) {
+                _this.addToCart({ cartId: cartKey, item: { name: STR_ITEM + _this.maxId++ } });
             });
-        });
+        }
+        else {
+            this._dispatch({ type: 'TestModel_addToCartRandom' });
+        }
     };
     RTestModel.addToCartRandom = function () {
         return function (dispatcher, getState) {
@@ -359,6 +547,11 @@ var RTestModel = /** @class */ (function () {
         else {
             this._dispatch({ type: 'TestModel_renameLast', payload: newName });
         }
+    };
+    RTestModel.renameLast = function (newName) {
+        return function (dispatcher, getState) {
+            (new RTestModel(null, dispatcher, getState)).renameLast(newName);
+        };
     };
     // is task
     // action
@@ -388,6 +581,20 @@ var RTestModel = /** @class */ (function () {
     RTestModel.createItem = function (someName) {
         return function (dispatcher, getState) {
             (new RTestModel(null, dispatcher, getState)).createItem(someName);
+        };
+    };
+    // is task
+    RTestModel.prototype.addOneFriend = function (name) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                this.add({ name: name });
+                return [2 /*return*/];
+            });
+        });
+    };
+    RTestModel.addOneFriend = function (name) {
+        return function (dispatcher, getState) {
+            (new RTestModel(null, dispatcher, getState)).addOneFriend(name);
         };
     };
     // is task
@@ -430,7 +637,15 @@ exports.TestModelEnums = {
     TestModel_cartId: 'TestModel_cartId',
     TestModel_shopState: 'TestModel_shopState',
     TestModel_carts: 'TestModel_carts',
+    TestModel_userMessage: 'TestModel_userMessage',
+    TestModel_setUserMessage: 'TestModel_setUserMessage',
     TestModel_add: 'TestModel_add',
+    TestModel_removeFirst: 'TestModel_removeFirst',
+    TestModel_sort: 'TestModel_sort',
+    TestModel_addCartSync: 'TestModel_addCartSync',
+    TestModel_addToCart: 'TestModel_addToCart',
+    TestModel_setCartNewItem: 'TestModel_setCartNewItem',
+    TestModel_addToCartRandom: 'TestModel_addToCartRandom',
     TestModel_renameLast: 'TestModel_renameLast',
 };
 exports.TestModelReducer = function (state, action) {
@@ -452,8 +667,32 @@ exports.TestModelReducer = function (state, action) {
             case exports.TestModelEnums.TestModel_carts:
                 (new RTestModel(draft)).carts = action.payload;
                 break;
+            case exports.TestModelEnums.TestModel_userMessage:
+                (new RTestModel(draft)).userMessage = action.payload;
+                break;
+            case exports.TestModelEnums.TestModel_setUserMessage:
+                (new RTestModel(draft)).setUserMessage(action.payload);
+                break;
             case exports.TestModelEnums.TestModel_add:
                 (new RTestModel(draft)).add(action.payload);
+                break;
+            case exports.TestModelEnums.TestModel_removeFirst:
+                (new RTestModel(draft)).removeFirst();
+                break;
+            case exports.TestModelEnums.TestModel_sort:
+                (new RTestModel(draft)).sort();
+                break;
+            case exports.TestModelEnums.TestModel_addCartSync:
+                (new RTestModel(draft)).addCartSync();
+                break;
+            case exports.TestModelEnums.TestModel_addToCart:
+                (new RTestModel(draft)).addToCart(action.payload);
+                break;
+            case exports.TestModelEnums.TestModel_setCartNewItem:
+                (new RTestModel(draft)).setCartNewItem(action.payload);
+                break;
+            case exports.TestModelEnums.TestModel_addToCartRandom:
+                (new RTestModel(draft)).addToCartRandom();
                 break;
             case exports.TestModelEnums.TestModel_renameLast:
                 (new RTestModel(draft)).renameLast(action.payload);
@@ -461,158 +700,4 @@ exports.TestModelReducer = function (state, action) {
         }
     });
 };
-var UserState = /** @class */ (function () {
-    function UserState() {
-        this.logged = false;
-    }
-    UserState.prototype.login = function (loginInfo) {
-        return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                return [2 /*return*/];
-            });
-        });
-    };
-    return UserState;
-}());
-var immer = require("immer");
-var init_UserState = function () {
-    var o = new UserState();
-    return {
-        logged: o.logged,
-        username: o.username,
-        firstName: o.firstName,
-        lastName: o.lastName,
-    };
-};
-var RUserState = /** @class */ (function () {
-    function RUserState(state, dispatch, getState) {
-        this._state = state;
-        this._dispatch = dispatch;
-        this._getState = getState;
-    }
-    Object.defineProperty(RUserState.prototype, "logged", {
-        get: function () {
-            if (this._getState) {
-                return this._getState().UserStateReducer.logged;
-            }
-            else {
-                return this._state.logged;
-            }
-        },
-        set: function (value) {
-            if (this._state) {
-                this._state.logged = value;
-            }
-            else {
-                // dispatch change for item logged
-                this._dispatch({ type: 'UserState_logged', payload: value });
-            }
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(RUserState.prototype, "username", {
-        get: function () {
-            if (this._getState) {
-                return this._getState().UserStateReducer.username;
-            }
-            else {
-                return this._state.username;
-            }
-        },
-        set: function (value) {
-            if (this._state) {
-                this._state.username = value;
-            }
-            else {
-                // dispatch change for item username
-                this._dispatch({ type: 'UserState_username', payload: value });
-            }
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(RUserState.prototype, "firstName", {
-        get: function () {
-            if (this._getState) {
-                return this._getState().UserStateReducer.firstName;
-            }
-            else {
-                return this._state.firstName;
-            }
-        },
-        set: function (value) {
-            if (this._state) {
-                this._state.firstName = value;
-            }
-            else {
-                // dispatch change for item firstName
-                this._dispatch({ type: 'UserState_firstName', payload: value });
-            }
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(RUserState.prototype, "lastName", {
-        get: function () {
-            if (this._getState) {
-                return this._getState().UserStateReducer.lastName;
-            }
-            else {
-                return this._state.lastName;
-            }
-        },
-        set: function (value) {
-            if (this._state) {
-                this._state.lastName = value;
-            }
-            else {
-                // dispatch change for item lastName
-                this._dispatch({ type: 'UserState_lastName', payload: value });
-            }
-        },
-        enumerable: true,
-        configurable: true
-    });
-    // is task
-    RUserState.prototype.login = function (loginInfo) {
-        return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                return [2 /*return*/];
-            });
-        });
-    };
-    RUserState.login = function (loginInfo) {
-        return function (dispatcher, getState) {
-            (new RUserState(null, dispatcher, getState)).login(loginInfo);
-        };
-    };
-    return RUserState;
-}());
-exports.RUserState = RUserState;
-exports.UserStateEnums = {
-    UserState_logged: 'UserState_logged',
-    UserState_username: 'UserState_username',
-    UserState_firstName: 'UserState_firstName',
-    UserState_lastName: 'UserState_lastName',
-};
-exports.UserStateReducer = function (state, action) {
-    if (state === void 0) { state = init_UserState(); }
-    return immer.produce(state, function (draft) {
-        switch (action.type) {
-            case exports.UserStateEnums.UserState_logged:
-                (new RUserState(draft)).logged = action.payload;
-                break;
-            case exports.UserStateEnums.UserState_username:
-                (new RUserState(draft)).username = action.payload;
-                break;
-            case exports.UserStateEnums.UserState_firstName:
-                (new RUserState(draft)).firstName = action.payload;
-                break;
-            case exports.UserStateEnums.UserState_lastName:
-                (new RUserState(draft)).lastName = action.payload;
-                break;
-        }
-    });
-};
-//# sourceMappingURL=ng.js.map
+//# sourceMappingURL=TestModel.js.map

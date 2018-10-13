@@ -10,7 +10,7 @@
     "build:frontend": "browserify ./dist/src/frontend/main.js -o ./public/index.js",
     "rmandcompile": "find ./dist/ -name \"*.d.ts\" -delete && tsc",
     "compile": "tsc",
-    "test": "npm run compile && node dist/src/tssimplec src/testinput.ts && npm run build:frontend && cp src/swagger/* dist/swagger/ && node dist/src/backend/index"
+    "test": "node dist/src/tssimplec src/testinput.ts && npm run compile && npm run build:frontend && cp src/swagger/* dist/swagger/ && node dist/src/backend/index"
   },
   "repository": {
     "type": "git",
@@ -38,7 +38,7 @@
     "redux-thunk": "^2.3.0",
     "robowr": "^1.0.5",
     "swagger-ui-express": "^4.0.1",
-    "ts-simple-ast": "^14.4.3",
+    "ts-simple-ast": "^17.0.0",
     "tsc": "^1.20150623.0",
     "typescript": "^3.1.1"
   },

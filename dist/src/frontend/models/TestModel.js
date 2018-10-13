@@ -55,9 +55,8 @@ var TaskState;
     TaskState[TaskState["SUCCESS"] = 3] = "SUCCESS";
 })(TaskState = exports.TaskState || (exports.TaskState = {}));
 var MSG = 'STATE IS NOW';
-var MSG2 = 'AFTER DISPATH STATE IS';
+var MSG2 = 'AFTER DISPATCH STATE IS';
 var DELAY = 1000;
-var ONE = 1;
 var LAST_NAME = 'I am the last item!!!!';
 var STR_CART = 'cart';
 var STR_ITEM = 'item';
@@ -80,47 +79,65 @@ var TestModel = /** @class */ (function () {
         this.shopState = TaskState.UNDEFINED;
         // my shopping carts
         this.carts = {};
+        // message to user
+        this.userMessage = '';
     }
+    // TODO:
+    // - ERROR / warning if there are no type initializers
+    // - ERROR if there are more than 2 parameters to a reducer
+    //   => or you could generate the protocol to be used for dispatching those values
+    // - setting value of simple property could be generated
+    TestModel.prototype.setUserMessage = function (value) {
+        this.userMessage = value;
+    };
     // reducer
     TestModel.prototype.add = function (item) {
         console.log(this.maxId);
         this.items.push(__assign({}, item, { id: this.maxId++ }));
     };
-    // Adding a new shopping cart
+    TestModel.prototype.removeFirst = function () {
+        this.items.splice(0, 1);
+    };
+    TestModel.prototype.sort = function () {
+        this.items.sort(function (a, b) {
+            return a.name.localeCompare(b.name);
+        });
+    };
+    /**
+     * Creates a new shopping cart
+     */
     TestModel.prototype.addCart = function () {
         return __awaiter(this, void 0, void 0, function () {
             var key;
             return __generator(this, function (_a) {
                 key = 'cart' + (this.cartId++);
                 this.carts[key] = {
-                    items: [{ name: STR_ITEM }]
+                    items: [{ id: this.maxId++, name: STR_ITEM }]
                 };
                 return [2 /*return*/];
             });
         });
     };
+    TestModel.prototype.addCartSync = function () {
+        var key = 'cart' + (this.cartId++);
+        this.carts[key] = {
+            items: [{ id: this.maxId++, name: STR_ITEM }]
+        };
+    };
     TestModel.prototype.addToCart = function (adding) {
-        return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                this.carts[adding.cartId].items.push(adding.item);
-                return [2 /*return*/];
-            });
-        });
+        this.carts[adding.cartId].items.push(__assign({}, adding.item, { id: this.maxId++ }));
+    };
+    TestModel.prototype.setCartNewItem = function (adding) {
+        this.carts[adding.cartId].newItemName = name;
     };
     TestModel.prototype.addToCartRandom = function () {
-        return __awaiter(this, void 0, void 0, function () {
-            var _this = this;
-            return __generator(this, function (_a) {
-                Object.keys(this.carts).forEach(function (cartKey) {
-                    if (Math.random() < PROB_50)
-                        _this.addToCart({ cartId: cartKey, item: { name: STR_ITEM + _this.maxId++ } });
-                });
-                return [2 /*return*/];
-            });
+        var _this = this;
+        Object.keys(this.carts).forEach(function (cartKey) {
+            _this.addToCart({ cartId: cartKey, item: { name: STR_ITEM + _this.maxId++ } });
         });
     };
     TestModel.prototype.renameLast = function (newName) {
-        this.items[this.items.length - ONE].name = newName;
+        this.items[this.items.length - 1].name = newName;
     };
     // action
     TestModel.prototype.createItem = function (someName) {
@@ -146,6 +163,14 @@ var TestModel = /** @class */ (function () {
             });
         });
     };
+    TestModel.prototype.addOneFriend = function (name) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                this.add({ name: name });
+                return [2 /*return*/];
+            });
+        });
+    };
     TestModel.prototype.fillSomeFriends = function () {
         return __awaiter(this, void 0, void 0, function () {
             var _this = this;
@@ -167,4 +192,4 @@ var TestModel = /** @class */ (function () {
     };
     return TestModel;
 }());
-//# sourceMappingURL=state2.js.map
+//# sourceMappingURL=TestModel.js.map

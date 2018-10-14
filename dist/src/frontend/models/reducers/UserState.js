@@ -38,6 +38,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var UserState = /** @class */ (function () {
     function UserState() {
         this.logged = false;
+        this.username = 'anonymous';
     }
     UserState.prototype.login = function (loginInfo) {
         return __awaiter(this, void 0, void 0, function () {
@@ -50,7 +51,7 @@ var UserState = /** @class */ (function () {
 }());
 var immer = require("immer");
 var react_redux_1 = require("react-redux");
-var mapStateToProps = function (state) {
+exports.mapStateToProps = function (state) {
     return {
         logged: state.UserState.logged,
         username: state.UserState.username,
@@ -58,14 +59,14 @@ var mapStateToProps = function (state) {
         lastName: state.UserState.lastName,
     };
 };
-var mapDispatchToProps = function (dispatch) {
+exports.mapDispatchToProps = function (dispatch) {
     return {
         login: function (loginInfo) {
             return dispatch(RUserState.login(loginInfo));
         },
     };
 };
-exports.StateConnector = react_redux_1.connect(mapStateToProps, mapDispatchToProps);
+exports.StateConnector = react_redux_1.connect(exports.mapStateToProps, exports.mapDispatchToProps);
 var init_UserState = function () {
     var o = new UserState();
     return {
@@ -99,7 +100,7 @@ var RUserState = /** @class */ (function () {
             }
             else {
                 // dispatch change for item logged
-                this._dispatch({ type: 'UserState_logged', payload: value });
+                this._dispatch({ type: exports.UserStateEnums.UserState_logged, payload: value });
             }
         },
         enumerable: true,
@@ -120,7 +121,7 @@ var RUserState = /** @class */ (function () {
             }
             else {
                 // dispatch change for item username
-                this._dispatch({ type: 'UserState_username', payload: value });
+                this._dispatch({ type: exports.UserStateEnums.UserState_username, payload: value });
             }
         },
         enumerable: true,
@@ -141,7 +142,7 @@ var RUserState = /** @class */ (function () {
             }
             else {
                 // dispatch change for item firstName
-                this._dispatch({ type: 'UserState_firstName', payload: value });
+                this._dispatch({ type: exports.UserStateEnums.UserState_firstName, payload: value });
             }
         },
         enumerable: true,
@@ -162,7 +163,7 @@ var RUserState = /** @class */ (function () {
             }
             else {
                 // dispatch change for item lastName
-                this._dispatch({ type: 'UserState_lastName', payload: value });
+                this._dispatch({ type: exports.UserStateEnums.UserState_lastName, payload: value });
             }
         },
         enumerable: true,

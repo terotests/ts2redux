@@ -194,7 +194,7 @@ var TestModel = /** @class */ (function () {
 }());
 var immer = require("immer");
 var react_redux_1 = require("react-redux");
-var mapStateToProps = function (state) {
+exports.mapStateToProps = function (state) {
     return {
         items: state.TestModel.items,
         maxId: state.TestModel.maxId,
@@ -204,7 +204,7 @@ var mapStateToProps = function (state) {
         userMessage: state.TestModel.userMessage,
     };
 };
-var mapDispatchToProps = function (dispatch) {
+exports.mapDispatchToProps = function (dispatch) {
     return {
         setUserMessage: function (value) {
             return dispatch(RTestModel.setUserMessage(value));
@@ -250,7 +250,7 @@ var mapDispatchToProps = function (dispatch) {
         },
     };
 };
-exports.StateConnector = react_redux_1.connect(mapStateToProps, mapDispatchToProps);
+exports.StateConnector = react_redux_1.connect(exports.mapStateToProps, exports.mapDispatchToProps);
 var init_TestModel = function () {
     var o = new TestModel();
     return {
@@ -286,7 +286,7 @@ var RTestModel = /** @class */ (function () {
             }
             else {
                 // dispatch change for item items
-                this._dispatch({ type: 'TestModel_items', payload: value });
+                this._dispatch({ type: exports.TestModelEnums.TestModel_items, payload: value });
             }
         },
         enumerable: true,
@@ -307,7 +307,7 @@ var RTestModel = /** @class */ (function () {
             }
             else {
                 // dispatch change for item maxId
-                this._dispatch({ type: 'TestModel_maxId', payload: value });
+                this._dispatch({ type: exports.TestModelEnums.TestModel_maxId, payload: value });
             }
         },
         enumerable: true,
@@ -328,7 +328,7 @@ var RTestModel = /** @class */ (function () {
             }
             else {
                 // dispatch change for item cartId
-                this._dispatch({ type: 'TestModel_cartId', payload: value });
+                this._dispatch({ type: exports.TestModelEnums.TestModel_cartId, payload: value });
             }
         },
         enumerable: true,
@@ -349,7 +349,7 @@ var RTestModel = /** @class */ (function () {
             }
             else {
                 // dispatch change for item shopState
-                this._dispatch({ type: 'TestModel_shopState', payload: value });
+                this._dispatch({ type: exports.TestModelEnums.TestModel_shopState, payload: value });
             }
         },
         enumerable: true,
@@ -370,7 +370,7 @@ var RTestModel = /** @class */ (function () {
             }
             else {
                 // dispatch change for item carts
-                this._dispatch({ type: 'TestModel_carts', payload: value });
+                this._dispatch({ type: exports.TestModelEnums.TestModel_carts, payload: value });
             }
         },
         enumerable: true,
@@ -391,7 +391,7 @@ var RTestModel = /** @class */ (function () {
             }
             else {
                 // dispatch change for item userMessage
-                this._dispatch({ type: 'TestModel_userMessage', payload: value });
+                this._dispatch({ type: exports.TestModelEnums.TestModel_userMessage, payload: value });
             }
         },
         enumerable: true,
@@ -403,7 +403,7 @@ var RTestModel = /** @class */ (function () {
             this.userMessage = value;
         }
         else {
-            this._dispatch({ type: 'TestModel_setUserMessage', payload: value });
+            this._dispatch({ type: exports.TestModelEnums.TestModel_setUserMessage, payload: value });
         }
     };
     RTestModel.setUserMessage = function (value) {
@@ -418,7 +418,7 @@ var RTestModel = /** @class */ (function () {
             this.items.push(__assign({}, item, { id: this.maxId++ }));
         }
         else {
-            this._dispatch({ type: 'TestModel_add', payload: item });
+            this._dispatch({ type: exports.TestModelEnums.TestModel_add, payload: item });
         }
     };
     RTestModel.add = function (item) {
@@ -432,7 +432,7 @@ var RTestModel = /** @class */ (function () {
             this.items.splice(0, 1);
         }
         else {
-            this._dispatch({ type: 'TestModel_removeFirst' });
+            this._dispatch({ type: exports.TestModelEnums.TestModel_removeFirst });
         }
     };
     RTestModel.removeFirst = function () {
@@ -448,7 +448,7 @@ var RTestModel = /** @class */ (function () {
             });
         }
         else {
-            this._dispatch({ type: 'TestModel_sort' });
+            this._dispatch({ type: exports.TestModelEnums.TestModel_sort });
         }
     };
     RTestModel.sort = function () {
@@ -486,7 +486,7 @@ var RTestModel = /** @class */ (function () {
             };
         }
         else {
-            this._dispatch({ type: 'TestModel_addCartSync' });
+            this._dispatch({ type: exports.TestModelEnums.TestModel_addCartSync });
         }
     };
     RTestModel.addCartSync = function () {
@@ -500,7 +500,7 @@ var RTestModel = /** @class */ (function () {
             this.carts[adding.cartId].items.push(__assign({}, adding.item, { id: this.maxId++ }));
         }
         else {
-            this._dispatch({ type: 'TestModel_addToCart', payload: adding });
+            this._dispatch({ type: exports.TestModelEnums.TestModel_addToCart, payload: adding });
         }
     };
     RTestModel.addToCart = function (adding) {
@@ -514,7 +514,7 @@ var RTestModel = /** @class */ (function () {
             this.carts[adding.cartId].newItemName = name;
         }
         else {
-            this._dispatch({ type: 'TestModel_setCartNewItem', payload: adding });
+            this._dispatch({ type: exports.TestModelEnums.TestModel_setCartNewItem, payload: adding });
         }
     };
     RTestModel.setCartNewItem = function (adding) {
@@ -531,7 +531,7 @@ var RTestModel = /** @class */ (function () {
             });
         }
         else {
-            this._dispatch({ type: 'TestModel_addToCartRandom' });
+            this._dispatch({ type: exports.TestModelEnums.TestModel_addToCartRandom });
         }
     };
     RTestModel.addToCartRandom = function () {
@@ -545,7 +545,7 @@ var RTestModel = /** @class */ (function () {
             this.items[this.items.length - 1].name = newName;
         }
         else {
-            this._dispatch({ type: 'TestModel_renameLast', payload: newName });
+            this._dispatch({ type: exports.TestModelEnums.TestModel_renameLast, payload: newName });
         }
     };
     RTestModel.renameLast = function (newName) {

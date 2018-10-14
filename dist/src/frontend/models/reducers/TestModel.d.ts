@@ -15,6 +15,7 @@ export declare enum TaskState {
     ERROR = 2,
     SUCCESS = 3
 }
+import { State } from './index';
 export interface ContainerPropsMethods {
     setUserMessage?: (value: string) => any;
     add?: (item: ShopCartItem) => any;
@@ -49,8 +50,10 @@ export interface ITestModel {
 }
 export interface ContainerPropsState extends ITestModel {
 }
-export interface Props extends ITestModel, ContainerPropsMethods {
+export interface Props extends ContainerPropsState, ContainerPropsMethods {
 }
+export declare const mapStateToProps: (state: State) => ContainerPropsState;
+export declare const mapDispatchToProps: (dispatch: any) => ContainerPropsMethods;
 export declare const StateConnector: any;
 /**
  * @generated true

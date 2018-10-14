@@ -1,7 +1,7 @@
 class UserState {
 
   logged:boolean = false
-  username: string
+  username: string = 'anonymous'
   firstName: string
   lastName: string
 
@@ -28,8 +28,8 @@ export interface IUserState {
 }
 
 export interface ContainerPropsState extends IUserState {}
-export interface Props extends IUserState, ContainerPropsMethods {}
-const mapStateToProps = (state : State) : ContainerPropsState => {
+export interface Props extends ContainerPropsState, ContainerPropsMethods {}
+export const mapStateToProps = (state : State) : ContainerPropsState => {
   return {
     logged: state.UserState.logged,
     username: state.UserState.username,
@@ -37,7 +37,7 @@ const mapStateToProps = (state : State) : ContainerPropsState => {
     lastName: state.UserState.lastName,
   }
 }
-const mapDispatchToProps = (dispatch) : ContainerPropsMethods => {
+export const mapDispatchToProps = (dispatch) : ContainerPropsMethods => {
   return {
     login : (loginInfo: {
     username: string;
@@ -83,7 +83,7 @@ export class RUserState {
       this._state.logged = value
     } else {
       // dispatch change for item logged
-      this._dispatch({type:'UserState_logged', payload:value})
+      this._dispatch({type:UserStateEnums.UserState_logged, payload:value})
     }
   }
   get username() : string{
@@ -98,7 +98,7 @@ export class RUserState {
       this._state.username = value
     } else {
       // dispatch change for item username
-      this._dispatch({type:'UserState_username', payload:value})
+      this._dispatch({type:UserStateEnums.UserState_username, payload:value})
     }
   }
   get firstName() : string{
@@ -113,7 +113,7 @@ export class RUserState {
       this._state.firstName = value
     } else {
       // dispatch change for item firstName
-      this._dispatch({type:'UserState_firstName', payload:value})
+      this._dispatch({type:UserStateEnums.UserState_firstName, payload:value})
     }
   }
   get lastName() : string{
@@ -128,7 +128,7 @@ export class RUserState {
       this._state.lastName = value
     } else {
       // dispatch change for item lastName
-      this._dispatch({type:'UserState_lastName', payload:value})
+      this._dispatch({type:UserStateEnums.UserState_lastName, payload:value})
     }
   }
   

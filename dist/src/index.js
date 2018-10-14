@@ -132,8 +132,8 @@ function createProject(settings) {
                                 ng_1.out('}', true);
                                 ng_1.out('', true);
                                 ng_1.out("export interface ContainerPropsState extends I" + c.getName() + " {}", true);
-                                ng_1.out("export interface Props extends I" + c.getName() + ", ContainerPropsMethods {}", true);
-                                ng_1.out('const mapStateToProps = (state : State) : ContainerPropsState => {', true);
+                                ng_1.out("export interface Props extends ContainerPropsState, ContainerPropsMethods {}", true);
+                                ng_1.out('export const mapStateToProps = (state : State) : ContainerPropsState => {', true);
                                 ng_1.indent(1);
                                 ng_1.out('return {', true);
                                 ng_1.indent(1);
@@ -144,7 +144,7 @@ function createProject(settings) {
                                 ng_1.out('}', true);
                                 ng_1.indent(-1);
                                 ng_1.out('}', true);
-                                ng_1.out('const mapDispatchToProps = (dispatch) : ContainerPropsMethods => {', true);
+                                ng_1.out('export const mapDispatchToProps = (dispatch) : ContainerPropsMethods => {', true);
                                 ng_1.indent(1);
                                 ng_1.out('return {', true);
                                 ng_1.indent(1);
@@ -271,7 +271,7 @@ function createProject(settings) {
                                     body_1.out('} else {', true);
                                     body_1.indent(1);
                                     body_1.out("// dispatch change for item " + p.getName(), true);
-                                    body_1.out("this._dispatch({type:'" + r_name + "', payload:value})", true);
+                                    body_1.out("this._dispatch({type:" + c.getName() + "Enums." + r_name + ", payload:value})", true);
                                     body_1.indent(-1);
                                     body_1.out('}', true);
                                     // body.out('this._'+p.getName()+' = value', true)
@@ -287,6 +287,9 @@ function createProject(settings) {
                                 });
                                 body_1.out('', true);
                                 c.getMethods().forEach(function (m) {
+                                    if (m.getParameters().length > 1) {
+                                        throw "Error at " + sourceFile.getFilePath() + " in class " + c.getName() + " method " + m.getName() + " can not have more than 2 parameters at the moment";
+                                    }
                                     var pName = m.getParameters().filter(function (a, i) { return i < 1; }).map(function (mod) { return mod.getName(); }).join('');
                                     if (m.isAsync()) {
                                         body_1.out('// is task', true);
@@ -318,7 +321,7 @@ function createProject(settings) {
                                         var firstParam = m.getParameters().filter(function (a, i) { return i < 1; }).map(function (mod) { return mod.getName(); }).join('');
                                         var fpCode = firstParam.length > 0 ? ",payload: " + firstParam + " " : '';
                                         body_1.indent(1);
-                                        body_1.out("this._dispatch({type:'" + r_name + "'" + fpCode + "})", true);
+                                        body_1.out("this._dispatch({type:" + c.getName() + "Enums." + r_name + fpCode + "})", true);
                                         body_1.indent(-1);
                                         body_1.out('}', true);
                                         body_1.indent(-1);

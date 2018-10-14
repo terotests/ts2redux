@@ -10,13 +10,12 @@ export const AbstractTodoList = (props : Props) => {
   return (
   <div>
       <div>TodoList Component</div>
-      <input type="submit"
-              value="load"
-              className="btn btn-default"
-              onClick={() => props.getItems()}
-      />
+      <button onClick={() => props.getItems()}>Load</button>
+      <button onClick={() => props.sortByTitle()}>Sort by Title</button>
+      <button onClick={() => props.sortByCompletion()}>Sort by Completion</button>
       <div>
         <div>{props.state}</div>
+        <div>{props.state === 'ERROR' ? (new String(props.stateError)) : ''}</div>
         <table><tbody>{props.items.map( m => {
           return <tr key={m.id}>
             <td>{m.id}</td>

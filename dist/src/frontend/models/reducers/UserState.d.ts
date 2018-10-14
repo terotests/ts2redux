@@ -1,3 +1,4 @@
+import { State } from './index';
 export interface ContainerPropsMethods {
     login?: (loginInfo: {
         username: string;
@@ -12,8 +13,10 @@ export interface IUserState {
 }
 export interface ContainerPropsState extends IUserState {
 }
-export interface Props extends IUserState, ContainerPropsMethods {
+export interface Props extends ContainerPropsState, ContainerPropsMethods {
 }
+export declare const mapStateToProps: (state: State) => ContainerPropsState;
+export declare const mapDispatchToProps: (dispatch: any) => ContainerPropsMethods;
 export declare const StateConnector: any;
 /**
  * @generated true

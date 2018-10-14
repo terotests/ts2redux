@@ -6,9 +6,12 @@ var container = require("../models/reducers/TodoList");
 exports.AbstractTodoList = function (props) {
     return (React.createElement("div", null,
         React.createElement("div", null, "TodoList Component"),
-        React.createElement("input", { type: "submit", value: "load", className: "btn btn-default", onClick: function () { return props.getItems(); } }),
+        React.createElement("button", { onClick: function () { return props.getItems(); } }, "Load"),
+        React.createElement("button", { onClick: function () { return props.sortByTitle(); } }, "Sort by Title"),
+        React.createElement("button", { onClick: function () { return props.sortByCompletion(); } }, "Sort by Completion"),
         React.createElement("div", null,
             React.createElement("div", null, props.state),
+            React.createElement("div", null, props.state === 'ERROR' ? (new String(props.stateError)) : ''),
             React.createElement("table", null,
                 React.createElement("tbody", null, props.items.map(function (m) {
                     return React.createElement("tr", { key: m.id },

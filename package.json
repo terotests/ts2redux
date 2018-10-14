@@ -38,7 +38,7 @@
     "redux-thunk": "^2.3.0",
     "robowr": "^1.0.5",
     "swagger-ui-express": "^4.0.1",
-    "ts-simple-ast": "^17.0.0",
+    "ts-simple-ast": "^17.0.1",
     "tsc": "^1.20150623.0",
     "typescript": "^3.1.1"
   },

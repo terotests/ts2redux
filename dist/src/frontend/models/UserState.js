@@ -39,6 +39,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 var UserState = /** @class */ (function () {
     function UserState() {
         this.logged = false;
+        this.username = 'anonymous';
     }
     UserState.prototype.login = function (loginInfo) {
         return __awaiter(this, void 0, void 0, function () {

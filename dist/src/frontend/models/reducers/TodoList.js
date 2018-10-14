@@ -44,6 +44,16 @@ var TodoList = /** @class */ (function () {
         this.items = [];
         this.state = 'UNDEFINED';
     }
+    TodoList.prototype.clearTodoList = function () {
+        this.items = [];
+    };
+    TodoList.prototype.sortByTitle = function () {
+        this.items.sort(function (a, b) { return a.title.localeCompare(b.title); });
+    };
+    TodoList.prototype.sortByCompletion = function () {
+        var toNumber = function (value) { return value ? 1 : 0; };
+        this.items.sort(function (a, b) { return toNumber(a.completed) - toNumber(b.completed); });
+    };
     TodoList.prototype.getItems = function () {
         return __awaiter(this, void 0, void 0, function () {
             var _a, e_1;
@@ -64,10 +74,8 @@ var TodoList = /** @class */ (function () {
                         return [3 /*break*/, 4];
                     case 3:
                         e_1 = _b.sent();
-                        this.state = {
-                            type: 'ERROR',
-                            error: e_1
-                        };
+                        this.state = 'ERROR';
+                        this.stateError = e_1;
                         return [3 /*break*/, 4];
                     case 4: return [2 /*return*/];
                 }
@@ -78,25 +86,36 @@ var TodoList = /** @class */ (function () {
 }());
 var immer = require("immer");
 var react_redux_1 = require("react-redux");
-var mapStateToProps = function (state) {
+exports.mapStateToProps = function (state) {
     return {
         items: state.TodoList.items,
         state: state.TodoList.state,
+        stateError: state.TodoList.stateError,
     };
 };
-var mapDispatchToProps = function (dispatch) {
+exports.mapDispatchToProps = function (dispatch) {
     return {
+        clearTodoList: function () {
+            return dispatch(RTodoList.clearTodoList());
+        },
+        sortByTitle: function () {
+            return dispatch(RTodoList.sortByTitle());
+        },
+        sortByCompletion: function () {
+            return dispatch(RTodoList.sortByCompletion());
+        },
         getItems: function () {
             return dispatch(RTodoList.getItems());
         },
     };
 };
-exports.StateConnector = react_redux_1.connect(mapStateToProps, mapDispatchToProps);
+exports.StateConnector = react_redux_1.connect(exports.mapStateToProps, exports.mapDispatchToProps);
 var init_TodoList = function () {
     var o = new TodoList();
     return {
         items: o.items,
         state: o.state,
+        stateError: o.stateError,
     };
 };
 /**
@@ -123,7 +142,7 @@ var RTodoList = /** @class */ (function () {
             }
             else {
                 // dispatch change for item items
-                this._dispatch({ type: 'TodoList_items', payload: value });
+                this._dispatch({ type: exports.TodoListEnums.TodoList_items, payload: value });
             }
         },
         enumerable: true,
@@ -144,12 +163,76 @@ var RTodoList = /** @class */ (function () {
             }
             else {
                 // dispatch change for item state
-                this._dispatch({ type: 'TodoList_state', payload: value });
+                this._dispatch({ type: exports.TodoListEnums.TodoList_state, payload: value });
             }
         },
         enumerable: true,
         configurable: true
     });
+    Object.defineProperty(RTodoList.prototype, "stateError", {
+        get: function () {
+            if (this._getState) {
+                return this._getState().TodoList.stateError;
+            }
+            else {
+                return this._state.stateError;
+            }
+        },
+        set: function (value) {
+            if (this._state) {
+                this._state.stateError = value;
+            }
+            else {
+                // dispatch change for item stateError
+                this._dispatch({ type: exports.TodoListEnums.TodoList_stateError, payload: value });
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
+    // is a reducer
+    RTodoList.prototype.clearTodoList = function () {
+        if (this._state) {
+            this.items = [];
+        }
+        else {
+            this._dispatch({ type: exports.TodoListEnums.TodoList_clearTodoList });
+        }
+    };
+    RTodoList.clearTodoList = function () {
+        return function (dispatcher, getState) {
+            (new RTodoList(null, dispatcher, getState)).clearTodoList();
+        };
+    };
+    // is a reducer
+    RTodoList.prototype.sortByTitle = function () {
+        if (this._state) {
+            this.items.sort(function (a, b) { return a.title.localeCompare(b.title); });
+        }
+        else {
+            this._dispatch({ type: exports.TodoListEnums.TodoList_sortByTitle });
+        }
+    };
+    RTodoList.sortByTitle = function () {
+        return function (dispatcher, getState) {
+            (new RTodoList(null, dispatcher, getState)).sortByTitle();
+        };
+    };
+    // is a reducer
+    RTodoList.prototype.sortByCompletion = function () {
+        if (this._state) {
+            var toNumber_1 = function (value) { return value ? 1 : 0; };
+            this.items.sort(function (a, b) { return toNumber_1(a.completed) - toNumber_1(b.completed); });
+        }
+        else {
+            this._dispatch({ type: exports.TodoListEnums.TodoList_sortByCompletion });
+        }
+    };
+    RTodoList.sortByCompletion = function () {
+        return function (dispatcher, getState) {
+            (new RTodoList(null, dispatcher, getState)).sortByCompletion();
+        };
+    };
     // is task
     RTodoList.prototype.getItems = function () {
         return __awaiter(this, void 0, void 0, function () {
@@ -171,10 +254,8 @@ var RTodoList = /** @class */ (function () {
                         return [3 /*break*/, 4];
                     case 3:
                         e_2 = _b.sent();
-                        this.state = {
-                            type: 'ERROR',
-                            error: e_2
-                        };
+                        this.state = 'ERROR';
+                        this.stateError = e_2;
                         return [3 /*break*/, 4];
                     case 4: return [2 /*return*/];
                 }
@@ -192,6 +273,10 @@ exports.RTodoList = RTodoList;
 exports.TodoListEnums = {
     TodoList_items: 'TodoList_items',
     TodoList_state: 'TodoList_state',
+    TodoList_stateError: 'TodoList_stateError',
+    TodoList_clearTodoList: 'TodoList_clearTodoList',
+    TodoList_sortByTitle: 'TodoList_sortByTitle',
+    TodoList_sortByCompletion: 'TodoList_sortByCompletion',
 };
 exports.TodoListReducer = function (state, action) {
     if (state === void 0) { state = init_TodoList(); }
@@ -202,6 +287,18 @@ exports.TodoListReducer = function (state, action) {
                 break;
             case exports.TodoListEnums.TodoList_state:
                 (new RTodoList(draft)).state = action.payload;
+                break;
+            case exports.TodoListEnums.TodoList_stateError:
+                (new RTodoList(draft)).stateError = action.payload;
+                break;
+            case exports.TodoListEnums.TodoList_clearTodoList:
+                (new RTodoList(draft)).clearTodoList();
+                break;
+            case exports.TodoListEnums.TodoList_sortByTitle:
+                (new RTodoList(draft)).sortByTitle();
+                break;
+            case exports.TodoListEnums.TodoList_sortByCompletion:
+                (new RTodoList(draft)).sortByCompletion();
                 break;
         }
     });

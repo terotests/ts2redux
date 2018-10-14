@@ -154,9 +154,9 @@ export async function createProject( settings:GenerationOptions) {
 
         ng.out('', true)
         ng.out(`export interface ContainerPropsState extends I${c.getName()} {}`, true);
-        ng.out(`export interface Props extends I${c.getName()}, ContainerPropsMethods {}`, true);
+        ng.out(`export interface Props extends ContainerPropsState, ContainerPropsMethods {}`, true);
 
-        ng.out('const mapStateToProps = (state : State) : ContainerPropsState => {', true)
+        ng.out('export const mapStateToProps = (state : State) : ContainerPropsState => {', true)
           ng.indent(1)
           ng.out('return {', true)
             ng.indent(1)
@@ -168,7 +168,7 @@ export async function createProject( settings:GenerationOptions) {
           ng.indent(-1)
         ng.out('}', true)
 
-        ng.out('const mapDispatchToProps = (dispatch) : ContainerPropsMethods => {', true)
+        ng.out('export const mapDispatchToProps = (dispatch) : ContainerPropsMethods => {', true)
           ng.indent(1)
           ng.out('return {', true)
             ng.indent(1)
@@ -311,7 +311,7 @@ export const ShopCartModelReducer = (state:ITestModel = {}, action) => {
             body.out('} else {', true)
               body.indent(1)
               body.out(`// dispatch change for item ${p.getName()}`, true)
-              body.out(`this._dispatch({type:'${r_name}', payload:value})`, true)
+              body.out(`this._dispatch({type:${c.getName()}Enums.${r_name}, payload:value})`, true)
               body.indent(-1)
             body.out('}', true)
             // body.out('this._'+p.getName()+' = value', true)
@@ -330,6 +330,9 @@ export const ShopCartModelReducer = (state:ITestModel = {}, action) => {
 
           body.out('', true)
           c.getMethods().forEach( m => {
+            if(m.getParameters().length > 1) {
+              throw `Error at ${sourceFile.getFilePath()} in class ${c.getName()} method ${m.getName()} can not have more than 2 parameters at the moment`
+            }
             const pName = m.getParameters().filter( (a,i) => i<1).map( mod => mod.getName() ).join('')
             if(m.isAsync()) {
               body.out('// is task', true)
@@ -360,7 +363,7 @@ export const ShopCartModelReducer = (state:ITestModel = {}, action) => {
                   const firstParam = m.getParameters().filter( (a,i) => i<1).map( mod => mod.getName() ).join('')
                   const fpCode = firstParam.length > 0 ? `,payload: ${firstParam} ` : '';
                   body.indent(1)
-                  body.out(`this._dispatch({type:'${r_name}'${fpCode}})`, true)    
+                  body.out(`this._dispatch({type:${c.getName()}Enums.${r_name}${fpCode}})`, true)    
                   body.indent(-1)
                   body.out('}', true)
                 body.indent(-1)

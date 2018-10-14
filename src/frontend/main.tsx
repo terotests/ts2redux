@@ -8,6 +8,7 @@ import { Provider } from 'react-redux';
 import { reducers } from './models/reducers/'
 import { MemberArea } from './components/memberArea';
 import { TodoList } from './components/todoList';
+import { CombinedStates } from './components/combinedState';
 
 let store = createStore(
   reducers,
@@ -24,6 +25,7 @@ ReactDOM.render(
     <div>
       <div><b>This is the JSX area</b></div>
       <MemberArea/>
+      <CombinedStates/>
       <TodoList/>
     </div>
   </Provider>,

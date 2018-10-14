@@ -44,6 +44,16 @@ var TodoList = /** @class */ (function () {
         this.items = [];
         this.state = 'UNDEFINED';
     }
+    TodoList.prototype.clearTodoList = function () {
+        this.items = [];
+    };
+    TodoList.prototype.sortByTitle = function () {
+        this.items.sort(function (a, b) { return a.title.localeCompare(b.title); });
+    };
+    TodoList.prototype.sortByCompletion = function () {
+        var toNumber = function (value) { return value ? 1 : 0; };
+        this.items.sort(function (a, b) { return toNumber(a.completed) - toNumber(b.completed); });
+    };
     TodoList.prototype.getItems = function () {
         return __awaiter(this, void 0, void 0, function () {
             var _a, e_1;
@@ -64,10 +74,8 @@ var TodoList = /** @class */ (function () {
                         return [3 /*break*/, 4];
                     case 3:
                         e_1 = _b.sent();
-                        this.state = {
-                            type: 'ERROR',
-                            error: e_1
-                        };
+                        this.state = 'ERROR';
+                        this.stateError = e_1;
                         return [3 /*break*/, 4];
                     case 4: return [2 /*return*/];
                 }

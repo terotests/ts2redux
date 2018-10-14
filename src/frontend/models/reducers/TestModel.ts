@@ -189,8 +189,8 @@ export interface ITestModel {
 }
 
 export interface ContainerPropsState extends ITestModel {}
-export interface Props extends ITestModel, ContainerPropsMethods {}
-const mapStateToProps = (state : State) : ContainerPropsState => {
+export interface Props extends ContainerPropsState, ContainerPropsMethods {}
+export const mapStateToProps = (state : State) : ContainerPropsState => {
   return {
     items: state.TestModel.items,
     maxId: state.TestModel.maxId,
@@ -200,7 +200,7 @@ const mapStateToProps = (state : State) : ContainerPropsState => {
     userMessage: state.TestModel.userMessage,
   }
 }
-const mapDispatchToProps = (dispatch) : ContainerPropsMethods => {
+export const mapDispatchToProps = (dispatch) : ContainerPropsMethods => {
   return {
     setUserMessage : (value: string) => {
       return dispatch(RTestModel.setUserMessage(value))
@@ -290,7 +290,7 @@ export class RTestModel {
       this._state.items = value
     } else {
       // dispatch change for item items
-      this._dispatch({type:'TestModel_items', payload:value})
+      this._dispatch({type:TestModelEnums.TestModel_items, payload:value})
     }
   }
   get maxId() : number{
@@ -305,7 +305,7 @@ export class RTestModel {
       this._state.maxId = value
     } else {
       // dispatch change for item maxId
-      this._dispatch({type:'TestModel_maxId', payload:value})
+      this._dispatch({type:TestModelEnums.TestModel_maxId, payload:value})
     }
   }
   get cartId() : number{
@@ -320,7 +320,7 @@ export class RTestModel {
       this._state.cartId = value
     } else {
       // dispatch change for item cartId
-      this._dispatch({type:'TestModel_cartId', payload:value})
+      this._dispatch({type:TestModelEnums.TestModel_cartId, payload:value})
     }
   }
   get shopState() : TaskState{
@@ -335,7 +335,7 @@ export class RTestModel {
       this._state.shopState = value
     } else {
       // dispatch change for item shopState
-      this._dispatch({type:'TestModel_shopState', payload:value})
+      this._dispatch({type:TestModelEnums.TestModel_shopState, payload:value})
     }
   }
   get carts() : {
@@ -354,7 +354,7 @@ export class RTestModel {
       this._state.carts = value
     } else {
       // dispatch change for item carts
-      this._dispatch({type:'TestModel_carts', payload:value})
+      this._dispatch({type:TestModelEnums.TestModel_carts, payload:value})
     }
   }
   get userMessage() : string{
@@ -369,7 +369,7 @@ export class RTestModel {
       this._state.userMessage = value
     } else {
       // dispatch change for item userMessage
-      this._dispatch({type:'TestModel_userMessage', payload:value})
+      this._dispatch({type:TestModelEnums.TestModel_userMessage, payload:value})
     }
   }
   
@@ -378,7 +378,7 @@ export class RTestModel {
     if(this._state) {
       this.userMessage = value;
     } else {
-      this._dispatch({type:'TestModel_setUserMessage',payload: value })
+      this._dispatch({type:TestModelEnums.TestModel_setUserMessage,payload: value })
     }
   }
   
@@ -396,7 +396,7 @@ export class RTestModel {
       id: this.maxId++
       });
     } else {
-      this._dispatch({type:'TestModel_add',payload: item })
+      this._dispatch({type:TestModelEnums.TestModel_add,payload: item })
     }
   }
   
@@ -410,7 +410,7 @@ export class RTestModel {
     if(this._state) {
       this.items.splice(0, 1);
     } else {
-      this._dispatch({type:'TestModel_removeFirst'})
+      this._dispatch({type:TestModelEnums.TestModel_removeFirst})
     }
   }
   
@@ -426,7 +426,7 @@ export class RTestModel {
       return a.name.localeCompare(b.name);
       });
     } else {
-      this._dispatch({type:'TestModel_sort'})
+      this._dispatch({type:TestModelEnums.TestModel_sort})
     }
   }
   
@@ -459,7 +459,7 @@ export class RTestModel {
       items: [{ id: this.maxId++, name: STR_ITEM }]
       };
     } else {
-      this._dispatch({type:'TestModel_addCartSync'})
+      this._dispatch({type:TestModelEnums.TestModel_addCartSync})
     }
   }
   
@@ -479,7 +479,7 @@ export class RTestModel {
       id: this.maxId++
       });
     } else {
-      this._dispatch({type:'TestModel_addToCart',payload: adding })
+      this._dispatch({type:TestModelEnums.TestModel_addToCart,payload: adding })
     }
   }
   
@@ -499,7 +499,7 @@ export class RTestModel {
     if(this._state) {
       this.carts[adding.cartId].newItemName = name;
     } else {
-      this._dispatch({type:'TestModel_setCartNewItem',payload: adding })
+      this._dispatch({type:TestModelEnums.TestModel_setCartNewItem,payload: adding })
     }
   }
   
@@ -518,7 +518,7 @@ export class RTestModel {
       this.addToCart({ cartId: cartKey, item: { name: STR_ITEM + this.maxId++ } });
       });
     } else {
-      this._dispatch({type:'TestModel_addToCartRandom'})
+      this._dispatch({type:TestModelEnums.TestModel_addToCartRandom})
     }
   }
   
@@ -532,7 +532,7 @@ export class RTestModel {
     if(this._state) {
       this.items[this.items.length - 1].name = newName;
     } else {
-      this._dispatch({type:'TestModel_renameLast',payload: newName })
+      this._dispatch({type:TestModelEnums.TestModel_renameLast,payload: newName })
     }
   }
   

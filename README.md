@@ -57,10 +57,10 @@ run `ts2redux <directory>` for the directory of yours models. Subdirectory `redu
 import * as React from 'react';
 import * as container from '../models/reducers/TodoList'
 
-// 1) Important: extend the container.Properties and add more props if needed
+// 1) Extend the container.Properties and add more props if needed
 export interface Props extends container.Props {}
 
-// 2) Create a re-suzable abstract component first
+// 2) Create a reusable abstract component first
 export const AbstractTodoList = (props : Props) => {
   return (
   <div>

@@ -1,7 +1,7 @@
 
 # TypeScript to Redux
 
-Tries to simplify creating the Redux state into 3 simple steps:
+Tries to simplify creating the Redux state into 3 simple steps (with some substeps):
 
 1. Create a model
 2. Compile the model to reducers
@@ -12,6 +12,7 @@ Tries to simplify creating the Redux state into 3 simple steps:
 ```typescript
 import axios from 'axios'
 
+// 1) Define some shape for the model
 export interface TodoListItem {
   userId: number
   id: number
@@ -23,10 +24,11 @@ export interface TodoListItem {
  * @simpleredux true
  */
 class TodoList {
-  // 1) It is important to define both type and initializer
+
+  // 2) define model types with initializers
   items: TodoListItem[] = []
-  // 2) This function will be transformed to action / dispacth / reducer and can be used from the
-  //    implemented component
+  
+  // 3) define some functions to be used with data
   async getItems() {
     this.items = (await axios.get('https://jsonplaceholder.typicode.com/todos')).data
   }
@@ -70,7 +72,7 @@ export const AbstractTodoList = (props : Props) => {
   );
 }
 
-// 4) Connect the Redux model and create a concrete implementation
+// 3) Connect the Redux model and create a concrete implementation
 export const TodoList = container.StateConnector( AbstractTodoList )
 ```
 

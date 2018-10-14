@@ -4,9 +4,10 @@ import {createProject} from './index'
 
 const args = process.argv.slice(2);
 if( args.length === 0 ) {
-  console.log('ts2swagger <directory>')
+  console.log('ts2redux <directory>')
   process.exit()
 }
+
 createProject({
   path: args[0]
 })

@@ -7,6 +7,7 @@ import reduxThunk from 'redux-thunk';
 import { Provider } from 'react-redux';
 import { reducers } from './models/reducers/'
 import { MemberArea } from './components/memberArea';
+import { TodoList } from './components/todoList';
 
 let store = createStore(
   reducers,
@@ -23,6 +24,7 @@ ReactDOM.render(
     <div>
       <div><b>This is the JSX area</b></div>
       <MemberArea/>
+      <TodoList/>
     </div>
   </Provider>,
   document.getElementById('root')

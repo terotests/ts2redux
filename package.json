@@ -4,7 +4,7 @@
   "description": "Convert TypeScript classes into Reducers",
   "main": "dist/src/index.js",
   "bin": {
-    "ts2swagger": "dist/src/cli.js"
+    "ts2redux": "dist/src/cli.js"
   },
   "scripts": {
     "build:frontend": "browserify ./dist/src/frontend/main.js -o ./public/index.js",

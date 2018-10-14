@@ -19,6 +19,7 @@ export interface TodoListItem {
   title: string
   completed: boolean
 }
+export type TaskState = 'UNDEFINED' | 'RUNNING' |  'LOADED' | { type:'ERROR', error:any }
 
 /**
  * @simpleredux true
@@ -27,10 +28,21 @@ class TodoList {
 
   // 2) define model types with initializers
   items: TodoListItem[] = []
-  
+  state: TaskState = 'UNDEFINED'
+
   // 3) define some functions to be used with data
   async getItems() {
-    this.items = (await axios.get('https://jsonplaceholder.typicode.com/todos')).data
+    if(this.state === 'RUNNING') return
+    try {
+      this.state = 'RUNNING'
+      this.items = (await axios.get('https://jsonplaceholder.typicode.com/todos')).data
+      this.state = 'LOADED'
+    } catch(e) {
+      this.state = {
+        type: 'ERROR',
+        error: e
+      }
+    }
   }
 }
 ```

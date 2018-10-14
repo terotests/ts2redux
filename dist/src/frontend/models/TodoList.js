@@ -42,18 +42,34 @@ var axios_1 = require("axios");
 var TodoList = /** @class */ (function () {
     function TodoList() {
         this.items = [];
+        this.state = 'UNDEFINED';
     }
     TodoList.prototype.getItems = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var _a;
+            var _a, e_1;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
+                        if (this.state === 'RUNNING')
+                            return [2 /*return*/];
+                        _b.label = 1;
+                    case 1:
+                        _b.trys.push([1, 3, , 4]);
+                        this.state = 'RUNNING';
                         _a = this;
                         return [4 /*yield*/, axios_1.default.get('https://jsonplaceholder.typicode.com/todos')];
-                    case 1:
+                    case 2:
                         _a.items = (_b.sent()).data;
-                        return [2 /*return*/];
+                        this.state = 'LOADED';
+                        return [3 /*break*/, 4];
+                    case 3:
+                        e_1 = _b.sent();
+                        this.state = {
+                            type: 'ERROR',
+                            error: e_1
+                        };
+                        return [3 /*break*/, 4];
+                    case 4: return [2 /*return*/];
                 }
             });
         });

@@ -7,13 +7,25 @@ export interface TodoListItem {
   completed: boolean
 }
 
+type TaskState = 'UNDEFINED' | 'RUNNING' |  'LOADED' | { type:'ERROR', error:any }
 /**
  * @simpleredux true
  */
 class TodoList {
   items: TodoListItem[] = []
+  state: TaskState = 'UNDEFINED'
   async getItems() {
-    this.items = (await axios.get('https://jsonplaceholder.typicode.com/todos')).data
+    if(this.state === 'RUNNING') return
+    try {
+      this.state = 'RUNNING'
+      this.items = (await axios.get('https://jsonplaceholder.typicode.com/todos')).data
+      this.state = 'LOADED'
+    } catch(e) {
+      this.state = {
+        type: 'ERROR',
+        error: e
+      }
+    }
   }
 }
 
@@ -26,6 +38,7 @@ export interface ContainerPropsMethods {
 }
 export interface ITodoList {
   items: TodoListItem[]
+  state: TaskState
 }
 
 export interface ContainerPropsState extends ITodoList {}
@@ -33,6 +46,7 @@ export interface Props extends ITodoList, ContainerPropsMethods {}
 const mapStateToProps = (state : State) : ContainerPropsState => {
   return {
     items: state.TodoList.items,
+    state: state.TodoList.state,
   }
 }
 const mapDispatchToProps = (dispatch) : ContainerPropsMethods => {
@@ -48,6 +62,7 @@ const init_TodoList = () => {
   const o = new TodoList();
   return {
     items: o.items,
+    state: o.state,
   }
 }
 
@@ -78,10 +93,37 @@ export class RTodoList {
       this._dispatch({type:'TodoList_items', payload:value})
     }
   }
+  get state() : TaskState{
+    if(this._getState) {
+      return this._getState().TodoList.state
+    } else {
+      return this._state.state
+    }
+  }
+  set state(value:TaskState) {
+    if(this._state) {
+      this._state.state = value
+    } else {
+      // dispatch change for item state
+      this._dispatch({type:'TodoList_state', payload:value})
+    }
+  }
   
   // is task
   async getItems() {
-      this.items = (await axios.get('https://jsonplaceholder.typicode.com/todos')).data;
+      if (this.state === 'RUNNING')
+          return;
+      try {
+          this.state = 'RUNNING';
+          this.items = (await axios.get('https://jsonplaceholder.typicode.com/todos')).data;
+          this.state = 'LOADED';
+      }
+      catch (e) {
+          this.state = {
+              type: 'ERROR',
+              error: e
+          };
+      }
   }
   
   static getItems(){
@@ -93,6 +135,7 @@ export class RTodoList {
 
 export const TodoListEnums = {
   TodoList_items : 'TodoList_items',
+  TodoList_state : 'TodoList_state',
 }
 
 export const TodoListReducer = (state:ITodoList = init_TodoList(), action) => {
@@ -100,6 +143,9 @@ export const TodoListReducer = (state:ITodoList = init_TodoList(), action) => {
     switch (action.type) {
       case TodoListEnums.TodoList_items: 
         (new RTodoList(draft)).items = action.payload
+        break;
+      case TodoListEnums.TodoList_state: 
+        (new RTodoList(draft)).state = action.payload
         break;
     }
   })

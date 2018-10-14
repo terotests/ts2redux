@@ -840,18 +840,34 @@ var axios_1 = require("axios");
 var TodoList = /** @class */ (function () {
     function TodoList() {
         this.items = [];
+        this.state = 'UNDEFINED';
     }
     TodoList.prototype.getItems = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var _a;
+            var _a, e_1;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
+                        if (this.state === 'RUNNING')
+                            return [2 /*return*/];
+                        _b.label = 1;
+                    case 1:
+                        _b.trys.push([1, 3, , 4]);
+                        this.state = 'RUNNING';
                         _a = this;
                         return [4 /*yield*/, axios_1.default.get('https://jsonplaceholder.typicode.com/todos')];
-                    case 1:
+                    case 2:
                         _a.items = (_b.sent()).data;
-                        return [2 /*return*/];
+                        this.state = 'LOADED';
+                        return [3 /*break*/, 4];
+                    case 3:
+                        e_1 = _b.sent();
+                        this.state = {
+                            type: 'ERROR',
+                            error: e_1
+                        };
+                        return [3 /*break*/, 4];
+                    case 4: return [2 /*return*/];
                 }
             });
         });
@@ -863,6 +879,7 @@ var react_redux_1 = require("react-redux");
 var mapStateToProps = function (state) {
     return {
         items: state.TodoList.items,
+        state: state.TodoList.state,
     };
 };
 var mapDispatchToProps = function (dispatch) {
@@ -877,6 +894,7 @@ var init_TodoList = function () {
     var o = new TodoList();
     return {
         items: o.items,
+        state: o.state,
     };
 };
 /**
@@ -909,18 +927,54 @@ var RTodoList = /** @class */ (function () {
         enumerable: true,
         configurable: true
     });
+    Object.defineProperty(RTodoList.prototype, "state", {
+        get: function () {
+            if (this._getState) {
+                return this._getState().TodoList.state;
+            }
+            else {
+                return this._state.state;
+            }
+        },
+        set: function (value) {
+            if (this._state) {
+                this._state.state = value;
+            }
+            else {
+                // dispatch change for item state
+                this._dispatch({ type: 'TodoList_state', payload: value });
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
     // is task
     RTodoList.prototype.getItems = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var _a;
+            var _a, e_2;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
+                        if (this.state === 'RUNNING')
+                            return [2 /*return*/];
+                        _b.label = 1;
+                    case 1:
+                        _b.trys.push([1, 3, , 4]);
+                        this.state = 'RUNNING';
                         _a = this;
                         return [4 /*yield*/, axios_1.default.get('https://jsonplaceholder.typicode.com/todos')];
-                    case 1:
+                    case 2:
                         _a.items = (_b.sent()).data;
-                        return [2 /*return*/];
+                        this.state = 'LOADED';
+                        return [3 /*break*/, 4];
+                    case 3:
+                        e_2 = _b.sent();
+                        this.state = {
+                            type: 'ERROR',
+                            error: e_2
+                        };
+                        return [3 /*break*/, 4];
+                    case 4: return [2 /*return*/];
                 }
             });
         });
@@ -935,6 +989,7 @@ var RTodoList = /** @class */ (function () {
 exports.RTodoList = RTodoList;
 exports.TodoListEnums = {
     TodoList_items: 'TodoList_items',
+    TodoList_state: 'TodoList_state',
 };
 exports.TodoListReducer = function (state, action) {
     if (state === void 0) { state = init_TodoList(); }
@@ -942,6 +997,9 @@ exports.TodoListReducer = function (state, action) {
         switch (action.type) {
             case exports.TodoListEnums.TodoList_items:
                 (new RTodoList(draft)).items = action.payload;
+                break;
+            case exports.TodoListEnums.TodoList_state:
+                (new RTodoList(draft)).state = action.payload;
                 break;
         }
     });

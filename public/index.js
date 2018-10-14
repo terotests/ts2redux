@@ -48,7 +48,8 @@ exports.AbstractTodoList = function (props) {
         React.createElement("div", null, "TodoList Component"),
         React.createElement("input", { type: "submit", value: "load", className: "btn btn-default", onClick: function () { return props.getItems(); } }),
         React.createElement("div", null,
-            React.createElement("table", { style: { border: '1px solid gray', padding: '5px' } },
+            React.createElement("div", null, props.state),
+            React.createElement("table", null,
                 React.createElement("tbody", null, props.items.map(function (m) {
                     return React.createElement("tr", { key: m.id },
                         React.createElement("td", null, m.id),
@@ -162,7 +163,7 @@ var FRIEND_LIST = [
     'Peter'
 ];
 /**
- * @simpleredux true
+ * @redux true
  */
 var TestModel = /** @class */ (function () {
     function TestModel() {
@@ -835,7 +836,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var axios_1 = require("axios");
 /**
- * @simpleredux true
+ * @redux true
  */
 var TodoList = /** @class */ (function () {
     function TodoList() {

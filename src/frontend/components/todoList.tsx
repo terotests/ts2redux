@@ -16,7 +16,8 @@ export const AbstractTodoList = (props : Props) => {
               onClick={() => props.getItems()}
       />
       <div>
-        <table style={{border:'1px solid gray', padding:'5px'}}><tbody>{props.items.map( m => {
+        <div>{props.state}</div>
+        <table><tbody>{props.items.map( m => {
           return <tr key={m.id}>
             <td>{m.id}</td>
             <td>{m.title}</td>

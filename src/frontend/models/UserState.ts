@@ -1,7 +1,7 @@
 
 
 /**
- * @simpleredux true
+ * @redux true
  */
 class UserState {
 

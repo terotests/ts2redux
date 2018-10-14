@@ -71,7 +71,7 @@ function createProject(settings) {
                                     file: sourceFile
                                 });
                             });
-                            JSTags(c, 'simpleredux').forEach(function (model) {
+                            JSTags(c, 'redux').forEach(function (model) {
                                 modelsList.push({
                                     name: model,
                                     iface: c,
@@ -97,7 +97,7 @@ function createProject(settings) {
                             return;
                         }
                         sourceFile.getClasses().forEach(function (c) {
-                            if (c.getJsDocs().filter(function (doc) { return doc.getTags().filter(function (tag) { return tag.getName() === 'simpleredux'; }).length > 0; }).length > 0) {
+                            if (c.getJsDocs().filter(function (doc) { return doc.getTags().filter(function (tag) { return tag.getName() === 'redux'; }).length > 0; }).length > 0) {
                                 var sourceDir = path.normalize(path.relative(process.cwd(), path.dirname(sourceFile.getFilePath())));
                                 console.log('sourceDir', sourceDir);
                                 var reducerFileName = sourceDir + '/reducers/' + c.getName() + '.ts';

@@ -68,7 +68,7 @@ var FRIEND_LIST = [
     'Peter'
 ];
 /**
- * @simpleredux true
+ * @redux true
  */
 var TestModel = /** @class */ (function () {
     function TestModel() {

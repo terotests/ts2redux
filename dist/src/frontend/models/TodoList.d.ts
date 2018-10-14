@@ -4,3 +4,7 @@ export interface TodoListItem {
     title: string;
     completed: boolean;
 }
+export declare type TaskState = 'UNDEFINED' | 'RUNNING' | 'LOADED' | {
+    type: 'ERROR';
+    error: any;
+};

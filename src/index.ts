@@ -82,7 +82,7 @@ export async function createProject( settings:GenerationOptions) {
           file : sourceFile
         })
       })    
-      JSTags( c, 'simpleredux').forEach( model => {
+      JSTags( c, 'redux').forEach( model => {
         modelsList.push({
           name: model,
           iface : c,
@@ -112,7 +112,7 @@ export async function createProject( settings:GenerationOptions) {
 
     sourceFile.getClasses().forEach( c=>{
       if( c.getJsDocs().filter(
-        doc =>doc.getTags().filter( tag => tag.getName() === 'simpleredux' ).length > 0
+        doc =>doc.getTags().filter( tag => tag.getName() === 'redux' ).length > 0
       ).length > 0 ) {      
 
         const sourceDir = path.normalize( path.relative( process.cwd(), path.dirname( sourceFile.getFilePath() ) ) )

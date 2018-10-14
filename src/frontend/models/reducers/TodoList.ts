@@ -7,9 +7,9 @@ export interface TodoListItem {
   completed: boolean
 }
 
-type TaskState = 'UNDEFINED' | 'RUNNING' |  'LOADED' | { type:'ERROR', error:any }
+export type TaskState = 'UNDEFINED' | 'RUNNING' |  'LOADED' | { type:'ERROR', error:any }
 /**
- * @simpleredux true
+ * @redux true
  */
 class TodoList {
   items: TodoListItem[] = []

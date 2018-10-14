@@ -34,7 +34,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 /**
- * @simpleredux true
+ * @redux true
  */
 var UserState = /** @class */ (function () {
     function UserState() {

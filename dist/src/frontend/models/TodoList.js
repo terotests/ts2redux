@@ -37,7 +37,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var axios_1 = require("axios");
 /**
- * @simpleredux true
+ * @redux true
  */
 var TodoList = /** @class */ (function () {
     function TodoList() {

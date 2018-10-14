@@ -4,7 +4,7 @@ export interface TodoListItem {
     title: string;
     completed: boolean;
 }
-declare type TaskState = 'UNDEFINED' | 'RUNNING' | 'LOADED' | {
+export declare type TaskState = 'UNDEFINED' | 'RUNNING' | 'LOADED' | {
     type: 'ERROR';
     error: any;
 };
@@ -38,4 +38,3 @@ export declare const TodoListEnums: {
     TodoList_state: string;
 };
 export declare const TodoListReducer: (state: ITodoList, action: any) => ITodoList;
-export {};

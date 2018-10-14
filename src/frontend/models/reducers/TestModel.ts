@@ -36,7 +36,7 @@ const FRIEND_LIST = [
   'Peter'
 ]
 /**
- * @simpleredux true
+ * @redux true
  */
 class TestModel {
   // model with initializer

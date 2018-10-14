@@ -8,7 +8,8 @@ exports.AbstractTodoList = function (props) {
         React.createElement("div", null, "TodoList Component"),
         React.createElement("input", { type: "submit", value: "load", className: "btn btn-default", onClick: function () { return props.getItems(); } }),
         React.createElement("div", null,
-            React.createElement("table", { style: { border: '1px solid gray', padding: '5px' } },
+            React.createElement("div", null, props.state),
+            React.createElement("table", null,
                 React.createElement("tbody", null, props.items.map(function (m) {
                     return React.createElement("tr", { key: m.id },
                         React.createElement("td", null, m.id),

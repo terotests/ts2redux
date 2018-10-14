@@ -1,5 +1,5 @@
 /**
- * @simpleredux true
+ * @redux true
  */
 declare class UserState {
     logged: boolean;

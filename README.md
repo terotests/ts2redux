@@ -22,7 +22,7 @@ export interface TodoListItem {
 export type TaskState = 'UNDEFINED' | 'RUNNING' |  'LOADED' | { type:'ERROR', error:any }
 
 /**
- * @simpleredux true
+ * @redux true
  */
 class TodoList {
 
@@ -64,7 +64,7 @@ export interface Props extends container.Props {}
 export const AbstractTodoList = (props : Props) => {
   return (
   <div>
-      <div>TodoList Component</div>
+      <h2>TodoList Component</h2>
       <input type="submit"
               value="load"
               className="btn btn-default"
@@ -72,7 +72,8 @@ export const AbstractTodoList = (props : Props) => {
               onClick={() => props.getItems()}
       />
       <div>
-        <table style={{border:'1px solid gray', padding:'5px'}}><tbody>{props.items.map( m => {
+        <div>{props.state}</div>
+        <table><tbody>{props.items.map( m => {
           return <tr key={m.id}>
             <td>{m.id}</td>
             <td>{m.title}</td>

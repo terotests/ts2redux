@@ -85,7 +85,7 @@ export const AbstractTodoList = (props : Props) => {
   );
 }
 
-// 3) Connect the Redux model and create a concrete implementation
+// 4) Connect the Redux model and create a concrete implementation
 export const TodoList = container.StateConnector( AbstractTodoList )
 ```
 

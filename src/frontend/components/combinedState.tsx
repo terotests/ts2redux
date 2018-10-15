@@ -17,6 +17,7 @@ export const AbstractCombinedStates = (props : Props) => {
         <div>Items length Now: {props.items.length}</div>
         <button onClick={()=>{props.getItems()}}>Try Loading</button>
         <button onClick={()=>{props.clearTodoList()}}>Clear List</button>
+        <button onClick={()=>{props.fakeLogin()}}>Test Login</button>        
       </div>
   </div>
   );

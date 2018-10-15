@@ -47,18 +47,12 @@ export async function createProject( settings:GenerationOptions) {
 
   project.addExistingSourceFiles([`${settings.path}/**/*.ts`,`${settings.path}/**/*.tsx`]); // , "!**/*.d.ts"
   const RFs = new R.CodeFileSystem()
-  
-  // create one dummy file for setting the context for the services
-  const webclient = RFs.getFile('/src/frontend/api/', 'index.ts').getWriter()
+
 
   const targetFiles:{[key:string]:TargetFile} = {};
-  const syncInterfaces:SyncInterface[] = [];
   const modelsList:ModelDefinition[] = []
   const generatedFiles:ModelDefinition[] = []
-
   const dirReducers:{[key:string]:GeneratedReducer[]} = {}
-
-  const ng = RFs.getFile('/src/frontend/', 'ng.ts').getWriter()
 
   // NOTE:
   // https://daveceddia.com/context-api-vs-redux/
@@ -89,16 +83,6 @@ export async function createProject( settings:GenerationOptions) {
           file : sourceFile
         })
       })    
-    })
-    sourceFile.getInterfaces().forEach( i => {
-      JSTags( i, 'sync').forEach( model => {
-        console.log('Syncing ', model)
-        syncInterfaces.push({
-          name: model,
-          iface : i,
-          file : sourceFile
-        })
-      })
     })
   })
 
@@ -393,50 +377,7 @@ export const ShopCartModelReducer = (state:ITestModel = {}, action) => {
               body.out('}', true)
               body.indent(-1)
             body.out('}', true)            
-            
-          })
-
-          // NOTE: sync is not used ATM.
-          syncInterfaces.forEach( decl => {
-            console.log('SYNC', decl.name)
-            if(decl.name == c.getName()) {
-              console.log(`Syncing ${c.getName()} -> ${decl.iface.getName()}`)
-              decl.iface.getProperties().forEach( p => {
-                console.log( ' *)', p.getName())
-              })
-              c.getProperties().forEach( p => {
-                const has = decl.iface.getProperties().filter( ip => ip.getName() == p.getName() )
-                if(has.length == 0 ) {
-                  const imports = decl.file.getImportDeclarations();
-                  let hadImport = false
-                  imports.forEach( i => {
-                    // i
-                    console.log('NameSpace getModuleSpecifierValue', i.getModuleSpecifierValue())
-                    const ns = i.getNamespaceImport()
-                    if(ns) {
-                      console.log('NameSpace import', ns.getText())
-                      if(ns.getText() == 'TestModelModule') hadImport = true
-                    }                      
-                    const named = i.getNamedImports()
-                    named.forEach( n => {
-                      console.log(' - ', n.getText())
-                    })
-                  })
-                  if(!hadImport) {
-                    const n:ImportDeclarationStructure = {moduleSpecifier:'jee'}
-                    decl.file.addImportDeclaration({
-                      namespaceImport:'TestModelModule',
-                      moduleSpecifier: "../ng"
-                  })
-                  }
-                }
-              })
-                      
-            }
-          })          
-          
-       
-
+          })         
       }
     })       
   })  

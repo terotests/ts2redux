@@ -19,6 +19,10 @@ class TodoList {
   clearTodoList() {
     this.items = []
   }
+  sortById() {
+    console.log('sortById was called')
+    this.items.sort( (a, b) => a.id - b.id )
+  }
   sortByTitle() {
     this.items.sort( (a, b) => a.title.localeCompare( b.title ) )
   }
@@ -30,6 +34,8 @@ class TodoList {
     if(this.state === 'RUNNING') return
     try {
       this.state = 'RUNNING'
+      console.log('should be error')
+      this.items.sort( (a, b) => a.title.localeCompare( b.title ) )
       this.items = (await axios.get('https://jsonplaceholder.typicode.com/todos')).data
       this.state = 'LOADED'
     } catch(e) {
@@ -45,6 +51,7 @@ import { State } from './index'
 
 export interface ContainerPropsMethods {
   clearTodoList? : () => any
+  sortById? : () => any
   sortByTitle? : () => any
   sortByCompletion? : () => any
   getItems? : () => any
@@ -68,6 +75,9 @@ export const mapDispatchToProps = (dispatch) : ContainerPropsMethods => {
   return {
     clearTodoList : () => {
       return dispatch(RTodoList.clearTodoList())
+    },
+    sortById : () => {
+      return dispatch(RTodoList.sortById())
     },
     sortByTitle : () => {
       return dispatch(RTodoList.sortByTitle())
@@ -164,6 +174,21 @@ export class RTodoList {
     }
   }
   // is a reducer
+  sortById(){
+    if(this._state) {
+      console.log('sortById was called');
+      this.items.sort((a, b) => a.id - b.id);
+    } else {
+      this._dispatch({type:TodoListEnums.TodoList_sortById})
+    }
+  }
+  
+  static sortById(){
+    return (dispatcher, getState) => {
+      (new RTodoList(null, dispatcher, getState)).sortById()
+    }
+  }
+  // is a reducer
   sortByTitle(){
     if(this._state) {
       this.items.sort((a, b) => a.title.localeCompare(b.title));
@@ -198,6 +223,8 @@ export class RTodoList {
           return;
       try {
           this.state = 'RUNNING';
+          console.log('should be error');
+          this.items.sort((a, b) => a.title.localeCompare(b.title));
           this.items = (await axios.get('https://jsonplaceholder.typicode.com/todos')).data;
           this.state = 'LOADED';
       }
@@ -219,6 +246,7 @@ export const TodoListEnums = {
   TodoList_state : 'TodoList_state',
   TodoList_stateError : 'TodoList_stateError',
   TodoList_clearTodoList : 'TodoList_clearTodoList',
+  TodoList_sortById : 'TodoList_sortById',
   TodoList_sortByTitle : 'TodoList_sortByTitle',
   TodoList_sortByCompletion : 'TodoList_sortByCompletion',
 }
@@ -237,6 +265,9 @@ export const TodoListReducer = (state:ITodoList = init_TodoList(), action) => {
         break;
       case TodoListEnums.TodoList_clearTodoList: 
         (new RTodoList(draft)).clearTodoList()
+        break;
+      case TodoListEnums.TodoList_sortById: 
+        (new RTodoList(draft)).sortById()
         break;
       case TodoListEnums.TodoList_sortByTitle: 
         (new RTodoList(draft)).sortByTitle()

@@ -107,16 +107,10 @@ var TestModel = /** @class */ (function () {
      * Creates a new shopping cart
      */
     TestModel.prototype.addCart = function () {
-        return __awaiter(this, void 0, void 0, function () {
-            var key;
-            return __generator(this, function (_a) {
-                key = 'cart' + (this.cartId++);
-                this.carts[key] = {
-                    items: [{ id: this.maxId++, name: STR_ITEM }]
-                };
-                return [2 /*return*/];
-            });
-        });
+        var key = 'cart' + (this.cartId++);
+        this.carts[key] = {
+            items: [{ id: this.maxId++, name: STR_ITEM }]
+        };
     };
     TestModel.prototype.addCartSync = function () {
         var key = 'cart' + (this.cartId++);
@@ -456,21 +450,17 @@ var RTestModel = /** @class */ (function () {
             (new RTestModel(null, dispatcher, getState)).sort();
         };
     };
-    // is task
-    /**
-     * Creates a new shopping cart
-     */
+    // is a reducer
     RTestModel.prototype.addCart = function () {
-        return __awaiter(this, void 0, void 0, function () {
-            var key;
-            return __generator(this, function (_a) {
-                key = 'cart' + (this.cartId++);
-                this.carts[key] = {
-                    items: [{ id: this.maxId++, name: STR_ITEM }]
-                };
-                return [2 /*return*/];
-            });
-        });
+        if (this._state) {
+            var key = 'cart' + (this.cartId++);
+            this.carts[key] = {
+                items: [{ id: this.maxId++, name: STR_ITEM }]
+            };
+        }
+        else {
+            this._dispatch({ type: exports.TestModelEnums.TestModel_addCart });
+        }
     };
     RTestModel.addCart = function () {
         return function (dispatcher, getState) {
@@ -642,6 +632,7 @@ exports.TestModelEnums = {
     TestModel_add: 'TestModel_add',
     TestModel_removeFirst: 'TestModel_removeFirst',
     TestModel_sort: 'TestModel_sort',
+    TestModel_addCart: 'TestModel_addCart',
     TestModel_addCartSync: 'TestModel_addCartSync',
     TestModel_addToCart: 'TestModel_addToCart',
     TestModel_setCartNewItem: 'TestModel_setCartNewItem',
@@ -681,6 +672,9 @@ exports.TestModelReducer = function (state, action) {
                 break;
             case exports.TestModelEnums.TestModel_sort:
                 (new RTestModel(draft)).sort();
+                break;
+            case exports.TestModelEnums.TestModel_addCart:
+                (new RTestModel(draft)).addCart();
                 break;
             case exports.TestModelEnums.TestModel_addCartSync:
                 (new RTestModel(draft)).addCartSync();

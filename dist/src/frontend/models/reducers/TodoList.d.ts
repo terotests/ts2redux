@@ -8,6 +8,7 @@ export declare type TaskState = 'UNDEFINED' | 'RUNNING' | 'LOADED' | 'ERROR';
 import { State } from './index';
 export interface ContainerPropsMethods {
     clearTodoList?: () => any;
+    sortById?: () => any;
     sortByTitle?: () => any;
     sortByCompletion?: () => any;
     getItems?: () => any;
@@ -37,6 +38,8 @@ export declare class RTodoList {
     stateError: any;
     clearTodoList(): void;
     static clearTodoList(): (dispatcher: any, getState: any) => void;
+    sortById(): void;
+    static sortById(): (dispatcher: any, getState: any) => void;
     sortByTitle(): void;
     static sortByTitle(): (dispatcher: any, getState: any) => void;
     sortByCompletion(): void;
@@ -49,6 +52,7 @@ export declare const TodoListEnums: {
     TodoList_state: string;
     TodoList_stateError: string;
     TodoList_clearTodoList: string;
+    TodoList_sortById: string;
     TodoList_sortByTitle: string;
     TodoList_sortByCompletion: string;
 };

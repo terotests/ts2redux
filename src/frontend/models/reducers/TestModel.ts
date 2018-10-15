@@ -83,7 +83,7 @@ class TestModel {
   /**
    * Creates a new shopping cart
    */  
-  async addCart() {
+  addCart() {
     const key = 'cart' + (this.cartId++)
     this.carts[key] = {
       items : [{id:this.maxId++, name: STR_ITEM}]   
@@ -435,15 +435,16 @@ export class RTestModel {
       (new RTestModel(null, dispatcher, getState)).sort()
     }
   }
-  // is task
-  /**
-   * Creates a new shopping cart
-   */
-  async addCart() {
+  // is a reducer
+  addCart(){
+    if(this._state) {
       const key = 'cart' + (this.cartId++);
       this.carts[key] = {
-          items: [{ id: this.maxId++, name: STR_ITEM }]
+      items: [{ id: this.maxId++, name: STR_ITEM }]
       };
+    } else {
+      this._dispatch({type:TestModelEnums.TestModel_addCart})
+    }
   }
   
   static addCart(){
@@ -607,6 +608,7 @@ export const TestModelEnums = {
   TestModel_add : 'TestModel_add',
   TestModel_removeFirst : 'TestModel_removeFirst',
   TestModel_sort : 'TestModel_sort',
+  TestModel_addCart : 'TestModel_addCart',
   TestModel_addCartSync : 'TestModel_addCartSync',
   TestModel_addToCart : 'TestModel_addToCart',
   TestModel_setCartNewItem : 'TestModel_setCartNewItem',
@@ -646,6 +648,9 @@ export const TestModelReducer = (state:ITestModel = init_TestModel(), action) =>
         break;
       case TestModelEnums.TestModel_sort: 
         (new RTestModel(draft)).sort()
+        break;
+      case TestModelEnums.TestModel_addCart: 
+        (new RTestModel(draft)).addCart()
         break;
       case TestModelEnums.TestModel_addCartSync: 
         (new RTestModel(draft)).addCartSync()

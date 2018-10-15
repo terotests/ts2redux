@@ -47,6 +47,10 @@ var TodoList = /** @class */ (function () {
     TodoList.prototype.clearTodoList = function () {
         this.items = [];
     };
+    TodoList.prototype.sortById = function () {
+        console.log('sortById was called');
+        this.items.sort(function (a, b) { return a.id - b.id; });
+    };
     TodoList.prototype.sortByTitle = function () {
         this.items.sort(function (a, b) { return a.title.localeCompare(b.title); });
     };
@@ -66,6 +70,8 @@ var TodoList = /** @class */ (function () {
                     case 1:
                         _b.trys.push([1, 3, , 4]);
                         this.state = 'RUNNING';
+                        console.log('should be error');
+                        this.items.sort(function (a, b) { return a.title.localeCompare(b.title); });
                         _a = this;
                         return [4 /*yield*/, axios_1.default.get('https://jsonplaceholder.typicode.com/todos')];
                     case 2:
@@ -97,6 +103,9 @@ exports.mapDispatchToProps = function (dispatch) {
     return {
         clearTodoList: function () {
             return dispatch(RTodoList.clearTodoList());
+        },
+        sortById: function () {
+            return dispatch(RTodoList.sortById());
         },
         sortByTitle: function () {
             return dispatch(RTodoList.sortByTitle());
@@ -205,6 +214,21 @@ var RTodoList = /** @class */ (function () {
         };
     };
     // is a reducer
+    RTodoList.prototype.sortById = function () {
+        if (this._state) {
+            console.log('sortById was called');
+            this.items.sort(function (a, b) { return a.id - b.id; });
+        }
+        else {
+            this._dispatch({ type: exports.TodoListEnums.TodoList_sortById });
+        }
+    };
+    RTodoList.sortById = function () {
+        return function (dispatcher, getState) {
+            (new RTodoList(null, dispatcher, getState)).sortById();
+        };
+    };
+    // is a reducer
     RTodoList.prototype.sortByTitle = function () {
         if (this._state) {
             this.items.sort(function (a, b) { return a.title.localeCompare(b.title); });
@@ -246,6 +270,8 @@ var RTodoList = /** @class */ (function () {
                     case 1:
                         _b.trys.push([1, 3, , 4]);
                         this.state = 'RUNNING';
+                        console.log('should be error');
+                        this.items.sort(function (a, b) { return a.title.localeCompare(b.title); });
                         _a = this;
                         return [4 /*yield*/, axios_1.default.get('https://jsonplaceholder.typicode.com/todos')];
                     case 2:
@@ -275,6 +301,7 @@ exports.TodoListEnums = {
     TodoList_state: 'TodoList_state',
     TodoList_stateError: 'TodoList_stateError',
     TodoList_clearTodoList: 'TodoList_clearTodoList',
+    TodoList_sortById: 'TodoList_sortById',
     TodoList_sortByTitle: 'TodoList_sortByTitle',
     TodoList_sortByCompletion: 'TodoList_sortByCompletion',
 };
@@ -293,6 +320,9 @@ exports.TodoListReducer = function (state, action) {
                 break;
             case exports.TodoListEnums.TodoList_clearTodoList:
                 (new RTodoList(draft)).clearTodoList();
+                break;
+            case exports.TodoListEnums.TodoList_sortById:
+                (new RTodoList(draft)).sortById();
                 break;
             case exports.TodoListEnums.TodoList_sortByTitle:
                 (new RTodoList(draft)).sortByTitle();

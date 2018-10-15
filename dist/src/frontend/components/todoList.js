@@ -7,6 +7,7 @@ exports.AbstractTodoList = function (props) {
     return (React.createElement("div", null,
         React.createElement("div", null, "TodoList Component"),
         React.createElement("button", { onClick: function () { return props.getItems(); } }, "Load"),
+        React.createElement("button", { onClick: function () { return props.sortById(); } }, "Sort by Id"),
         React.createElement("button", { onClick: function () { return props.sortByTitle(); } }, "Sort by Title"),
         React.createElement("button", { onClick: function () { return props.sortByCompletion(); } }, "Sort by Completion"),
         React.createElement("div", null,

@@ -79,10 +79,7 @@ export declare class RTestModel {
     static removeFirst(): (dispatcher: any, getState: any) => void;
     sort(): void;
     static sort(): (dispatcher: any, getState: any) => void;
-    /**
-     * Creates a new shopping cart
-     */
-    addCart(): Promise<void>;
+    addCart(): void;
     static addCart(): (dispatcher: any, getState: any) => void;
     addCartSync(): void;
     static addCartSync(): (dispatcher: any, getState: any) => void;
@@ -126,6 +123,7 @@ export declare const TestModelEnums: {
     TestModel_add: string;
     TestModel_removeFirst: string;
     TestModel_sort: string;
+    TestModel_addCart: string;
     TestModel_addCartSync: string;
     TestModel_addToCart: string;
     TestModel_setCartNewItem: string;

@@ -6,8 +6,11 @@ declare class UserState {
     username: string;
     firstName: string;
     lastName: string;
+    lastLogin: number;
     login(loginInfo: {
         username: string;
         password: string;
     }): Promise<void>;
+    logout(): Promise<void>;
+    fakeLogin(): void;
 }

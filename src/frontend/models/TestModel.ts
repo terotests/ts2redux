@@ -83,7 +83,7 @@ class TestModel {
   /**
    * Creates a new shopping cart
    */  
-  async addCart() {
+  addCart() {
     const key = 'cart' + (this.cartId++)
     this.carts[key] = {
       items : [{id:this.maxId++, name: STR_ITEM}]   

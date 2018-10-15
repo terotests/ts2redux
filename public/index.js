@@ -28,7 +28,8 @@ exports.AbstractCombinedStates = function (props) {
                 "Items length Now: ",
                 props.items.length),
             React.createElement("button", { onClick: function () { props.getItems(); } }, "Try Loading"),
-            React.createElement("button", { onClick: function () { props.clearTodoList(); } }, "Clear List"))));
+            React.createElement("button", { onClick: function () { props.clearTodoList(); } }, "Clear List"),
+            React.createElement("button", { onClick: function () { props.fakeLogin(); } }, "Test Login"))));
 };
 exports.StateConnector = react_redux_1.connect(function (state) { return (__assign({}, todoContainer.mapStateToProps(state), userContainer.mapStateToProps(state))); }, function (dispatch) { return (__assign({}, todoContainer.mapDispatchToProps(dispatch), userContainer.mapDispatchToProps(dispatch))); });
 // This is the specialized version of the component
@@ -83,6 +84,7 @@ exports.AbstractTodoList = function (props) {
     return (React.createElement("div", null,
         React.createElement("div", null, "TodoList Component"),
         React.createElement("button", { onClick: function () { return props.getItems(); } }, "Load"),
+        React.createElement("button", { onClick: function () { return props.sortById(); } }, "Sort by Id"),
         React.createElement("button", { onClick: function () { return props.sortByTitle(); } }, "Sort by Title"),
         React.createElement("button", { onClick: function () { return props.sortByCompletion(); } }, "Sort by Completion"),
         React.createElement("div", null,
@@ -243,16 +245,10 @@ var TestModel = /** @class */ (function () {
      * Creates a new shopping cart
      */
     TestModel.prototype.addCart = function () {
-        return __awaiter(this, void 0, void 0, function () {
-            var key;
-            return __generator(this, function (_a) {
-                key = 'cart' + (this.cartId++);
-                this.carts[key] = {
-                    items: [{ id: this.maxId++, name: STR_ITEM }]
-                };
-                return [2 /*return*/];
-            });
-        });
+        var key = 'cart' + (this.cartId++);
+        this.carts[key] = {
+            items: [{ id: this.maxId++, name: STR_ITEM }]
+        };
     };
     TestModel.prototype.addCartSync = function () {
         var key = 'cart' + (this.cartId++);
@@ -592,21 +588,17 @@ var RTestModel = /** @class */ (function () {
             (new RTestModel(null, dispatcher, getState)).sort();
         };
     };
-    // is task
-    /**
-     * Creates a new shopping cart
-     */
+    // is a reducer
     RTestModel.prototype.addCart = function () {
-        return __awaiter(this, void 0, void 0, function () {
-            var key;
-            return __generator(this, function (_a) {
-                key = 'cart' + (this.cartId++);
-                this.carts[key] = {
-                    items: [{ id: this.maxId++, name: STR_ITEM }]
-                };
-                return [2 /*return*/];
-            });
-        });
+        if (this._state) {
+            var key = 'cart' + (this.cartId++);
+            this.carts[key] = {
+                items: [{ id: this.maxId++, name: STR_ITEM }]
+            };
+        }
+        else {
+            this._dispatch({ type: exports.TestModelEnums.TestModel_addCart });
+        }
     };
     RTestModel.addCart = function () {
         return function (dispatcher, getState) {
@@ -778,6 +770,7 @@ exports.TestModelEnums = {
     TestModel_add: 'TestModel_add',
     TestModel_removeFirst: 'TestModel_removeFirst',
     TestModel_sort: 'TestModel_sort',
+    TestModel_addCart: 'TestModel_addCart',
     TestModel_addCartSync: 'TestModel_addCartSync',
     TestModel_addToCart: 'TestModel_addToCart',
     TestModel_setCartNewItem: 'TestModel_setCartNewItem',
@@ -817,6 +810,9 @@ exports.TestModelReducer = function (state, action) {
                 break;
             case exports.TestModelEnums.TestModel_sort:
                 (new RTestModel(draft)).sort();
+                break;
+            case exports.TestModelEnums.TestModel_addCart:
+                (new RTestModel(draft)).addCart();
                 break;
             case exports.TestModelEnums.TestModel_addCartSync:
                 (new RTestModel(draft)).addCartSync();
@@ -887,6 +883,10 @@ var TodoList = /** @class */ (function () {
     TodoList.prototype.clearTodoList = function () {
         this.items = [];
     };
+    TodoList.prototype.sortById = function () {
+        console.log('sortById was called');
+        this.items.sort(function (a, b) { return a.id - b.id; });
+    };
     TodoList.prototype.sortByTitle = function () {
         this.items.sort(function (a, b) { return a.title.localeCompare(b.title); });
     };
@@ -906,6 +906,8 @@ var TodoList = /** @class */ (function () {
                     case 1:
                         _b.trys.push([1, 3, , 4]);
                         this.state = 'RUNNING';
+                        console.log('should be error');
+                        this.items.sort(function (a, b) { return a.title.localeCompare(b.title); });
                         _a = this;
                         return [4 /*yield*/, axios_1.default.get('https://jsonplaceholder.typicode.com/todos')];
                     case 2:
@@ -937,6 +939,9 @@ exports.mapDispatchToProps = function (dispatch) {
     return {
         clearTodoList: function () {
             return dispatch(RTodoList.clearTodoList());
+        },
+        sortById: function () {
+            return dispatch(RTodoList.sortById());
         },
         sortByTitle: function () {
             return dispatch(RTodoList.sortByTitle());
@@ -1045,6 +1050,21 @@ var RTodoList = /** @class */ (function () {
         };
     };
     // is a reducer
+    RTodoList.prototype.sortById = function () {
+        if (this._state) {
+            console.log('sortById was called');
+            this.items.sort(function (a, b) { return a.id - b.id; });
+        }
+        else {
+            this._dispatch({ type: exports.TodoListEnums.TodoList_sortById });
+        }
+    };
+    RTodoList.sortById = function () {
+        return function (dispatcher, getState) {
+            (new RTodoList(null, dispatcher, getState)).sortById();
+        };
+    };
+    // is a reducer
     RTodoList.prototype.sortByTitle = function () {
         if (this._state) {
             this.items.sort(function (a, b) { return a.title.localeCompare(b.title); });
@@ -1086,6 +1106,8 @@ var RTodoList = /** @class */ (function () {
                     case 1:
                         _b.trys.push([1, 3, , 4]);
                         this.state = 'RUNNING';
+                        console.log('should be error');
+                        this.items.sort(function (a, b) { return a.title.localeCompare(b.title); });
                         _a = this;
                         return [4 /*yield*/, axios_1.default.get('https://jsonplaceholder.typicode.com/todos')];
                     case 2:
@@ -1115,6 +1137,7 @@ exports.TodoListEnums = {
     TodoList_state: 'TodoList_state',
     TodoList_stateError: 'TodoList_stateError',
     TodoList_clearTodoList: 'TodoList_clearTodoList',
+    TodoList_sortById: 'TodoList_sortById',
     TodoList_sortByTitle: 'TodoList_sortByTitle',
     TodoList_sortByCompletion: 'TodoList_sortByCompletion',
 };
@@ -1133,6 +1156,9 @@ exports.TodoListReducer = function (state, action) {
                 break;
             case exports.TodoListEnums.TodoList_clearTodoList:
                 (new RTodoList(draft)).clearTodoList();
+                break;
+            case exports.TodoListEnums.TodoList_sortById:
+                (new RTodoList(draft)).sortById();
                 break;
             case exports.TodoListEnums.TodoList_sortByTitle:
                 (new RTodoList(draft)).sortByTitle();
@@ -1194,6 +1220,16 @@ var UserState = /** @class */ (function () {
             });
         });
     };
+    UserState.prototype.logout = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/];
+            });
+        });
+    };
+    UserState.prototype.fakeLogin = function () {
+        this.username = 'Fake Login';
+    };
     return UserState;
 }());
 var immer = require("immer");
@@ -1204,12 +1240,19 @@ exports.mapStateToProps = function (state) {
         username: state.UserState.username,
         firstName: state.UserState.firstName,
         lastName: state.UserState.lastName,
+        lastLogin: state.UserState.lastLogin,
     };
 };
 exports.mapDispatchToProps = function (dispatch) {
     return {
         login: function (loginInfo) {
             return dispatch(RUserState.login(loginInfo));
+        },
+        logout: function () {
+            return dispatch(RUserState.logout());
+        },
+        fakeLogin: function () {
+            return dispatch(RUserState.fakeLogin());
         },
     };
 };
@@ -1221,6 +1264,7 @@ var init_UserState = function () {
         username: o.username,
         firstName: o.firstName,
         lastName: o.lastName,
+        lastLogin: o.lastLogin,
     };
 };
 /**
@@ -1316,6 +1360,27 @@ var RUserState = /** @class */ (function () {
         enumerable: true,
         configurable: true
     });
+    Object.defineProperty(RUserState.prototype, "lastLogin", {
+        get: function () {
+            if (this._getState) {
+                return this._getState().UserState.lastLogin;
+            }
+            else {
+                return this._state.lastLogin;
+            }
+        },
+        set: function (value) {
+            if (this._state) {
+                this._state.lastLogin = value;
+            }
+            else {
+                // dispatch change for item lastLogin
+                this._dispatch({ type: exports.UserStateEnums.UserState_lastLogin, payload: value });
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
     // is task
     RUserState.prototype.login = function (loginInfo) {
         return __awaiter(this, void 0, void 0, function () {
@@ -1329,6 +1394,33 @@ var RUserState = /** @class */ (function () {
             (new RUserState(null, dispatcher, getState)).login(loginInfo);
         };
     };
+    // is task
+    RUserState.prototype.logout = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/];
+            });
+        });
+    };
+    RUserState.logout = function () {
+        return function (dispatcher, getState) {
+            (new RUserState(null, dispatcher, getState)).logout();
+        };
+    };
+    // is a reducer
+    RUserState.prototype.fakeLogin = function () {
+        if (this._state) {
+            this.username = 'Fake Login';
+        }
+        else {
+            this._dispatch({ type: exports.UserStateEnums.UserState_fakeLogin });
+        }
+    };
+    RUserState.fakeLogin = function () {
+        return function (dispatcher, getState) {
+            (new RUserState(null, dispatcher, getState)).fakeLogin();
+        };
+    };
     return RUserState;
 }());
 exports.RUserState = RUserState;
@@ -1337,6 +1429,8 @@ exports.UserStateEnums = {
     UserState_username: 'UserState_username',
     UserState_firstName: 'UserState_firstName',
     UserState_lastName: 'UserState_lastName',
+    UserState_lastLogin: 'UserState_lastLogin',
+    UserState_fakeLogin: 'UserState_fakeLogin',
 };
 exports.UserStateReducer = function (state, action) {
     if (state === void 0) { state = init_UserState(); }
@@ -1353,6 +1447,12 @@ exports.UserStateReducer = function (state, action) {
                 break;
             case exports.UserStateEnums.UserState_lastName:
                 (new RUserState(draft)).lastName = action.payload;
+                break;
+            case exports.UserStateEnums.UserState_lastLogin:
+                (new RUserState(draft)).lastLogin = action.payload;
+                break;
+            case exports.UserStateEnums.UserState_fakeLogin:
+                (new RUserState(draft)).fakeLogin();
                 break;
         }
     });

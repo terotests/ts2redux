@@ -40,20 +40,17 @@ var R = require("robowr");
 var path = require("path");
 function createProject(settings) {
     return __awaiter(this, void 0, void 0, function () {
-        var project, RFs, webclient, targetFiles, syncInterfaces, modelsList, generatedFiles, dirReducers, ng, JSTags;
+        var project, RFs, targetFiles, modelsList, generatedFiles, dirReducers, JSTags;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
                     project = new ts_simple_ast_1.default();
                     project.addExistingSourceFiles([settings.path + "/**/*.ts", settings.path + "/**/*.tsx"]); // , "!**/*.d.ts"
                     RFs = new R.CodeFileSystem();
-                    webclient = RFs.getFile('/src/frontend/api/', 'index.ts').getWriter();
                     targetFiles = {};
-                    syncInterfaces = [];
                     modelsList = [];
                     generatedFiles = [];
                     dirReducers = {};
-                    ng = RFs.getFile('/src/frontend/', 'ng.ts').getWriter();
                     JSTags = function (c, name) {
                         var res = [];
                         c.getJsDocs().forEach(function (doc) { return doc.getTags().forEach(function (tag) {
@@ -75,16 +72,6 @@ function createProject(settings) {
                                 modelsList.push({
                                     name: model,
                                     iface: c,
-                                    file: sourceFile
-                                });
-                            });
-                        });
-                        sourceFile.getInterfaces().forEach(function (i) {
-                            JSTags(i, 'sync').forEach(function (model) {
-                                console.log('Syncing ', model);
-                                syncInterfaces.push({
-                                    name: model,
-                                    iface: i,
                                     file: sourceFile
                                 });
                             });
@@ -349,44 +336,6 @@ function createProject(settings) {
                                     body_1.out('}', true);
                                     body_1.indent(-1);
                                     body_1.out('}', true);
-                                });
-                                // NOTE: sync is not used ATM.
-                                syncInterfaces.forEach(function (decl) {
-                                    console.log('SYNC', decl.name);
-                                    if (decl.name == c.getName()) {
-                                        console.log("Syncing " + c.getName() + " -> " + decl.iface.getName());
-                                        decl.iface.getProperties().forEach(function (p) {
-                                            console.log(' *)', p.getName());
-                                        });
-                                        c.getProperties().forEach(function (p) {
-                                            var has = decl.iface.getProperties().filter(function (ip) { return ip.getName() == p.getName(); });
-                                            if (has.length == 0) {
-                                                var imports = decl.file.getImportDeclarations();
-                                                var hadImport_1 = false;
-                                                imports.forEach(function (i) {
-                                                    // i
-                                                    console.log('NameSpace getModuleSpecifierValue', i.getModuleSpecifierValue());
-                                                    var ns = i.getNamespaceImport();
-                                                    if (ns) {
-                                                        console.log('NameSpace import', ns.getText());
-                                                        if (ns.getText() == 'TestModelModule')
-                                                            hadImport_1 = true;
-                                                    }
-                                                    var named = i.getNamedImports();
-                                                    named.forEach(function (n) {
-                                                        console.log(' - ', n.getText());
-                                                    });
-                                                });
-                                                if (!hadImport_1) {
-                                                    var n = { moduleSpecifier: 'jee' };
-                                                    decl.file.addImportDeclaration({
-                                                        namespaceImport: 'TestModelModule',
-                                                        moduleSpecifier: "../ng"
-                                                    });
-                                                }
-                                            }
-                                        });
-                                    }
                                 });
                             }
                         });

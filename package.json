@@ -1,6 +1,6 @@
 {
   "name": "ts2redux",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "description": "Convert TypeScript classes into Reducers",
   "main": "dist/src/index.js",
   "bin": {
@@ -10,7 +10,11 @@
     "build:frontend": "browserify ./dist/src/frontend/main.js -o ./public/index.js",
     "rmandcompile": "find ./dist/ -name \"*.d.ts\" -delete && tsc",
     "compile": "tsc",
-    "test": "node dist/src/tssimplec src/testinput.ts && npm run compile && npm run build:frontend && cp src/swagger/* dist/swagger/ && node dist/src/backend/index"
+    "build:redux": "echo 'Building modules' && node dist/src/tssimplec src/testinput.ts",
+    "build:ts": "echo 'Building ts' && tsc && npm run build:frontend ",
+    "watch:redux": "nodemon -e js,ts --watch src/frontend/models/ --ignore src/frontend/models/reducers --exec npm run build:redux",
+    "watch:ts": "nodemon -e js,ts,tsx --watch src --ignore src/frontend/models/ --exec npm run build:ts",
+    "test": "npm run watch:ts & npm run watch:redux & node dist/src/tssimplec src/testinput.ts && npm run compile && npm run build:frontend && cp src/swagger/* dist/swagger/ && node dist/src/backend/index"
   },
   "repository": {
     "type": "git",
@@ -45,7 +49,8 @@
   "devDependencies": {
     "browserify": "^16.2.2",
     "chai": "^4.1.2",
-    "mocha": "^5.2.0"
+    "mocha": "^5.2.0",
+    "nodemon": "^1.18.4"
   },
   "bugs": {
     "url": "https://github.com/terotests/ts2redux/issues"

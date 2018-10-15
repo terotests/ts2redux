@@ -11,6 +11,7 @@ export const AbstractTodoList = (props : Props) => {
   <div>
       <div>TodoList Component</div>
       <button onClick={() => props.getItems()}>Load</button>
+      <button onClick={() => props.sortById()}>Sort by Id</button>
       <button onClick={() => props.sortByTitle()}>Sort by Title</button>
       <button onClick={() => props.sortByCompletion()}>Sort by Completion</button>
       <div>

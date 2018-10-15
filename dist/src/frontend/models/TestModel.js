@@ -107,16 +107,10 @@ var TestModel = /** @class */ (function () {
      * Creates a new shopping cart
      */
     TestModel.prototype.addCart = function () {
-        return __awaiter(this, void 0, void 0, function () {
-            var key;
-            return __generator(this, function (_a) {
-                key = 'cart' + (this.cartId++);
-                this.carts[key] = {
-                    items: [{ id: this.maxId++, name: STR_ITEM }]
-                };
-                return [2 /*return*/];
-            });
-        });
+        var key = 'cart' + (this.cartId++);
+        this.carts[key] = {
+            items: [{ id: this.maxId++, name: STR_ITEM }]
+        };
     };
     TestModel.prototype.addCartSync = function () {
         var key = 'cart' + (this.cartId++);

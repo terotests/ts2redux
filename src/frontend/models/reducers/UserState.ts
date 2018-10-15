@@ -4,9 +4,15 @@ class UserState {
   username: string = 'anonymous'
   firstName: string
   lastName: string
-
+  lastLogin: number 
   async login(loginInfo:{username:string, password:string}) {
+    
+  }
+  async logout() {
 
+  }
+  fakeLogin() {
+    this.username = 'Fake Login'
   }
 }
 
@@ -19,12 +25,15 @@ export interface ContainerPropsMethods {
   username: string;
   password: string;
   }) => any
+  logout? : () => any
+  fakeLogin? : () => any
 }
 export interface IUserState {
   logged: boolean
   username: string
   firstName: string
   lastName: string
+  lastLogin: number
 }
 
 export interface ContainerPropsState extends IUserState {}
@@ -35,6 +44,7 @@ export const mapStateToProps = (state : State) : ContainerPropsState => {
     username: state.UserState.username,
     firstName: state.UserState.firstName,
     lastName: state.UserState.lastName,
+    lastLogin: state.UserState.lastLogin,
   }
 }
 export const mapDispatchToProps = (dispatch) : ContainerPropsMethods => {
@@ -44,6 +54,12 @@ export const mapDispatchToProps = (dispatch) : ContainerPropsMethods => {
     password: string;
     }) => {
       return dispatch(RUserState.login(loginInfo))
+    },
+    logout : () => {
+      return dispatch(RUserState.logout())
+    },
+    fakeLogin : () => {
+      return dispatch(RUserState.fakeLogin())
     },
   }
 }
@@ -56,6 +72,7 @@ const init_UserState = () => {
     username: o.username,
     firstName: o.firstName,
     lastName: o.lastName,
+    lastLogin: o.lastLogin,
   }
 }
 
@@ -131,6 +148,21 @@ export class RUserState {
       this._dispatch({type:UserStateEnums.UserState_lastName, payload:value})
     }
   }
+  get lastLogin() : number{
+    if(this._getState) {
+      return this._getState().UserState.lastLogin
+    } else {
+      return this._state.lastLogin
+    }
+  }
+  set lastLogin(value:number) {
+    if(this._state) {
+      this._state.lastLogin = value
+    } else {
+      // dispatch change for item lastLogin
+      this._dispatch({type:UserStateEnums.UserState_lastLogin, payload:value})
+    }
+  }
   
   // is task
   async login(loginInfo: {
@@ -147,6 +179,29 @@ export class RUserState {
       (new RUserState(null, dispatcher, getState)).login(loginInfo)
     }
   }
+  // is task
+  async logout() {
+  }
+  
+  static logout(){
+    return (dispatcher, getState) => {
+      (new RUserState(null, dispatcher, getState)).logout()
+    }
+  }
+  // is a reducer
+  fakeLogin(){
+    if(this._state) {
+      this.username = 'Fake Login';
+    } else {
+      this._dispatch({type:UserStateEnums.UserState_fakeLogin})
+    }
+  }
+  
+  static fakeLogin(){
+    return (dispatcher, getState) => {
+      (new RUserState(null, dispatcher, getState)).fakeLogin()
+    }
+  }
 }
 
 export const UserStateEnums = {
@@ -154,6 +209,8 @@ export const UserStateEnums = {
   UserState_username : 'UserState_username',
   UserState_firstName : 'UserState_firstName',
   UserState_lastName : 'UserState_lastName',
+  UserState_lastLogin : 'UserState_lastLogin',
+  UserState_fakeLogin : 'UserState_fakeLogin',
 }
 
 export const UserStateReducer = (state:IUserState = init_UserState(), action) => {
@@ -170,6 +227,12 @@ export const UserStateReducer = (state:IUserState = init_UserState(), action) =>
         break;
       case UserStateEnums.UserState_lastName: 
         (new RUserState(draft)).lastName = action.payload
+        break;
+      case UserStateEnums.UserState_lastLogin: 
+        (new RUserState(draft)).lastLogin = action.payload
+        break;
+      case UserStateEnums.UserState_fakeLogin: 
+        (new RUserState(draft)).fakeLogin()
         break;
     }
   })

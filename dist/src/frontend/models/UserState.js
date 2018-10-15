@@ -48,6 +48,16 @@ var UserState = /** @class */ (function () {
             });
         });
     };
+    UserState.prototype.logout = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/];
+            });
+        });
+    };
+    UserState.prototype.fakeLogin = function () {
+        this.username = 'Fake Login';
+    };
     return UserState;
 }());
 //# sourceMappingURL=UserState.js.map

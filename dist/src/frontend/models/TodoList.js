@@ -47,6 +47,10 @@ var TodoList = /** @class */ (function () {
     TodoList.prototype.clearTodoList = function () {
         this.items = [];
     };
+    TodoList.prototype.sortById = function () {
+        console.log('sortById was called');
+        this.items.sort(function (a, b) { return a.id - b.id; });
+    };
     TodoList.prototype.sortByTitle = function () {
         this.items.sort(function (a, b) { return a.title.localeCompare(b.title); });
     };
@@ -66,6 +70,8 @@ var TodoList = /** @class */ (function () {
                     case 1:
                         _b.trys.push([1, 3, , 4]);
                         this.state = 'RUNNING';
+                        console.log('should be error');
+                        this.items.sort(function (a, b) { return a.title.localeCompare(b.title); });
                         _a = this;
                         return [4 /*yield*/, axios_1.default.get('https://jsonplaceholder.typicode.com/todos')];
                     case 2:

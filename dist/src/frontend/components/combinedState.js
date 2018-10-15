@@ -27,7 +27,8 @@ exports.AbstractCombinedStates = function (props) {
                 "Items length Now: ",
                 props.items.length),
             React.createElement("button", { onClick: function () { props.getItems(); } }, "Try Loading"),
-            React.createElement("button", { onClick: function () { props.clearTodoList(); } }, "Clear List"))));
+            React.createElement("button", { onClick: function () { props.clearTodoList(); } }, "Clear List"),
+            React.createElement("button", { onClick: function () { props.fakeLogin(); } }, "Test Login"))));
 };
 exports.StateConnector = react_redux_1.connect(function (state) { return (__assign({}, todoContainer.mapStateToProps(state), userContainer.mapStateToProps(state))); }, function (dispatch) { return (__assign({}, todoContainer.mapDispatchToProps(dispatch), userContainer.mapDispatchToProps(dispatch))); });
 // This is the specialized version of the component

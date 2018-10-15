@@ -47,6 +47,16 @@ var UserState = /** @class */ (function () {
             });
         });
     };
+    UserState.prototype.logout = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/];
+            });
+        });
+    };
+    UserState.prototype.fakeLogin = function () {
+        this.username = 'Fake Login';
+    };
     return UserState;
 }());
 var immer = require("immer");
@@ -57,12 +67,19 @@ exports.mapStateToProps = function (state) {
         username: state.UserState.username,
         firstName: state.UserState.firstName,
         lastName: state.UserState.lastName,
+        lastLogin: state.UserState.lastLogin,
     };
 };
 exports.mapDispatchToProps = function (dispatch) {
     return {
         login: function (loginInfo) {
             return dispatch(RUserState.login(loginInfo));
+        },
+        logout: function () {
+            return dispatch(RUserState.logout());
+        },
+        fakeLogin: function () {
+            return dispatch(RUserState.fakeLogin());
         },
     };
 };
@@ -74,6 +91,7 @@ var init_UserState = function () {
         username: o.username,
         firstName: o.firstName,
         lastName: o.lastName,
+        lastLogin: o.lastLogin,
     };
 };
 /**
@@ -169,6 +187,27 @@ var RUserState = /** @class */ (function () {
         enumerable: true,
         configurable: true
     });
+    Object.defineProperty(RUserState.prototype, "lastLogin", {
+        get: function () {
+            if (this._getState) {
+                return this._getState().UserState.lastLogin;
+            }
+            else {
+                return this._state.lastLogin;
+            }
+        },
+        set: function (value) {
+            if (this._state) {
+                this._state.lastLogin = value;
+            }
+            else {
+                // dispatch change for item lastLogin
+                this._dispatch({ type: exports.UserStateEnums.UserState_lastLogin, payload: value });
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
     // is task
     RUserState.prototype.login = function (loginInfo) {
         return __awaiter(this, void 0, void 0, function () {
@@ -182,6 +221,33 @@ var RUserState = /** @class */ (function () {
             (new RUserState(null, dispatcher, getState)).login(loginInfo);
         };
     };
+    // is task
+    RUserState.prototype.logout = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/];
+            });
+        });
+    };
+    RUserState.logout = function () {
+        return function (dispatcher, getState) {
+            (new RUserState(null, dispatcher, getState)).logout();
+        };
+    };
+    // is a reducer
+    RUserState.prototype.fakeLogin = function () {
+        if (this._state) {
+            this.username = 'Fake Login';
+        }
+        else {
+            this._dispatch({ type: exports.UserStateEnums.UserState_fakeLogin });
+        }
+    };
+    RUserState.fakeLogin = function () {
+        return function (dispatcher, getState) {
+            (new RUserState(null, dispatcher, getState)).fakeLogin();
+        };
+    };
     return RUserState;
 }());
 exports.RUserState = RUserState;
@@ -190,6 +256,8 @@ exports.UserStateEnums = {
     UserState_username: 'UserState_username',
     UserState_firstName: 'UserState_firstName',
     UserState_lastName: 'UserState_lastName',
+    UserState_lastLogin: 'UserState_lastLogin',
+    UserState_fakeLogin: 'UserState_fakeLogin',
 };
 exports.UserStateReducer = function (state, action) {
     if (state === void 0) { state = init_UserState(); }
@@ -206,6 +274,12 @@ exports.UserStateReducer = function (state, action) {
                 break;
             case exports.UserStateEnums.UserState_lastName:
                 (new RUserState(draft)).lastName = action.payload;
+                break;
+            case exports.UserStateEnums.UserState_lastLogin:
+                (new RUserState(draft)).lastLogin = action.payload;
+                break;
+            case exports.UserStateEnums.UserState_fakeLogin:
+                (new RUserState(draft)).fakeLogin();
                 break;
         }
     });

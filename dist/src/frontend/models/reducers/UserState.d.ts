@@ -4,12 +4,15 @@ export interface ContainerPropsMethods {
         username: string;
         password: string;
     }) => any;
+    logout?: () => any;
+    fakeLogin?: () => any;
 }
 export interface IUserState {
     logged: boolean;
     username: string;
     firstName: string;
     lastName: string;
+    lastLogin: number;
 }
 export interface ContainerPropsState extends IUserState {
 }
@@ -30,6 +33,7 @@ export declare class RUserState {
     username: string;
     firstName: string;
     lastName: string;
+    lastLogin: number;
     login(loginInfo: {
         username: string;
         password: string;
@@ -38,11 +42,17 @@ export declare class RUserState {
         username: string;
         password: string;
     }): (dispatcher: any, getState: any) => void;
+    logout(): Promise<void>;
+    static logout(): (dispatcher: any, getState: any) => void;
+    fakeLogin(): void;
+    static fakeLogin(): (dispatcher: any, getState: any) => void;
 }
 export declare const UserStateEnums: {
     UserState_logged: string;
     UserState_username: string;
     UserState_firstName: string;
     UserState_lastName: string;
+    UserState_lastLogin: string;
+    UserState_fakeLogin: string;
 };
 export declare const UserStateReducer: (state: IUserState, action: any) => IUserState;

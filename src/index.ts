@@ -120,8 +120,8 @@ export async function createProject( settings:GenerationOptions) {
 
         const sourceDir = path.normalize( path.relative( process.cwd(), path.dirname( sourceFile.getFilePath() ) ) )
         console.log('sourceDir', sourceDir)
-        const reducerFileName = sourceDir + '/reducers/' +  c.getName() + '.ts'
-        const ng = RFs.getFile(sourceDir + '/reducers/',  c.getName() + '.ts' ).getWriter()
+        const reducerFileName = sourceDir + '/reducers/' +  c.getName() + '.tsx'
+        const ng = RFs.getFile(sourceDir + '/reducers/',  c.getName() + '.tsx' ).getWriter()
 
         if(!dirReducers[sourceDir]) dirReducers[sourceDir] = []
 
@@ -438,8 +438,9 @@ export const ShopCartModelReducer = (state:ITestModel = {}, action) => {
           // https://daveceddia.com/context-api-vs-redux/
 
           const tsx = (outer) => {
-            const ng = RFs.getFile(sourceDir + '/reducers/',  c.getName() + 'Ctx.tsx' ).getWriter()
-            ng.raw(outer.getCode())
+            // const ng = RFs.getFile(sourceDir + '/reducers/',  c.getName() + 'Ctx.tsx' ).getWriter()
+            const ng = outer
+            // ng.raw(outer.getCode())
             createComment( ng, 'React Context API test');            
             // create context...
             ng.out(`export const ${c.getName()}Context = React.createContext<Props>(null)`, true)

@@ -103,18 +103,18 @@ function createProject(settings) {
                         }
                         sourceFile.getClasses().forEach(function (c) {
                             if (c.getJsDocs().filter(function (doc) { return doc.getTags().filter(function (tag) { return tag.getName() === 'redux'; }).length > 0; }).length > 0) {
-                                var sourceDir_1 = path.normalize(path.relative(process.cwd(), path.dirname(sourceFile.getFilePath())));
-                                console.log('sourceDir', sourceDir_1);
-                                var reducerFileName = sourceDir_1 + '/reducers/' + c.getName() + '.ts';
-                                var ng_1 = RFs.getFile(sourceDir_1 + '/reducers/', c.getName() + '.ts').getWriter();
-                                if (!dirReducers[sourceDir_1])
-                                    dirReducers[sourceDir_1] = [];
+                                var sourceDir = path.normalize(path.relative(process.cwd(), path.dirname(sourceFile.getFilePath())));
+                                console.log('sourceDir', sourceDir);
+                                var reducerFileName = sourceDir + '/reducers/' + c.getName() + '.tsx';
+                                var ng_1 = RFs.getFile(sourceDir + '/reducers/', c.getName() + '.tsx').getWriter();
+                                if (!dirReducers[sourceDir])
+                                    dirReducers[sourceDir] = [];
                                 // in the end create index.ts for each reducer
-                                dirReducers[sourceDir_1].push({
+                                dirReducers[sourceDir].push({
                                     name: c.getName(),
                                     writer: ng_1,
-                                    writerMainDir: sourceDir_1,
-                                    writerReducerDir: sourceDir_1 + '/reducers/',
+                                    writerMainDir: sourceDir,
+                                    writerReducerDir: sourceDir + '/reducers/',
                                     fileName: reducerFileName
                                 });
                                 var targetPath = path.dirname(reducerFileName);
@@ -382,8 +382,9 @@ function createProject(settings) {
                                 // https://hackernoon.com/how-to-use-the-new-react-context-api-fce011e7d87
                                 // https://daveceddia.com/context-api-vs-redux/
                                 var tsx = function (outer) {
-                                    var ng = RFs.getFile(sourceDir_1 + '/reducers/', c.getName() + 'Ctx.tsx').getWriter();
-                                    ng.raw(outer.getCode());
+                                    // const ng = RFs.getFile(sourceDir + '/reducers/',  c.getName() + 'Ctx.tsx' ).getWriter()
+                                    var ng = outer;
+                                    // ng.raw(outer.getCode())
                                     createComment(ng, 'React Context API test');
                                     // create context...
                                     ng.out("export const " + c.getName() + "Context = React.createContext<Props>(null)", true);

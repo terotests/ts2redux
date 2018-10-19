@@ -6,7 +6,7 @@ import { createStore, applyMiddleware, compose } from 'redux';
 import reduxThunk from 'redux-thunk';
 import { Provider } from 'react-redux';
 import { reducers } from './models/reducers/'
-import { TodoListContext, TodoListStore } from './models/reducers/TodoListCtx'
+import { TodoListContext, TodoListStore } from './models/reducers/TodoList'
 import { MemberArea } from './components/memberArea';
 import { TodoList } from './components/todoList';
 import { CombinedStates } from './components/combinedState';

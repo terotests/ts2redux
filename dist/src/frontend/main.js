@@ -8,7 +8,7 @@ var redux_1 = require("redux");
 var redux_thunk_1 = require("redux-thunk");
 var react_redux_1 = require("react-redux");
 var reducers_1 = require("./models/reducers/");
-var TodoListCtx_1 = require("./models/reducers/TodoListCtx");
+var TodoList_1 = require("./models/reducers/TodoList");
 var memberArea_1 = require("./components/memberArea");
 var todoList_1 = require("./components/todoList");
 var combinedState_1 = require("./components/combinedState");
@@ -27,15 +27,15 @@ ReactDOM.render(React.createElement(react_redux_1.Provider, { store: store },
             React.createElement(todoList_1.TodoList, null)),
         React.createElement("div", null,
             React.createElement("h4", null, "Context API test"),
-            React.createElement(TodoListCtx_1.TodoListStore, null,
-                React.createElement(TodoListCtx_1.TodoListContext.Consumer, null, function (todolist) {
+            React.createElement(TodoList_1.TodoListStore, null,
+                React.createElement(TodoList_1.TodoListContext.Consumer, null, function (todolist) {
                     return React.createElement("div", null,
                         React.createElement("button", { onClick: function () { return todolist.getItems(); } }, "Load"),
                         React.createElement("button", { onClick: function () { return todolist.reverse(); } }, "Revert"),
                         React.createElement("ul", null, todolist.items ? todolist.items.slice(0, 6).map(function (item) { return React.createElement("li", { key: item.id }, item.title); }) : ''));
                 })),
-            React.createElement(TodoListCtx_1.TodoListStore, null,
-                React.createElement(TodoListCtx_1.TodoListContext.Consumer, null, function (todolist) {
+            React.createElement(TodoList_1.TodoListStore, null,
+                React.createElement(TodoList_1.TodoListContext.Consumer, null, function (todolist) {
                     return React.createElement("div", null,
                         React.createElement("div", null, todolist.state),
                         React.createElement("button", { onClick: function () { return todolist.getItems(); } }, "Load"),

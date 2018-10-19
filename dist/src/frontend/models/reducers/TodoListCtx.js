@@ -1,4 +1,28 @@
 "use strict";
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    }
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
@@ -100,6 +124,7 @@ var TodoList = /** @class */ (function () {
 exports.TodoList = TodoList;
 var immer = require("immer");
 var react_redux_1 = require("react-redux");
+var React = require("react");
 exports.mapStateToProps = function (state) {
     return {
         items: state.TodoList.items,
@@ -360,4 +385,53 @@ exports.TodoListReducer = function (state, action) {
         }
     });
 };
-//# sourceMappingURL=TodoList.js.map
+/***************************
+* React Context API test   *
+***************************/
+exports.TodoListContext = React.createContext(null);
+var TodoListStore = /** @class */ (function (_super) {
+    __extends(TodoListStore, _super);
+    function TodoListStore(props) {
+        var _this = _super.call(this, props) || this;
+        _this.state = init_TodoList();
+        _this.clearTodoList = _this.clearTodoList.bind(_this);
+        _this.reverse = _this.reverse.bind(_this);
+        _this.sortById = _this.sortById.bind(_this);
+        _this.sortByTitle = _this.sortByTitle.bind(_this);
+        _this.sortByCompletion = _this.sortByCompletion.bind(_this);
+        _this.getItems = _this.getItems.bind(_this);
+        return _this;
+    }
+    TodoListStore.prototype.clearTodoList = function () {
+        this.setState(immer.produce(this.state, function (draft) { return (new RTodoList(draft)).clearTodoList(); }));
+    };
+    TodoListStore.prototype.reverse = function () {
+        this.setState(immer.produce(this.state, function (draft) { return (new RTodoList(draft)).reverse(); }));
+    };
+    TodoListStore.prototype.sortById = function () {
+        this.setState(immer.produce(this.state, function (draft) { return (new RTodoList(draft)).sortById(); }));
+    };
+    TodoListStore.prototype.sortByTitle = function () {
+        this.setState(immer.produce(this.state, function (draft) { return (new RTodoList(draft)).sortByTitle(); }));
+    };
+    TodoListStore.prototype.sortByCompletion = function () {
+        this.setState(immer.produce(this.state, function (draft) { return (new RTodoList(draft)).sortByCompletion(); }));
+    };
+    TodoListStore.prototype.getItems = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var _this = this;
+            return __generator(this, function (_a) {
+                (new RTodoList(null, function (action) { _this.setState(exports.TodoListReducer(_this.state, action)); }, function () { return ({ TodoList: _this.state }); })).getItems();
+                return [2 /*return*/];
+            });
+        });
+    };
+    TodoListStore.prototype.render = function () {
+        return (React.createElement(exports.TodoListContext.Provider, { value: __assign({}, this.state, { clearTodoList: this.clearTodoList, reverse: this.reverse, sortById: this.sortById, sortByTitle: this.sortByTitle, sortByCompletion: this.sortByCompletion, getItems: this.getItems }) },
+            " ",
+            this.props.children));
+    };
+    return TodoListStore;
+}(React.Component));
+exports.TodoListStore = TodoListStore;
+//# sourceMappingURL=TodoListCtx.js.map

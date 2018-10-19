@@ -244,3 +244,36 @@ export const UserStateReducer = (state:IUserState = init_UserState(), action) =>
     }
   })
 }
+/***************************
+* React Context API test   *
+***************************/
+export const UserStateContext = React.createContext<Props>(null)
+export class UserStateStore extends React.Component {
+  state: IUserState = init_UserState() 
+  constructor( props ){
+    super(props)
+    this.login = this.login.bind(this)
+    this.logout = this.logout.bind(this)
+    this.fakeLogin = this.fakeLogin.bind(this)
+  }
+  async login(loginInfo: {
+  username: string;
+  password: string;
+  }){
+    (new RUserState(null, (action) => { this.setState( UserStateReducer( this.state, action ) )}, () => ({UserState:this.state})) ).login(loginInfo)
+  }
+  async logout(){
+    (new RUserState(null, (action) => { this.setState( UserStateReducer( this.state, action ) )}, () => ({UserState:this.state})) ).logout()
+  }
+  fakeLogin(){
+    this.setState( immer.produce( this.state, draft => ( new RUserState(draft) ).fakeLogin() ) )
+  }
+  render() {
+    return (<UserStateContext.Provider value={{...this.state, 
+      login: this.login,
+      logout: this.logout,
+      fakeLogin: this.fakeLogin,
+    }}> {this.props.children} 
+    </UserStateContext.Provider>)
+  }
+}

@@ -1,4 +1,5 @@
 import { State } from './index';
+import * as React from 'react';
 export interface ContainerPropsMethods {
     login?: (loginInfo: {
         username: string;
@@ -56,3 +57,18 @@ export declare const UserStateEnums: {
     UserState_fakeLogin: string;
 };
 export declare const UserStateReducer: (state: IUserState, action: any) => IUserState;
+/***************************
+* React Context API test   *
+***************************/
+export declare const UserStateContext: React.Context<Props>;
+export declare class UserStateStore extends React.Component {
+    state: IUserState;
+    constructor(props: any);
+    login(loginInfo: {
+        username: string;
+        password: string;
+    }): Promise<void>;
+    logout(): Promise<void>;
+    fakeLogin(): void;
+    render(): JSX.Element;
+}

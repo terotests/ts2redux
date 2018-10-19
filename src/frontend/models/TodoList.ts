@@ -11,7 +11,7 @@ export type TaskState = 'UNDEFINED' | 'RUNNING' |  'LOADED' | 'ERROR'
 /**
  * @redux true
  */
-class TodoList {
+export class TodoList {
   items: TodoListItem[] = []
   state: TaskState = 'UNDEFINED'
   stateError: any
@@ -19,8 +19,11 @@ class TodoList {
   clearTodoList() {
     this.items = []
   }
+  reverse() {
+    this.items.reverse()
+  }  
   sortById() {
-    console.log('sortById was called')
+    console.log('sortById was called!')
     this.items.sort( (a, b) => a.id - b.id )
   }
   sortByTitle() {
@@ -34,8 +37,6 @@ class TodoList {
     if(this.state === 'RUNNING') return
     try {
       this.state = 'RUNNING'
-      console.log('should be error')
-      this.items.sort( (a, b) => a.title.localeCompare( b.title ) )
       this.items = (await axios.get('https://jsonplaceholder.typicode.com/todos')).data
       this.state = 'LOADED'
     } catch(e) {

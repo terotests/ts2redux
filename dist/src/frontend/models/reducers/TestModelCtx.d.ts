@@ -16,6 +16,7 @@ export declare enum TaskState {
     SUCCESS = 3
 }
 import { State } from './index';
+import * as React from 'react';
 export interface ContainerPropsMethods {
     setUserMessage?: (value: string) => any;
     add?: (item: ShopCartItem) => any;
@@ -131,3 +132,32 @@ export declare const TestModelEnums: {
     TestModel_renameLast: string;
 };
 export declare const TestModelReducer: (state: ITestModel, action: any) => ITestModel;
+/***************************
+* React Context API test   *
+***************************/
+export declare const TestModelContext: React.Context<Props>;
+export declare class TestModelStore extends React.Component {
+    state: ITestModel;
+    constructor(props: any);
+    setUserMessage(value: string): void;
+    add(item: ShopCartItem): void;
+    removeFirst(): void;
+    sort(): void;
+    addCart(): void;
+    addCartSync(): void;
+    addToCart(adding: {
+        cartId: string;
+        item: ShopCartItem;
+    }): void;
+    setCartNewItem(adding: {
+        cartId: string;
+        name: string;
+    }): void;
+    addToCartRandom(): void;
+    renameLast(newName: string): void;
+    createItem(someName: string): Promise<void>;
+    addOneFriend(name: any): Promise<void>;
+    fillSomeFriends(): Promise<void>;
+    ChangeLastItem(): Promise<void>;
+    render(): JSX.Element;
+}

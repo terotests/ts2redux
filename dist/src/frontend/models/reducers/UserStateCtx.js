@@ -1,4 +1,28 @@
 "use strict";
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    }
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
@@ -67,6 +91,7 @@ var UserState = /** @class */ (function () {
 }());
 var immer = require("immer");
 var react_redux_1 = require("react-redux");
+var React = require("react");
 exports.mapStateToProps = function (state) {
     return {
         logged: state.UserState.logged,
@@ -290,4 +315,47 @@ exports.UserStateReducer = function (state, action) {
         }
     });
 };
-//# sourceMappingURL=UserState.js.map
+/***************************
+* React Context API test   *
+***************************/
+exports.UserStateContext = React.createContext(null);
+var UserStateStore = /** @class */ (function (_super) {
+    __extends(UserStateStore, _super);
+    function UserStateStore(props) {
+        var _this = _super.call(this, props) || this;
+        _this.state = init_UserState();
+        _this.login = _this.login.bind(_this);
+        _this.logout = _this.logout.bind(_this);
+        _this.fakeLogin = _this.fakeLogin.bind(_this);
+        return _this;
+    }
+    UserStateStore.prototype.login = function (loginInfo) {
+        return __awaiter(this, void 0, void 0, function () {
+            var _this = this;
+            return __generator(this, function (_a) {
+                (new RUserState(null, function (action) { _this.setState(exports.UserStateReducer(_this.state, action)); }, function () { return ({ UserState: _this.state }); })).login(loginInfo);
+                return [2 /*return*/];
+            });
+        });
+    };
+    UserStateStore.prototype.logout = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var _this = this;
+            return __generator(this, function (_a) {
+                (new RUserState(null, function (action) { _this.setState(exports.UserStateReducer(_this.state, action)); }, function () { return ({ UserState: _this.state }); })).logout();
+                return [2 /*return*/];
+            });
+        });
+    };
+    UserStateStore.prototype.fakeLogin = function () {
+        this.setState(immer.produce(this.state, function (draft) { return (new RUserState(draft)).fakeLogin(); }));
+    };
+    UserStateStore.prototype.render = function () {
+        return (React.createElement(exports.UserStateContext.Provider, { value: __assign({}, this.state, { login: this.login, logout: this.logout, fakeLogin: this.fakeLogin }) },
+            " ",
+            this.props.children));
+    };
+    return UserStateStore;
+}(React.Component));
+exports.UserStateStore = UserStateStore;
+//# sourceMappingURL=UserStateCtx.js.map

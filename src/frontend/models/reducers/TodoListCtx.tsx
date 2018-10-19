@@ -306,3 +306,48 @@ export const TodoListReducer = (state:ITodoList = init_TodoList(), action) => {
     }
   })
 }
+/***************************
+* React Context API test   *
+***************************/
+export const TodoListContext = React.createContext<Props>(null)
+export class TodoListStore extends React.Component {
+  state: ITodoList = init_TodoList() 
+  constructor( props ){
+    super(props)
+    this.clearTodoList = this.clearTodoList.bind(this)
+    this.reverse = this.reverse.bind(this)
+    this.sortById = this.sortById.bind(this)
+    this.sortByTitle = this.sortByTitle.bind(this)
+    this.sortByCompletion = this.sortByCompletion.bind(this)
+    this.getItems = this.getItems.bind(this)
+  }
+  clearTodoList(){
+    this.setState( immer.produce( this.state, draft => ( new RTodoList(draft) ).clearTodoList() ) )
+  }
+  reverse(){
+    this.setState( immer.produce( this.state, draft => ( new RTodoList(draft) ).reverse() ) )
+  }
+  sortById(){
+    this.setState( immer.produce( this.state, draft => ( new RTodoList(draft) ).sortById() ) )
+  }
+  sortByTitle(){
+    this.setState( immer.produce( this.state, draft => ( new RTodoList(draft) ).sortByTitle() ) )
+  }
+  sortByCompletion(){
+    this.setState( immer.produce( this.state, draft => ( new RTodoList(draft) ).sortByCompletion() ) )
+  }
+  async getItems(){
+    (new RTodoList(null, (action) => { this.setState( TodoListReducer( this.state, action ) )}, () => ({TodoList:this.state})) ).getItems()
+  }
+  render() {
+    return (<TodoListContext.Provider value={{...this.state, 
+      clearTodoList: this.clearTodoList,
+      reverse: this.reverse,
+      sortById: this.sortById,
+      sortByTitle: this.sortByTitle,
+      sortByCompletion: this.sortByCompletion,
+      getItems: this.getItems,
+    }}> {this.props.children} 
+    </TodoListContext.Provider>)
+  }
+}

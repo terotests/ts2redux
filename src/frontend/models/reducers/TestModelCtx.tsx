@@ -677,3 +677,95 @@ export const TestModelReducer = (state:ITestModel = init_TestModel(), action) =>
     }
   })
 }
+/***************************
+* React Context API test   *
+***************************/
+export const TestModelContext = React.createContext<Props>(null)
+export class TestModelStore extends React.Component {
+  state: ITestModel = init_TestModel() 
+  constructor( props ){
+    super(props)
+    this.setUserMessage = this.setUserMessage.bind(this)
+    this.add = this.add.bind(this)
+    this.removeFirst = this.removeFirst.bind(this)
+    this.sort = this.sort.bind(this)
+    this.addCart = this.addCart.bind(this)
+    this.addCartSync = this.addCartSync.bind(this)
+    this.addToCart = this.addToCart.bind(this)
+    this.setCartNewItem = this.setCartNewItem.bind(this)
+    this.addToCartRandom = this.addToCartRandom.bind(this)
+    this.renameLast = this.renameLast.bind(this)
+    this.createItem = this.createItem.bind(this)
+    this.addOneFriend = this.addOneFriend.bind(this)
+    this.fillSomeFriends = this.fillSomeFriends.bind(this)
+    this.ChangeLastItem = this.ChangeLastItem.bind(this)
+  }
+  setUserMessage(value: string){
+    this.setState( immer.produce( this.state, draft => ( new RTestModel(draft) ).setUserMessage(value) ) )
+  }
+  add(item: ShopCartItem){
+    this.setState( immer.produce( this.state, draft => ( new RTestModel(draft) ).add(item) ) )
+  }
+  removeFirst(){
+    this.setState( immer.produce( this.state, draft => ( new RTestModel(draft) ).removeFirst() ) )
+  }
+  sort(){
+    this.setState( immer.produce( this.state, draft => ( new RTestModel(draft) ).sort() ) )
+  }
+  addCart(){
+    this.setState( immer.produce( this.state, draft => ( new RTestModel(draft) ).addCart() ) )
+  }
+  addCartSync(){
+    this.setState( immer.produce( this.state, draft => ( new RTestModel(draft) ).addCartSync() ) )
+  }
+  addToCart(adding: {
+  cartId: string;
+  item: ShopCartItem;
+  }){
+    this.setState( immer.produce( this.state, draft => ( new RTestModel(draft) ).addToCart(adding) ) )
+  }
+  setCartNewItem(adding: {
+  cartId: string;
+  name: string;
+  }){
+    this.setState( immer.produce( this.state, draft => ( new RTestModel(draft) ).setCartNewItem(adding) ) )
+  }
+  addToCartRandom(){
+    this.setState( immer.produce( this.state, draft => ( new RTestModel(draft) ).addToCartRandom() ) )
+  }
+  renameLast(newName: string){
+    this.setState( immer.produce( this.state, draft => ( new RTestModel(draft) ).renameLast(newName) ) )
+  }
+  // action
+  async createItem(someName: string){
+    (new RTestModel(null, (action) => { this.setState( TestModelReducer( this.state, action ) )}, () => ({TestModel:this.state})) ).createItem(someName)
+  }
+  async addOneFriend(name){
+    (new RTestModel(null, (action) => { this.setState( TestModelReducer( this.state, action ) )}, () => ({TestModel:this.state})) ).addOneFriend(name)
+  }
+  async fillSomeFriends(){
+    (new RTestModel(null, (action) => { this.setState( TestModelReducer( this.state, action ) )}, () => ({TestModel:this.state})) ).fillSomeFriends()
+  }
+  async ChangeLastItem(){
+    (new RTestModel(null, (action) => { this.setState( TestModelReducer( this.state, action ) )}, () => ({TestModel:this.state})) ).ChangeLastItem()
+  }
+  render() {
+    return (<TestModelContext.Provider value={{...this.state, 
+      setUserMessage: this.setUserMessage,
+      add: this.add,
+      removeFirst: this.removeFirst,
+      sort: this.sort,
+      addCart: this.addCart,
+      addCartSync: this.addCartSync,
+      addToCart: this.addToCart,
+      setCartNewItem: this.setCartNewItem,
+      addToCartRandom: this.addToCartRandom,
+      renameLast: this.renameLast,
+      createItem: this.createItem,
+      addOneFriend: this.addOneFriend,
+      fillSomeFriends: this.fillSomeFriends,
+      ChangeLastItem: this.ChangeLastItem,
+    }}> {this.props.children} 
+    </TestModelContext.Provider>)
+  }
+}

@@ -20,6 +20,7 @@ export declare class TodoList {
     getItems(): Promise<void>;
 }
 import { State } from './index';
+import * as React from 'react';
 export interface ContainerPropsMethods {
     clearTodoList?: () => any;
     reverse?: () => any;
@@ -75,3 +76,18 @@ export declare const TodoListEnums: {
     TodoList_sortByCompletion: string;
 };
 export declare const TodoListReducer: (state: ITodoList, action: any) => ITodoList;
+/***************************
+* React Context API test   *
+***************************/
+export declare const TodoListContext: React.Context<Props>;
+export declare class TodoListStore extends React.Component {
+    state: ITodoList;
+    constructor(props: any);
+    clearTodoList(): void;
+    reverse(): void;
+    sortById(): void;
+    sortByTitle(): void;
+    sortByCompletion(): void;
+    getItems(): Promise<void>;
+    render(): JSX.Element;
+}

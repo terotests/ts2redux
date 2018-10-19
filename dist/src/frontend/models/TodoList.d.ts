@@ -5,3 +5,17 @@ export interface TodoListItem {
     completed: boolean;
 }
 export declare type TaskState = 'UNDEFINED' | 'RUNNING' | 'LOADED' | 'ERROR';
+/**
+ * @redux true
+ */
+export declare class TodoList {
+    items: TodoListItem[];
+    state: TaskState;
+    stateError: any;
+    clearTodoList(): void;
+    reverse(): void;
+    sortById(): void;
+    sortByTitle(): void;
+    sortByCompletion(): void;
+    getItems(): Promise<void>;
+}

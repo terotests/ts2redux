@@ -89,6 +89,18 @@ export const AbstractTodoList = (props : Props) => {
 export const TodoList = container.StateConnector( AbstractTodoList )
 ```
 
+## TODO:
+
+Think about local storage and the migrations
+https://medium.freecodecamp.org/how-to-use-redux-persist-when-migrating-your-states-a5dee16b5ead
+
+https://github.com/rt2zz/redux-persist/blob/HEAD/docs/migrations.md
+
+## React Context API
+
+https://hackernoon.com/how-to-use-the-new-react-context-api-fce011e7d87
+
+
 
 
 ## License

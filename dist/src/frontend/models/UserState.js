@@ -44,6 +44,7 @@ var UserState = /** @class */ (function () {
     UserState.prototype.login = function (loginInfo) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
+                console.log('Login called with ', loginInfo);
                 return [2 /*return*/];
             });
         });

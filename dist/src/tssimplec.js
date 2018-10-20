@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var index_1 = require("./index");
 index_1.createProject({
-    path: 'src'
+    path: 'src',
+    reducerPath: 'reducers'
 });
 //# sourceMappingURL=tssimplec.js.map

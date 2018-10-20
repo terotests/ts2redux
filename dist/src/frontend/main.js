@@ -26,7 +26,7 @@ var UserInfo = function (props) { return React.createElement(UserState_1.UserSta
 }); };
 ReactDOM.render(React.createElement(react_redux_1.Provider, { store: store },
     React.createElement(Ctx.Provider, { value: listValue },
-        React.createElement(UserState_1.UserStateStore, null,
+        React.createElement(UserState_1.UserStateProvider, null,
             React.createElement("div", null,
                 React.createElement("div", null,
                     React.createElement("b", null, "This is the JSX area")),
@@ -41,7 +41,7 @@ ReactDOM.render(React.createElement(react_redux_1.Provider, { store: store },
                         state.username,
                         React.createElement("button", { onClick: state.fakeLogin }, "Fake Login"));
                 }),
-                React.createElement(TodoList_1.TodoListStore, null,
+                React.createElement(TodoList_1.TodoListProvider, null,
                     React.createElement(TodoList_1.TodoListContext.Consumer, null, function (todolist) {
                         return React.createElement("div", null,
                             React.createElement("div", null,
@@ -51,17 +51,17 @@ ReactDOM.render(React.createElement(react_redux_1.Provider, { store: store },
                             React.createElement("button", { onClick: function () { return todolist.reverse(); } }, "Revert"),
                             React.createElement("ul", null, todolist.items.slice(0, 6).map(function (item) { return React.createElement("li", { key: item.id }, item.title); })));
                     })),
-                React.createElement(TodoList_1.TodoListStore, null,
-                    React.createElement(TodoList_1.TodoListContext.Consumer, null, function (todolist) {
+                React.createElement(TodoList_1.TodoListProvider, null,
+                    React.createElement(TodoList_1.TodoListConsumer, null, function (todolist) {
                         return React.createElement("div", null,
                             React.createElement("div", null, todolist.state),
                             React.createElement("button", { onClick: function () { return todolist.getItems(); } }, "Load"),
-                            React.createElement("button", { onClick: function () { return todolist.reverse(); } }, "Revert"),
+                            React.createElement("button", { onClick: todolist.reverse }, "Revert List"),
                             React.createElement("button", { onClick: function () { return todolist.clearTodoList(); } }, "Clear"),
                             React.createElement("ul", null, todolist.items.slice(0, 10).map(function (item) { return React.createElement("li", { key: item.id },
                                 item.title,
                                 " ",
-                                React.createElement(UserState_1.UserStateStore, null,
+                                React.createElement(UserState_1.UserStateProvider, null,
                                     React.createElement(UserInfo, null))); })));
                     })))))), document.getElementById('root'));
 /*

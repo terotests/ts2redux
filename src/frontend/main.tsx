@@ -6,8 +6,8 @@ import { createStore, applyMiddleware, compose } from 'redux';
 import reduxThunk from 'redux-thunk';
 import { Provider } from 'react-redux';
 import { reducers } from './models/reducers/'
-import { TodoListContext, TodoListStore } from './models/reducers/TodoList'
-import { UserStateContext, UserStateStore } from './models/reducers/UserState'
+import { TodoListContext, TodoListProvider, TodoListConsumer } from './models/reducers/TodoList'
+import { UserStateContext, UserStateProvider } from './models/reducers/UserState'
 import { MemberArea } from './components/memberArea';
 import { TodoList } from './components/todoList';
 import { CombinedStates } from './components/combinedState';
@@ -37,7 +37,7 @@ ReactDOM.render(
   <Provider store={store}>
     
     <Ctx.Provider value={listValue}>
-      <UserStateStore>
+      <UserStateProvider>
       <div>
         <div><b>This is the JSX area</b></div>
         <MemberArea/>
@@ -55,7 +55,7 @@ ReactDOM.render(
             }
           }</UserStateContext.Consumer>
         
-        <TodoListStore>
+        <TodoListProvider>
           <TodoListContext.Consumer>{
             (todolist) => {
               return <div>
@@ -68,26 +68,26 @@ ReactDOM.render(
                 </div>
             }
           }</TodoListContext.Consumer>          
-        </TodoListStore>
+        </TodoListProvider>
 
-        <TodoListStore>
-          <TodoListContext.Consumer>{
-            (todolist) => {
+        <TodoListProvider>
+          <TodoListConsumer>{
+            (todolist) => {              
               return <div>
                   <div>{todolist.state}</div>
                   <button onClick={() => todolist.getItems()}>Load</button>
-                  <button onClick={() => todolist.reverse()}>Revert</button>
+                  <button onClick={todolist.reverse}>Revert List</button>
                   <button onClick={() => todolist.clearTodoList()}>Clear</button>
                   <ul>{
-                    todolist.items.slice(0,10).map( item => <li key={item.id}>{item.title} <UserStateStore><UserInfo/></UserStateStore></li>) 
+                    todolist.items.slice(0,10).map( item => <li key={item.id}>{item.title} <UserStateProvider><UserInfo/></UserStateProvider></li>) 
                   }</ul>
                 </div>
             }
-          }</TodoListContext.Consumer>          
-        </TodoListStore>
+          }</TodoListConsumer>          
+        </TodoListProvider>
 
       </div>
-      </UserStateStore>
+      </UserStateProvider>
     </Ctx.Provider>
     
   </Provider>,

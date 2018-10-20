@@ -2,5 +2,6 @@
 import {createProject} from './index'
 
 createProject({
-  path:'src'
+  path:'src',
+  reducerPath: 'reducers'
 })

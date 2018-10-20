@@ -11,7 +11,7 @@ class UserState {
   lastName: string
   lastLogin: number 
   async login(loginInfo:{username:string, password:string}) {
-    
+    console.log('Login called with ', loginInfo)
   }
   async logout() {
 

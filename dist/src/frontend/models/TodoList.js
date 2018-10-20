@@ -51,7 +51,6 @@ var TodoList = /** @class */ (function () {
         this.items.reverse();
     };
     TodoList.prototype.sortById = function () {
-        console.log('sortById was called!');
         this.items.sort(function (a, b) { return a.id - b.id; });
     };
     TodoList.prototype.sortByTitle = function () {

@@ -5,17 +5,28 @@ Compile simple TypeScript classes into both Redux or React Context API state mac
 
 Too good to be true?
 
-Yes, it is true, but the library is still quite young and Please Do check the [Limitations](https://github.com/terotests/ts2redux#introduction) before you test the library.
+Yes, it is true, but the compiler is still quite young and Please Do check the [Limitations](https://github.com/terotests/ts2redux#limitations) before you test the library.
+
+## Installation
+
+```
+npm i -g ts2redux
+```
+Run test app by cloning [Repository](https://github.com/terotests/ts2redux) and then
+```
+npm install
+npm test
+```
 
 ## Why?
 
 It is not likely that state management gets much easier than this:
 
-1. State is written using pure TypeScript (which is completely independent from any state library)
-2. Same state definition can be used either as Redux or Context API state
-3. Both Redux and React Context API can be inspected using Redux Devtools
-4. No need for external Async -libraries, sagas etc.  just use normal `async` and assign the state 
-5. Immutable transitions are handled effectively by `immer`
+1. State is written using as TypeScript `class` - initializers, reducers, actions are derived from that
+2. You can choose Redux or Context API (or both for that matter)
+3. Partial Redux Devtools support for React Context API 
+4. Just use normal `async` - no fancy library needed for async operations
+5. Typed with TypeScript
 
 Also the library imposes no direct dependencies, after it has compiled the sources, you do not need the compiler any more - the resulting files have not dependencies to anything else than proven libraries like React, Immer etc.
 
@@ -25,17 +36,14 @@ This library would not have been possible without following great OS tools:
 - [ts-simple-ast](https://github.com/dsherret/ts-simple-ast) for AST code management (special thanks for library author David Sherret for extremely fast responses while I was having problems during development!)
 - [immer](https://github.com/mweststrate/immer) for easy immutable transformations
 - [yargs](https://github.com/yargs/yargs) for command line processing
-- Redux
 - [Redux Devtools Extansions](https://github.com/zalmoxisus/redux-devtools-extension)
 - and of course [Redux](https://github.com/reduxjs/redux) and [React and the new Context API](https://reactjs.org/docs/context.html)
-Also inspiration sources were people at [Koodiklinikka](https://github.com/koodiklinikka), developers at [Leonidas](https://leonidasoy.fi/) and several blog article writers [1](https://daveceddia.com/context-api-vs-redux/)[2](https://medium.freecodecamp.org/replacing-redux-with-the-new-react-context-api-8f5d01a00e8c)
+
+Also inspiration sources were fellow coders at [Koodiklinikka](https://github.com/koodiklinikka), developers at [Leonidas](https://leonidasoy.fi/) and several blog article writers [1](https://daveceddia.com/context-api-vs-redux/)[2](https://medium.freecodecamp.org/replacing-redux-with-the-new-react-context-api-8f5d01a00e8c)
 
 ## Introduction
 
-Ok, As you all know, Redux state management can be time consuming and people are switching to more user friendly
-solutions like MobX or new React Context API. These are all great.
-
-However, the simplest way of writing a stateful model is simply creating a simple TypeScript class would be like this
+The simplest way of writing a stateful model is simply creating a simple TypeScript class would be like this
 ```typescript
 export class SimpleModel {
   items: any[] = []
@@ -46,6 +54,7 @@ export class SimpleModel {
 }
 ```
 Or if you prefer the classical increment / decrement example
+
 ```typescript
 export class IncModel {
   cnt:number = 0
@@ -57,38 +66,26 @@ export class IncModel {
   }  
 }
 ```
-However, because the class is using imperative model with mutable state changes we can not use this with Redux.
+The question asked was: would it be possible to transfer this simple state representation automatically to Redux? Or even to React Context API?
 
-Or could we?
+Turns out with a little bit of [compiler magic](https://github.com/dsherret/ts-simple-ast) we can transform the *idea* of the class into both Redux and React Context API representations. The Redux compiling will create necessary Actions, Enumerations and Reducers, Combined Reducers and MapStateToProps, MapDispatchToProps to manage the component state correctly. 
 
-Turns out with a little bit of [compiler magic](https://github.com/dsherret/ts-simple-ast) we can transform the *idea* of the class into both Redux and React Context API representations, which are both functionally similar to the original class and extremely easy to use.
-
-Only thing we need to do is tell compiler that this class should be transformed to a Reducer or React Context API Consumer or Provider.
-
-We do it by adding a [JSDoc](http://usejsdoc.org/) comment property to the class comment like this
+The compiler does not need much help, we need to add the [JSDoc](http://usejsdoc.org/) comment property before the class and also we need to remember to give types to the properties of the class.
 
 ```typescript
 /**
  * @redux true
  */
-export class SimpleModel {
-  items: any[] = []
-  async getItems() {
-    this.items = (await axios.get('https://jsonplaceholder.typicode.com/todos')).data
-  }
+export class IncModel {
+  // ...
 }
 ```
-Then we can run something like this
-
+Then we can compile the model
 ```
-  ts2redux src
+  ts2redux <path>
 ```
-And the directory where `IncModel` and `SimpleModel` now magically contain files [IncModel.tsc](https://github.com/terotests/ts2redux/blob/master/src/frontend/models/reducers/IncModel.tsx) and  
-[SimpleModel.tsc](https://github.com/terotests/ts2redux/blob/master/src/frontend/models/reducers/IncModel.tsx) 
-
-Whoa! There is a lot of stuff there, admittedly, and it is not easy to understand what the code does at the first glance. 
-
-But what is important is what is exported from the file and what we can use, the `ts2redux` has been friendly enought to generate to us something which React Context API calls Provider and Consumer pair, which we can now import to our application and user the state easily from there on.
+And the directory will have `reducers/` directory where `IncModel` and `SimpleModel` are defined [IncModel.tsc](https://github.com/terotests/ts2redux/blob/master/src/frontend/models/reducers/IncModel.tsx) and  
+[SimpleModel.tsc](https://github.com/terotests/ts2redux/blob/master/src/frontend/models/reducers/IncModel.tsx) together with all Redux ceremony and more.
 
 ## Limitations
 
@@ -104,19 +101,19 @@ class Foo {
   name3 = 'Someone'
 }
 ```
-Reason for this is that at least for now, the type is not inferred from the assigned value ( can be changed in the future )
+Reason for this is that at least for now, the type is not inferred from the assigned value.
 
-### Async Functions can not mutate state deeply
+### Async Functions can not mutate state deeply (syncronous can)
 
-There is important limitation for `async` functions for the class: `async` function can read state but can only assign (`=`) to class properties, not mutate them deeply. 
+There is important limitation for `async` functions for the class: `async` function can read state but can only assign (`=`) to class properties, not mutate them deeply like syncronous functions, which are compiled to reducers.
 
-This is because, unlike syncronous routines, which are using `immer` the `async` functions can only generate new Redux actions from the assigments.
+This is because `async` functions can only mutate the state by dispatching new Redux actions from the assigments. 
 
 For example
 ```typescript
  // this is OK
  this.items = []            
- // this is error
+ // this is error, no dispatch generated, Redux will complain about this too
  this.items.sort( /*... */)  
 ```
 
@@ -146,9 +143,11 @@ import * as foo from '../barzone'
 ```
 Will be broken. If you need to import files in the model files it is recommened to [Configure TypeScript to not user relative paths](https://decembersoft.com/posts/say-goodbye-to-relative-paths-in-typescript-imports/)
 
-### Removed React Context API -components are not removed from the Redux Devtools
+### React Context API -components are not removed from Redux Devtools after unmount
 
-If you generate a lot of Redux Context API -components and Redux Devtools is enabled, history of unmounted components is visible in the Redux Devtools debugging history. In some cases this may be desirable, in some cases not.
+If you generate a lot of Redux Context API -components and Redux Devtools is enabled, history of unmounted components is visible in the Redux Devtools debugging history. In some cases this may be desirable, in some cases not. 
+
+In case the component is unmounted, it's listeners are unsubscribed and time travel will not work tool
 
 ## Using React Context API
 
@@ -204,39 +203,24 @@ export const ReduxInc = container.StateConnector( AbstractInc )
 ```
 
 
+# Examples
 
-# TODO -list example
+Some example of Models are available in [src/frontend/models](https://github.com/terotests/ts2redux/tree/master/src/frontend/models) -directory.
 
-Tries to simplify creating the Redux state into 3 simple steps (with some substeps):
+## Error handling in async functions
 
-1. Create a model
-2. Compile the model to reducers
-3. Bind model to some React component
-
-## Step 1: create a model
+In typical Redux code you want to have some kind of loading state
 
 ```typescript
-import axios from 'axios'
+export type TaskState = 'UNDEFINED' | 'RUNNING' |  'LOADED' | 'ERROR'
+```
 
-// 1) Define some shape for the model
-export interface TodoListItem {
-  userId: number
-  id: number
-  title: string
-  completed: boolean
-}
-export type TaskState = 'UNDEFINED' | 'RUNNING' |  'LOADED' | { type:'ERROR', error:any }
+Any kind of loading state is pretty easy to implement, for example
 
-/**
- * @redux true
- */
+```typescript
 class TodoList {
-
-  // 2) define model types with initializers
   items: TodoListItem[] = []
   state: TaskState = 'UNDEFINED'
-
-  // 3) define some functions to be used with data
   async getItems() {
     if(this.state === 'RUNNING') return
     try {
@@ -244,65 +228,11 @@ class TodoList {
       this.items = (await axios.get('https://jsonplaceholder.typicode.com/todos')).data
       this.state = 'LOADED'
     } catch(e) {
-      this.state = {
-        type: 'ERROR',
-        error: e
-      }
+      this.state = 'ERROR'
     }
   }
 }
 ```
-
-## Step 2: compile the model
-
-run `ts2redux <directory>` for the directory of yours models. Subdirectory `reducers/` will be created
-
-## Step 3: connect model to a component
-
-```typescript
-import * as React from 'react';
-import * as container from '../models/reducers/TodoList'
-
-// 1) Extend the container.Properties and add more props if needed
-export interface Props extends container.Props {}
-
-// 2) Create a reusable abstract component first
-export const AbstractTodoList = (props : Props) => {
-  return (
-  <div>
-      <h2>TodoList Component</h2>
-      <input type="submit"
-              value="load"
-              className="btn btn-default"
-              // 3) the getItems() is mapped here
-              onClick={() => props.getItems()}
-      />
-      <div>
-        <div>{props.state}</div>
-        <table><tbody>{props.items.map( m => {
-          return <tr key={m.id}>
-            <td>{m.id}</td>
-            <td>{m.title}</td>
-            <td>{m.completed ? 'Completed' : 'In Progress'}</td>
-          </tr>;
-        })}</tbody></table>        
-      </div>
-  </div>
-  );
-}
-
-// 4) Connect the Redux model and create a concrete implementation
-export const TodoList = container.StateConnector( AbstractTodoList )
-```
-
-## TODO:
-
-Think about local storage and the migrations
-https://medium.freecodecamp.org/how-to-use-redux-persist-when-migrating-your-states-a5dee16b5ead
-
-https://github.com/rt2zz/redux-persist/blob/HEAD/docs/migrations.md
-
-
-## License
+# License
 
 MIT.

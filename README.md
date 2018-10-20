@@ -235,14 +235,6 @@ class TodoList {
   }
 }
 ```
-
-# TODO:
-
-Think about local storage and the migrations
-https://medium.freecodecamp.org/how-to-use-redux-persist-when-migrating-your-states-a5dee16b5ead
-
-https://github.com/rt2zz/redux-persist/blob/HEAD/docs/migrations.md
-
 # License
 
 MIT.

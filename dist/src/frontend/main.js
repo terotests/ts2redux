@@ -13,6 +13,7 @@ var UserState_1 = require("./models/reducers/UserState");
 var IncModel_1 = require("./models/reducers/IncModel");
 var memberArea_1 = require("./components/memberArea");
 var todoList_1 = require("./components/todoList");
+var ReduxInc_1 = require("./components/ReduxInc");
 var combinedState_1 = require("./components/combinedState");
 var todo = require("./models/TodoList");
 var store = redux_1.createStore(reducers_1.reducers, redux_1.compose(redux_1.applyMiddleware(redux_thunk_1.default), window['devToolsExtension'] ? window['devToolsExtension']() : function (f) { return f; }));
@@ -33,6 +34,7 @@ ReactDOM.render(React.createElement(react_redux_1.Provider, { store: store },
                     React.createElement("div", null, state.cnt),
                     React.createElement("button", { onClick: state.increment }, "+"),
                     React.createElement("button", { onClick: state.decrement }, "-")); })),
+            React.createElement(ReduxInc_1.ReduxInc, null),
             React.createElement("div", null,
                 React.createElement(memberArea_1.MemberArea, null),
                 React.createElement(combinedState_1.CombinedStates, null),

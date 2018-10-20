@@ -74,12 +74,14 @@ Whoa! There is a lot of stuff there, admittedly, and it is not easy to understan
 
 But what is important is what is exported from the file and what we can use, the `ts2redux` has been friendly enought to generate to us something which React Context API calls Provider and Consumer pair, which we can now import to our application
 
+## Using React Context API
+
 ```typescript
+// for the new ReactContext API
 import { IncModelConsumer, IncModelProvider } from './models/reducers/IncModel'
 ```
+For React Context API we simply create a upper level `<model>Provider` and lower in the VDOM tree use `<model>Consumer` to render components or to call methods of the model.
 
-**IncModelProvider** will provide root element under which any number of `IncModelConsumer` instances can
-read an call the functions from our model like this
 ```typescript
   <IncModelProvider>
       <IncModelConsumer>{state=><div>
@@ -88,6 +90,41 @@ read an call the functions from our model like this
         <button onClick={state.decrement}>-</button>
       </div>}</IncModelConsumer>
   </IncModelProvider>
+```
+
+## Using Redux
+
+For Redux the compiler generates the main reducer import in 
+```typescript
+import { reducers } from './models/reducers/'
+```
+This is pretty standard Redux stuff, the main reducer is given then to the `createStore`
+```typescript
+let store = createStore( reducers, /** other params*/)
+```
+After which you create `<Provider store={store}>` normally.
+
+The IncModel -component would look like this:
+```typescript
+
+// impor the IncModel
+import * as container from '../models/reducers/IncModel'
+
+// abstract properties version of the component
+export interface Props extends container.Props {}
+
+// this component can be re-used
+export const AbstractInc = (props : Props) => {
+  return (
+    <div>
+      <div>{props.cnt}</div>
+      <button onClick={props.increment}>+</button>
+      <button onClick={props.decrement}>-</button>
+    </div>
+  );
+}
+// Connect the abstract component to the Redux model
+export const ReduxInc = container.StateConnector( AbstractInc )
 ```
 
 

@@ -13,6 +13,7 @@ import { IncModelConsumer, IncModelProvider } from './models/reducers/IncModel'
 
 import { MemberArea } from './components/memberArea';
 import { TodoList } from './components/todoList';
+import { ReduxInc } from './components/ReduxInc';
 import { CombinedStates } from './components/combinedState';
 import * as todo from './models/TodoList'
 
@@ -38,7 +39,6 @@ const UserInfo = (props) => <UserStateContext.Consumer>{
 
 ReactDOM.render(
   <Provider store={store}>
-    
     <Ctx.Provider value={listValue}>
       <UserStateProvider>
       
@@ -49,7 +49,7 @@ ReactDOM.render(
             <button onClick={state.decrement}>-</button>
           </div>}</IncModelConsumer>
       </IncModelProvider>
-      
+      <ReduxInc/>
       <div>
         <MemberArea/>
         <CombinedStates/>

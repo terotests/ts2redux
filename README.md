@@ -5,15 +5,28 @@ Compile simple TypeScript classes into both Redux or React Context API state mac
 
 Too good to be true?
 
-Yes, it is true, but the compiler is still quite young and Please Do check the [Limitations](https://github.com/terotests/ts2redux#introduction) before you test the library.
+Yes, it is true, but the compiler is still quite young and Please Do check the [Limitations](https://github.com/terotests/ts2redux#limitations) before you test the library.
+
+## Installation
+
+```
+npm i -g ts2redux
+```
+Run test app by cloning [Repository](https://github.com/terotests/ts2redux) and then
+```
+npm install
+npm test
+```
 
 ## Why?
+
+To find out if it is possible.
 
 It is not likely that state management gets much easier than this:
 
 1. State is written using as TypeScript `class` - initializers, reducers, actions are derived from that
 2. You can choose Redux or Context API (or both for that matter)
-3. Redux Devtools support for React Context API
+3. Partial Redux Devtools support for React Context API 
 4. Just use normal `async` - no fancy library needed for async operations
 5. Typed with TypeScript
 
@@ -32,10 +45,7 @@ Also inspiration sources were people at [Koodiklinikka](https://github.com/koodi
 
 ## Introduction
 
-Ok, As you all know, Redux state management can be time consuming and people are switching to more user friendly
-solutions like MobX or considering the new React Context API. There are some nice libraries available for the Context API like [Unstated](https://github.com/jamiebuilds/unstated).
-
-However, the simplest way of writing a stateful model is simply creating a simple TypeScript class would be like this
+The simplest way of writing a stateful model is simply creating a simple TypeScript class would be like this
 ```typescript
 export class SimpleModel {
   items: any[] = []
@@ -58,30 +68,26 @@ export class IncModel {
   }  
 }
 ```
-The question asked was: would it be possible to transfer this simple state representation automatically to Redux?
+The question asked was: would it be possible to transfer this simple state representation automatically to Redux? Or even to React Context API?
 
-Turns out with a little bit of [compiler magic](https://github.com/dsherret/ts-simple-ast) we can transform the *idea* of the class into both Redux and React Context API representations, which are both functionally similar to the original class and quite easy to use.
+Turns out with a little bit of [compiler magic](https://github.com/dsherret/ts-simple-ast) we can transform the *idea* of the class into both Redux and React Context API representations. The Redux compiling will create necessary Actions, Enumerations and Reducers, Combined Reducers and MapStateToProps, MapDispatchToProps to manage the component state correctly. 
 
-Only thing we need to do is tell compiler that this class should be transformed by adding a [JSDoc](http://usejsdoc.org/) comment property
+The compiler does not need much help, we need to add the [JSDoc](http://usejsdoc.org/) comment property before the class and also we need to remember to give types to the properties of the class.
 
 ```typescript
 /**
  * @redux true
  */
-export class MyModel {
+export class IncModel {
   // ...
 }
 ```
-If the source files are in `src/` we can run `ts2redux` against it like this
+Then we can compile the model
 ```
-  ts2redux src
+  ts2redux <path>
 ```
-And the directory where `IncModel` and `SimpleModel` now magically contain files [IncModel.tsc](https://github.com/terotests/ts2redux/blob/master/src/frontend/models/reducers/IncModel.tsx) and  
-[SimpleModel.tsc](https://github.com/terotests/ts2redux/blob/master/src/frontend/models/reducers/IncModel.tsx) 
-
-Whoa! There is a lot of stuff there, admittedly, and it is not easy to understand what the code does at the first glance. 
-
-But what is important is what is exported from the file and what we can use, the `ts2redux` has been friendly enought to generate to us something which React Context API calls Provider and Consumer pair, which we can now import to our application and user the state easily from there on.
+And the directory will have `reducers/` directory where `IncModel` and `SimpleModel` are defined [IncModel.tsc](https://github.com/terotests/ts2redux/blob/master/src/frontend/models/reducers/IncModel.tsx) and  
+[SimpleModel.tsc](https://github.com/terotests/ts2redux/blob/master/src/frontend/models/reducers/IncModel.tsx) together with all Redux ceremony and more.
 
 ## Limitations
 
@@ -97,19 +103,19 @@ class Foo {
   name3 = 'Someone'
 }
 ```
-Reason for this is that at least for now, the type is not inferred from the assigned value ( can be changed in the future )
+Reason for this is that at least for now, the type is not inferred from the assigned value.
 
-### Async Functions can not mutate state deeply
+### Async Functions can not mutate state deeply (syncronous can)
 
-There is important limitation for `async` functions for the class: `async` function can read state but can only assign (`=`) to class properties, not mutate them deeply. 
+There is important limitation for `async` functions for the class: `async` function can read state but can only assign (`=`) to class properties, not mutate them deeply like syncronous functions, which are compiled to reducers.
 
-This is because, unlike syncronous routines, which are using `immer` the `async` functions can only generate new Redux actions from the assigments.
+This is because `async` functions can only mutate the state by dispatching new Redux actions from the assigments. 
 
 For example
 ```typescript
  // this is OK
  this.items = []            
- // this is error
+ // this is error, no dispatch generated, Redux will complain about this too
  this.items.sort( /*... */)  
 ```
 
@@ -139,9 +145,11 @@ import * as foo from '../barzone'
 ```
 Will be broken. If you need to import files in the model files it is recommened to [Configure TypeScript to not user relative paths](https://decembersoft.com/posts/say-goodbye-to-relative-paths-in-typescript-imports/)
 
-### Removed React Context API -components are not removed from the Redux Devtools
+### React Context API -components are not removed from Redux Devtools after unmount
 
-If you generate a lot of Redux Context API -components and Redux Devtools is enabled, history of unmounted components is visible in the Redux Devtools debugging history. In some cases this may be desirable, in some cases not.
+If you generate a lot of Redux Context API -components and Redux Devtools is enabled, history of unmounted components is visible in the Redux Devtools debugging history. In some cases this may be desirable, in some cases not. 
+
+In case the component is unmounted, it's listeners are unsubscribed and time travel will not work tool
 
 ## Using React Context API
 

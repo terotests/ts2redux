@@ -36,10 +36,10 @@ This library would not have been possible without following great OS tools:
 - [ts-simple-ast](https://github.com/dsherret/ts-simple-ast) for AST code management (special thanks for library author David Sherret for extremely fast responses while I was having problems during development!)
 - [immer](https://github.com/mweststrate/immer) for easy immutable transformations
 - [yargs](https://github.com/yargs/yargs) for command line processing
-- Redux
 - [Redux Devtools Extansions](https://github.com/zalmoxisus/redux-devtools-extension)
 - and of course [Redux](https://github.com/reduxjs/redux) and [React and the new Context API](https://reactjs.org/docs/context.html)
-Also inspiration sources were people at [Koodiklinikka](https://github.com/koodiklinikka), developers at [Leonidas](https://leonidasoy.fi/) and several blog article writers [1](https://daveceddia.com/context-api-vs-redux/)[2](https://medium.freecodecamp.org/replacing-redux-with-the-new-react-context-api-8f5d01a00e8c)
+
+Also inspiration sources were fellow coders at [Koodiklinikka](https://github.com/koodiklinikka), developers at [Leonidas](https://leonidasoy.fi/) and several blog article writers [1](https://daveceddia.com/context-api-vs-redux/)[2](https://medium.freecodecamp.org/replacing-redux-with-the-new-react-context-api-8f5d01a00e8c)
 
 ## Introduction
 

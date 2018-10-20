@@ -3,6 +3,22 @@
 
 Compile simple TypeScript classes into both Redux or React Context API state machines, which work together with Redux Devtools (yes, also React Context changes can be viewed from Redux Devtools, time travel also works! 🎉)
 
+Too good to be true?
+
+Yes, it is true, but the library is still quite young and Please Do check the [Limitations](https://github.com/terotests/ts2redux#introduction) before you test the library.
+
+## Why?
+
+It is not likely that state management gets much easier than this:
+
+1. State is written using pure TypeScript (which is completely independent from any state library)
+2. Same state definition can be used either as Redux or Context API state
+3. Both Redux and React Context API can be inspected using Redux Devtools
+4. No need for external Async -libraries, sagas etc.  just use normal `async` and assign the state 
+5. Immutable transitions are handled effectively by `immer`
+
+Also the library imposes no direct dependencies, after it has compiled the sources, you do not need the compiler any more - the resulting files have not dependencies to anything else than proven libraries like React, Immer etc.
+
 ## Acknowledgements
 
 This library would not have been possible without following great OS tools:

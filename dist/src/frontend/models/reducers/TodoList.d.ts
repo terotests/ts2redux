@@ -82,7 +82,9 @@ export declare const TodoListReducer: (state: ITodoList, action: any) => ITodoLi
 export declare const TodoListContext: React.Context<Props>;
 export declare class TodoListStore extends React.Component {
     state: ITodoList;
+    __devTools: any;
     constructor(props: any);
+    componentWillUnmount(): void;
     clearTodoList(): void;
     reverse(): void;
     sortById(): void;
@@ -91,3 +93,6 @@ export declare class TodoListStore extends React.Component {
     getItems(): Promise<void>;
     render(): JSX.Element;
 }
+/*************************************
+* HOC for connecting to properties   *
+*************************************/

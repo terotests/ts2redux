@@ -444,16 +444,44 @@ export const ShopCartModelReducer = (state:ITestModel = {}, action) => {
             createComment( ng, 'React Context API test');            
             // create context...
             ng.out(`export const ${c.getName()}Context = React.createContext<Props>(null)`, true)
-  
+            ng.out(`let instanceCnt = 1`, true)
             ng.out(`export class ${c.getName()}Store extends React.Component {`, true)
               ng.indent(1)
               ng.out(`state: I${c.getName()} = init_${c.getName()}() `, true)
+              ng.out(`__devTools:any = null`, true)
+              // devToolsConnection:any = null  
               ng.out(`constructor( props ){`, true)
                 ng.indent(1)
                 ng.out(`super(props)`, true);
                 const binder = ng.fork()
+                ng.out(`const devs = window['devToolsExtension'] ? window['devToolsExtension'] : null`, true)
+                ng.out(`if(devs) {`, true)
+                  ng.indent(1)
+                  ng.out(`this.__devTools = devs.connect({name:'${c.getName()}'+instanceCnt++})`, true)
+                  ng.out(`this.__devTools.init(this.state)`, true)                 
+                  ng.indent(-1)
+                ng.out(`}`, true)
                 ng.indent(-1)
               ng.out(`}`, true)
+              ng.out(`componentWillUnmount() {`, true)
+                ng.indent(1)
+                ng.out(`if(this.__devTools) this.__devTools.unsubscribe()`, true)
+                ng.indent(-1)
+              ng.out(`}`, true)
+
+              // debugger idea
+/*
+      const newState = TodoListReducer( this.state, action )
+      this.devToolsConnection.send('getItems', newState);
+      this.setState( newState )
+*/
+
+/*
+
+        componentWillUnmount() {
+            window.removeEventListener('scroll', this.onScroll.bind(this), false);
+        }
+*/              
 
               c.getMethods().forEach( m => {
                 const body = ng
@@ -466,11 +494,18 @@ export const ShopCartModelReducer = (state:ITestModel = {}, action) => {
                   body.indent(1)
                   const firstParam = m.getParameters().filter( (a,i) => i<1).map( mod => mod.getName() ).join('')
                   if(m.isAsync()) {
-body.out(`(new R${c.getName()}(null, (action) => { this.setState( ${c.getName()}Reducer( this.state, action ) )}, () => ({${c.getName()}:this.state})) ).${m.getName()}(${firstParam})`, true);
+body.out(`(new R${c.getName()}(null, (action) => {`, true)
+body.indent(1)
+  body.out(`const nextState = ${c.getName()}Reducer( this.state, action )`, true)  
+  body.out(`if(this.__devTools) this.__devTools.send(action.type, nextState)`, true)              
+  body.out(`this.setState(nextState)`, true)
+body.indent(-1)
+body.out(`}, () => ({${c.getName()}:this.state})) ).${m.getName()}(${firstParam})`, true);
                   } else {
-                    const pNames = 
-body.out(`this.setState( immer.produce( this.state, draft => ( new R${c.getName()}(draft) ).${m.getName()}(${firstParam}) ) )`, true)
-                  }
+body.out(`const nextState = immer.produce( this.state, draft => ( new R${c.getName()}(draft) ).${m.getName()}(${firstParam}) )`, true)
+body.out(`if(this.__devTools) this.__devTools.send('${m.getName()}', nextState)`, true)              
+body.out(`this.setState(nextState)`, true)
+}
                   body.indent(-1)
                 body.out('}', true) 
 
@@ -489,6 +524,26 @@ body.out(`this.setState( immer.produce( this.state, draft => ( new R${c.getName(
               ng.out('}', true)
               ng.indent(-1)
             ng.out(`}`, true)  
+
+            createComment(ng, 'HOC for connecting to properties')
+            
+            // Disable for now...
+            /*
+            ng.out(`export function ${c.getName()}HOC(Component) {`, true)
+              ng.indent(1)
+              ng.out(`return function Connected${c.getName()}(props) {`, true)
+                ng.indent(1)
+                ng.out(`return (<${c.getName()}Context.Consumer>`, true)
+                 ng.indent(1)
+                 ng.out(`{data => <Component {...props} {...data} />}`, true)
+                 ng.indent(-1)
+                ng.out(`</${c.getName()}Context.Consumer>)`, true)
+                ng.indent(-1)
+              ng.out(`}`, true)
+              ng.indent(-1)
+            ng.out(`}`, true)   
+            */         
+
           }
           tsx(ng)
       }

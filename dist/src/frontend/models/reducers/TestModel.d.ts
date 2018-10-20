@@ -138,7 +138,9 @@ export declare const TestModelReducer: (state: ITestModel, action: any) => ITest
 export declare const TestModelContext: React.Context<Props>;
 export declare class TestModelStore extends React.Component {
     state: ITestModel;
+    __devTools: any;
     constructor(props: any);
+    componentWillUnmount(): void;
     setUserMessage(value: string): void;
     add(item: ShopCartItem): void;
     removeFirst(): void;
@@ -161,3 +163,6 @@ export declare class TestModelStore extends React.Component {
     ChangeLastItem(): Promise<void>;
     render(): JSX.Element;
 }
+/*************************************
+* HOC for connecting to properties   *
+*************************************/

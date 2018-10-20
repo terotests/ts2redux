@@ -63,7 +63,9 @@ export declare const UserStateReducer: (state: IUserState, action: any) => IUser
 export declare const UserStateContext: React.Context<Props>;
 export declare class UserStateStore extends React.Component {
     state: IUserState;
+    __devTools: any;
     constructor(props: any);
+    componentWillUnmount(): void;
     login(loginInfo: {
         username: string;
         password: string;
@@ -72,3 +74,6 @@ export declare class UserStateStore extends React.Component {
     fakeLogin(): void;
     render(): JSX.Element;
 }
+/*************************************
+* HOC for connecting to properties   *
+*************************************/

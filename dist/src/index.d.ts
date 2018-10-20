@@ -3,6 +3,7 @@ import * as R from 'robowr';
 export interface GenerationOptions {
     path: string;
     reducerPath?: string;
+    disableDevtoolsFromContext?: boolean;
 }
 export interface ModelDefinition {
     name: string;

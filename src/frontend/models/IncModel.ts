@@ -5,10 +5,10 @@
 
 export class IncModel {
   cnt:number = 0
-  async increment() {
+  increment() {
     this.cnt++
   }
-  async decrement() {
+  decrement() {
     this.cnt--
   }  
 }

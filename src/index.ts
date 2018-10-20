@@ -14,6 +14,7 @@ import { dirname } from "path";
 export interface GenerationOptions {
   path: string
   reducerPath?: string
+  disableDevtoolsFromContext?: boolean
 }
 
 export interface ModelDefinition {
@@ -400,36 +401,33 @@ export const ShopCartModelReducer = (state:ITestModel = {}, action) => {
                 ng.indent(1)
                 ng.out(`super(props)`, true);
                 const binder = ng.fork()
-                ng.out(`const devs = window['devToolsExtension'] ? window['devToolsExtension'] : null`, true)
-                ng.out(`if(devs) {`, true)
-                  ng.indent(1)
-                  ng.out(`this.__devTools = devs.connect({name:'${c.getName()}'+instanceCnt++})`, true)
-                  ng.out(`this.__devTools.init(this.state)`, true) 
-                  ng.out(`this.__devTools.subscribe( msg => {`, true)  
+                if(!settings.disableDevtoolsFromContext) {
+                  ng.out(`const devs = window['devToolsExtension'] ? window['devToolsExtension'] : null`, true)
+                  ng.out(`if(devs) {`, true)
                     ng.indent(1)
-                    ng.out(`if (msg.type === 'DISPATCH' && msg.state) {`, true)
+                    ng.out(`this.__devTools = devs.connect({name:'${c.getName()}'+instanceCnt++})`, true)
+                    ng.out(`this.__devTools.init(this.state)`, true) 
+                    ng.out(`this.__devTools.subscribe( msg => {`, true)  
                       ng.indent(1)
-                      ng.out(`this.setState(JSON.parse(msg.state))`, true)
+                      ng.out(`if (msg.type === 'DISPATCH' && msg.state) {`, true)
+                        ng.indent(1)
+                        ng.out(`this.setState(JSON.parse(msg.state))`, true)
+                        ng.indent(-1)
+                      ng.out(`}`, true) 
                       ng.indent(-1)
-                    ng.out(`}`, true) 
+                    ng.out(`})`, true)                                  
                     ng.indent(-1)
-                  ng.out(`})`, true)      
-/*
-      this.__devTools.subscribe( f => {
-        if (f.type === 'DISPATCH' && f.state) {
-          this.setState(JSON.parse(f.state))
-        }
-      })
-*/                             
+                  ng.out(`}`, true)
+                }
+                ng.indent(-1)
+              ng.out(`}`, true)
+              if(!settings.disableDevtoolsFromContext) {
+                ng.out(`componentWillUnmount() {`, true)
+                  ng.indent(1)
+                  ng.out(`if(this.__devTools) this.__devTools.unsubscribe()`, true)
                   ng.indent(-1)
                 ng.out(`}`, true)
-                ng.indent(-1)
-              ng.out(`}`, true)
-              ng.out(`componentWillUnmount() {`, true)
-                ng.indent(1)
-                ng.out(`if(this.__devTools) this.__devTools.unsubscribe()`, true)
-                ng.indent(-1)
-              ng.out(`}`, true)
+              }
 
               // debugger idea
 /*
@@ -458,15 +456,25 @@ export const ShopCartModelReducer = (state:ITestModel = {}, action) => {
                   if(m.isAsync()) {
 body.out(`(new R${c.getName()}(null, (action) => {`, true)
 body.indent(1)
-  body.out(`const nextState = ${c.getName()}Reducer( this.state, action )`, true)  
-  body.out(`if(this.__devTools) this.__devTools.send(action.type, nextState)`, true)              
-  body.out(`this.setState(nextState)`, true)
+                  
+  if(!settings.disableDevtoolsFromContext) { 
+    body.out(`const nextState = ${c.getName()}Reducer( this.state, action )`, true) 
+    body.out(`if(this.__devTools) this.__devTools.send(action.type, nextState)`, true)  
+    body.out(`this.setState(nextState)`, true)
+  } else {
+    body.out(`this.setState(${c.getName()}Reducer( this.state, action ))`, true)
+  }               
+  
 body.indent(-1)
 body.out(`}, () => ({${c.getName()}:this.state})) ).${m.getName()}(${firstParam})`, true);
                   } else {
-body.out(`const nextState = immer.produce( this.state, draft => ( new R${c.getName()}(draft) ).${m.getName()}(${firstParam}) )`, true)
-body.out(`if(this.__devTools) this.__devTools.send('${m.getName()}', nextState)`, true)              
-body.out(`this.setState(nextState)`, true)
+if(!settings.disableDevtoolsFromContext) { 
+  body.out(`const nextState = immer.produce( this.state, draft => ( new R${c.getName()}(draft) ).${m.getName()}(${firstParam}) )`, true)
+  body.out(`if(this.__devTools) this.__devTools.send('${m.getName()}', nextState)`, true)   
+  body.out(`this.setState(nextState)`, true)
+} else {
+  body.out(`this.setState(immer.produce( this.state, draft => ( new R${c.getName()}(draft) ).${m.getName()}(${firstParam}) ))`, true)
+}           
 }
                   body.indent(-1)
                 body.out('}', true) 

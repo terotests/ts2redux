@@ -17,5 +17,8 @@ export declare class TodoList {
     sortById(): void;
     sortByTitle(): void;
     sortByCompletion(): void;
+    /**
+     * Fetch items from json placeholder service
+     */
     getItems(): Promise<void>;
 }

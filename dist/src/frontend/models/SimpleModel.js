@@ -39,60 +39,26 @@ var axios_1 = require("axios");
 /**
  * @redux true
  */
-var TodoList = /** @class */ (function () {
-    function TodoList() {
+var SimpleModel = /** @class */ (function () {
+    function SimpleModel() {
         this.items = [];
-        this.state = 'UNDEFINED';
     }
-    TodoList.prototype.clearTodoList = function () {
-        this.items = [];
-    };
-    TodoList.prototype.reverse = function () {
-        this.items.reverse();
-    };
-    TodoList.prototype.sortById = function () {
-        console.log('sortById was called!');
-        this.items.sort(function (a, b) { return a.id - b.id; });
-    };
-    TodoList.prototype.sortByTitle = function () {
-        this.items.sort(function (a, b) { return a.title.localeCompare(b.title); });
-    };
-    TodoList.prototype.sortByCompletion = function () {
-        var toNumber = function (value) { return value ? 1 : 0; };
-        this.items.sort(function (a, b) { return toNumber(a.completed) - toNumber(b.completed); });
-    };
-    /**
-     * Fetch items from json placeholder service
-     */
-    TodoList.prototype.getItems = function () {
+    SimpleModel.prototype.getItems = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var _a, e_1;
+            var _a;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
-                        if (this.state === 'RUNNING')
-                            return [2 /*return*/];
-                        _b.label = 1;
-                    case 1:
-                        _b.trys.push([1, 3, , 4]);
-                        this.state = 'RUNNING';
                         _a = this;
                         return [4 /*yield*/, axios_1.default.get('https://jsonplaceholder.typicode.com/todos')];
-                    case 2:
+                    case 1:
                         _a.items = (_b.sent()).data;
-                        this.state = 'LOADED';
-                        return [3 /*break*/, 4];
-                    case 3:
-                        e_1 = _b.sent();
-                        this.state = 'ERROR';
-                        this.stateError = e_1;
-                        return [3 /*break*/, 4];
-                    case 4: return [2 /*return*/];
+                        return [2 /*return*/];
                 }
             });
         });
     };
-    return TodoList;
+    return SimpleModel;
 }());
-exports.TodoList = TodoList;
-//# sourceMappingURL=TodoList.js.map
+exports.SimpleModel = SimpleModel;
+//# sourceMappingURL=SimpleModel.js.map

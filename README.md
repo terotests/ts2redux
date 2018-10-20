@@ -5,7 +5,7 @@ Compile simple TypeScript classes into both Redux or React Context API state mac
 
 Too good to be true?
 
-Yes, it is true, but the library is still quite young and Please Do check the [Limitations](https://github.com/terotests/ts2redux#introduction) before you test the library.
+Yes, it is true, but the compiler is still quite young and Please Do check the [Limitations](https://github.com/terotests/ts2redux#introduction) before you test the library.
 
 ## Why?
 

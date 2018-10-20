@@ -10,6 +10,7 @@ var react_redux_1 = require("react-redux");
 var reducers_1 = require("./models/reducers/");
 var TodoList_1 = require("./models/reducers/TodoList");
 var UserState_1 = require("./models/reducers/UserState");
+var IncModel_1 = require("./models/reducers/IncModel");
 var memberArea_1 = require("./components/memberArea");
 var todoList_1 = require("./components/todoList");
 var combinedState_1 = require("./components/combinedState");
@@ -27,9 +28,12 @@ var UserInfo = function (props) { return React.createElement(UserState_1.UserSta
 ReactDOM.render(React.createElement(react_redux_1.Provider, { store: store },
     React.createElement(Ctx.Provider, { value: listValue },
         React.createElement(UserState_1.UserStateProvider, null,
+            React.createElement(IncModel_1.IncModelProvider, null,
+                React.createElement(IncModel_1.IncModelConsumer, null, function (state) { return React.createElement("div", null,
+                    React.createElement("div", null, state.cnt),
+                    React.createElement("button", { onClick: state.increment }, "+"),
+                    React.createElement("button", { onClick: state.decrement }, "-")); })),
             React.createElement("div", null,
-                React.createElement("div", null,
-                    React.createElement("b", null, "This is the JSX area")),
                 React.createElement(memberArea_1.MemberArea, null),
                 React.createElement(combinedState_1.CombinedStates, null),
                 React.createElement(todoList_1.TodoList, null)),

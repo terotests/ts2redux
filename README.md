@@ -24,8 +24,21 @@ However, the simplest way of writing a stateful model is simply creating a simpl
 export class SimpleModel {
   items: any[] = []
   async getItems() {
+    // get some data from the internet
     this.items = (await axios.get('https://jsonplaceholder.typicode.com/todos')).data
   }
+}
+```
+Or if you prefer the classical increment / decrement example
+```typescript
+export class IncModel {
+  cnt:number = 0
+  async increment() {
+    this.cnt++
+  }
+  async decrement() {
+    this.cnt--
+  }  
 }
 ```
 However, because the class is using imperative model with mutable state changes we can not use this with Redux.
@@ -49,7 +62,33 @@ export class SimpleModel {
   }
 }
 ```
-Then we can try the compiler and see what comes out.
+Then we can run something like this
+
+```
+  ts2redux src
+```
+And the directory where `IncModel` and `SimpleModel` now magically contain files [IncModel.tsc](https://github.com/terotests/ts2redux/blob/master/src/frontend/models/reducers/IncModel.tsx) and  
+[SimpleModel.tsc](https://github.com/terotests/ts2redux/blob/master/src/frontend/models/reducers/IncModel.tsx) 
+
+Whoa! There is a lot of stuff there, admittedly, and it is not easy to understand what the code does at the first glance. 
+
+But what is important is what is exported from the file and what we can use, the `ts2redux` has been friendly enought to generate to us something which React Context API calls Provider and Consumer pair, which we can now import to our application
+
+```typescript
+import { IncModelConsumer, IncModelProvider } from './models/reducers/IncModel'
+```
+
+**IncModelProvider** will provide root element under which any number of `IncModelConsumer` instances can
+read an call the functions from our model like this
+```typescript
+  <IncModelProvider>
+      <IncModelConsumer>{state=><div>
+        <div>{state.cnt}</div>
+        <button onClick={state.increment}>+</button>
+        <button onClick={state.decrement}>-</button>
+      </div>}</IncModelConsumer>
+  </IncModelProvider>
+```
 
 
 

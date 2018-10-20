@@ -8,6 +8,9 @@ import { Provider } from 'react-redux';
 import { reducers } from './models/reducers/'
 import { TodoListContext, TodoListProvider, TodoListConsumer } from './models/reducers/TodoList'
 import { UserStateContext, UserStateProvider } from './models/reducers/UserState'
+
+import { IncModelConsumer, IncModelProvider } from './models/reducers/IncModel'
+
 import { MemberArea } from './components/memberArea';
 import { TodoList } from './components/todoList';
 import { CombinedStates } from './components/combinedState';
@@ -38,8 +41,16 @@ ReactDOM.render(
     
     <Ctx.Provider value={listValue}>
       <UserStateProvider>
+      
+      <IncModelProvider>
+          <IncModelConsumer>{state=><div>
+            <div>{state.cnt}</div>
+            <button onClick={state.increment}>+</button>
+            <button onClick={state.decrement}>-</button>
+          </div>}</IncModelConsumer>
+      </IncModelProvider>
+      
       <div>
-        <div><b>This is the JSX area</b></div>
         <MemberArea/>
         <CombinedStates/>
         <TodoList/>

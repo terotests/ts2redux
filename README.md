@@ -84,8 +84,8 @@ Then we can compile the model
 ```
   ts2redux <path>
 ```
-And the directory will have `reducers/` directory where `IncModel` and `SimpleModel` are defined [IncModel.tsc](https://github.com/terotests/ts2redux/blob/master/src/frontend/models/reducers/IncModel.tsx) and  
-[SimpleModel.tsc](https://github.com/terotests/ts2redux/blob/master/src/frontend/models/reducers/IncModel.tsx) together with all Redux ceremony and more.
+And the directory will have `reducers/` directory where `IncModel` and `SimpleModel` are defined [IncModel.tsx](https://github.com/terotests/ts2redux/blob/master/src/frontend/models/reducers/IncModel.tsx) and  
+[SimpleModel.tsx](https://github.com/terotests/ts2redux/blob/master/src/frontend/models/reducers/IncModel.tsx) together with all Redux ceremony and more.
 
 ## Limitations
 

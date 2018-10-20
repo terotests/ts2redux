@@ -11,7 +11,7 @@ Yes, it is true, but the compiler is still quite young and Please Do check the [
 
 It is not likely that state management gets much easier than this:
 
-1. State is written using pure TypeScript (which is completely independent from any state library)
+1. State is written using as TypeScript `class` - initializers, reducers, actions are derived from that
 2. Same state definition can be used either as Redux or Context API state
 3. Both Redux and React Context API can be inspected using Redux Devtools
 4. No need for external Async -libraries, sagas etc.  just use normal `async` and assign the state 

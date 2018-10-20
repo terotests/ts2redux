@@ -20,8 +20,6 @@ npm test
 
 ## Why?
 
-To find out if it is possible.
-
 It is not likely that state management gets much easier than this:
 
 1. State is written using as TypeScript `class` - initializers, reducers, actions are derived from that

@@ -113,6 +113,7 @@ var redux_thunk_1 = require("redux-thunk");
 var react_redux_1 = require("react-redux");
 var reducers_1 = require("./models/reducers/");
 var TodoList_1 = require("./models/reducers/TodoList");
+var UserState_1 = require("./models/reducers/UserState");
 var memberArea_1 = require("./components/memberArea");
 var todoList_1 = require("./components/todoList");
 var combinedState_1 = require("./components/combinedState");
@@ -121,31 +122,52 @@ var store = redux_1.createStore(reducers_1.reducers, redux_1.compose(redux_1.app
 var listValue = new todo.TodoList();
 var Ctx = React.createContext(listValue);
 // const history = syncHistoryWithStore(hashHistory, store);
+var UserInfo = function (props) { return React.createElement(UserState_1.UserStateContext.Consumer, null, function (state) {
+    return React.createElement("div", null,
+        "USER: ",
+        state.username,
+        React.createElement("button", { onClick: state.fakeLogin }, "Fake Login"));
+}); };
 ReactDOM.render(React.createElement(react_redux_1.Provider, { store: store },
     React.createElement(Ctx.Provider, { value: listValue },
-        React.createElement("div", null,
+        React.createElement(UserState_1.UserStateProvider, null,
             React.createElement("div", null,
-                React.createElement("b", null, "This is the JSX area")),
-            React.createElement(memberArea_1.MemberArea, null),
-            React.createElement(combinedState_1.CombinedStates, null),
-            React.createElement(todoList_1.TodoList, null)),
-        React.createElement("div", null,
-            React.createElement("h4", null, "Context API test"),
-            React.createElement(TodoList_1.TodoListStore, null,
-                React.createElement(TodoList_1.TodoListContext.Consumer, null, function (todolist) {
+                React.createElement("div", null,
+                    React.createElement("b", null, "This is the JSX area")),
+                React.createElement(memberArea_1.MemberArea, null),
+                React.createElement(combinedState_1.CombinedStates, null),
+                React.createElement(todoList_1.TodoList, null)),
+            React.createElement("div", null,
+                React.createElement("h4", null, "Context API test"),
+                React.createElement(UserState_1.UserStateContext.Consumer, null, function (state) {
                     return React.createElement("div", null,
-                        React.createElement("button", { onClick: function () { return todolist.getItems(); } }, "Load"),
-                        React.createElement("button", { onClick: function () { return todolist.reverse(); } }, "Revert"),
-                        React.createElement("ul", null, todolist.items ? todolist.items.slice(0, 6).map(function (item) { return React.createElement("li", { key: item.id }, item.title); }) : ''));
-                })),
-            React.createElement(TodoList_1.TodoListStore, null,
-                React.createElement(TodoList_1.TodoListContext.Consumer, null, function (todolist) {
-                    return React.createElement("div", null,
-                        React.createElement("div", null, todolist.state),
-                        React.createElement("button", { onClick: function () { return todolist.getItems(); } }, "Load"),
-                        React.createElement("button", { onClick: function () { return todolist.reverse(); } }, "Revert"),
-                        React.createElement("ul", null, todolist.items ? todolist.items.slice(0, 10).map(function (item) { return React.createElement("li", { key: item.id }, item.title); }) : ''));
-                }))))), document.getElementById('root'));
+                        "USER: ",
+                        state.username,
+                        React.createElement("button", { onClick: state.fakeLogin }, "Fake Login"));
+                }),
+                React.createElement(TodoList_1.TodoListProvider, null,
+                    React.createElement(TodoList_1.TodoListContext.Consumer, null, function (todolist) {
+                        return React.createElement("div", null,
+                            React.createElement("div", null,
+                                "Items loaded ",
+                                todolist.items.length),
+                            React.createElement("button", { onClick: function () { return todolist.getItems(); } }, "Load"),
+                            React.createElement("button", { onClick: function () { return todolist.reverse(); } }, "Revert"),
+                            React.createElement("ul", null, todolist.items.slice(0, 6).map(function (item) { return React.createElement("li", { key: item.id }, item.title); })));
+                    })),
+                React.createElement(TodoList_1.TodoListProvider, null,
+                    React.createElement(TodoList_1.TodoListConsumer, null, function (todolist) {
+                        return React.createElement("div", null,
+                            React.createElement("div", null, todolist.state),
+                            React.createElement("button", { onClick: function () { return todolist.getItems(); } }, "Load"),
+                            React.createElement("button", { onClick: todolist.reverse }, "Revert List"),
+                            React.createElement("button", { onClick: function () { return todolist.clearTodoList(); } }, "Clear"),
+                            React.createElement("ul", null, todolist.items.slice(0, 10).map(function (item) { return React.createElement("li", { key: item.id },
+                                item.title,
+                                " ",
+                                React.createElement(UserState_1.UserStateProvider, null,
+                                    React.createElement(UserInfo, null))); })));
+                    })))))), document.getElementById('root'));
 /*
       <Router history={history}>
         <Route path="/" component={App}>
@@ -157,7 +179,7 @@ ReactDOM.render(React.createElement(react_redux_1.Provider, { store: store },
       </Router>
 */ 
 
-},{"./components/combinedState":1,"./components/memberArea":2,"./components/todoList":3,"./models/TodoList":5,"./models/reducers/":9,"./models/reducers/TodoList":7,"react":76,"react-dom":58,"react-redux":68,"redux":78,"redux-thunk":77}],5:[function(require,module,exports){
+},{"./components/combinedState":1,"./components/memberArea":2,"./components/todoList":3,"./models/TodoList":5,"./models/reducers/":9,"./models/reducers/TodoList":7,"./models/reducers/UserState":8,"react":76,"react-dom":58,"react-redux":68,"redux":78,"redux-thunk":77}],5:[function(require,module,exports){
 "use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -315,12 +337,13 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-/********************************************************
-*                                                       *
-*   Generated by ts2redux at 2018-10-19T17:41:40.856Z   *
-*   Source file ../TestModel.ts                         *
-*                                                       *
-********************************************************/
+/*********************************************************************************
+*                                                                                *
+*   Redux Reducers and React Context API Provider/Consumer for state TestModel   *
+*   Generated by ts2redux at 2018-10-20T09:58:11.882Z                            *
+*   From Source file ../TestModel.ts                                             *
+*                                                                                *
+*********************************************************************************/
 var timers_1 = require("timers");
 var TaskState;
 (function (TaskState) {
@@ -974,11 +997,14 @@ exports.TestModelReducer = function (state, action) {
 * React Context API test   *
 ***************************/
 exports.TestModelContext = React.createContext(null);
-var TestModelStore = /** @class */ (function (_super) {
-    __extends(TestModelStore, _super);
-    function TestModelStore(props) {
+exports.TestModelConsumer = exports.TestModelContext.Consumer;
+var instanceCnt = 1;
+var TestModelProvider = /** @class */ (function (_super) {
+    __extends(TestModelProvider, _super);
+    function TestModelProvider(props) {
         var _this = _super.call(this, props) || this;
         _this.state = init_TestModel();
+        _this.__devTools = null;
         _this.setUserMessage = _this.setUserMessage.bind(_this);
         _this.add = _this.add.bind(_this);
         _this.removeFirst = _this.removeFirst.bind(_this);
@@ -993,83 +1019,147 @@ var TestModelStore = /** @class */ (function (_super) {
         _this.addOneFriend = _this.addOneFriend.bind(_this);
         _this.fillSomeFriends = _this.fillSomeFriends.bind(_this);
         _this.ChangeLastItem = _this.ChangeLastItem.bind(_this);
+        var devs = window['devToolsExtension'] ? window['devToolsExtension'] : null;
+        if (devs) {
+            _this.__devTools = devs.connect({ name: 'TestModel' + instanceCnt++ });
+            _this.__devTools.init(_this.state);
+            _this.__devTools.subscribe(function (msg) {
+                if (msg.type === 'DISPATCH' && msg.state) {
+                    _this.setState(JSON.parse(msg.state));
+                }
+            });
+        }
         return _this;
     }
-    TestModelStore.prototype.setUserMessage = function (value) {
-        this.setState(immer.produce(this.state, function (draft) { return (new RTestModel(draft)).setUserMessage(value); }));
+    TestModelProvider.prototype.componentWillUnmount = function () {
+        if (this.__devTools)
+            this.__devTools.unsubscribe();
     };
-    TestModelStore.prototype.add = function (item) {
-        this.setState(immer.produce(this.state, function (draft) { return (new RTestModel(draft)).add(item); }));
+    TestModelProvider.prototype.setUserMessage = function (value) {
+        var nextState = immer.produce(this.state, function (draft) { return (new RTestModel(draft)).setUserMessage(value); });
+        if (this.__devTools)
+            this.__devTools.send('setUserMessage', nextState);
+        this.setState(nextState);
     };
-    TestModelStore.prototype.removeFirst = function () {
-        this.setState(immer.produce(this.state, function (draft) { return (new RTestModel(draft)).removeFirst(); }));
+    TestModelProvider.prototype.add = function (item) {
+        var nextState = immer.produce(this.state, function (draft) { return (new RTestModel(draft)).add(item); });
+        if (this.__devTools)
+            this.__devTools.send('add', nextState);
+        this.setState(nextState);
     };
-    TestModelStore.prototype.sort = function () {
-        this.setState(immer.produce(this.state, function (draft) { return (new RTestModel(draft)).sort(); }));
+    TestModelProvider.prototype.removeFirst = function () {
+        var nextState = immer.produce(this.state, function (draft) { return (new RTestModel(draft)).removeFirst(); });
+        if (this.__devTools)
+            this.__devTools.send('removeFirst', nextState);
+        this.setState(nextState);
     };
-    TestModelStore.prototype.addCart = function () {
-        this.setState(immer.produce(this.state, function (draft) { return (new RTestModel(draft)).addCart(); }));
+    TestModelProvider.prototype.sort = function () {
+        var nextState = immer.produce(this.state, function (draft) { return (new RTestModel(draft)).sort(); });
+        if (this.__devTools)
+            this.__devTools.send('sort', nextState);
+        this.setState(nextState);
     };
-    TestModelStore.prototype.addCartSync = function () {
-        this.setState(immer.produce(this.state, function (draft) { return (new RTestModel(draft)).addCartSync(); }));
+    TestModelProvider.prototype.addCart = function () {
+        var nextState = immer.produce(this.state, function (draft) { return (new RTestModel(draft)).addCart(); });
+        if (this.__devTools)
+            this.__devTools.send('addCart', nextState);
+        this.setState(nextState);
     };
-    TestModelStore.prototype.addToCart = function (adding) {
-        this.setState(immer.produce(this.state, function (draft) { return (new RTestModel(draft)).addToCart(adding); }));
+    TestModelProvider.prototype.addCartSync = function () {
+        var nextState = immer.produce(this.state, function (draft) { return (new RTestModel(draft)).addCartSync(); });
+        if (this.__devTools)
+            this.__devTools.send('addCartSync', nextState);
+        this.setState(nextState);
     };
-    TestModelStore.prototype.setCartNewItem = function (adding) {
-        this.setState(immer.produce(this.state, function (draft) { return (new RTestModel(draft)).setCartNewItem(adding); }));
+    TestModelProvider.prototype.addToCart = function (adding) {
+        var nextState = immer.produce(this.state, function (draft) { return (new RTestModel(draft)).addToCart(adding); });
+        if (this.__devTools)
+            this.__devTools.send('addToCart', nextState);
+        this.setState(nextState);
     };
-    TestModelStore.prototype.addToCartRandom = function () {
-        this.setState(immer.produce(this.state, function (draft) { return (new RTestModel(draft)).addToCartRandom(); }));
+    TestModelProvider.prototype.setCartNewItem = function (adding) {
+        var nextState = immer.produce(this.state, function (draft) { return (new RTestModel(draft)).setCartNewItem(adding); });
+        if (this.__devTools)
+            this.__devTools.send('setCartNewItem', nextState);
+        this.setState(nextState);
     };
-    TestModelStore.prototype.renameLast = function (newName) {
-        this.setState(immer.produce(this.state, function (draft) { return (new RTestModel(draft)).renameLast(newName); }));
+    TestModelProvider.prototype.addToCartRandom = function () {
+        var nextState = immer.produce(this.state, function (draft) { return (new RTestModel(draft)).addToCartRandom(); });
+        if (this.__devTools)
+            this.__devTools.send('addToCartRandom', nextState);
+        this.setState(nextState);
+    };
+    TestModelProvider.prototype.renameLast = function (newName) {
+        var nextState = immer.produce(this.state, function (draft) { return (new RTestModel(draft)).renameLast(newName); });
+        if (this.__devTools)
+            this.__devTools.send('renameLast', nextState);
+        this.setState(nextState);
     };
     // action
-    TestModelStore.prototype.createItem = function (someName) {
+    TestModelProvider.prototype.createItem = function (someName) {
         return __awaiter(this, void 0, void 0, function () {
             var _this = this;
             return __generator(this, function (_a) {
-                (new RTestModel(null, function (action) { _this.setState(exports.TestModelReducer(_this.state, action)); }, function () { return ({ TestModel: _this.state }); })).createItem(someName);
+                (new RTestModel(null, function (action) {
+                    var nextState = exports.TestModelReducer(_this.state, action);
+                    if (_this.__devTools)
+                        _this.__devTools.send(action.type, nextState);
+                    _this.setState(nextState);
+                }, function () { return ({ TestModel: _this.state }); })).createItem(someName);
                 return [2 /*return*/];
             });
         });
     };
-    TestModelStore.prototype.addOneFriend = function (name) {
+    TestModelProvider.prototype.addOneFriend = function (name) {
         return __awaiter(this, void 0, void 0, function () {
             var _this = this;
             return __generator(this, function (_a) {
-                (new RTestModel(null, function (action) { _this.setState(exports.TestModelReducer(_this.state, action)); }, function () { return ({ TestModel: _this.state }); })).addOneFriend(name);
+                (new RTestModel(null, function (action) {
+                    var nextState = exports.TestModelReducer(_this.state, action);
+                    if (_this.__devTools)
+                        _this.__devTools.send(action.type, nextState);
+                    _this.setState(nextState);
+                }, function () { return ({ TestModel: _this.state }); })).addOneFriend(name);
                 return [2 /*return*/];
             });
         });
     };
-    TestModelStore.prototype.fillSomeFriends = function () {
+    TestModelProvider.prototype.fillSomeFriends = function () {
         return __awaiter(this, void 0, void 0, function () {
             var _this = this;
             return __generator(this, function (_a) {
-                (new RTestModel(null, function (action) { _this.setState(exports.TestModelReducer(_this.state, action)); }, function () { return ({ TestModel: _this.state }); })).fillSomeFriends();
+                (new RTestModel(null, function (action) {
+                    var nextState = exports.TestModelReducer(_this.state, action);
+                    if (_this.__devTools)
+                        _this.__devTools.send(action.type, nextState);
+                    _this.setState(nextState);
+                }, function () { return ({ TestModel: _this.state }); })).fillSomeFriends();
                 return [2 /*return*/];
             });
         });
     };
-    TestModelStore.prototype.ChangeLastItem = function () {
+    TestModelProvider.prototype.ChangeLastItem = function () {
         return __awaiter(this, void 0, void 0, function () {
             var _this = this;
             return __generator(this, function (_a) {
-                (new RTestModel(null, function (action) { _this.setState(exports.TestModelReducer(_this.state, action)); }, function () { return ({ TestModel: _this.state }); })).ChangeLastItem();
+                (new RTestModel(null, function (action) {
+                    var nextState = exports.TestModelReducer(_this.state, action);
+                    if (_this.__devTools)
+                        _this.__devTools.send(action.type, nextState);
+                    _this.setState(nextState);
+                }, function () { return ({ TestModel: _this.state }); })).ChangeLastItem();
                 return [2 /*return*/];
             });
         });
     };
-    TestModelStore.prototype.render = function () {
+    TestModelProvider.prototype.render = function () {
         return (React.createElement(exports.TestModelContext.Provider, { value: __assign({}, this.state, { setUserMessage: this.setUserMessage, add: this.add, removeFirst: this.removeFirst, sort: this.sort, addCart: this.addCart, addCartSync: this.addCartSync, addToCart: this.addToCart, setCartNewItem: this.setCartNewItem, addToCartRandom: this.addToCartRandom, renameLast: this.renameLast, createItem: this.createItem, addOneFriend: this.addOneFriend, fillSomeFriends: this.fillSomeFriends, ChangeLastItem: this.ChangeLastItem }) },
             " ",
             this.props.children));
     };
-    return TestModelStore;
+    return TestModelProvider;
 }(React.Component));
-exports.TestModelStore = TestModelStore;
+exports.TestModelProvider = TestModelProvider;
 
 },{"immer":36,"react":76,"react-redux":68,"timers":87}],7:[function(require,module,exports){
 "use strict";
@@ -1133,12 +1223,13 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-/********************************************************
-*                                                       *
-*   Generated by ts2redux at 2018-10-19T17:41:40.885Z   *
-*   Source file ../TodoList.ts                          *
-*                                                       *
-********************************************************/
+/********************************************************************************
+*                                                                               *
+*   Redux Reducers and React Context API Provider/Consumer for state TodoList   *
+*   Generated by ts2redux at 2018-10-20T09:58:11.932Z                           *
+*   From Source file ../TodoList.ts                                             *
+*                                                                               *
+********************************************************************************/
 var axios_1 = require("axios");
 /**
  * @redux true
@@ -1463,51 +1554,88 @@ exports.TodoListReducer = function (state, action) {
 * React Context API test   *
 ***************************/
 exports.TodoListContext = React.createContext(null);
-var TodoListStore = /** @class */ (function (_super) {
-    __extends(TodoListStore, _super);
-    function TodoListStore(props) {
+exports.TodoListConsumer = exports.TodoListContext.Consumer;
+var instanceCnt = 1;
+var TodoListProvider = /** @class */ (function (_super) {
+    __extends(TodoListProvider, _super);
+    function TodoListProvider(props) {
         var _this = _super.call(this, props) || this;
         _this.state = init_TodoList();
+        _this.__devTools = null;
         _this.clearTodoList = _this.clearTodoList.bind(_this);
         _this.reverse = _this.reverse.bind(_this);
         _this.sortById = _this.sortById.bind(_this);
         _this.sortByTitle = _this.sortByTitle.bind(_this);
         _this.sortByCompletion = _this.sortByCompletion.bind(_this);
         _this.getItems = _this.getItems.bind(_this);
+        var devs = window['devToolsExtension'] ? window['devToolsExtension'] : null;
+        if (devs) {
+            _this.__devTools = devs.connect({ name: 'TodoList' + instanceCnt++ });
+            _this.__devTools.init(_this.state);
+            _this.__devTools.subscribe(function (msg) {
+                if (msg.type === 'DISPATCH' && msg.state) {
+                    _this.setState(JSON.parse(msg.state));
+                }
+            });
+        }
         return _this;
     }
-    TodoListStore.prototype.clearTodoList = function () {
-        this.setState(immer.produce(this.state, function (draft) { return (new RTodoList(draft)).clearTodoList(); }));
+    TodoListProvider.prototype.componentWillUnmount = function () {
+        if (this.__devTools)
+            this.__devTools.unsubscribe();
     };
-    TodoListStore.prototype.reverse = function () {
-        this.setState(immer.produce(this.state, function (draft) { return (new RTodoList(draft)).reverse(); }));
+    TodoListProvider.prototype.clearTodoList = function () {
+        var nextState = immer.produce(this.state, function (draft) { return (new RTodoList(draft)).clearTodoList(); });
+        if (this.__devTools)
+            this.__devTools.send('clearTodoList', nextState);
+        this.setState(nextState);
     };
-    TodoListStore.prototype.sortById = function () {
-        this.setState(immer.produce(this.state, function (draft) { return (new RTodoList(draft)).sortById(); }));
+    TodoListProvider.prototype.reverse = function () {
+        var nextState = immer.produce(this.state, function (draft) { return (new RTodoList(draft)).reverse(); });
+        if (this.__devTools)
+            this.__devTools.send('reverse', nextState);
+        this.setState(nextState);
     };
-    TodoListStore.prototype.sortByTitle = function () {
-        this.setState(immer.produce(this.state, function (draft) { return (new RTodoList(draft)).sortByTitle(); }));
+    TodoListProvider.prototype.sortById = function () {
+        var nextState = immer.produce(this.state, function (draft) { return (new RTodoList(draft)).sortById(); });
+        if (this.__devTools)
+            this.__devTools.send('sortById', nextState);
+        this.setState(nextState);
     };
-    TodoListStore.prototype.sortByCompletion = function () {
-        this.setState(immer.produce(this.state, function (draft) { return (new RTodoList(draft)).sortByCompletion(); }));
+    TodoListProvider.prototype.sortByTitle = function () {
+        var nextState = immer.produce(this.state, function (draft) { return (new RTodoList(draft)).sortByTitle(); });
+        if (this.__devTools)
+            this.__devTools.send('sortByTitle', nextState);
+        this.setState(nextState);
     };
-    TodoListStore.prototype.getItems = function () {
+    TodoListProvider.prototype.sortByCompletion = function () {
+        var nextState = immer.produce(this.state, function (draft) { return (new RTodoList(draft)).sortByCompletion(); });
+        if (this.__devTools)
+            this.__devTools.send('sortByCompletion', nextState);
+        this.setState(nextState);
+    };
+    TodoListProvider.prototype.getItems = function () {
         return __awaiter(this, void 0, void 0, function () {
             var _this = this;
             return __generator(this, function (_a) {
-                (new RTodoList(null, function (action) { _this.setState(exports.TodoListReducer(_this.state, action)); }, function () { return ({ TodoList: _this.state }); })).getItems();
+                (new RTodoList(null, function (action) {
+                    var nextState = exports.TodoListReducer(_this.state, action);
+                    if (_this.__devTools)
+                        _this.__devTools.send(action.type, nextState);
+                    _this.setState(nextState);
+                }, function () { return ({ TodoList: _this.state }); })).getItems();
                 return [2 /*return*/];
             });
         });
     };
-    TodoListStore.prototype.render = function () {
+    TodoListProvider.prototype.render = function () {
         return (React.createElement(exports.TodoListContext.Provider, { value: __assign({}, this.state, { clearTodoList: this.clearTodoList, reverse: this.reverse, sortById: this.sortById, sortByTitle: this.sortByTitle, sortByCompletion: this.sortByCompletion, getItems: this.getItems }) },
             " ",
             this.props.children));
     };
-    return TodoListStore;
+    return TodoListProvider;
 }(React.Component));
-exports.TodoListStore = TodoListStore;
+exports.TodoListProvider = TodoListProvider;
 
 },{"axios":10,"immer":36,"react":76,"react-redux":68}],8:[function(require,module,exports){
 "use strict";
@@ -1571,12 +1699,13 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-/********************************************************
-*                                                       *
-*   Generated by ts2redux at 2018-10-19T17:41:40.892Z   *
-*   Source file ../UserState.ts                         *
-*                                                       *
-********************************************************/
+/*********************************************************************************
+*                                                                                *
+*   Redux Reducers and React Context API Provider/Consumer for state UserState   *
+*   Generated by ts2redux at 2018-10-20T09:58:11.943Z                            *
+*   From Source file ../UserState.ts                                             *
+*                                                                                *
+*********************************************************************************/
 var UserState = /** @class */ (function () {
     function UserState() {
         this.logged = false;
@@ -1585,6 +1714,7 @@ var UserState = /** @class */ (function () {
     UserState.prototype.login = function (loginInfo) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
+                console.log('Login called with ', loginInfo);
                 return [2 /*return*/];
             });
         });
@@ -1755,6 +1885,7 @@ var RUserState = /** @class */ (function () {
     RUserState.prototype.login = function (loginInfo) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
+                console.log('Login called with ', loginInfo);
                 return [2 /*return*/];
             });
         });
@@ -1831,49 +1962,85 @@ exports.UserStateReducer = function (state, action) {
 * React Context API test   *
 ***************************/
 exports.UserStateContext = React.createContext(null);
-var UserStateStore = /** @class */ (function (_super) {
-    __extends(UserStateStore, _super);
-    function UserStateStore(props) {
+exports.UserStateConsumer = exports.UserStateContext.Consumer;
+var instanceCnt = 1;
+var UserStateProvider = /** @class */ (function (_super) {
+    __extends(UserStateProvider, _super);
+    function UserStateProvider(props) {
         var _this = _super.call(this, props) || this;
         _this.state = init_UserState();
+        _this.__devTools = null;
         _this.login = _this.login.bind(_this);
         _this.logout = _this.logout.bind(_this);
         _this.fakeLogin = _this.fakeLogin.bind(_this);
+        var devs = window['devToolsExtension'] ? window['devToolsExtension'] : null;
+        if (devs) {
+            _this.__devTools = devs.connect({ name: 'UserState' + instanceCnt++ });
+            _this.__devTools.init(_this.state);
+            _this.__devTools.subscribe(function (msg) {
+                if (msg.type === 'DISPATCH' && msg.state) {
+                    _this.setState(JSON.parse(msg.state));
+                }
+            });
+        }
         return _this;
     }
-    UserStateStore.prototype.login = function (loginInfo) {
+    UserStateProvider.prototype.componentWillUnmount = function () {
+        if (this.__devTools)
+            this.__devTools.unsubscribe();
+    };
+    UserStateProvider.prototype.login = function (loginInfo) {
         return __awaiter(this, void 0, void 0, function () {
             var _this = this;
             return __generator(this, function (_a) {
-                (new RUserState(null, function (action) { _this.setState(exports.UserStateReducer(_this.state, action)); }, function () { return ({ UserState: _this.state }); })).login(loginInfo);
+                (new RUserState(null, function (action) {
+                    var nextState = exports.UserStateReducer(_this.state, action);
+                    if (_this.__devTools)
+                        _this.__devTools.send(action.type, nextState);
+                    _this.setState(nextState);
+                }, function () { return ({ UserState: _this.state }); })).login(loginInfo);
                 return [2 /*return*/];
             });
         });
     };
-    UserStateStore.prototype.logout = function () {
+    UserStateProvider.prototype.logout = function () {
         return __awaiter(this, void 0, void 0, function () {
             var _this = this;
             return __generator(this, function (_a) {
-                (new RUserState(null, function (action) { _this.setState(exports.UserStateReducer(_this.state, action)); }, function () { return ({ UserState: _this.state }); })).logout();
+                (new RUserState(null, function (action) {
+                    var nextState = exports.UserStateReducer(_this.state, action);
+                    if (_this.__devTools)
+                        _this.__devTools.send(action.type, nextState);
+                    _this.setState(nextState);
+                }, function () { return ({ UserState: _this.state }); })).logout();
                 return [2 /*return*/];
             });
         });
     };
-    UserStateStore.prototype.fakeLogin = function () {
-        this.setState(immer.produce(this.state, function (draft) { return (new RUserState(draft)).fakeLogin(); }));
+    UserStateProvider.prototype.fakeLogin = function () {
+        var nextState = immer.produce(this.state, function (draft) { return (new RUserState(draft)).fakeLogin(); });
+        if (this.__devTools)
+            this.__devTools.send('fakeLogin', nextState);
+        this.setState(nextState);
     };
-    UserStateStore.prototype.render = function () {
+    UserStateProvider.prototype.render = function () {
         return (React.createElement(exports.UserStateContext.Provider, { value: __assign({}, this.state, { login: this.login, logout: this.logout, fakeLogin: this.fakeLogin }) },
             " ",
             this.props.children));
     };
-    return UserStateStore;
+    return UserStateProvider;
 }(React.Component));
-exports.UserStateStore = UserStateStore;
+exports.UserStateProvider = UserStateProvider;
 
 },{"immer":36,"react":76,"react-redux":68}],9:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+/**********************************************************
+*                                                         *
+*     Combined Reducers for main application              *
+*     Generated by ts2redux at 2018-10-20T09:58:11.962Z   *
+*                                                         *
+**********************************************************/
 var redux = require("redux");
 var TestModel_1 = require("./TestModel");
 var TodoList_1 = require("./TodoList");

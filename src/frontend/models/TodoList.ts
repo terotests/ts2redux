@@ -33,6 +33,9 @@ export class TodoList {
     const toNumber = (value:boolean) : number => value ? 1 : 0;
     this.items.sort( (a, b) => toNumber(a.completed) - toNumber(b.completed) )
   }
+  /**
+   * Fetch items from json placeholder service
+   */
   async getItems() {
     if(this.state === 'RUNNING') return
     try {

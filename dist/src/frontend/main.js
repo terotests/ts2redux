@@ -9,6 +9,7 @@ var redux_thunk_1 = require("redux-thunk");
 var react_redux_1 = require("react-redux");
 var reducers_1 = require("./models/reducers/");
 var TodoList_1 = require("./models/reducers/TodoList");
+var UserState_1 = require("./models/reducers/UserState");
 var memberArea_1 = require("./components/memberArea");
 var todoList_1 = require("./components/todoList");
 var combinedState_1 = require("./components/combinedState");
@@ -17,31 +18,52 @@ var store = redux_1.createStore(reducers_1.reducers, redux_1.compose(redux_1.app
 var listValue = new todo.TodoList();
 var Ctx = React.createContext(listValue);
 // const history = syncHistoryWithStore(hashHistory, store);
+var UserInfo = function (props) { return React.createElement(UserState_1.UserStateContext.Consumer, null, function (state) {
+    return React.createElement("div", null,
+        "USER: ",
+        state.username,
+        React.createElement("button", { onClick: state.fakeLogin }, "Fake Login"));
+}); };
 ReactDOM.render(React.createElement(react_redux_1.Provider, { store: store },
     React.createElement(Ctx.Provider, { value: listValue },
-        React.createElement("div", null,
+        React.createElement(UserState_1.UserStateProvider, null,
             React.createElement("div", null,
-                React.createElement("b", null, "This is the JSX area")),
-            React.createElement(memberArea_1.MemberArea, null),
-            React.createElement(combinedState_1.CombinedStates, null),
-            React.createElement(todoList_1.TodoList, null)),
-        React.createElement("div", null,
-            React.createElement("h4", null, "Context API test"),
-            React.createElement(TodoList_1.TodoListStore, null,
-                React.createElement(TodoList_1.TodoListContext.Consumer, null, function (todolist) {
+                React.createElement("div", null,
+                    React.createElement("b", null, "This is the JSX area")),
+                React.createElement(memberArea_1.MemberArea, null),
+                React.createElement(combinedState_1.CombinedStates, null),
+                React.createElement(todoList_1.TodoList, null)),
+            React.createElement("div", null,
+                React.createElement("h4", null, "Context API test"),
+                React.createElement(UserState_1.UserStateContext.Consumer, null, function (state) {
                     return React.createElement("div", null,
-                        React.createElement("button", { onClick: function () { return todolist.getItems(); } }, "Load"),
-                        React.createElement("button", { onClick: function () { return todolist.reverse(); } }, "Revert"),
-                        React.createElement("ul", null, todolist.items ? todolist.items.slice(0, 6).map(function (item) { return React.createElement("li", { key: item.id }, item.title); }) : ''));
-                })),
-            React.createElement(TodoList_1.TodoListStore, null,
-                React.createElement(TodoList_1.TodoListContext.Consumer, null, function (todolist) {
-                    return React.createElement("div", null,
-                        React.createElement("div", null, todolist.state),
-                        React.createElement("button", { onClick: function () { return todolist.getItems(); } }, "Load"),
-                        React.createElement("button", { onClick: function () { return todolist.reverse(); } }, "Revert"),
-                        React.createElement("ul", null, todolist.items ? todolist.items.slice(0, 10).map(function (item) { return React.createElement("li", { key: item.id }, item.title); }) : ''));
-                }))))), document.getElementById('root'));
+                        "USER: ",
+                        state.username,
+                        React.createElement("button", { onClick: state.fakeLogin }, "Fake Login"));
+                }),
+                React.createElement(TodoList_1.TodoListProvider, null,
+                    React.createElement(TodoList_1.TodoListContext.Consumer, null, function (todolist) {
+                        return React.createElement("div", null,
+                            React.createElement("div", null,
+                                "Items loaded ",
+                                todolist.items.length),
+                            React.createElement("button", { onClick: function () { return todolist.getItems(); } }, "Load"),
+                            React.createElement("button", { onClick: function () { return todolist.reverse(); } }, "Revert"),
+                            React.createElement("ul", null, todolist.items.slice(0, 6).map(function (item) { return React.createElement("li", { key: item.id }, item.title); })));
+                    })),
+                React.createElement(TodoList_1.TodoListProvider, null,
+                    React.createElement(TodoList_1.TodoListConsumer, null, function (todolist) {
+                        return React.createElement("div", null,
+                            React.createElement("div", null, todolist.state),
+                            React.createElement("button", { onClick: function () { return todolist.getItems(); } }, "Load"),
+                            React.createElement("button", { onClick: todolist.reverse }, "Revert List"),
+                            React.createElement("button", { onClick: function () { return todolist.clearTodoList(); } }, "Clear"),
+                            React.createElement("ul", null, todolist.items.slice(0, 10).map(function (item) { return React.createElement("li", { key: item.id },
+                                item.title,
+                                " ",
+                                React.createElement(UserState_1.UserStateProvider, null,
+                                    React.createElement(UserInfo, null))); })));
+                    })))))), document.getElementById('root'));
 /*
       <Router history={history}>
         <Route path="/" component={App}>

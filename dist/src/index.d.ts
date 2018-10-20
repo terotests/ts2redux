@@ -2,6 +2,7 @@ import { InterfaceDeclaration, SourceFile, ClassDeclaration } from "ts-simple-as
 import * as R from 'robowr';
 export interface GenerationOptions {
     path: string;
+    reducerPath?: string;
 }
 export interface ModelDefinition {
     name: string;

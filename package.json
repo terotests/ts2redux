@@ -14,7 +14,7 @@
     "build:ts": "echo 'Building ts' && tsc && npm run build:frontend ",
     "watch:redux": "nodemon -e js,ts --watch src/frontend/models/ --ignore src/frontend/models/reducers --exec npm run build:redux",
     "watch:ts": "nodemon -e js,ts,tsx --watch src --ignore src/frontend/models/ --exec npm run build:ts",
-    "test": "npm run watch:ts & npm run watch:redux & node dist/src/tssimplec src/testinput.ts && npm run compile && npm run build:frontend && cp src/swagger/* dist/swagger/ && node dist/src/backend/index"
+    "test": "npm run watch:ts & npm run watch:redux & node dist/src/tssimplec src/testinput.ts && npm run compile && npm run build:frontend && node dist/src/backend/index"
   },
   "repository": {
     "type": "git",

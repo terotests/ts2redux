@@ -2,9 +2,7 @@
   
 import Project, { InterfaceDeclaration, SourceFile, FunctionDeclaration, ClassDeclaration, ImportDeclaration, ImportDeclarationStructure} from "ts-simple-ast";
 import * as R from 'robowr'
-import * as ProgrammerBase from './programmer/service'
 import {getFunctionDoc, getPropertyTypeName, getTypeName, getTypePath} from './utils'
-
 import * as path from 'path'
 import { getJSDocTypeParameterTags } from "typescript";
 import * as immer from 'immer'

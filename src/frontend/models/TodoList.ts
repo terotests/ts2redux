@@ -23,7 +23,6 @@ export class TodoList {
     this.items.reverse()
   }  
   sortById() {
-    console.log('sortById was called!')
     this.items.sort( (a, b) => a.id - b.id )
   }
   sortByTitle() {

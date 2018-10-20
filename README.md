@@ -12,10 +12,10 @@ Yes, it is true, but the compiler is still quite young and Please Do check the [
 It is not likely that state management gets much easier than this:
 
 1. State is written using as TypeScript `class` - initializers, reducers, actions are derived from that
-2. Same state definition can be used either as Redux or Context API state
-3. Both Redux and React Context API can be inspected using Redux Devtools
-4. No need for external Async -libraries, sagas etc.  just use normal `async` and assign the state 
-5. Immutable transitions are handled effectively by `immer`
+2. You can choose Redux or Context API (or both for that matter)
+3. Redux Devtools support for React Context API
+4. Just use normal `async` - no fancy library needed for async operations
+5. Typed with TypeScript
 
 Also the library imposes no direct dependencies, after it has compiled the sources, you do not need the compiler any more - the resulting files have not dependencies to anything else than proven libraries like React, Immer etc.
 
@@ -33,7 +33,7 @@ Also inspiration sources were people at [Koodiklinikka](https://github.com/koodi
 ## Introduction
 
 Ok, As you all know, Redux state management can be time consuming and people are switching to more user friendly
-solutions like MobX or new React Context API. These are all great.
+solutions like MobX or considering the new React Context API. There are some nice libraries available for the Context API like [Unstated](https://github.com/jamiebuilds/unstated).
 
 However, the simplest way of writing a stateful model is simply creating a simple TypeScript class would be like this
 ```typescript
@@ -46,6 +46,7 @@ export class SimpleModel {
 }
 ```
 Or if you prefer the classical increment / decrement example
+
 ```typescript
 export class IncModel {
   cnt:number = 0
@@ -57,29 +58,21 @@ export class IncModel {
   }  
 }
 ```
-However, because the class is using imperative model with mutable state changes we can not use this with Redux.
+The question asked was: would it be possible to transfer this simple state representation automatically to Redux?
 
-Or could we?
+Turns out with a little bit of [compiler magic](https://github.com/dsherret/ts-simple-ast) we can transform the *idea* of the class into both Redux and React Context API representations, which are both functionally similar to the original class and quite easy to use.
 
-Turns out with a little bit of [compiler magic](https://github.com/dsherret/ts-simple-ast) we can transform the *idea* of the class into both Redux and React Context API representations, which are both functionally similar to the original class and extremely easy to use.
-
-Only thing we need to do is tell compiler that this class should be transformed to a Reducer or React Context API Consumer or Provider.
-
-We do it by adding a [JSDoc](http://usejsdoc.org/) comment property to the class comment like this
+Only thing we need to do is tell compiler that this class should be transformed by adding a [JSDoc](http://usejsdoc.org/) comment property
 
 ```typescript
 /**
  * @redux true
  */
-export class SimpleModel {
-  items: any[] = []
-  async getItems() {
-    this.items = (await axios.get('https://jsonplaceholder.typicode.com/todos')).data
-  }
+export class MyModel {
+  // ...
 }
 ```
-Then we can run something like this
-
+If the source files are in `src/` we can run `ts2redux` against it like this
 ```
   ts2redux src
 ```
@@ -204,39 +197,24 @@ export const ReduxInc = container.StateConnector( AbstractInc )
 ```
 
 
+# Examples
 
-# TODO -list example
+Some example of Models are available in [src/frontend/models](https://github.com/terotests/ts2redux/tree/master/src/frontend/models) -directory.
 
-Tries to simplify creating the Redux state into 3 simple steps (with some substeps):
+## Error handling in async functions
 
-1. Create a model
-2. Compile the model to reducers
-3. Bind model to some React component
-
-## Step 1: create a model
+In typical Redux code you want to have some kind of loading state
 
 ```typescript
-import axios from 'axios'
+export type TaskState = 'UNDEFINED' | 'RUNNING' |  'LOADED' | 'ERROR'
+```
 
-// 1) Define some shape for the model
-export interface TodoListItem {
-  userId: number
-  id: number
-  title: string
-  completed: boolean
-}
-export type TaskState = 'UNDEFINED' | 'RUNNING' |  'LOADED' | { type:'ERROR', error:any }
+Any kind of loading state is pretty easy to implement, for example
 
-/**
- * @redux true
- */
+```typescript
 class TodoList {
-
-  // 2) define model types with initializers
   items: TodoListItem[] = []
   state: TaskState = 'UNDEFINED'
-
-  // 3) define some functions to be used with data
   async getItems() {
     if(this.state === 'RUNNING') return
     try {
@@ -244,65 +222,19 @@ class TodoList {
       this.items = (await axios.get('https://jsonplaceholder.typicode.com/todos')).data
       this.state = 'LOADED'
     } catch(e) {
-      this.state = {
-        type: 'ERROR',
-        error: e
-      }
+      this.state = 'ERROR'
     }
   }
 }
 ```
 
-## Step 2: compile the model
-
-run `ts2redux <directory>` for the directory of yours models. Subdirectory `reducers/` will be created
-
-## Step 3: connect model to a component
-
-```typescript
-import * as React from 'react';
-import * as container from '../models/reducers/TodoList'
-
-// 1) Extend the container.Properties and add more props if needed
-export interface Props extends container.Props {}
-
-// 2) Create a reusable abstract component first
-export const AbstractTodoList = (props : Props) => {
-  return (
-  <div>
-      <h2>TodoList Component</h2>
-      <input type="submit"
-              value="load"
-              className="btn btn-default"
-              // 3) the getItems() is mapped here
-              onClick={() => props.getItems()}
-      />
-      <div>
-        <div>{props.state}</div>
-        <table><tbody>{props.items.map( m => {
-          return <tr key={m.id}>
-            <td>{m.id}</td>
-            <td>{m.title}</td>
-            <td>{m.completed ? 'Completed' : 'In Progress'}</td>
-          </tr>;
-        })}</tbody></table>        
-      </div>
-  </div>
-  );
-}
-
-// 4) Connect the Redux model and create a concrete implementation
-export const TodoList = container.StateConnector( AbstractTodoList )
-```
-
-## TODO:
+# TODO:
 
 Think about local storage and the migrations
 https://medium.freecodecamp.org/how-to-use-redux-persist-when-migrating-your-states-a5dee16b5ead
 
 https://github.com/rt2zz/redux-persist/blob/HEAD/docs/migrations.md
 
-
-## License
+# License
 
 MIT.

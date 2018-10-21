@@ -36,7 +36,7 @@ This library would not have been possible without following great OS tools:
 - [ts-simple-ast](https://github.com/dsherret/ts-simple-ast) for AST code management (special thanks for library author David Sherret for extremely fast responses while I was having problems during development!)
 - [immer](https://github.com/mweststrate/immer) for easy immutable transformations
 - [yargs](https://github.com/yargs/yargs) for command line processing
-- [Redux Devtools Extansions](https://github.com/zalmoxisus/redux-devtools-extension)
+- [Redux Devtools Extensions](https://github.com/zalmoxisus/redux-devtools-extension)
 - and of course [Redux](https://github.com/reduxjs/redux) and [React and the new Context API](https://reactjs.org/docs/context.html)
 
 Also inspiration sources were fellow coders at [Koodiklinikka](https://github.com/koodiklinikka), developers at [Leonidas](https://leonidasoy.fi/) and several blog article writers [1](https://daveceddia.com/context-api-vs-redux/)[2](https://medium.freecodecamp.org/replacing-redux-with-the-new-react-context-api-8f5d01a00e8c)
@@ -103,7 +103,7 @@ class Foo {
 ```
 Reason for this is that at least for now, the type is not inferred from the assigned value.
 
-### Async Functions can not mutate state deeply (syncronous can)
+### Async Functions can not mutate state deeply (synchronous can)
 
 There is important limitation for `async` functions for the class: `async` function can read state but can only assign (`=`) to class properties, not mutate them deeply like syncronous functions, which are compiled to reducers.
 
@@ -141,13 +141,13 @@ Because the Model code is brutally copied to the beginning of the genrated reduc
 ```typescript
 import * as foo from '../barzone'
 ```
-Will be broken. If you need to import files in the model files it is recommened to [Configure TypeScript to not user relative paths](https://decembersoft.com/posts/say-goodbye-to-relative-paths-in-typescript-imports/)
+Will be broken. If you need to import files in the model files it is recommened to [Configure TypeScript not to user relative paths](https://decembersoft.com/posts/say-goodbye-to-relative-paths-in-typescript-imports/)
 
 ### React Context API -components are not removed from Redux Devtools after unmount
 
 If you generate a lot of Redux Context API -components and Redux Devtools is enabled, history of unmounted components is visible in the Redux Devtools debugging history. In some cases this may be desirable, in some cases not. 
 
-In case the component is unmounted, it's listeners are unsubscribed and time travel will not work tool
+In case the component is unmounted, it's listeners are unsubscribed and time travel will not work.
 
 ## Using React Context API
 

@@ -496,7 +496,7 @@ if(!settings.disableDevtoolsFromContext) {
             // createComment(ng, 'HOC for connecting to properties')
             
             // Disable for now...
-            /*
+            /*            
             ng.out(`export function ${c.getName()}HOC(Component) {`, true)
               ng.indent(1)
               ng.out(`return function Connected${c.getName()}(props) {`, true)

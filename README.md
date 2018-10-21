@@ -141,7 +141,7 @@ Because the Model code is brutally copied to the beginning of the genrated reduc
 ```typescript
 import * as foo from '../barzone'
 ```
-Will be broken. If you need to import files in the model files it is recommened to [Configure TypeScript to not user relative paths](https://decembersoft.com/posts/say-goodbye-to-relative-paths-in-typescript-imports/)
+Will be broken. If you need to import files in the model files it is recommened to [Configure TypeScript not to user relative paths](https://decembersoft.com/posts/say-goodbye-to-relative-paths-in-typescript-imports/)
 
 ### React Context API -components are not removed from Redux Devtools after unmount
 

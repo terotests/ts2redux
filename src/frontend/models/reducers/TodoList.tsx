@@ -314,7 +314,7 @@ export const TodoListReducer = (state:ITodoList = initTodoList(), action:any ) =
 /***************************
 * React Context API test   *
 ***************************/
-export const TodoListContext = React.createContext<IProps|undefined>(undefined)
+export const TodoListContext = React.createContext<IProps>(initTodoList())
 export const TodoListConsumer = TodoListContext.Consumer
 let instanceCnt = 1
 export class TodoListProvider extends React.Component {

@@ -681,7 +681,7 @@ export const TestModelReducer = (state:ITestModel = initTestModel(), action:any 
 /***************************
 * React Context API test   *
 ***************************/
-export const TestModelContext = React.createContext<IProps|undefined>(undefined)
+export const TestModelContext = React.createContext<IProps>(initTestModel())
 export const TestModelConsumer = TestModelContext.Consumer
 let instanceCnt = 1
 export class TestModelProvider extends React.Component {

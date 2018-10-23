@@ -249,7 +249,7 @@ export const UserStateReducer = (state:IUserState = initUserState(), action:any 
 /***************************
 * React Context API test   *
 ***************************/
-export const UserStateContext = React.createContext<IProps|undefined>(undefined)
+export const UserStateContext = React.createContext<IProps>(initUserState())
 export const UserStateConsumer = UserStateContext.Consumer
 let instanceCnt = 1
 export class UserStateProvider extends React.Component {

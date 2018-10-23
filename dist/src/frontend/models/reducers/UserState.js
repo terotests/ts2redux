@@ -347,7 +347,7 @@ exports.UserStateReducer = function (state, action) {
 /***************************
 * React Context API test   *
 ***************************/
-exports.UserStateContext = React.createContext(undefined);
+exports.UserStateContext = React.createContext(initUserState());
 exports.UserStateConsumer = exports.UserStateContext.Consumer;
 var instanceCnt = 1;
 var UserStateProvider = /** @class */ (function (_super) {

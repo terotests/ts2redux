@@ -767,7 +767,7 @@ exports.TestModelReducer = function (state, action) {
 /***************************
 * React Context API test   *
 ***************************/
-exports.TestModelContext = React.createContext(undefined);
+exports.TestModelContext = React.createContext(initTestModel());
 exports.TestModelConsumer = exports.TestModelContext.Consumer;
 var instanceCnt = 1;
 var TestModelProvider = /** @class */ (function (_super) {

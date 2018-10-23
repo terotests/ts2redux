@@ -179,6 +179,21 @@ function createProject(settings) {
                                 ng_1.out('}', true);
                                 ng_1.indent(-1);
                                 ng_1.out('}', true);
+                                ng_1.out('const initWithMethods' + c.getName() + ' = () => {', true);
+                                ng_1.indent(1);
+                                ng_1.out('const o = new ' + c.getName() + '();', true);
+                                ng_1.out('return {', true);
+                                ng_1.indent(1);
+                                c.getProperties().forEach(function (p) {
+                                    ng_1.out(p.getName() + ': o.' + p.getName() + ',', true);
+                                });
+                                c.getMethods().forEach(function (m) {
+                                    ng_1.out(m.getName() + ': o.' + m.getName() + ',', true);
+                                });
+                                ng_1.indent(-1);
+                                ng_1.out('}', true);
+                                ng_1.indent(-1);
+                                ng_1.out('}', true);
                                 // Create model of all the variables...
                                 ng_1.raw("\n/**\n * @generated true\n */", true);
                                 ng_1.out('export class R' + c.getName() + ' {', true);
@@ -318,7 +333,7 @@ function createProject(settings) {
                                     body_1.out('public static ');
                                     body_1.out(m.getModifiers().filter(function (mod) { return (mod.getText() != 'async' && mod.getText() != 'public'); }).map(function (mod) { return mod.print() + ' '; }).join(''));
                                     body_1.out(m.getName() + '(' + m.getParameters().map(function (mod) { return mod.print(); }).join(', ') + ')');
-                                    propsMethods_1.out(m.getName() + '? : (' + m.getParameters().map(function (mod) { return mod.print(); }).join(', ') + ') => any', true);
+                                    propsMethods_1.out(m.getName() + ' : (' + m.getParameters().map(function (mod) { return mod.print(); }).join(', ') + ') => any', true);
                                     dispatchMethods_1.out(m.getName() + ' : (' + m.getParameters().map(function (mod) { return mod.print(); }).join(', ') + ') => {', true);
                                     dispatchMethods_1.indent(1);
                                     dispatchMethods_1.out("return dispatch(R" + c.getName() + "." + m.getName() + "(" + pName + "))", true);
@@ -344,7 +359,7 @@ function createProject(settings) {
                                     // ng.raw(outer.getCode())
                                     createComment(ng, 'React Context API test');
                                     // create context...
-                                    ng.out("export const " + c.getName() + "Context = React.createContext<IProps|undefined>(undefined)", true);
+                                    ng.out("export const " + c.getName() + "Context = React.createContext<IProps>(initWithMethods" + c.getName() + "())", true);
                                     ng.out("export const " + c.getName() + "Consumer = " + c.getName() + "Context.Consumer", true);
                                     ng.out("let instanceCnt = 1", true);
                                     ng.out("export class " + c.getName() + "Provider extends React.Component {", true);

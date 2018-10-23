@@ -57,10 +57,10 @@ export class TodoList {
 
 import * as immer from 'immer'
 import { connect } from 'react-redux'
-import { State } from './index'
+import { IState } from './index'
 import * as React from 'react'
 
-export interface ContainerPropsMethods {
+export interface IContainerPropsMethods {
   clearTodoList? : () => any
   reverse? : () => any
   sortById? : () => any
@@ -74,16 +74,16 @@ export interface ITodoList {
   stateError: any
 }
 
-export interface ContainerPropsState extends ITodoList {}
-export interface Props extends ContainerPropsState, ContainerPropsMethods {}
-export const mapStateToProps = (state : State) : ContainerPropsState => {
+type IContainerPropsState = ITodoList
+export interface IProps extends IContainerPropsState, IContainerPropsMethods {}
+export const mapStateToProps = (state : IState) : IContainerPropsState => {
   return {
     items: state.TodoList.items,
     state: state.TodoList.state,
     stateError: state.TodoList.stateError,
   }
 }
-export const mapDispatchToProps = (dispatch) : ContainerPropsMethods => {
+export const mapDispatchToProps = (dispatch:any) : IContainerPropsMethods => {
   return {
     clearTodoList : () => {
       return dispatch(RTodoList.clearTodoList())
@@ -107,7 +107,7 @@ export const mapDispatchToProps = (dispatch) : ContainerPropsMethods => {
 }
 export const StateConnector = connect( mapStateToProps, mapDispatchToProps);
 
-const init_TodoList = () => {
+const initTodoList = () => {
   const o = new TodoList();
   return {
     items: o.items,
@@ -128,49 +128,49 @@ export class RTodoList {
     this._dispatch = dispatch
     this._getState = getState
   }
-  get items() : TodoListItem[]{
+  get items() : TodoListItem[] | undefined {
     if(this._getState) {
       return this._getState().TodoList.items
     } else {
-      return this._state.items
+      if(this._state) { return this._state.items }
     }
-  }
-  set items(value:TodoListItem[]) {
-    if(this._state) {
+    return undefined}
+  set items(value:TodoListItem[] | undefined) {
+    if(this._state && (typeof(value) !== 'undefined')) {
       this._state.items = value
     } else {
       // dispatch change for item items
-      this._dispatch({type:TodoListEnums.TodoList_items, payload:value})
+      if(this._dispatch) { this._dispatch({type:TodoListEnums.TodoList_items, payload:value}) }
     }
   }
-  get state() : TaskState{
+  get state() : TaskState | undefined {
     if(this._getState) {
       return this._getState().TodoList.state
     } else {
-      return this._state.state
+      if(this._state) { return this._state.state }
     }
-  }
-  set state(value:TaskState) {
-    if(this._state) {
+    return undefined}
+  set state(value:TaskState | undefined) {
+    if(this._state && (typeof(value) !== 'undefined')) {
       this._state.state = value
     } else {
       // dispatch change for item state
-      this._dispatch({type:TodoListEnums.TodoList_state, payload:value})
+      if(this._dispatch) { this._dispatch({type:TodoListEnums.TodoList_state, payload:value}) }
     }
   }
-  get stateError() : any{
+  get stateError() : any | undefined {
     if(this._getState) {
       return this._getState().TodoList.stateError
     } else {
-      return this._state.stateError
+      if(this._state) { return this._state.stateError }
     }
-  }
-  set stateError(value:any) {
-    if(this._state) {
+    return undefined}
+  set stateError(value:any | undefined) {
+    if(this._state && (typeof(value) !== 'undefined')) {
       this._state.stateError = value
     } else {
       // dispatch change for item stateError
-      this._dispatch({type:TodoListEnums.TodoList_stateError, payload:value})
+      if(this._dispatch) { this._dispatch({type:TodoListEnums.TodoList_stateError, payload:value}) }
     }
   }
   
@@ -179,13 +179,13 @@ export class RTodoList {
     if(this._state) {
       this.items = [];
     } else {
-      this._dispatch({type:TodoListEnums.TodoList_clearTodoList})
+      if(this._dispatch) { this._dispatch({type:TodoListEnums.TodoList_clearTodoList}) }
     }
   }
   
-  static clearTodoList(){
-    return (dispatcher, getState) => {
-      (new RTodoList(null, dispatcher, getState)).clearTodoList()
+  public static clearTodoList(){
+    return (dispatcher:any, getState:any) => {
+      (new RTodoList(undefined, dispatcher, getState)).clearTodoList()
     }
   }
   // is a reducer
@@ -193,13 +193,13 @@ export class RTodoList {
     if(this._state) {
       this.items.reverse();
     } else {
-      this._dispatch({type:TodoListEnums.TodoList_reverse})
+      if(this._dispatch) { this._dispatch({type:TodoListEnums.TodoList_reverse}) }
     }
   }
   
-  static reverse(){
-    return (dispatcher, getState) => {
-      (new RTodoList(null, dispatcher, getState)).reverse()
+  public static reverse(){
+    return (dispatcher:any, getState:any) => {
+      (new RTodoList(undefined, dispatcher, getState)).reverse()
     }
   }
   // is a reducer
@@ -207,13 +207,13 @@ export class RTodoList {
     if(this._state) {
       this.items.sort((a, b) => a.id - b.id);
     } else {
-      this._dispatch({type:TodoListEnums.TodoList_sortById})
+      if(this._dispatch) { this._dispatch({type:TodoListEnums.TodoList_sortById}) }
     }
   }
   
-  static sortById(){
-    return (dispatcher, getState) => {
-      (new RTodoList(null, dispatcher, getState)).sortById()
+  public static sortById(){
+    return (dispatcher:any, getState:any) => {
+      (new RTodoList(undefined, dispatcher, getState)).sortById()
     }
   }
   // is a reducer
@@ -221,13 +221,13 @@ export class RTodoList {
     if(this._state) {
       this.items.sort((a, b) => a.title.localeCompare(b.title));
     } else {
-      this._dispatch({type:TodoListEnums.TodoList_sortByTitle})
+      if(this._dispatch) { this._dispatch({type:TodoListEnums.TodoList_sortByTitle}) }
     }
   }
   
-  static sortByTitle(){
-    return (dispatcher, getState) => {
-      (new RTodoList(null, dispatcher, getState)).sortByTitle()
+  public static sortByTitle(){
+    return (dispatcher:any, getState:any) => {
+      (new RTodoList(undefined, dispatcher, getState)).sortByTitle()
     }
   }
   // is a reducer
@@ -236,13 +236,13 @@ export class RTodoList {
       const toNumber = (value: boolean): number => value ? 1 : 0;
       this.items.sort((a, b) => toNumber(a.completed) - toNumber(b.completed));
     } else {
-      this._dispatch({type:TodoListEnums.TodoList_sortByCompletion})
+      if(this._dispatch) { this._dispatch({type:TodoListEnums.TodoList_sortByCompletion}) }
     }
   }
   
-  static sortByCompletion(){
-    return (dispatcher, getState) => {
-      (new RTodoList(null, dispatcher, getState)).sortByCompletion()
+  public static sortByCompletion(){
+    return (dispatcher:any, getState:any) => {
+      (new RTodoList(undefined, dispatcher, getState)).sortByCompletion()
     }
   }
   // is task
@@ -263,9 +263,9 @@ export class RTodoList {
       }
   }
   
-  static getItems(){
-    return (dispatcher, getState) => {
-      (new RTodoList(null, dispatcher, getState)).getItems()
+  public static getItems(){
+    return (dispatcher:any, getState:any) => {
+      (new RTodoList(undefined, dispatcher, getState)).getItems()
     }
   }
 }
@@ -281,7 +281,7 @@ export const TodoListEnums = {
   TodoList_sortByCompletion : 'TodoList_sortByCompletion',
 }
 
-export const TodoListReducer = (state:ITodoList = init_TodoList(), action) => {
+export const TodoListReducer = (state:ITodoList = initTodoList(), action:any ) => {
   return immer.produce(state, draft => {
     switch (action.type) {
       case TodoListEnums.TodoList_items: 
@@ -314,13 +314,13 @@ export const TodoListReducer = (state:ITodoList = init_TodoList(), action) => {
 /***************************
 * React Context API test   *
 ***************************/
-export const TodoListContext = React.createContext<Props>(null)
+export const TodoListContext = React.createContext<IProps|undefined>(undefined)
 export const TodoListConsumer = TodoListContext.Consumer
 let instanceCnt = 1
 export class TodoListProvider extends React.Component {
-  state: ITodoList = init_TodoList() 
-  __devTools:any = null
-  constructor( props ){
+  public state: ITodoList = initTodoList() 
+  private __devTools:any = null
+  constructor( props:any ){
     super(props)
     this.clearTodoList = this.clearTodoList.bind(this)
     this.reverse = this.reverse.bind(this)
@@ -332,15 +332,15 @@ export class TodoListProvider extends React.Component {
     if(devs) {
       this.__devTools = devs.connect({name:'TodoList'+instanceCnt++})
       this.__devTools.init(this.state)
-      this.__devTools.subscribe( msg => {
+      this.__devTools.subscribe( (msg:any) => {
         if (msg.type === 'DISPATCH' && msg.state) {
           this.setState(JSON.parse(msg.state))
         }
       })
     }
   }
-  componentWillUnmount() {
-    if(this.__devTools) this.__devTools.unsubscribe()
+  public componentWillUnmount() {
+    if(this.__devTools) { this.__devTools.unsubscribe() }
   }
   clearTodoList(){
     const nextState = immer.produce( this.state, draft => ( new RTodoList(draft) ).clearTodoList() )
@@ -371,13 +371,13 @@ export class TodoListProvider extends React.Component {
    * Fetch items from json placeholder service
    */
   async getItems(){
-    (new RTodoList(null, (action) => {
+    (new RTodoList(undefined, (action:any) => {
       const nextState = TodoListReducer( this.state, action )
-      if(this.__devTools) this.__devTools.send(action.type, nextState)
+      if(this.__devTools) { this.__devTools.send(action.type, nextState) }
       this.setState(nextState)
     }, () => ({TodoList:this.state})) ).getItems()
   }
-  render() {
+  public render() {
     return (<TodoListContext.Provider value={{...this.state, 
       clearTodoList: this.clearTodoList,
       reverse: this.reverse,

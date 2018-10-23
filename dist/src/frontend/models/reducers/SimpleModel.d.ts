@@ -11,20 +11,19 @@ export declare class SimpleModel {
     items: any[];
     getItems(): Promise<void>;
 }
-import { State } from './index';
+import { IState } from './index';
 import * as React from 'react';
-export interface ContainerPropsMethods {
+export interface IContainerPropsMethods {
     getItems?: () => any;
 }
 export interface ISimpleModel {
     items: any[];
 }
-export interface ContainerPropsState extends ISimpleModel {
+declare type IContainerPropsState = ISimpleModel;
+export interface IProps extends IContainerPropsState, IContainerPropsMethods {
 }
-export interface Props extends ContainerPropsState, ContainerPropsMethods {
-}
-export declare const mapStateToProps: (state: State) => ContainerPropsState;
-export declare const mapDispatchToProps: (dispatch: any) => ContainerPropsMethods;
+export declare const mapStateToProps: (state: IState) => ISimpleModel;
+export declare const mapDispatchToProps: (dispatch: any) => IContainerPropsMethods;
 export declare const StateConnector: any;
 /**
  * @generated true
@@ -34,7 +33,7 @@ export declare class RSimpleModel {
     private _dispatch?;
     private _getState?;
     constructor(state?: ISimpleModel, dispatch?: (action: any) => void, getState?: () => any);
-    items: any[];
+    items: any[] | undefined;
     getItems(): Promise<void>;
     static getItems(): (dispatcher: any, getState: any) => void;
 }
@@ -45,13 +44,14 @@ export declare const SimpleModelReducer: (state: ISimpleModel, action: any) => I
 /***************************
 * React Context API test   *
 ***************************/
-export declare const SimpleModelContext: React.Context<Props>;
-export declare const SimpleModelConsumer: React.ComponentType<React.ConsumerProps<Props>>;
+export declare const SimpleModelContext: React.Context<IProps>;
+export declare const SimpleModelConsumer: React.ComponentType<React.ConsumerProps<IProps>>;
 export declare class SimpleModelProvider extends React.Component {
     state: ISimpleModel;
-    __devTools: any;
+    private __devTools;
     constructor(props: any);
     componentWillUnmount(): void;
     getItems(): Promise<void>;
     render(): JSX.Element;
 }
+export {};

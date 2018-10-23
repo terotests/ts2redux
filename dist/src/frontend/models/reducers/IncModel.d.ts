@@ -9,21 +9,20 @@ export declare class IncModel {
     increment(): void;
     decrement(): void;
 }
-import { State } from './index';
+import { IState } from './index';
 import * as React from 'react';
-export interface ContainerPropsMethods {
+export interface IContainerPropsMethods {
     increment?: () => any;
     decrement?: () => any;
 }
 export interface IIncModel {
     cnt: number;
 }
-export interface ContainerPropsState extends IIncModel {
+declare type IContainerPropsState = IIncModel;
+export interface IProps extends IContainerPropsState, IContainerPropsMethods {
 }
-export interface Props extends ContainerPropsState, ContainerPropsMethods {
-}
-export declare const mapStateToProps: (state: State) => ContainerPropsState;
-export declare const mapDispatchToProps: (dispatch: any) => ContainerPropsMethods;
+export declare const mapStateToProps: (state: IState) => IIncModel;
+export declare const mapDispatchToProps: (dispatch: any) => IContainerPropsMethods;
 export declare const StateConnector: any;
 /**
  * @generated true
@@ -33,7 +32,7 @@ export declare class RIncModel {
     private _dispatch?;
     private _getState?;
     constructor(state?: IIncModel, dispatch?: (action: any) => void, getState?: () => any);
-    cnt: number;
+    cnt: number | undefined;
     increment(): void;
     static increment(): (dispatcher: any, getState: any) => void;
     decrement(): void;
@@ -48,14 +47,15 @@ export declare const IncModelReducer: (state: IIncModel, action: any) => IIncMod
 /***************************
 * React Context API test   *
 ***************************/
-export declare const IncModelContext: React.Context<Props>;
-export declare const IncModelConsumer: React.ComponentType<React.ConsumerProps<Props>>;
+export declare const IncModelContext: React.Context<IProps>;
+export declare const IncModelConsumer: React.ComponentType<React.ConsumerProps<IProps>>;
 export declare class IncModelProvider extends React.Component {
     state: IIncModel;
-    __devTools: any;
+    private __devTools;
     constructor(props: any);
     componentWillUnmount(): void;
     increment(): void;
     decrement(): void;
     render(): JSX.Element;
 }
+export {};

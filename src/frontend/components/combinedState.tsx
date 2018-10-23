@@ -5,7 +5,7 @@ import * as todoContainer from '../models/reducers/TodoList'
 import * as userContainer from '../models/reducers/UserState'
 
 // abstract properties version of the component
-export interface Props extends todoContainer.Props, userContainer.Props {}
+export interface Props extends todoContainer.IProps, userContainer.IProps {}
 
 // this component can be re-used
 export const AbstractCombinedStates = (props : Props) => {

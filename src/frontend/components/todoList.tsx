@@ -3,7 +3,7 @@ import * as React from 'react';
 import * as container from '../models/reducers/TodoList'
 
 // abstract properties version of the component
-export interface Props extends container.Props {}
+export interface Props extends container.IProps {}
 
 // this component can be re-used
 export const AbstractTodoList = (props : Props) => {

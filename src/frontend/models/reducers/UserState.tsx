@@ -25,10 +25,10 @@ class UserState {
 
 import * as immer from 'immer'
 import { connect } from 'react-redux'
-import { State } from './index'
+import { IState } from './index'
 import * as React from 'react'
 
-export interface ContainerPropsMethods {
+export interface IContainerPropsMethods {
   login? : (loginInfo: {
   username: string;
   password: string;
@@ -44,9 +44,9 @@ export interface IUserState {
   lastLogin: number
 }
 
-export interface ContainerPropsState extends IUserState {}
-export interface Props extends ContainerPropsState, ContainerPropsMethods {}
-export const mapStateToProps = (state : State) : ContainerPropsState => {
+type IContainerPropsState = IUserState
+export interface IProps extends IContainerPropsState, IContainerPropsMethods {}
+export const mapStateToProps = (state : IState) : IContainerPropsState => {
   return {
     logged: state.UserState.logged,
     username: state.UserState.username,
@@ -55,7 +55,7 @@ export const mapStateToProps = (state : State) : ContainerPropsState => {
     lastLogin: state.UserState.lastLogin,
   }
 }
-export const mapDispatchToProps = (dispatch) : ContainerPropsMethods => {
+export const mapDispatchToProps = (dispatch:any) : IContainerPropsMethods => {
   return {
     login : (loginInfo: {
     username: string;
@@ -73,7 +73,7 @@ export const mapDispatchToProps = (dispatch) : ContainerPropsMethods => {
 }
 export const StateConnector = connect( mapStateToProps, mapDispatchToProps);
 
-const init_UserState = () => {
+const initUserState = () => {
   const o = new UserState();
   return {
     logged: o.logged,
@@ -96,79 +96,79 @@ export class RUserState {
     this._dispatch = dispatch
     this._getState = getState
   }
-  get logged() : boolean{
+  get logged() : boolean | undefined {
     if(this._getState) {
       return this._getState().UserState.logged
     } else {
-      return this._state.logged
+      if(this._state) { return this._state.logged }
     }
-  }
-  set logged(value:boolean) {
-    if(this._state) {
+    return undefined}
+  set logged(value:boolean | undefined) {
+    if(this._state && (typeof(value) !== 'undefined')) {
       this._state.logged = value
     } else {
       // dispatch change for item logged
-      this._dispatch({type:UserStateEnums.UserState_logged, payload:value})
+      if(this._dispatch) { this._dispatch({type:UserStateEnums.UserState_logged, payload:value}) }
     }
   }
-  get username() : string{
+  get username() : string | undefined {
     if(this._getState) {
       return this._getState().UserState.username
     } else {
-      return this._state.username
+      if(this._state) { return this._state.username }
     }
-  }
-  set username(value:string) {
-    if(this._state) {
+    return undefined}
+  set username(value:string | undefined) {
+    if(this._state && (typeof(value) !== 'undefined')) {
       this._state.username = value
     } else {
       // dispatch change for item username
-      this._dispatch({type:UserStateEnums.UserState_username, payload:value})
+      if(this._dispatch) { this._dispatch({type:UserStateEnums.UserState_username, payload:value}) }
     }
   }
-  get firstName() : string{
+  get firstName() : string | undefined {
     if(this._getState) {
       return this._getState().UserState.firstName
     } else {
-      return this._state.firstName
+      if(this._state) { return this._state.firstName }
     }
-  }
-  set firstName(value:string) {
-    if(this._state) {
+    return undefined}
+  set firstName(value:string | undefined) {
+    if(this._state && (typeof(value) !== 'undefined')) {
       this._state.firstName = value
     } else {
       // dispatch change for item firstName
-      this._dispatch({type:UserStateEnums.UserState_firstName, payload:value})
+      if(this._dispatch) { this._dispatch({type:UserStateEnums.UserState_firstName, payload:value}) }
     }
   }
-  get lastName() : string{
+  get lastName() : string | undefined {
     if(this._getState) {
       return this._getState().UserState.lastName
     } else {
-      return this._state.lastName
+      if(this._state) { return this._state.lastName }
     }
-  }
-  set lastName(value:string) {
-    if(this._state) {
+    return undefined}
+  set lastName(value:string | undefined) {
+    if(this._state && (typeof(value) !== 'undefined')) {
       this._state.lastName = value
     } else {
       // dispatch change for item lastName
-      this._dispatch({type:UserStateEnums.UserState_lastName, payload:value})
+      if(this._dispatch) { this._dispatch({type:UserStateEnums.UserState_lastName, payload:value}) }
     }
   }
-  get lastLogin() : number{
+  get lastLogin() : number | undefined {
     if(this._getState) {
       return this._getState().UserState.lastLogin
     } else {
-      return this._state.lastLogin
+      if(this._state) { return this._state.lastLogin }
     }
-  }
-  set lastLogin(value:number) {
-    if(this._state) {
+    return undefined}
+  set lastLogin(value:number | undefined) {
+    if(this._state && (typeof(value) !== 'undefined')) {
       this._state.lastLogin = value
     } else {
       // dispatch change for item lastLogin
-      this._dispatch({type:UserStateEnums.UserState_lastLogin, payload:value})
+      if(this._dispatch) { this._dispatch({type:UserStateEnums.UserState_lastLogin, payload:value}) }
     }
   }
   
@@ -180,21 +180,21 @@ export class RUserState {
       console.log('Login called with ', loginInfo);
   }
   
-  static login(loginInfo: {
+  public static login(loginInfo: {
   username: string;
   password: string;
   }){
-    return (dispatcher, getState) => {
-      (new RUserState(null, dispatcher, getState)).login(loginInfo)
+    return (dispatcher:any, getState:any) => {
+      (new RUserState(undefined, dispatcher, getState)).login(loginInfo)
     }
   }
   // is task
   async logout() {
   }
   
-  static logout(){
-    return (dispatcher, getState) => {
-      (new RUserState(null, dispatcher, getState)).logout()
+  public static logout(){
+    return (dispatcher:any, getState:any) => {
+      (new RUserState(undefined, dispatcher, getState)).logout()
     }
   }
   // is a reducer
@@ -202,13 +202,13 @@ export class RUserState {
     if(this._state) {
       this.username = 'Fake Login';
     } else {
-      this._dispatch({type:UserStateEnums.UserState_fakeLogin})
+      if(this._dispatch) { this._dispatch({type:UserStateEnums.UserState_fakeLogin}) }
     }
   }
   
-  static fakeLogin(){
-    return (dispatcher, getState) => {
-      (new RUserState(null, dispatcher, getState)).fakeLogin()
+  public static fakeLogin(){
+    return (dispatcher:any, getState:any) => {
+      (new RUserState(undefined, dispatcher, getState)).fakeLogin()
     }
   }
 }
@@ -222,7 +222,7 @@ export const UserStateEnums = {
   UserState_fakeLogin : 'UserState_fakeLogin',
 }
 
-export const UserStateReducer = (state:IUserState = init_UserState(), action) => {
+export const UserStateReducer = (state:IUserState = initUserState(), action:any ) => {
   return immer.produce(state, draft => {
     switch (action.type) {
       case UserStateEnums.UserState_logged: 
@@ -249,13 +249,13 @@ export const UserStateReducer = (state:IUserState = init_UserState(), action) =>
 /***************************
 * React Context API test   *
 ***************************/
-export const UserStateContext = React.createContext<Props>(null)
+export const UserStateContext = React.createContext<IProps|undefined>(undefined)
 export const UserStateConsumer = UserStateContext.Consumer
 let instanceCnt = 1
 export class UserStateProvider extends React.Component {
-  state: IUserState = init_UserState() 
-  __devTools:any = null
-  constructor( props ){
+  public state: IUserState = initUserState() 
+  private __devTools:any = null
+  constructor( props:any ){
     super(props)
     this.login = this.login.bind(this)
     this.logout = this.logout.bind(this)
@@ -264,30 +264,30 @@ export class UserStateProvider extends React.Component {
     if(devs) {
       this.__devTools = devs.connect({name:'UserState'+instanceCnt++})
       this.__devTools.init(this.state)
-      this.__devTools.subscribe( msg => {
+      this.__devTools.subscribe( (msg:any) => {
         if (msg.type === 'DISPATCH' && msg.state) {
           this.setState(JSON.parse(msg.state))
         }
       })
     }
   }
-  componentWillUnmount() {
-    if(this.__devTools) this.__devTools.unsubscribe()
+  public componentWillUnmount() {
+    if(this.__devTools) { this.__devTools.unsubscribe() }
   }
   async login(loginInfo: {
   username: string;
   password: string;
   }){
-    (new RUserState(null, (action) => {
+    (new RUserState(undefined, (action:any) => {
       const nextState = UserStateReducer( this.state, action )
-      if(this.__devTools) this.__devTools.send(action.type, nextState)
+      if(this.__devTools) { this.__devTools.send(action.type, nextState) }
       this.setState(nextState)
     }, () => ({UserState:this.state})) ).login(loginInfo)
   }
   async logout(){
-    (new RUserState(null, (action) => {
+    (new RUserState(undefined, (action:any) => {
       const nextState = UserStateReducer( this.state, action )
-      if(this.__devTools) this.__devTools.send(action.type, nextState)
+      if(this.__devTools) { this.__devTools.send(action.type, nextState) }
       this.setState(nextState)
     }, () => ({UserState:this.state})) ).logout()
   }
@@ -296,7 +296,7 @@ export class UserStateProvider extends React.Component {
     if(this.__devTools) this.__devTools.send('fakeLogin', nextState)
     this.setState(nextState)
   }
-  render() {
+  public render() {
     return (<UserStateContext.Provider value={{...this.state, 
       login: this.login,
       logout: this.logout,

@@ -157,7 +157,7 @@ exports.mapDispatchToProps = function (dispatch) {
     };
 };
 exports.StateConnector = react_redux_1.connect(exports.mapStateToProps, exports.mapDispatchToProps);
-var init_TodoList = function () {
+var initTodoList = function () {
     var o = new TodoList();
     return {
         items: o.items,
@@ -180,16 +180,21 @@ var RTodoList = /** @class */ (function () {
                 return this._getState().TodoList.items;
             }
             else {
-                return this._state.items;
+                if (this._state) {
+                    return this._state.items;
+                }
             }
+            return undefined;
         },
         set: function (value) {
-            if (this._state) {
+            if (this._state && (typeof (value) !== 'undefined')) {
                 this._state.items = value;
             }
             else {
                 // dispatch change for item items
-                this._dispatch({ type: exports.TodoListEnums.TodoList_items, payload: value });
+                if (this._dispatch) {
+                    this._dispatch({ type: exports.TodoListEnums.TodoList_items, payload: value });
+                }
             }
         },
         enumerable: true,
@@ -201,16 +206,21 @@ var RTodoList = /** @class */ (function () {
                 return this._getState().TodoList.state;
             }
             else {
-                return this._state.state;
+                if (this._state) {
+                    return this._state.state;
+                }
             }
+            return undefined;
         },
         set: function (value) {
-            if (this._state) {
+            if (this._state && (typeof (value) !== 'undefined')) {
                 this._state.state = value;
             }
             else {
                 // dispatch change for item state
-                this._dispatch({ type: exports.TodoListEnums.TodoList_state, payload: value });
+                if (this._dispatch) {
+                    this._dispatch({ type: exports.TodoListEnums.TodoList_state, payload: value });
+                }
             }
         },
         enumerable: true,
@@ -222,16 +232,21 @@ var RTodoList = /** @class */ (function () {
                 return this._getState().TodoList.stateError;
             }
             else {
-                return this._state.stateError;
+                if (this._state) {
+                    return this._state.stateError;
+                }
             }
+            return undefined;
         },
         set: function (value) {
-            if (this._state) {
+            if (this._state && (typeof (value) !== 'undefined')) {
                 this._state.stateError = value;
             }
             else {
                 // dispatch change for item stateError
-                this._dispatch({ type: exports.TodoListEnums.TodoList_stateError, payload: value });
+                if (this._dispatch) {
+                    this._dispatch({ type: exports.TodoListEnums.TodoList_stateError, payload: value });
+                }
             }
         },
         enumerable: true,
@@ -243,12 +258,14 @@ var RTodoList = /** @class */ (function () {
             this.items = [];
         }
         else {
-            this._dispatch({ type: exports.TodoListEnums.TodoList_clearTodoList });
+            if (this._dispatch) {
+                this._dispatch({ type: exports.TodoListEnums.TodoList_clearTodoList });
+            }
         }
     };
     RTodoList.clearTodoList = function () {
         return function (dispatcher, getState) {
-            (new RTodoList(null, dispatcher, getState)).clearTodoList();
+            (new RTodoList(undefined, dispatcher, getState)).clearTodoList();
         };
     };
     // is a reducer
@@ -257,12 +274,14 @@ var RTodoList = /** @class */ (function () {
             this.items.reverse();
         }
         else {
-            this._dispatch({ type: exports.TodoListEnums.TodoList_reverse });
+            if (this._dispatch) {
+                this._dispatch({ type: exports.TodoListEnums.TodoList_reverse });
+            }
         }
     };
     RTodoList.reverse = function () {
         return function (dispatcher, getState) {
-            (new RTodoList(null, dispatcher, getState)).reverse();
+            (new RTodoList(undefined, dispatcher, getState)).reverse();
         };
     };
     // is a reducer
@@ -271,12 +290,14 @@ var RTodoList = /** @class */ (function () {
             this.items.sort(function (a, b) { return a.id - b.id; });
         }
         else {
-            this._dispatch({ type: exports.TodoListEnums.TodoList_sortById });
+            if (this._dispatch) {
+                this._dispatch({ type: exports.TodoListEnums.TodoList_sortById });
+            }
         }
     };
     RTodoList.sortById = function () {
         return function (dispatcher, getState) {
-            (new RTodoList(null, dispatcher, getState)).sortById();
+            (new RTodoList(undefined, dispatcher, getState)).sortById();
         };
     };
     // is a reducer
@@ -285,12 +306,14 @@ var RTodoList = /** @class */ (function () {
             this.items.sort(function (a, b) { return a.title.localeCompare(b.title); });
         }
         else {
-            this._dispatch({ type: exports.TodoListEnums.TodoList_sortByTitle });
+            if (this._dispatch) {
+                this._dispatch({ type: exports.TodoListEnums.TodoList_sortByTitle });
+            }
         }
     };
     RTodoList.sortByTitle = function () {
         return function (dispatcher, getState) {
-            (new RTodoList(null, dispatcher, getState)).sortByTitle();
+            (new RTodoList(undefined, dispatcher, getState)).sortByTitle();
         };
     };
     // is a reducer
@@ -300,12 +323,14 @@ var RTodoList = /** @class */ (function () {
             this.items.sort(function (a, b) { return toNumber_1(a.completed) - toNumber_1(b.completed); });
         }
         else {
-            this._dispatch({ type: exports.TodoListEnums.TodoList_sortByCompletion });
+            if (this._dispatch) {
+                this._dispatch({ type: exports.TodoListEnums.TodoList_sortByCompletion });
+            }
         }
     };
     RTodoList.sortByCompletion = function () {
         return function (dispatcher, getState) {
-            (new RTodoList(null, dispatcher, getState)).sortByCompletion();
+            (new RTodoList(undefined, dispatcher, getState)).sortByCompletion();
         };
     };
     // is task
@@ -342,7 +367,7 @@ var RTodoList = /** @class */ (function () {
     };
     RTodoList.getItems = function () {
         return function (dispatcher, getState) {
-            (new RTodoList(null, dispatcher, getState)).getItems();
+            (new RTodoList(undefined, dispatcher, getState)).getItems();
         };
     };
     return RTodoList;
@@ -359,7 +384,7 @@ exports.TodoListEnums = {
     TodoList_sortByCompletion: 'TodoList_sortByCompletion',
 };
 exports.TodoListReducer = function (state, action) {
-    if (state === void 0) { state = init_TodoList(); }
+    if (state === void 0) { state = initTodoList(); }
     return immer.produce(state, function (draft) {
         switch (action.type) {
             case exports.TodoListEnums.TodoList_items:
@@ -392,14 +417,14 @@ exports.TodoListReducer = function (state, action) {
 /***************************
 * React Context API test   *
 ***************************/
-exports.TodoListContext = React.createContext(null);
+exports.TodoListContext = React.createContext(undefined);
 exports.TodoListConsumer = exports.TodoListContext.Consumer;
 var instanceCnt = 1;
 var TodoListProvider = /** @class */ (function (_super) {
     __extends(TodoListProvider, _super);
     function TodoListProvider(props) {
         var _this = _super.call(this, props) || this;
-        _this.state = init_TodoList();
+        _this.state = initTodoList();
         _this.__devTools = null;
         _this.clearTodoList = _this.clearTodoList.bind(_this);
         _this.reverse = _this.reverse.bind(_this);
@@ -420,8 +445,9 @@ var TodoListProvider = /** @class */ (function (_super) {
         return _this;
     }
     TodoListProvider.prototype.componentWillUnmount = function () {
-        if (this.__devTools)
+        if (this.__devTools) {
             this.__devTools.unsubscribe();
+        }
     };
     TodoListProvider.prototype.clearTodoList = function () {
         var nextState = immer.produce(this.state, function (draft) { return (new RTodoList(draft)).clearTodoList(); });
@@ -460,10 +486,11 @@ var TodoListProvider = /** @class */ (function (_super) {
         return __awaiter(this, void 0, void 0, function () {
             var _this = this;
             return __generator(this, function (_a) {
-                (new RTodoList(null, function (action) {
+                (new RTodoList(undefined, function (action) {
                     var nextState = exports.TodoListReducer(_this.state, action);
-                    if (_this.__devTools)
+                    if (_this.__devTools) {
                         _this.__devTools.send(action.type, nextState);
+                    }
                     _this.setState(nextState);
                 }, function () { return ({ TodoList: _this.state }); })).getItems();
                 return [2 /*return*/];

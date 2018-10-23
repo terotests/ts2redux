@@ -265,7 +265,7 @@ exports.mapDispatchToProps = function (dispatch) {
     };
 };
 exports.StateConnector = react_redux_1.connect(exports.mapStateToProps, exports.mapDispatchToProps);
-var init_TestModel = function () {
+var initTestModel = function () {
     var o = new TestModel();
     return {
         items: o.items,
@@ -291,16 +291,21 @@ var RTestModel = /** @class */ (function () {
                 return this._getState().TestModel.items;
             }
             else {
-                return this._state.items;
+                if (this._state) {
+                    return this._state.items;
+                }
             }
+            return undefined;
         },
         set: function (value) {
-            if (this._state) {
+            if (this._state && (typeof (value) !== 'undefined')) {
                 this._state.items = value;
             }
             else {
                 // dispatch change for item items
-                this._dispatch({ type: exports.TestModelEnums.TestModel_items, payload: value });
+                if (this._dispatch) {
+                    this._dispatch({ type: exports.TestModelEnums.TestModel_items, payload: value });
+                }
             }
         },
         enumerable: true,
@@ -312,16 +317,21 @@ var RTestModel = /** @class */ (function () {
                 return this._getState().TestModel.maxId;
             }
             else {
-                return this._state.maxId;
+                if (this._state) {
+                    return this._state.maxId;
+                }
             }
+            return undefined;
         },
         set: function (value) {
-            if (this._state) {
+            if (this._state && (typeof (value) !== 'undefined')) {
                 this._state.maxId = value;
             }
             else {
                 // dispatch change for item maxId
-                this._dispatch({ type: exports.TestModelEnums.TestModel_maxId, payload: value });
+                if (this._dispatch) {
+                    this._dispatch({ type: exports.TestModelEnums.TestModel_maxId, payload: value });
+                }
             }
         },
         enumerable: true,
@@ -333,16 +343,21 @@ var RTestModel = /** @class */ (function () {
                 return this._getState().TestModel.cartId;
             }
             else {
-                return this._state.cartId;
+                if (this._state) {
+                    return this._state.cartId;
+                }
             }
+            return undefined;
         },
         set: function (value) {
-            if (this._state) {
+            if (this._state && (typeof (value) !== 'undefined')) {
                 this._state.cartId = value;
             }
             else {
                 // dispatch change for item cartId
-                this._dispatch({ type: exports.TestModelEnums.TestModel_cartId, payload: value });
+                if (this._dispatch) {
+                    this._dispatch({ type: exports.TestModelEnums.TestModel_cartId, payload: value });
+                }
             }
         },
         enumerable: true,
@@ -354,16 +369,21 @@ var RTestModel = /** @class */ (function () {
                 return this._getState().TestModel.shopState;
             }
             else {
-                return this._state.shopState;
+                if (this._state) {
+                    return this._state.shopState;
+                }
             }
+            return undefined;
         },
         set: function (value) {
-            if (this._state) {
+            if (this._state && (typeof (value) !== 'undefined')) {
                 this._state.shopState = value;
             }
             else {
                 // dispatch change for item shopState
-                this._dispatch({ type: exports.TestModelEnums.TestModel_shopState, payload: value });
+                if (this._dispatch) {
+                    this._dispatch({ type: exports.TestModelEnums.TestModel_shopState, payload: value });
+                }
             }
         },
         enumerable: true,
@@ -375,16 +395,21 @@ var RTestModel = /** @class */ (function () {
                 return this._getState().TestModel.carts;
             }
             else {
-                return this._state.carts;
+                if (this._state) {
+                    return this._state.carts;
+                }
             }
+            return undefined;
         },
         set: function (value) {
-            if (this._state) {
+            if (this._state && (typeof (value) !== 'undefined')) {
                 this._state.carts = value;
             }
             else {
                 // dispatch change for item carts
-                this._dispatch({ type: exports.TestModelEnums.TestModel_carts, payload: value });
+                if (this._dispatch) {
+                    this._dispatch({ type: exports.TestModelEnums.TestModel_carts, payload: value });
+                }
             }
         },
         enumerable: true,
@@ -396,16 +421,21 @@ var RTestModel = /** @class */ (function () {
                 return this._getState().TestModel.userMessage;
             }
             else {
-                return this._state.userMessage;
+                if (this._state) {
+                    return this._state.userMessage;
+                }
             }
+            return undefined;
         },
         set: function (value) {
-            if (this._state) {
+            if (this._state && (typeof (value) !== 'undefined')) {
                 this._state.userMessage = value;
             }
             else {
                 // dispatch change for item userMessage
-                this._dispatch({ type: exports.TestModelEnums.TestModel_userMessage, payload: value });
+                if (this._dispatch) {
+                    this._dispatch({ type: exports.TestModelEnums.TestModel_userMessage, payload: value });
+                }
             }
         },
         enumerable: true,
@@ -417,12 +447,14 @@ var RTestModel = /** @class */ (function () {
             this.userMessage = value;
         }
         else {
-            this._dispatch({ type: exports.TestModelEnums.TestModel_setUserMessage, payload: value });
+            if (this._dispatch) {
+                this._dispatch({ type: exports.TestModelEnums.TestModel_setUserMessage, payload: value });
+            }
         }
     };
     RTestModel.setUserMessage = function (value) {
         return function (dispatcher, getState) {
-            (new RTestModel(null, dispatcher, getState)).setUserMessage(value);
+            (new RTestModel(undefined, dispatcher, getState)).setUserMessage(value);
         };
     };
     // is a reducer
@@ -432,12 +464,14 @@ var RTestModel = /** @class */ (function () {
             this.items.push(__assign({}, item, { id: this.maxId++ }));
         }
         else {
-            this._dispatch({ type: exports.TestModelEnums.TestModel_add, payload: item });
+            if (this._dispatch) {
+                this._dispatch({ type: exports.TestModelEnums.TestModel_add, payload: item });
+            }
         }
     };
     RTestModel.add = function (item) {
         return function (dispatcher, getState) {
-            (new RTestModel(null, dispatcher, getState)).add(item);
+            (new RTestModel(undefined, dispatcher, getState)).add(item);
         };
     };
     // is a reducer
@@ -446,12 +480,14 @@ var RTestModel = /** @class */ (function () {
             this.items.splice(0, 1);
         }
         else {
-            this._dispatch({ type: exports.TestModelEnums.TestModel_removeFirst });
+            if (this._dispatch) {
+                this._dispatch({ type: exports.TestModelEnums.TestModel_removeFirst });
+            }
         }
     };
     RTestModel.removeFirst = function () {
         return function (dispatcher, getState) {
-            (new RTestModel(null, dispatcher, getState)).removeFirst();
+            (new RTestModel(undefined, dispatcher, getState)).removeFirst();
         };
     };
     // is a reducer
@@ -462,12 +498,14 @@ var RTestModel = /** @class */ (function () {
             });
         }
         else {
-            this._dispatch({ type: exports.TestModelEnums.TestModel_sort });
+            if (this._dispatch) {
+                this._dispatch({ type: exports.TestModelEnums.TestModel_sort });
+            }
         }
     };
     RTestModel.sort = function () {
         return function (dispatcher, getState) {
-            (new RTestModel(null, dispatcher, getState)).sort();
+            (new RTestModel(undefined, dispatcher, getState)).sort();
         };
     };
     // is a reducer
@@ -479,12 +517,14 @@ var RTestModel = /** @class */ (function () {
             };
         }
         else {
-            this._dispatch({ type: exports.TestModelEnums.TestModel_addCart });
+            if (this._dispatch) {
+                this._dispatch({ type: exports.TestModelEnums.TestModel_addCart });
+            }
         }
     };
     RTestModel.addCart = function () {
         return function (dispatcher, getState) {
-            (new RTestModel(null, dispatcher, getState)).addCart();
+            (new RTestModel(undefined, dispatcher, getState)).addCart();
         };
     };
     // is a reducer
@@ -496,12 +536,14 @@ var RTestModel = /** @class */ (function () {
             };
         }
         else {
-            this._dispatch({ type: exports.TestModelEnums.TestModel_addCartSync });
+            if (this._dispatch) {
+                this._dispatch({ type: exports.TestModelEnums.TestModel_addCartSync });
+            }
         }
     };
     RTestModel.addCartSync = function () {
         return function (dispatcher, getState) {
-            (new RTestModel(null, dispatcher, getState)).addCartSync();
+            (new RTestModel(undefined, dispatcher, getState)).addCartSync();
         };
     };
     // is a reducer
@@ -510,12 +552,14 @@ var RTestModel = /** @class */ (function () {
             this.carts[adding.cartId].items.push(__assign({}, adding.item, { id: this.maxId++ }));
         }
         else {
-            this._dispatch({ type: exports.TestModelEnums.TestModel_addToCart, payload: adding });
+            if (this._dispatch) {
+                this._dispatch({ type: exports.TestModelEnums.TestModel_addToCart, payload: adding });
+            }
         }
     };
     RTestModel.addToCart = function (adding) {
         return function (dispatcher, getState) {
-            (new RTestModel(null, dispatcher, getState)).addToCart(adding);
+            (new RTestModel(undefined, dispatcher, getState)).addToCart(adding);
         };
     };
     // is a reducer
@@ -524,12 +568,14 @@ var RTestModel = /** @class */ (function () {
             this.carts[adding.cartId].newItemName = name;
         }
         else {
-            this._dispatch({ type: exports.TestModelEnums.TestModel_setCartNewItem, payload: adding });
+            if (this._dispatch) {
+                this._dispatch({ type: exports.TestModelEnums.TestModel_setCartNewItem, payload: adding });
+            }
         }
     };
     RTestModel.setCartNewItem = function (adding) {
         return function (dispatcher, getState) {
-            (new RTestModel(null, dispatcher, getState)).setCartNewItem(adding);
+            (new RTestModel(undefined, dispatcher, getState)).setCartNewItem(adding);
         };
     };
     // is a reducer
@@ -541,12 +587,14 @@ var RTestModel = /** @class */ (function () {
             });
         }
         else {
-            this._dispatch({ type: exports.TestModelEnums.TestModel_addToCartRandom });
+            if (this._dispatch) {
+                this._dispatch({ type: exports.TestModelEnums.TestModel_addToCartRandom });
+            }
         }
     };
     RTestModel.addToCartRandom = function () {
         return function (dispatcher, getState) {
-            (new RTestModel(null, dispatcher, getState)).addToCartRandom();
+            (new RTestModel(undefined, dispatcher, getState)).addToCartRandom();
         };
     };
     // is a reducer
@@ -555,12 +603,14 @@ var RTestModel = /** @class */ (function () {
             this.items[this.items.length - 1].name = newName;
         }
         else {
-            this._dispatch({ type: exports.TestModelEnums.TestModel_renameLast, payload: newName });
+            if (this._dispatch) {
+                this._dispatch({ type: exports.TestModelEnums.TestModel_renameLast, payload: newName });
+            }
         }
     };
     RTestModel.renameLast = function (newName) {
         return function (dispatcher, getState) {
-            (new RTestModel(null, dispatcher, getState)).renameLast(newName);
+            (new RTestModel(undefined, dispatcher, getState)).renameLast(newName);
         };
     };
     // is task
@@ -590,7 +640,7 @@ var RTestModel = /** @class */ (function () {
     };
     RTestModel.createItem = function (someName) {
         return function (dispatcher, getState) {
-            (new RTestModel(null, dispatcher, getState)).createItem(someName);
+            (new RTestModel(undefined, dispatcher, getState)).createItem(someName);
         };
     };
     // is task
@@ -604,7 +654,7 @@ var RTestModel = /** @class */ (function () {
     };
     RTestModel.addOneFriend = function (name) {
         return function (dispatcher, getState) {
-            (new RTestModel(null, dispatcher, getState)).addOneFriend(name);
+            (new RTestModel(undefined, dispatcher, getState)).addOneFriend(name);
         };
     };
     // is task
@@ -621,7 +671,7 @@ var RTestModel = /** @class */ (function () {
     };
     RTestModel.fillSomeFriends = function () {
         return function (dispatcher, getState) {
-            (new RTestModel(null, dispatcher, getState)).fillSomeFriends();
+            (new RTestModel(undefined, dispatcher, getState)).fillSomeFriends();
         };
     };
     // is task
@@ -635,7 +685,7 @@ var RTestModel = /** @class */ (function () {
     };
     RTestModel.ChangeLastItem = function () {
         return function (dispatcher, getState) {
-            (new RTestModel(null, dispatcher, getState)).ChangeLastItem();
+            (new RTestModel(undefined, dispatcher, getState)).ChangeLastItem();
         };
     };
     return RTestModel;
@@ -660,7 +710,7 @@ exports.TestModelEnums = {
     TestModel_renameLast: 'TestModel_renameLast',
 };
 exports.TestModelReducer = function (state, action) {
-    if (state === void 0) { state = init_TestModel(); }
+    if (state === void 0) { state = initTestModel(); }
     return immer.produce(state, function (draft) {
         switch (action.type) {
             case exports.TestModelEnums.TestModel_items:
@@ -717,14 +767,14 @@ exports.TestModelReducer = function (state, action) {
 /***************************
 * React Context API test   *
 ***************************/
-exports.TestModelContext = React.createContext(null);
+exports.TestModelContext = React.createContext(undefined);
 exports.TestModelConsumer = exports.TestModelContext.Consumer;
 var instanceCnt = 1;
 var TestModelProvider = /** @class */ (function (_super) {
     __extends(TestModelProvider, _super);
     function TestModelProvider(props) {
         var _this = _super.call(this, props) || this;
-        _this.state = init_TestModel();
+        _this.state = initTestModel();
         _this.__devTools = null;
         _this.setUserMessage = _this.setUserMessage.bind(_this);
         _this.add = _this.add.bind(_this);
@@ -753,8 +803,9 @@ var TestModelProvider = /** @class */ (function (_super) {
         return _this;
     }
     TestModelProvider.prototype.componentWillUnmount = function () {
-        if (this.__devTools)
+        if (this.__devTools) {
             this.__devTools.unsubscribe();
+        }
     };
     TestModelProvider.prototype.setUserMessage = function (value) {
         var nextState = immer.produce(this.state, function (draft) { return (new RTestModel(draft)).setUserMessage(value); });
@@ -821,10 +872,11 @@ var TestModelProvider = /** @class */ (function (_super) {
         return __awaiter(this, void 0, void 0, function () {
             var _this = this;
             return __generator(this, function (_a) {
-                (new RTestModel(null, function (action) {
+                (new RTestModel(undefined, function (action) {
                     var nextState = exports.TestModelReducer(_this.state, action);
-                    if (_this.__devTools)
+                    if (_this.__devTools) {
                         _this.__devTools.send(action.type, nextState);
+                    }
                     _this.setState(nextState);
                 }, function () { return ({ TestModel: _this.state }); })).createItem(someName);
                 return [2 /*return*/];
@@ -835,10 +887,11 @@ var TestModelProvider = /** @class */ (function (_super) {
         return __awaiter(this, void 0, void 0, function () {
             var _this = this;
             return __generator(this, function (_a) {
-                (new RTestModel(null, function (action) {
+                (new RTestModel(undefined, function (action) {
                     var nextState = exports.TestModelReducer(_this.state, action);
-                    if (_this.__devTools)
+                    if (_this.__devTools) {
                         _this.__devTools.send(action.type, nextState);
+                    }
                     _this.setState(nextState);
                 }, function () { return ({ TestModel: _this.state }); })).addOneFriend(name);
                 return [2 /*return*/];
@@ -849,10 +902,11 @@ var TestModelProvider = /** @class */ (function (_super) {
         return __awaiter(this, void 0, void 0, function () {
             var _this = this;
             return __generator(this, function (_a) {
-                (new RTestModel(null, function (action) {
+                (new RTestModel(undefined, function (action) {
                     var nextState = exports.TestModelReducer(_this.state, action);
-                    if (_this.__devTools)
+                    if (_this.__devTools) {
                         _this.__devTools.send(action.type, nextState);
+                    }
                     _this.setState(nextState);
                 }, function () { return ({ TestModel: _this.state }); })).fillSomeFriends();
                 return [2 /*return*/];
@@ -863,10 +917,11 @@ var TestModelProvider = /** @class */ (function (_super) {
         return __awaiter(this, void 0, void 0, function () {
             var _this = this;
             return __generator(this, function (_a) {
-                (new RTestModel(null, function (action) {
+                (new RTestModel(undefined, function (action) {
                     var nextState = exports.TestModelReducer(_this.state, action);
-                    if (_this.__devTools)
+                    if (_this.__devTools) {
                         _this.__devTools.send(action.type, nextState);
+                    }
                     _this.setState(nextState);
                 }, function () { return ({ TestModel: _this.state }); })).ChangeLastItem();
                 return [2 /*return*/];

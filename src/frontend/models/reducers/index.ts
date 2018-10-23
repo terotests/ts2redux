@@ -5,19 +5,19 @@
 *                                              *
 ***********************************************/
 import * as redux from 'redux';
-import { IncModelReducer, IIncModel } from './IncModel';
-import { SimpleModelReducer, ISimpleModel } from './SimpleModel';
-import { TestModelReducer, ITestModel } from './TestModel';
-import { TodoListReducer, ITodoList } from './TodoList';
-import { UserStateReducer, IUserState } from './UserState';
-export interface State {
+import { IIncModel, IncModelReducer } from './IncModel';
+import { ISimpleModel, SimpleModelReducer } from './SimpleModel';
+import { ITestModel, TestModelReducer } from './TestModel';
+import { ITodoList, TodoListReducer } from './TodoList';
+import { IUserState, UserStateReducer } from './UserState';
+export interface IState {
   IncModel: IIncModel
   SimpleModel: ISimpleModel
   TestModel: ITestModel
   TodoList: ITodoList
   UserState: IUserState
 }
-export const reducers = redux.combineReducers<State>({
+export const reducers = redux.combineReducers<IState>({
   IncModel: IncModelReducer,
   SimpleModel: SimpleModelReducer,
   TestModel: TestModelReducer,

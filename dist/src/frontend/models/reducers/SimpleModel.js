@@ -107,7 +107,7 @@ exports.mapDispatchToProps = function (dispatch) {
     };
 };
 exports.StateConnector = react_redux_1.connect(exports.mapStateToProps, exports.mapDispatchToProps);
-var init_SimpleModel = function () {
+var initSimpleModel = function () {
     var o = new SimpleModel();
     return {
         items: o.items,
@@ -128,16 +128,21 @@ var RSimpleModel = /** @class */ (function () {
                 return this._getState().SimpleModel.items;
             }
             else {
-                return this._state.items;
+                if (this._state) {
+                    return this._state.items;
+                }
             }
+            return undefined;
         },
         set: function (value) {
-            if (this._state) {
+            if (this._state && (typeof (value) !== 'undefined')) {
                 this._state.items = value;
             }
             else {
                 // dispatch change for item items
-                this._dispatch({ type: exports.SimpleModelEnums.SimpleModel_items, payload: value });
+                if (this._dispatch) {
+                    this._dispatch({ type: exports.SimpleModelEnums.SimpleModel_items, payload: value });
+                }
             }
         },
         enumerable: true,
@@ -161,7 +166,7 @@ var RSimpleModel = /** @class */ (function () {
     };
     RSimpleModel.getItems = function () {
         return function (dispatcher, getState) {
-            (new RSimpleModel(null, dispatcher, getState)).getItems();
+            (new RSimpleModel(undefined, dispatcher, getState)).getItems();
         };
     };
     return RSimpleModel;
@@ -171,7 +176,7 @@ exports.SimpleModelEnums = {
     SimpleModel_items: 'SimpleModel_items',
 };
 exports.SimpleModelReducer = function (state, action) {
-    if (state === void 0) { state = init_SimpleModel(); }
+    if (state === void 0) { state = initSimpleModel(); }
     return immer.produce(state, function (draft) {
         switch (action.type) {
             case exports.SimpleModelEnums.SimpleModel_items:
@@ -183,14 +188,14 @@ exports.SimpleModelReducer = function (state, action) {
 /***************************
 * React Context API test   *
 ***************************/
-exports.SimpleModelContext = React.createContext(null);
+exports.SimpleModelContext = React.createContext(undefined);
 exports.SimpleModelConsumer = exports.SimpleModelContext.Consumer;
 var instanceCnt = 1;
 var SimpleModelProvider = /** @class */ (function (_super) {
     __extends(SimpleModelProvider, _super);
     function SimpleModelProvider(props) {
         var _this = _super.call(this, props) || this;
-        _this.state = init_SimpleModel();
+        _this.state = initSimpleModel();
         _this.__devTools = null;
         _this.getItems = _this.getItems.bind(_this);
         var devs = window['devToolsExtension'] ? window['devToolsExtension'] : null;
@@ -206,17 +211,19 @@ var SimpleModelProvider = /** @class */ (function (_super) {
         return _this;
     }
     SimpleModelProvider.prototype.componentWillUnmount = function () {
-        if (this.__devTools)
+        if (this.__devTools) {
             this.__devTools.unsubscribe();
+        }
     };
     SimpleModelProvider.prototype.getItems = function () {
         return __awaiter(this, void 0, void 0, function () {
             var _this = this;
             return __generator(this, function (_a) {
-                (new RSimpleModel(null, function (action) {
+                (new RSimpleModel(undefined, function (action) {
                     var nextState = exports.SimpleModelReducer(_this.state, action);
-                    if (_this.__devTools)
+                    if (_this.__devTools) {
                         _this.__devTools.send(action.type, nextState);
+                    }
                     _this.setState(nextState);
                 }, function () { return ({ SimpleModel: _this.state }); })).getItems();
                 return [2 /*return*/];

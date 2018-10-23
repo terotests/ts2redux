@@ -108,7 +108,7 @@ export const SimpleModelReducer = (state:ISimpleModel = initSimpleModel(), actio
 /***************************
 * React Context API test   *
 ***************************/
-export const SimpleModelContext = React.createContext<IProps|undefined>(undefined)
+export const SimpleModelContext = React.createContext<IProps>(initSimpleModel())
 export const SimpleModelConsumer = SimpleModelContext.Consumer
 let instanceCnt = 1
 export class SimpleModelProvider extends React.Component {

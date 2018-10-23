@@ -162,7 +162,7 @@ exports.IncModelReducer = function (state, action) {
 /***************************
 * React Context API test   *
 ***************************/
-exports.IncModelContext = React.createContext(undefined);
+exports.IncModelContext = React.createContext(initIncModel());
 exports.IncModelConsumer = exports.IncModelContext.Consumer;
 var instanceCnt = 1;
 var IncModelProvider = /** @class */ (function (_super) {

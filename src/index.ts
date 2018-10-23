@@ -206,6 +206,22 @@ export async function createProject( settings:GenerationOptions) {
           ng.indent(-1)
         ng.out('}', true)
 
+        ng.out('const initWithMethods' + c.getName()+ ' = () => {', true)
+          ng.indent(1)
+          ng.out('const o = new '+c.getName()+'();', true);
+          ng.out('return {', true)
+            ng.indent(1)
+            c.getProperties().forEach( p => {
+              ng.out(p.getName() + ': o.' + p.getName()  + ',', true)
+            })
+            c.getMethods().forEach( m => {
+              ng.out(m.getName() + ': o.' + m.getName()  + ',', true)
+            })            
+            ng.indent(-1)
+          ng.out('}', true)
+          ng.indent(-1)
+        ng.out('}', true)        
+
         // Create model of all the variables...
 
         ng.raw(`
@@ -358,7 +374,7 @@ export const ShopCartModelReducer = (state:ITestModel = {}, action) => {
             body.out( m.getModifiers().filter(mod => ( mod.getText() != 'async' && mod.getText() != 'public')).map( mod => mod.print() +' ' ).join('') )
             body.out( m.getName() + '(' +  m.getParameters().map( mod => mod.print() ).join(', ') + ')')
 
-            propsMethods.out( m.getName() + '? : (' +  m.getParameters().map( mod => mod.print() ).join(', ') + ') => any', true)
+            propsMethods.out( m.getName() + ' : (' +  m.getParameters().map( mod => mod.print() ).join(', ') + ') => any', true)
             dispatchMethods.out( m.getName() + ' : (' +  m.getParameters().map( mod => mod.print() ).join(', ') + ') => {', true)
               dispatchMethods.indent(1)
               dispatchMethods.out(`return dispatch(R${c.getName()}.${m.getName()}(${pName}))`, true)
@@ -387,7 +403,7 @@ export const ShopCartModelReducer = (state:ITestModel = {}, action) => {
             // ng.raw(outer.getCode())
             createComment( ng, 'React Context API test');            
             // create context...
-            ng.out(`export const ${c.getName()}Context = React.createContext<IProps|undefined>(undefined)`, true)
+            ng.out(`export const ${c.getName()}Context = React.createContext<IProps>(initWithMethods${c.getName()}())`, true)
             ng.out(`export const ${c.getName()}Consumer = ${c.getName()}Context.Consumer`, true)
             ng.out(`let instanceCnt = 1`, true)
             ng.out(`export class ${c.getName()}Provider extends React.Component {`, true)

@@ -135,7 +135,7 @@ export const IncModelReducer = (state:IIncModel = initIncModel(), action:any ) =
 /***************************
 * React Context API test   *
 ***************************/
-export const IncModelContext = React.createContext<IProps|undefined>(undefined)
+export const IncModelContext = React.createContext<IProps>(initIncModel())
 export const IncModelConsumer = IncModelContext.Consumer
 let instanceCnt = 1
 export class IncModelProvider extends React.Component {

@@ -463,7 +463,7 @@ exports.IncModelReducer = function (state, action) {
 /***************************
 * React Context API test   *
 ***************************/
-exports.IncModelContext = React.createContext(undefined);
+exports.IncModelContext = React.createContext(initIncModel());
 exports.IncModelConsumer = exports.IncModelContext.Consumer;
 var instanceCnt = 1;
 var IncModelProvider = /** @class */ (function (_super) {
@@ -703,7 +703,7 @@ exports.SimpleModelReducer = function (state, action) {
 /***************************
 * React Context API test   *
 ***************************/
-exports.SimpleModelContext = React.createContext(undefined);
+exports.SimpleModelContext = React.createContext(initSimpleModel());
 exports.SimpleModelConsumer = exports.SimpleModelContext.Consumer;
 var instanceCnt = 1;
 var SimpleModelProvider = /** @class */ (function (_super) {
@@ -1524,7 +1524,7 @@ exports.TestModelReducer = function (state, action) {
 /***************************
 * React Context API test   *
 ***************************/
-exports.TestModelContext = React.createContext(undefined);
+exports.TestModelContext = React.createContext(initTestModel());
 exports.TestModelConsumer = exports.TestModelContext.Consumer;
 var instanceCnt = 1;
 var TestModelProvider = /** @class */ (function (_super) {
@@ -2114,7 +2114,7 @@ exports.TodoListReducer = function (state, action) {
 /***************************
 * React Context API test   *
 ***************************/
-exports.TodoListContext = React.createContext(undefined);
+exports.TodoListContext = React.createContext(initTodoList());
 exports.TodoListConsumer = exports.TodoListContext.Consumer;
 var instanceCnt = 1;
 var TodoListProvider = /** @class */ (function (_super) {
@@ -2553,7 +2553,7 @@ exports.UserStateReducer = function (state, action) {
 /***************************
 * React Context API test   *
 ***************************/
-exports.UserStateContext = React.createContext(undefined);
+exports.UserStateContext = React.createContext(initUserState());
 exports.UserStateConsumer = exports.UserStateContext.Consumer;
 var instanceCnt = 1;
 var UserStateProvider = /** @class */ (function (_super) {

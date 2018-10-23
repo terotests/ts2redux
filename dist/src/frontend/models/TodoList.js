@@ -43,7 +43,27 @@ var TodoList = /** @class */ (function () {
     function TodoList() {
         this.items = [];
         this.state = 'UNDEFINED';
+        this.sortColumn = 'id';
+        this.filterType = 'none';
     }
+    TodoList.prototype.getFilteredList = function () {
+        switch (this.filterType) {
+            case 'completed':
+                return this.items.slice().filter(function (item) { return item.completed; });
+                break;
+        }
+        return this.items;
+    };
+    TodoList.prototype.getSortedList = function () {
+        switch (this.sortColumn) {
+            case 'id':
+                return this.getFilteredList().slice().sort(function (a, b) { return a.id - b.id; });
+                break;
+            case 'title':
+                return this.getFilteredList().slice().sort(function (a, b) { return a.title.localeCompare(b.title); });
+                break;
+        }
+    };
     TodoList.prototype.clearTodoList = function () {
         this.items = [];
     };

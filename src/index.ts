@@ -1,6 +1,6 @@
 
   
-import Project, { InterfaceDeclaration, SourceFile, FunctionDeclaration, ClassDeclaration, ImportDeclaration, ImportDeclarationStructure} from "ts-simple-ast";
+import Project, { InterfaceDeclaration, SourceFile, FunctionDeclaration, ClassDeclaration, ImportDeclaration, ImportDeclarationStructure, SyntaxKind, SyntaxList, Node} from "ts-simple-ast";
 import * as R from 'robowr'
 import {getFunctionDoc, getPropertyTypeName, getTypeName, getTypePath} from './utils'
 import * as path from 'path'
@@ -313,9 +313,38 @@ export const ShopCartModelReducer = (state:ITestModel = {}, action) => {
           c.getMethods().forEach( m => {
             if(m.getParameters().length > 1) {
               throw `Error at ${sourceFile.getFilePath()} in class ${c.getName()} method ${m.getName()} can not have more than 2 parameters at the moment`
-            }
+            }            
             const pName = m.getParameters().filter( (a,i) => i<1).map( mod => mod.getName() ).join('')
+            const rvNode = m.getReturnTypeNode()
+            if(rvNode) {
+              const inputSet:{[key:string]:Node} = {}
+              m.getBody().forEachDescendant((node, traversal) => {
+                switch (node.getKind()) {
+                  case SyntaxKind.PropertyAccessExpression:
+                    // could be this.
+                    if( node.getFirstChild().getKind() === SyntaxKind.ThisKeyword ) {
+                      inputSet[node.getChildAtIndex(2).print()] = node
+                    }
+                    break
+                }
+              })
+              
+              const properties:{[key:string]:Node} = {}
+              const methods:{[key:string]:Node} = {}
+              c.getMethods().forEach( m => {
+                methods[m.getName()] = m
+              })
+              c.getProperties().forEach( p => {
+                properties[p.getName()] = p
+              })              
+              console.log( '---- INPUT ', Object.keys(inputSet), ' for method ', m.getName() )
+              Object.keys(inputSet).forEach( key => {
+                if(methods[key]) console.log('method ', key)
+                if(properties[key]) console.log('property ', key)
+              })
 
+              return
+            }
             if(m.isAsync()) {
               body.out('// is task', true)
               body.raw( m.print(), true)   
@@ -441,6 +470,10 @@ export const ShopCartModelReducer = (state:ITestModel = {}, action) => {
 */              
 
               c.getMethods().forEach( m => {
+                const rvNode = m.getReturnTypeNode()
+                if(rvNode) {
+                  return;
+                }
                 const body = ng
                 body.raw( m.getModifiers().map( mod => mod.print()+' ' ).join('') )
 
@@ -482,6 +515,10 @@ if(!settings.disableDevtoolsFromContext) {
                 ng.out(`return (<${c.getName()}Context.Provider value={{...this.state, `, true)
                   ng.indent(1)
                     c.getMethods().forEach( m => {
+                      const rvNode = m.getReturnTypeNode()
+                      if(rvNode) {
+                        return;
+                      }
                       ng.out(m.getName() + ': this.'+m.getName() + ',', true)
                     })
                   ng.indent(-1)

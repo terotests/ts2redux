@@ -11,6 +11,8 @@ export interface TodoListItem {
     completed: boolean;
 }
 export declare type TaskState = 'UNDEFINED' | 'RUNNING' | 'LOADED' | 'ERROR';
+export declare type SortColumns = 'id' | 'title';
+export declare type FilterTypes = 'none' | 'completed';
 /**
  * @redux true
  */
@@ -18,6 +20,10 @@ export declare class TodoList {
     items: TodoListItem[];
     state: TaskState;
     stateError: any;
+    sortColumn: SortColumns;
+    filterType: FilterTypes;
+    getFilteredList(): TodoListItem[];
+    getSortedList(): TodoListItem[];
     clearTodoList(): void;
     reverse(): void;
     sortById(): void;
@@ -42,6 +48,8 @@ export interface ITodoList {
     items: TodoListItem[];
     state: TaskState;
     stateError: any;
+    sortColumn: SortColumns;
+    filterType: FilterTypes;
 }
 export interface ContainerPropsState extends ITodoList {
 }
@@ -61,6 +69,8 @@ export declare class RTodoList {
     items: TodoListItem[];
     state: TaskState;
     stateError: any;
+    sortColumn: SortColumns;
+    filterType: FilterTypes;
     clearTodoList(): void;
     static clearTodoList(): (dispatcher: any, getState: any) => void;
     reverse(): void;
@@ -81,6 +91,8 @@ export declare const TodoListEnums: {
     TodoList_items: string;
     TodoList_state: string;
     TodoList_stateError: string;
+    TodoList_sortColumn: string;
+    TodoList_filterType: string;
     TodoList_clearTodoList: string;
     TodoList_reverse: string;
     TodoList_sortById: string;

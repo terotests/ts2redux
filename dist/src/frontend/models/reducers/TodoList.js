@@ -73,7 +73,27 @@ var TodoList = /** @class */ (function () {
     function TodoList() {
         this.items = [];
         this.state = 'UNDEFINED';
+        this.sortColumn = 'id';
+        this.filterType = 'none';
     }
+    TodoList.prototype.getFilteredList = function () {
+        switch (this.filterType) {
+            case 'completed':
+                return this.items.slice().filter(function (item) { return item.completed; });
+                break;
+        }
+        return this.items;
+    };
+    TodoList.prototype.getSortedList = function () {
+        switch (this.sortColumn) {
+            case 'id':
+                return this.getFilteredList().slice().sort(function (a, b) { return a.id - b.id; });
+                break;
+            case 'title':
+                return this.getFilteredList().slice().sort(function (a, b) { return a.title.localeCompare(b.title); });
+                break;
+        }
+    };
     TodoList.prototype.clearTodoList = function () {
         this.items = [];
     };
@@ -132,6 +152,8 @@ exports.mapStateToProps = function (state) {
         items: state.TodoList.items,
         state: state.TodoList.state,
         stateError: state.TodoList.stateError,
+        sortColumn: state.TodoList.sortColumn,
+        filterType: state.TodoList.filterType,
     };
 };
 exports.mapDispatchToProps = function (dispatch) {
@@ -163,6 +185,8 @@ var init_TodoList = function () {
         items: o.items,
         state: o.state,
         stateError: o.stateError,
+        sortColumn: o.sortColumn,
+        filterType: o.filterType,
     };
 };
 /**
@@ -232,6 +256,48 @@ var RTodoList = /** @class */ (function () {
             else {
                 // dispatch change for item stateError
                 this._dispatch({ type: exports.TodoListEnums.TodoList_stateError, payload: value });
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(RTodoList.prototype, "sortColumn", {
+        get: function () {
+            if (this._getState) {
+                return this._getState().TodoList.sortColumn;
+            }
+            else {
+                return this._state.sortColumn;
+            }
+        },
+        set: function (value) {
+            if (this._state) {
+                this._state.sortColumn = value;
+            }
+            else {
+                // dispatch change for item sortColumn
+                this._dispatch({ type: exports.TodoListEnums.TodoList_sortColumn, payload: value });
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(RTodoList.prototype, "filterType", {
+        get: function () {
+            if (this._getState) {
+                return this._getState().TodoList.filterType;
+            }
+            else {
+                return this._state.filterType;
+            }
+        },
+        set: function (value) {
+            if (this._state) {
+                this._state.filterType = value;
+            }
+            else {
+                // dispatch change for item filterType
+                this._dispatch({ type: exports.TodoListEnums.TodoList_filterType, payload: value });
             }
         },
         enumerable: true,
@@ -352,6 +418,8 @@ exports.TodoListEnums = {
     TodoList_items: 'TodoList_items',
     TodoList_state: 'TodoList_state',
     TodoList_stateError: 'TodoList_stateError',
+    TodoList_sortColumn: 'TodoList_sortColumn',
+    TodoList_filterType: 'TodoList_filterType',
     TodoList_clearTodoList: 'TodoList_clearTodoList',
     TodoList_reverse: 'TodoList_reverse',
     TodoList_sortById: 'TodoList_sortById',
@@ -370,6 +438,12 @@ exports.TodoListReducer = function (state, action) {
                 break;
             case exports.TodoListEnums.TodoList_stateError:
                 (new RTodoList(draft)).stateError = action.payload;
+                break;
+            case exports.TodoListEnums.TodoList_sortColumn:
+                (new RTodoList(draft)).sortColumn = action.payload;
+                break;
+            case exports.TodoListEnums.TodoList_filterType:
+                (new RTodoList(draft)).filterType = action.payload;
                 break;
             case exports.TodoListEnums.TodoList_clearTodoList:
                 (new RTodoList(draft)).clearTodoList();

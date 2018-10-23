@@ -272,6 +272,36 @@ function createProject(settings) {
                                         throw "Error at " + sourceFile.getFilePath() + " in class " + c.getName() + " method " + m.getName() + " can not have more than 2 parameters at the moment";
                                     }
                                     var pName = m.getParameters().filter(function (a, i) { return i < 1; }).map(function (mod) { return mod.getName(); }).join('');
+                                    var rvNode = m.getReturnTypeNode();
+                                    if (rvNode) {
+                                        var inputSet_1 = {};
+                                        m.getBody().forEachDescendant(function (node, traversal) {
+                                            switch (node.getKind()) {
+                                                case ts_simple_ast_1.SyntaxKind.PropertyAccessExpression:
+                                                    // could be this.
+                                                    if (node.getFirstChild().getKind() === ts_simple_ast_1.SyntaxKind.ThisKeyword) {
+                                                        inputSet_1[node.getChildAtIndex(2).print()] = node;
+                                                    }
+                                                    break;
+                                            }
+                                        });
+                                        var properties_1 = {};
+                                        var methods_1 = {};
+                                        c.getMethods().forEach(function (m) {
+                                            methods_1[m.getName()] = m;
+                                        });
+                                        c.getProperties().forEach(function (p) {
+                                            properties_1[p.getName()] = p;
+                                        });
+                                        console.log('---- INPUT ', Object.keys(inputSet_1), ' for method ', m.getName());
+                                        Object.keys(inputSet_1).forEach(function (key) {
+                                            if (methods_1[key])
+                                                console.log('method ', key);
+                                            if (properties_1[key])
+                                                console.log('property ', key);
+                                        });
+                                        return;
+                                    }
                                     if (m.isAsync()) {
                                         body_1.out('// is task', true);
                                         body_1.raw(m.print(), true);
@@ -391,6 +421,10 @@ function createProject(settings) {
                                             }
                                     */
                                     c.getMethods().forEach(function (m) {
+                                        var rvNode = m.getReturnTypeNode();
+                                        if (rvNode) {
+                                            return;
+                                        }
                                         var body = ng;
                                         body.raw(m.getModifiers().map(function (mod) { return mod.print() + ' '; }).join(''));
                                         binder.out("this." + m.getName() + " = this." + m.getName() + ".bind(this)", true);
@@ -431,6 +465,10 @@ function createProject(settings) {
                                     ng.out("return (<" + c.getName() + "Context.Provider value={{...this.state, ", true);
                                     ng.indent(1);
                                     c.getMethods().forEach(function (m) {
+                                        var rvNode = m.getReturnTypeNode();
+                                        if (rvNode) {
+                                            return;
+                                        }
                                         ng.out(m.getName() + ': this.' + m.getName() + ',', true);
                                     });
                                     ng.indent(-1);

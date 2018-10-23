@@ -62,7 +62,7 @@ exports.mapDispatchToProps = function (dispatch) {
     };
 };
 exports.StateConnector = react_redux_1.connect(exports.mapStateToProps, exports.mapDispatchToProps);
-var init_IncModel = function () {
+var initIncModel = function () {
     var o = new IncModel();
     return {
         cnt: o.cnt,
@@ -83,16 +83,21 @@ var RIncModel = /** @class */ (function () {
                 return this._getState().IncModel.cnt;
             }
             else {
-                return this._state.cnt;
+                if (this._state) {
+                    return this._state.cnt;
+                }
             }
+            return undefined;
         },
         set: function (value) {
-            if (this._state) {
+            if (this._state && (typeof (value) !== 'undefined')) {
                 this._state.cnt = value;
             }
             else {
                 // dispatch change for item cnt
-                this._dispatch({ type: exports.IncModelEnums.IncModel_cnt, payload: value });
+                if (this._dispatch) {
+                    this._dispatch({ type: exports.IncModelEnums.IncModel_cnt, payload: value });
+                }
             }
         },
         enumerable: true,
@@ -104,12 +109,14 @@ var RIncModel = /** @class */ (function () {
             this.cnt++;
         }
         else {
-            this._dispatch({ type: exports.IncModelEnums.IncModel_increment });
+            if (this._dispatch) {
+                this._dispatch({ type: exports.IncModelEnums.IncModel_increment });
+            }
         }
     };
     RIncModel.increment = function () {
         return function (dispatcher, getState) {
-            (new RIncModel(null, dispatcher, getState)).increment();
+            (new RIncModel(undefined, dispatcher, getState)).increment();
         };
     };
     // is a reducer
@@ -118,12 +125,14 @@ var RIncModel = /** @class */ (function () {
             this.cnt--;
         }
         else {
-            this._dispatch({ type: exports.IncModelEnums.IncModel_decrement });
+            if (this._dispatch) {
+                this._dispatch({ type: exports.IncModelEnums.IncModel_decrement });
+            }
         }
     };
     RIncModel.decrement = function () {
         return function (dispatcher, getState) {
-            (new RIncModel(null, dispatcher, getState)).decrement();
+            (new RIncModel(undefined, dispatcher, getState)).decrement();
         };
     };
     return RIncModel;
@@ -135,7 +144,7 @@ exports.IncModelEnums = {
     IncModel_decrement: 'IncModel_decrement',
 };
 exports.IncModelReducer = function (state, action) {
-    if (state === void 0) { state = init_IncModel(); }
+    if (state === void 0) { state = initIncModel(); }
     return immer.produce(state, function (draft) {
         switch (action.type) {
             case exports.IncModelEnums.IncModel_cnt:
@@ -153,14 +162,14 @@ exports.IncModelReducer = function (state, action) {
 /***************************
 * React Context API test   *
 ***************************/
-exports.IncModelContext = React.createContext(null);
+exports.IncModelContext = React.createContext(undefined);
 exports.IncModelConsumer = exports.IncModelContext.Consumer;
 var instanceCnt = 1;
 var IncModelProvider = /** @class */ (function (_super) {
     __extends(IncModelProvider, _super);
     function IncModelProvider(props) {
         var _this = _super.call(this, props) || this;
-        _this.state = init_IncModel();
+        _this.state = initIncModel();
         _this.__devTools = null;
         _this.increment = _this.increment.bind(_this);
         _this.decrement = _this.decrement.bind(_this);
@@ -177,8 +186,9 @@ var IncModelProvider = /** @class */ (function (_super) {
         return _this;
     }
     IncModelProvider.prototype.componentWillUnmount = function () {
-        if (this.__devTools)
+        if (this.__devTools) {
             this.__devTools.unsubscribe();
+        }
     };
     IncModelProvider.prototype.increment = function () {
         var nextState = immer.produce(this.state, function (draft) { return (new RIncModel(draft)).increment(); });

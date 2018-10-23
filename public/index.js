@@ -363,7 +363,7 @@ exports.mapDispatchToProps = function (dispatch) {
     };
 };
 exports.StateConnector = react_redux_1.connect(exports.mapStateToProps, exports.mapDispatchToProps);
-var init_IncModel = function () {
+var initIncModel = function () {
     var o = new IncModel();
     return {
         cnt: o.cnt,
@@ -384,16 +384,21 @@ var RIncModel = /** @class */ (function () {
                 return this._getState().IncModel.cnt;
             }
             else {
-                return this._state.cnt;
+                if (this._state) {
+                    return this._state.cnt;
+                }
             }
+            return undefined;
         },
         set: function (value) {
-            if (this._state) {
+            if (this._state && (typeof (value) !== 'undefined')) {
                 this._state.cnt = value;
             }
             else {
                 // dispatch change for item cnt
-                this._dispatch({ type: exports.IncModelEnums.IncModel_cnt, payload: value });
+                if (this._dispatch) {
+                    this._dispatch({ type: exports.IncModelEnums.IncModel_cnt, payload: value });
+                }
             }
         },
         enumerable: true,
@@ -405,12 +410,14 @@ var RIncModel = /** @class */ (function () {
             this.cnt++;
         }
         else {
-            this._dispatch({ type: exports.IncModelEnums.IncModel_increment });
+            if (this._dispatch) {
+                this._dispatch({ type: exports.IncModelEnums.IncModel_increment });
+            }
         }
     };
     RIncModel.increment = function () {
         return function (dispatcher, getState) {
-            (new RIncModel(null, dispatcher, getState)).increment();
+            (new RIncModel(undefined, dispatcher, getState)).increment();
         };
     };
     // is a reducer
@@ -419,12 +426,14 @@ var RIncModel = /** @class */ (function () {
             this.cnt--;
         }
         else {
-            this._dispatch({ type: exports.IncModelEnums.IncModel_decrement });
+            if (this._dispatch) {
+                this._dispatch({ type: exports.IncModelEnums.IncModel_decrement });
+            }
         }
     };
     RIncModel.decrement = function () {
         return function (dispatcher, getState) {
-            (new RIncModel(null, dispatcher, getState)).decrement();
+            (new RIncModel(undefined, dispatcher, getState)).decrement();
         };
     };
     return RIncModel;
@@ -436,7 +445,7 @@ exports.IncModelEnums = {
     IncModel_decrement: 'IncModel_decrement',
 };
 exports.IncModelReducer = function (state, action) {
-    if (state === void 0) { state = init_IncModel(); }
+    if (state === void 0) { state = initIncModel(); }
     return immer.produce(state, function (draft) {
         switch (action.type) {
             case exports.IncModelEnums.IncModel_cnt:
@@ -454,14 +463,14 @@ exports.IncModelReducer = function (state, action) {
 /***************************
 * React Context API test   *
 ***************************/
-exports.IncModelContext = React.createContext(null);
+exports.IncModelContext = React.createContext(undefined);
 exports.IncModelConsumer = exports.IncModelContext.Consumer;
 var instanceCnt = 1;
 var IncModelProvider = /** @class */ (function (_super) {
     __extends(IncModelProvider, _super);
     function IncModelProvider(props) {
         var _this = _super.call(this, props) || this;
-        _this.state = init_IncModel();
+        _this.state = initIncModel();
         _this.__devTools = null;
         _this.increment = _this.increment.bind(_this);
         _this.decrement = _this.decrement.bind(_this);
@@ -478,8 +487,9 @@ var IncModelProvider = /** @class */ (function (_super) {
         return _this;
     }
     IncModelProvider.prototype.componentWillUnmount = function () {
-        if (this.__devTools)
+        if (this.__devTools) {
             this.__devTools.unsubscribe();
+        }
     };
     IncModelProvider.prototype.increment = function () {
         var nextState = immer.produce(this.state, function (draft) { return (new RIncModel(draft)).increment(); });
@@ -612,7 +622,7 @@ exports.mapDispatchToProps = function (dispatch) {
     };
 };
 exports.StateConnector = react_redux_1.connect(exports.mapStateToProps, exports.mapDispatchToProps);
-var init_SimpleModel = function () {
+var initSimpleModel = function () {
     var o = new SimpleModel();
     return {
         items: o.items,
@@ -633,16 +643,21 @@ var RSimpleModel = /** @class */ (function () {
                 return this._getState().SimpleModel.items;
             }
             else {
-                return this._state.items;
+                if (this._state) {
+                    return this._state.items;
+                }
             }
+            return undefined;
         },
         set: function (value) {
-            if (this._state) {
+            if (this._state && (typeof (value) !== 'undefined')) {
                 this._state.items = value;
             }
             else {
                 // dispatch change for item items
-                this._dispatch({ type: exports.SimpleModelEnums.SimpleModel_items, payload: value });
+                if (this._dispatch) {
+                    this._dispatch({ type: exports.SimpleModelEnums.SimpleModel_items, payload: value });
+                }
             }
         },
         enumerable: true,
@@ -666,7 +681,7 @@ var RSimpleModel = /** @class */ (function () {
     };
     RSimpleModel.getItems = function () {
         return function (dispatcher, getState) {
-            (new RSimpleModel(null, dispatcher, getState)).getItems();
+            (new RSimpleModel(undefined, dispatcher, getState)).getItems();
         };
     };
     return RSimpleModel;
@@ -676,7 +691,7 @@ exports.SimpleModelEnums = {
     SimpleModel_items: 'SimpleModel_items',
 };
 exports.SimpleModelReducer = function (state, action) {
-    if (state === void 0) { state = init_SimpleModel(); }
+    if (state === void 0) { state = initSimpleModel(); }
     return immer.produce(state, function (draft) {
         switch (action.type) {
             case exports.SimpleModelEnums.SimpleModel_items:
@@ -688,14 +703,14 @@ exports.SimpleModelReducer = function (state, action) {
 /***************************
 * React Context API test   *
 ***************************/
-exports.SimpleModelContext = React.createContext(null);
+exports.SimpleModelContext = React.createContext(undefined);
 exports.SimpleModelConsumer = exports.SimpleModelContext.Consumer;
 var instanceCnt = 1;
 var SimpleModelProvider = /** @class */ (function (_super) {
     __extends(SimpleModelProvider, _super);
     function SimpleModelProvider(props) {
         var _this = _super.call(this, props) || this;
-        _this.state = init_SimpleModel();
+        _this.state = initSimpleModel();
         _this.__devTools = null;
         _this.getItems = _this.getItems.bind(_this);
         var devs = window['devToolsExtension'] ? window['devToolsExtension'] : null;
@@ -711,17 +726,19 @@ var SimpleModelProvider = /** @class */ (function (_super) {
         return _this;
     }
     SimpleModelProvider.prototype.componentWillUnmount = function () {
-        if (this.__devTools)
+        if (this.__devTools) {
             this.__devTools.unsubscribe();
+        }
     };
     SimpleModelProvider.prototype.getItems = function () {
         return __awaiter(this, void 0, void 0, function () {
             var _this = this;
             return __generator(this, function (_a) {
-                (new RSimpleModel(null, function (action) {
+                (new RSimpleModel(undefined, function (action) {
                     var nextState = exports.SimpleModelReducer(_this.state, action);
-                    if (_this.__devTools)
+                    if (_this.__devTools) {
                         _this.__devTools.send(action.type, nextState);
+                    }
                     _this.setState(nextState);
                 }, function () { return ({ SimpleModel: _this.state }); })).getItems();
                 return [2 /*return*/];
@@ -1005,7 +1022,7 @@ exports.mapDispatchToProps = function (dispatch) {
     };
 };
 exports.StateConnector = react_redux_1.connect(exports.mapStateToProps, exports.mapDispatchToProps);
-var init_TestModel = function () {
+var initTestModel = function () {
     var o = new TestModel();
     return {
         items: o.items,
@@ -1031,16 +1048,21 @@ var RTestModel = /** @class */ (function () {
                 return this._getState().TestModel.items;
             }
             else {
-                return this._state.items;
+                if (this._state) {
+                    return this._state.items;
+                }
             }
+            return undefined;
         },
         set: function (value) {
-            if (this._state) {
+            if (this._state && (typeof (value) !== 'undefined')) {
                 this._state.items = value;
             }
             else {
                 // dispatch change for item items
-                this._dispatch({ type: exports.TestModelEnums.TestModel_items, payload: value });
+                if (this._dispatch) {
+                    this._dispatch({ type: exports.TestModelEnums.TestModel_items, payload: value });
+                }
             }
         },
         enumerable: true,
@@ -1052,16 +1074,21 @@ var RTestModel = /** @class */ (function () {
                 return this._getState().TestModel.maxId;
             }
             else {
-                return this._state.maxId;
+                if (this._state) {
+                    return this._state.maxId;
+                }
             }
+            return undefined;
         },
         set: function (value) {
-            if (this._state) {
+            if (this._state && (typeof (value) !== 'undefined')) {
                 this._state.maxId = value;
             }
             else {
                 // dispatch change for item maxId
-                this._dispatch({ type: exports.TestModelEnums.TestModel_maxId, payload: value });
+                if (this._dispatch) {
+                    this._dispatch({ type: exports.TestModelEnums.TestModel_maxId, payload: value });
+                }
             }
         },
         enumerable: true,
@@ -1073,16 +1100,21 @@ var RTestModel = /** @class */ (function () {
                 return this._getState().TestModel.cartId;
             }
             else {
-                return this._state.cartId;
+                if (this._state) {
+                    return this._state.cartId;
+                }
             }
+            return undefined;
         },
         set: function (value) {
-            if (this._state) {
+            if (this._state && (typeof (value) !== 'undefined')) {
                 this._state.cartId = value;
             }
             else {
                 // dispatch change for item cartId
-                this._dispatch({ type: exports.TestModelEnums.TestModel_cartId, payload: value });
+                if (this._dispatch) {
+                    this._dispatch({ type: exports.TestModelEnums.TestModel_cartId, payload: value });
+                }
             }
         },
         enumerable: true,
@@ -1094,16 +1126,21 @@ var RTestModel = /** @class */ (function () {
                 return this._getState().TestModel.shopState;
             }
             else {
-                return this._state.shopState;
+                if (this._state) {
+                    return this._state.shopState;
+                }
             }
+            return undefined;
         },
         set: function (value) {
-            if (this._state) {
+            if (this._state && (typeof (value) !== 'undefined')) {
                 this._state.shopState = value;
             }
             else {
                 // dispatch change for item shopState
-                this._dispatch({ type: exports.TestModelEnums.TestModel_shopState, payload: value });
+                if (this._dispatch) {
+                    this._dispatch({ type: exports.TestModelEnums.TestModel_shopState, payload: value });
+                }
             }
         },
         enumerable: true,
@@ -1115,16 +1152,21 @@ var RTestModel = /** @class */ (function () {
                 return this._getState().TestModel.carts;
             }
             else {
-                return this._state.carts;
+                if (this._state) {
+                    return this._state.carts;
+                }
             }
+            return undefined;
         },
         set: function (value) {
-            if (this._state) {
+            if (this._state && (typeof (value) !== 'undefined')) {
                 this._state.carts = value;
             }
             else {
                 // dispatch change for item carts
-                this._dispatch({ type: exports.TestModelEnums.TestModel_carts, payload: value });
+                if (this._dispatch) {
+                    this._dispatch({ type: exports.TestModelEnums.TestModel_carts, payload: value });
+                }
             }
         },
         enumerable: true,
@@ -1136,16 +1178,21 @@ var RTestModel = /** @class */ (function () {
                 return this._getState().TestModel.userMessage;
             }
             else {
-                return this._state.userMessage;
+                if (this._state) {
+                    return this._state.userMessage;
+                }
             }
+            return undefined;
         },
         set: function (value) {
-            if (this._state) {
+            if (this._state && (typeof (value) !== 'undefined')) {
                 this._state.userMessage = value;
             }
             else {
                 // dispatch change for item userMessage
-                this._dispatch({ type: exports.TestModelEnums.TestModel_userMessage, payload: value });
+                if (this._dispatch) {
+                    this._dispatch({ type: exports.TestModelEnums.TestModel_userMessage, payload: value });
+                }
             }
         },
         enumerable: true,
@@ -1157,12 +1204,14 @@ var RTestModel = /** @class */ (function () {
             this.userMessage = value;
         }
         else {
-            this._dispatch({ type: exports.TestModelEnums.TestModel_setUserMessage, payload: value });
+            if (this._dispatch) {
+                this._dispatch({ type: exports.TestModelEnums.TestModel_setUserMessage, payload: value });
+            }
         }
     };
     RTestModel.setUserMessage = function (value) {
         return function (dispatcher, getState) {
-            (new RTestModel(null, dispatcher, getState)).setUserMessage(value);
+            (new RTestModel(undefined, dispatcher, getState)).setUserMessage(value);
         };
     };
     // is a reducer
@@ -1172,12 +1221,14 @@ var RTestModel = /** @class */ (function () {
             this.items.push(__assign({}, item, { id: this.maxId++ }));
         }
         else {
-            this._dispatch({ type: exports.TestModelEnums.TestModel_add, payload: item });
+            if (this._dispatch) {
+                this._dispatch({ type: exports.TestModelEnums.TestModel_add, payload: item });
+            }
         }
     };
     RTestModel.add = function (item) {
         return function (dispatcher, getState) {
-            (new RTestModel(null, dispatcher, getState)).add(item);
+            (new RTestModel(undefined, dispatcher, getState)).add(item);
         };
     };
     // is a reducer
@@ -1186,12 +1237,14 @@ var RTestModel = /** @class */ (function () {
             this.items.splice(0, 1);
         }
         else {
-            this._dispatch({ type: exports.TestModelEnums.TestModel_removeFirst });
+            if (this._dispatch) {
+                this._dispatch({ type: exports.TestModelEnums.TestModel_removeFirst });
+            }
         }
     };
     RTestModel.removeFirst = function () {
         return function (dispatcher, getState) {
-            (new RTestModel(null, dispatcher, getState)).removeFirst();
+            (new RTestModel(undefined, dispatcher, getState)).removeFirst();
         };
     };
     // is a reducer
@@ -1202,12 +1255,14 @@ var RTestModel = /** @class */ (function () {
             });
         }
         else {
-            this._dispatch({ type: exports.TestModelEnums.TestModel_sort });
+            if (this._dispatch) {
+                this._dispatch({ type: exports.TestModelEnums.TestModel_sort });
+            }
         }
     };
     RTestModel.sort = function () {
         return function (dispatcher, getState) {
-            (new RTestModel(null, dispatcher, getState)).sort();
+            (new RTestModel(undefined, dispatcher, getState)).sort();
         };
     };
     // is a reducer
@@ -1219,12 +1274,14 @@ var RTestModel = /** @class */ (function () {
             };
         }
         else {
-            this._dispatch({ type: exports.TestModelEnums.TestModel_addCart });
+            if (this._dispatch) {
+                this._dispatch({ type: exports.TestModelEnums.TestModel_addCart });
+            }
         }
     };
     RTestModel.addCart = function () {
         return function (dispatcher, getState) {
-            (new RTestModel(null, dispatcher, getState)).addCart();
+            (new RTestModel(undefined, dispatcher, getState)).addCart();
         };
     };
     // is a reducer
@@ -1236,12 +1293,14 @@ var RTestModel = /** @class */ (function () {
             };
         }
         else {
-            this._dispatch({ type: exports.TestModelEnums.TestModel_addCartSync });
+            if (this._dispatch) {
+                this._dispatch({ type: exports.TestModelEnums.TestModel_addCartSync });
+            }
         }
     };
     RTestModel.addCartSync = function () {
         return function (dispatcher, getState) {
-            (new RTestModel(null, dispatcher, getState)).addCartSync();
+            (new RTestModel(undefined, dispatcher, getState)).addCartSync();
         };
     };
     // is a reducer
@@ -1250,12 +1309,14 @@ var RTestModel = /** @class */ (function () {
             this.carts[adding.cartId].items.push(__assign({}, adding.item, { id: this.maxId++ }));
         }
         else {
-            this._dispatch({ type: exports.TestModelEnums.TestModel_addToCart, payload: adding });
+            if (this._dispatch) {
+                this._dispatch({ type: exports.TestModelEnums.TestModel_addToCart, payload: adding });
+            }
         }
     };
     RTestModel.addToCart = function (adding) {
         return function (dispatcher, getState) {
-            (new RTestModel(null, dispatcher, getState)).addToCart(adding);
+            (new RTestModel(undefined, dispatcher, getState)).addToCart(adding);
         };
     };
     // is a reducer
@@ -1264,12 +1325,14 @@ var RTestModel = /** @class */ (function () {
             this.carts[adding.cartId].newItemName = name;
         }
         else {
-            this._dispatch({ type: exports.TestModelEnums.TestModel_setCartNewItem, payload: adding });
+            if (this._dispatch) {
+                this._dispatch({ type: exports.TestModelEnums.TestModel_setCartNewItem, payload: adding });
+            }
         }
     };
     RTestModel.setCartNewItem = function (adding) {
         return function (dispatcher, getState) {
-            (new RTestModel(null, dispatcher, getState)).setCartNewItem(adding);
+            (new RTestModel(undefined, dispatcher, getState)).setCartNewItem(adding);
         };
     };
     // is a reducer
@@ -1281,12 +1344,14 @@ var RTestModel = /** @class */ (function () {
             });
         }
         else {
-            this._dispatch({ type: exports.TestModelEnums.TestModel_addToCartRandom });
+            if (this._dispatch) {
+                this._dispatch({ type: exports.TestModelEnums.TestModel_addToCartRandom });
+            }
         }
     };
     RTestModel.addToCartRandom = function () {
         return function (dispatcher, getState) {
-            (new RTestModel(null, dispatcher, getState)).addToCartRandom();
+            (new RTestModel(undefined, dispatcher, getState)).addToCartRandom();
         };
     };
     // is a reducer
@@ -1295,12 +1360,14 @@ var RTestModel = /** @class */ (function () {
             this.items[this.items.length - 1].name = newName;
         }
         else {
-            this._dispatch({ type: exports.TestModelEnums.TestModel_renameLast, payload: newName });
+            if (this._dispatch) {
+                this._dispatch({ type: exports.TestModelEnums.TestModel_renameLast, payload: newName });
+            }
         }
     };
     RTestModel.renameLast = function (newName) {
         return function (dispatcher, getState) {
-            (new RTestModel(null, dispatcher, getState)).renameLast(newName);
+            (new RTestModel(undefined, dispatcher, getState)).renameLast(newName);
         };
     };
     // is task
@@ -1330,7 +1397,7 @@ var RTestModel = /** @class */ (function () {
     };
     RTestModel.createItem = function (someName) {
         return function (dispatcher, getState) {
-            (new RTestModel(null, dispatcher, getState)).createItem(someName);
+            (new RTestModel(undefined, dispatcher, getState)).createItem(someName);
         };
     };
     // is task
@@ -1344,7 +1411,7 @@ var RTestModel = /** @class */ (function () {
     };
     RTestModel.addOneFriend = function (name) {
         return function (dispatcher, getState) {
-            (new RTestModel(null, dispatcher, getState)).addOneFriend(name);
+            (new RTestModel(undefined, dispatcher, getState)).addOneFriend(name);
         };
     };
     // is task
@@ -1361,7 +1428,7 @@ var RTestModel = /** @class */ (function () {
     };
     RTestModel.fillSomeFriends = function () {
         return function (dispatcher, getState) {
-            (new RTestModel(null, dispatcher, getState)).fillSomeFriends();
+            (new RTestModel(undefined, dispatcher, getState)).fillSomeFriends();
         };
     };
     // is task
@@ -1375,7 +1442,7 @@ var RTestModel = /** @class */ (function () {
     };
     RTestModel.ChangeLastItem = function () {
         return function (dispatcher, getState) {
-            (new RTestModel(null, dispatcher, getState)).ChangeLastItem();
+            (new RTestModel(undefined, dispatcher, getState)).ChangeLastItem();
         };
     };
     return RTestModel;
@@ -1400,7 +1467,7 @@ exports.TestModelEnums = {
     TestModel_renameLast: 'TestModel_renameLast',
 };
 exports.TestModelReducer = function (state, action) {
-    if (state === void 0) { state = init_TestModel(); }
+    if (state === void 0) { state = initTestModel(); }
     return immer.produce(state, function (draft) {
         switch (action.type) {
             case exports.TestModelEnums.TestModel_items:
@@ -1457,14 +1524,14 @@ exports.TestModelReducer = function (state, action) {
 /***************************
 * React Context API test   *
 ***************************/
-exports.TestModelContext = React.createContext(null);
+exports.TestModelContext = React.createContext(undefined);
 exports.TestModelConsumer = exports.TestModelContext.Consumer;
 var instanceCnt = 1;
 var TestModelProvider = /** @class */ (function (_super) {
     __extends(TestModelProvider, _super);
     function TestModelProvider(props) {
         var _this = _super.call(this, props) || this;
-        _this.state = init_TestModel();
+        _this.state = initTestModel();
         _this.__devTools = null;
         _this.setUserMessage = _this.setUserMessage.bind(_this);
         _this.add = _this.add.bind(_this);
@@ -1493,8 +1560,9 @@ var TestModelProvider = /** @class */ (function (_super) {
         return _this;
     }
     TestModelProvider.prototype.componentWillUnmount = function () {
-        if (this.__devTools)
+        if (this.__devTools) {
             this.__devTools.unsubscribe();
+        }
     };
     TestModelProvider.prototype.setUserMessage = function (value) {
         var nextState = immer.produce(this.state, function (draft) { return (new RTestModel(draft)).setUserMessage(value); });
@@ -1561,10 +1629,11 @@ var TestModelProvider = /** @class */ (function (_super) {
         return __awaiter(this, void 0, void 0, function () {
             var _this = this;
             return __generator(this, function (_a) {
-                (new RTestModel(null, function (action) {
+                (new RTestModel(undefined, function (action) {
                     var nextState = exports.TestModelReducer(_this.state, action);
-                    if (_this.__devTools)
+                    if (_this.__devTools) {
                         _this.__devTools.send(action.type, nextState);
+                    }
                     _this.setState(nextState);
                 }, function () { return ({ TestModel: _this.state }); })).createItem(someName);
                 return [2 /*return*/];
@@ -1575,10 +1644,11 @@ var TestModelProvider = /** @class */ (function (_super) {
         return __awaiter(this, void 0, void 0, function () {
             var _this = this;
             return __generator(this, function (_a) {
-                (new RTestModel(null, function (action) {
+                (new RTestModel(undefined, function (action) {
                     var nextState = exports.TestModelReducer(_this.state, action);
-                    if (_this.__devTools)
+                    if (_this.__devTools) {
                         _this.__devTools.send(action.type, nextState);
+                    }
                     _this.setState(nextState);
                 }, function () { return ({ TestModel: _this.state }); })).addOneFriend(name);
                 return [2 /*return*/];
@@ -1589,10 +1659,11 @@ var TestModelProvider = /** @class */ (function (_super) {
         return __awaiter(this, void 0, void 0, function () {
             var _this = this;
             return __generator(this, function (_a) {
-                (new RTestModel(null, function (action) {
+                (new RTestModel(undefined, function (action) {
                     var nextState = exports.TestModelReducer(_this.state, action);
-                    if (_this.__devTools)
+                    if (_this.__devTools) {
                         _this.__devTools.send(action.type, nextState);
+                    }
                     _this.setState(nextState);
                 }, function () { return ({ TestModel: _this.state }); })).fillSomeFriends();
                 return [2 /*return*/];
@@ -1603,10 +1674,11 @@ var TestModelProvider = /** @class */ (function (_super) {
         return __awaiter(this, void 0, void 0, function () {
             var _this = this;
             return __generator(this, function (_a) {
-                (new RTestModel(null, function (action) {
+                (new RTestModel(undefined, function (action) {
                     var nextState = exports.TestModelReducer(_this.state, action);
-                    if (_this.__devTools)
+                    if (_this.__devTools) {
                         _this.__devTools.send(action.type, nextState);
+                    }
                     _this.setState(nextState);
                 }, function () { return ({ TestModel: _this.state }); })).ChangeLastItem();
                 return [2 /*return*/];
@@ -1782,7 +1854,7 @@ exports.mapDispatchToProps = function (dispatch) {
     };
 };
 exports.StateConnector = react_redux_1.connect(exports.mapStateToProps, exports.mapDispatchToProps);
-var init_TodoList = function () {
+var initTodoList = function () {
     var o = new TodoList();
     return {
         items: o.items,
@@ -1805,16 +1877,21 @@ var RTodoList = /** @class */ (function () {
                 return this._getState().TodoList.items;
             }
             else {
-                return this._state.items;
+                if (this._state) {
+                    return this._state.items;
+                }
             }
+            return undefined;
         },
         set: function (value) {
-            if (this._state) {
+            if (this._state && (typeof (value) !== 'undefined')) {
                 this._state.items = value;
             }
             else {
                 // dispatch change for item items
-                this._dispatch({ type: exports.TodoListEnums.TodoList_items, payload: value });
+                if (this._dispatch) {
+                    this._dispatch({ type: exports.TodoListEnums.TodoList_items, payload: value });
+                }
             }
         },
         enumerable: true,
@@ -1826,16 +1903,21 @@ var RTodoList = /** @class */ (function () {
                 return this._getState().TodoList.state;
             }
             else {
-                return this._state.state;
+                if (this._state) {
+                    return this._state.state;
+                }
             }
+            return undefined;
         },
         set: function (value) {
-            if (this._state) {
+            if (this._state && (typeof (value) !== 'undefined')) {
                 this._state.state = value;
             }
             else {
                 // dispatch change for item state
-                this._dispatch({ type: exports.TodoListEnums.TodoList_state, payload: value });
+                if (this._dispatch) {
+                    this._dispatch({ type: exports.TodoListEnums.TodoList_state, payload: value });
+                }
             }
         },
         enumerable: true,
@@ -1847,16 +1929,21 @@ var RTodoList = /** @class */ (function () {
                 return this._getState().TodoList.stateError;
             }
             else {
-                return this._state.stateError;
+                if (this._state) {
+                    return this._state.stateError;
+                }
             }
+            return undefined;
         },
         set: function (value) {
-            if (this._state) {
+            if (this._state && (typeof (value) !== 'undefined')) {
                 this._state.stateError = value;
             }
             else {
                 // dispatch change for item stateError
-                this._dispatch({ type: exports.TodoListEnums.TodoList_stateError, payload: value });
+                if (this._dispatch) {
+                    this._dispatch({ type: exports.TodoListEnums.TodoList_stateError, payload: value });
+                }
             }
         },
         enumerable: true,
@@ -1868,12 +1955,14 @@ var RTodoList = /** @class */ (function () {
             this.items = [];
         }
         else {
-            this._dispatch({ type: exports.TodoListEnums.TodoList_clearTodoList });
+            if (this._dispatch) {
+                this._dispatch({ type: exports.TodoListEnums.TodoList_clearTodoList });
+            }
         }
     };
     RTodoList.clearTodoList = function () {
         return function (dispatcher, getState) {
-            (new RTodoList(null, dispatcher, getState)).clearTodoList();
+            (new RTodoList(undefined, dispatcher, getState)).clearTodoList();
         };
     };
     // is a reducer
@@ -1882,12 +1971,14 @@ var RTodoList = /** @class */ (function () {
             this.items.reverse();
         }
         else {
-            this._dispatch({ type: exports.TodoListEnums.TodoList_reverse });
+            if (this._dispatch) {
+                this._dispatch({ type: exports.TodoListEnums.TodoList_reverse });
+            }
         }
     };
     RTodoList.reverse = function () {
         return function (dispatcher, getState) {
-            (new RTodoList(null, dispatcher, getState)).reverse();
+            (new RTodoList(undefined, dispatcher, getState)).reverse();
         };
     };
     // is a reducer
@@ -1896,12 +1987,14 @@ var RTodoList = /** @class */ (function () {
             this.items.sort(function (a, b) { return a.id - b.id; });
         }
         else {
-            this._dispatch({ type: exports.TodoListEnums.TodoList_sortById });
+            if (this._dispatch) {
+                this._dispatch({ type: exports.TodoListEnums.TodoList_sortById });
+            }
         }
     };
     RTodoList.sortById = function () {
         return function (dispatcher, getState) {
-            (new RTodoList(null, dispatcher, getState)).sortById();
+            (new RTodoList(undefined, dispatcher, getState)).sortById();
         };
     };
     // is a reducer
@@ -1910,12 +2003,14 @@ var RTodoList = /** @class */ (function () {
             this.items.sort(function (a, b) { return a.title.localeCompare(b.title); });
         }
         else {
-            this._dispatch({ type: exports.TodoListEnums.TodoList_sortByTitle });
+            if (this._dispatch) {
+                this._dispatch({ type: exports.TodoListEnums.TodoList_sortByTitle });
+            }
         }
     };
     RTodoList.sortByTitle = function () {
         return function (dispatcher, getState) {
-            (new RTodoList(null, dispatcher, getState)).sortByTitle();
+            (new RTodoList(undefined, dispatcher, getState)).sortByTitle();
         };
     };
     // is a reducer
@@ -1925,12 +2020,14 @@ var RTodoList = /** @class */ (function () {
             this.items.sort(function (a, b) { return toNumber_1(a.completed) - toNumber_1(b.completed); });
         }
         else {
-            this._dispatch({ type: exports.TodoListEnums.TodoList_sortByCompletion });
+            if (this._dispatch) {
+                this._dispatch({ type: exports.TodoListEnums.TodoList_sortByCompletion });
+            }
         }
     };
     RTodoList.sortByCompletion = function () {
         return function (dispatcher, getState) {
-            (new RTodoList(null, dispatcher, getState)).sortByCompletion();
+            (new RTodoList(undefined, dispatcher, getState)).sortByCompletion();
         };
     };
     // is task
@@ -1967,7 +2064,7 @@ var RTodoList = /** @class */ (function () {
     };
     RTodoList.getItems = function () {
         return function (dispatcher, getState) {
-            (new RTodoList(null, dispatcher, getState)).getItems();
+            (new RTodoList(undefined, dispatcher, getState)).getItems();
         };
     };
     return RTodoList;
@@ -1984,7 +2081,7 @@ exports.TodoListEnums = {
     TodoList_sortByCompletion: 'TodoList_sortByCompletion',
 };
 exports.TodoListReducer = function (state, action) {
-    if (state === void 0) { state = init_TodoList(); }
+    if (state === void 0) { state = initTodoList(); }
     return immer.produce(state, function (draft) {
         switch (action.type) {
             case exports.TodoListEnums.TodoList_items:
@@ -2017,14 +2114,14 @@ exports.TodoListReducer = function (state, action) {
 /***************************
 * React Context API test   *
 ***************************/
-exports.TodoListContext = React.createContext(null);
+exports.TodoListContext = React.createContext(undefined);
 exports.TodoListConsumer = exports.TodoListContext.Consumer;
 var instanceCnt = 1;
 var TodoListProvider = /** @class */ (function (_super) {
     __extends(TodoListProvider, _super);
     function TodoListProvider(props) {
         var _this = _super.call(this, props) || this;
-        _this.state = init_TodoList();
+        _this.state = initTodoList();
         _this.__devTools = null;
         _this.clearTodoList = _this.clearTodoList.bind(_this);
         _this.reverse = _this.reverse.bind(_this);
@@ -2045,8 +2142,9 @@ var TodoListProvider = /** @class */ (function (_super) {
         return _this;
     }
     TodoListProvider.prototype.componentWillUnmount = function () {
-        if (this.__devTools)
+        if (this.__devTools) {
             this.__devTools.unsubscribe();
+        }
     };
     TodoListProvider.prototype.clearTodoList = function () {
         var nextState = immer.produce(this.state, function (draft) { return (new RTodoList(draft)).clearTodoList(); });
@@ -2085,10 +2183,11 @@ var TodoListProvider = /** @class */ (function (_super) {
         return __awaiter(this, void 0, void 0, function () {
             var _this = this;
             return __generator(this, function (_a) {
-                (new RTodoList(null, function (action) {
+                (new RTodoList(undefined, function (action) {
                     var nextState = exports.TodoListReducer(_this.state, action);
-                    if (_this.__devTools)
+                    if (_this.__devTools) {
                         _this.__devTools.send(action.type, nextState);
+                    }
                     _this.setState(nextState);
                 }, function () { return ({ TodoList: _this.state }); })).getItems();
                 return [2 /*return*/];
@@ -2223,7 +2322,7 @@ exports.mapDispatchToProps = function (dispatch) {
     };
 };
 exports.StateConnector = react_redux_1.connect(exports.mapStateToProps, exports.mapDispatchToProps);
-var init_UserState = function () {
+var initUserState = function () {
     var o = new UserState();
     return {
         logged: o.logged,
@@ -2248,16 +2347,21 @@ var RUserState = /** @class */ (function () {
                 return this._getState().UserState.logged;
             }
             else {
-                return this._state.logged;
+                if (this._state) {
+                    return this._state.logged;
+                }
             }
+            return undefined;
         },
         set: function (value) {
-            if (this._state) {
+            if (this._state && (typeof (value) !== 'undefined')) {
                 this._state.logged = value;
             }
             else {
                 // dispatch change for item logged
-                this._dispatch({ type: exports.UserStateEnums.UserState_logged, payload: value });
+                if (this._dispatch) {
+                    this._dispatch({ type: exports.UserStateEnums.UserState_logged, payload: value });
+                }
             }
         },
         enumerable: true,
@@ -2269,16 +2373,21 @@ var RUserState = /** @class */ (function () {
                 return this._getState().UserState.username;
             }
             else {
-                return this._state.username;
+                if (this._state) {
+                    return this._state.username;
+                }
             }
+            return undefined;
         },
         set: function (value) {
-            if (this._state) {
+            if (this._state && (typeof (value) !== 'undefined')) {
                 this._state.username = value;
             }
             else {
                 // dispatch change for item username
-                this._dispatch({ type: exports.UserStateEnums.UserState_username, payload: value });
+                if (this._dispatch) {
+                    this._dispatch({ type: exports.UserStateEnums.UserState_username, payload: value });
+                }
             }
         },
         enumerable: true,
@@ -2290,16 +2399,21 @@ var RUserState = /** @class */ (function () {
                 return this._getState().UserState.firstName;
             }
             else {
-                return this._state.firstName;
+                if (this._state) {
+                    return this._state.firstName;
+                }
             }
+            return undefined;
         },
         set: function (value) {
-            if (this._state) {
+            if (this._state && (typeof (value) !== 'undefined')) {
                 this._state.firstName = value;
             }
             else {
                 // dispatch change for item firstName
-                this._dispatch({ type: exports.UserStateEnums.UserState_firstName, payload: value });
+                if (this._dispatch) {
+                    this._dispatch({ type: exports.UserStateEnums.UserState_firstName, payload: value });
+                }
             }
         },
         enumerable: true,
@@ -2311,16 +2425,21 @@ var RUserState = /** @class */ (function () {
                 return this._getState().UserState.lastName;
             }
             else {
-                return this._state.lastName;
+                if (this._state) {
+                    return this._state.lastName;
+                }
             }
+            return undefined;
         },
         set: function (value) {
-            if (this._state) {
+            if (this._state && (typeof (value) !== 'undefined')) {
                 this._state.lastName = value;
             }
             else {
                 // dispatch change for item lastName
-                this._dispatch({ type: exports.UserStateEnums.UserState_lastName, payload: value });
+                if (this._dispatch) {
+                    this._dispatch({ type: exports.UserStateEnums.UserState_lastName, payload: value });
+                }
             }
         },
         enumerable: true,
@@ -2332,16 +2451,21 @@ var RUserState = /** @class */ (function () {
                 return this._getState().UserState.lastLogin;
             }
             else {
-                return this._state.lastLogin;
+                if (this._state) {
+                    return this._state.lastLogin;
+                }
             }
+            return undefined;
         },
         set: function (value) {
-            if (this._state) {
+            if (this._state && (typeof (value) !== 'undefined')) {
                 this._state.lastLogin = value;
             }
             else {
                 // dispatch change for item lastLogin
-                this._dispatch({ type: exports.UserStateEnums.UserState_lastLogin, payload: value });
+                if (this._dispatch) {
+                    this._dispatch({ type: exports.UserStateEnums.UserState_lastLogin, payload: value });
+                }
             }
         },
         enumerable: true,
@@ -2358,7 +2482,7 @@ var RUserState = /** @class */ (function () {
     };
     RUserState.login = function (loginInfo) {
         return function (dispatcher, getState) {
-            (new RUserState(null, dispatcher, getState)).login(loginInfo);
+            (new RUserState(undefined, dispatcher, getState)).login(loginInfo);
         };
     };
     // is task
@@ -2371,7 +2495,7 @@ var RUserState = /** @class */ (function () {
     };
     RUserState.logout = function () {
         return function (dispatcher, getState) {
-            (new RUserState(null, dispatcher, getState)).logout();
+            (new RUserState(undefined, dispatcher, getState)).logout();
         };
     };
     // is a reducer
@@ -2380,12 +2504,14 @@ var RUserState = /** @class */ (function () {
             this.username = 'Fake Login';
         }
         else {
-            this._dispatch({ type: exports.UserStateEnums.UserState_fakeLogin });
+            if (this._dispatch) {
+                this._dispatch({ type: exports.UserStateEnums.UserState_fakeLogin });
+            }
         }
     };
     RUserState.fakeLogin = function () {
         return function (dispatcher, getState) {
-            (new RUserState(null, dispatcher, getState)).fakeLogin();
+            (new RUserState(undefined, dispatcher, getState)).fakeLogin();
         };
     };
     return RUserState;
@@ -2400,7 +2526,7 @@ exports.UserStateEnums = {
     UserState_fakeLogin: 'UserState_fakeLogin',
 };
 exports.UserStateReducer = function (state, action) {
-    if (state === void 0) { state = init_UserState(); }
+    if (state === void 0) { state = initUserState(); }
     return immer.produce(state, function (draft) {
         switch (action.type) {
             case exports.UserStateEnums.UserState_logged:
@@ -2427,14 +2553,14 @@ exports.UserStateReducer = function (state, action) {
 /***************************
 * React Context API test   *
 ***************************/
-exports.UserStateContext = React.createContext(null);
+exports.UserStateContext = React.createContext(undefined);
 exports.UserStateConsumer = exports.UserStateContext.Consumer;
 var instanceCnt = 1;
 var UserStateProvider = /** @class */ (function (_super) {
     __extends(UserStateProvider, _super);
     function UserStateProvider(props) {
         var _this = _super.call(this, props) || this;
-        _this.state = init_UserState();
+        _this.state = initUserState();
         _this.__devTools = null;
         _this.login = _this.login.bind(_this);
         _this.logout = _this.logout.bind(_this);
@@ -2452,17 +2578,19 @@ var UserStateProvider = /** @class */ (function (_super) {
         return _this;
     }
     UserStateProvider.prototype.componentWillUnmount = function () {
-        if (this.__devTools)
+        if (this.__devTools) {
             this.__devTools.unsubscribe();
+        }
     };
     UserStateProvider.prototype.login = function (loginInfo) {
         return __awaiter(this, void 0, void 0, function () {
             var _this = this;
             return __generator(this, function (_a) {
-                (new RUserState(null, function (action) {
+                (new RUserState(undefined, function (action) {
                     var nextState = exports.UserStateReducer(_this.state, action);
-                    if (_this.__devTools)
+                    if (_this.__devTools) {
                         _this.__devTools.send(action.type, nextState);
+                    }
                     _this.setState(nextState);
                 }, function () { return ({ UserState: _this.state }); })).login(loginInfo);
                 return [2 /*return*/];
@@ -2473,10 +2601,11 @@ var UserStateProvider = /** @class */ (function (_super) {
         return __awaiter(this, void 0, void 0, function () {
             var _this = this;
             return __generator(this, function (_a) {
-                (new RUserState(null, function (action) {
+                (new RUserState(undefined, function (action) {
                     var nextState = exports.UserStateReducer(_this.state, action);
-                    if (_this.__devTools)
+                    if (_this.__devTools) {
                         _this.__devTools.send(action.type, nextState);
+                    }
                     _this.setState(nextState);
                 }, function () { return ({ UserState: _this.state }); })).logout();
                 return [2 /*return*/];

@@ -145,12 +145,12 @@ export async function createProject( settings:GenerationOptions) {
 
         ng.out(`import * as immer from 'immer'`, true)
         ng.out(`import { connect } from 'react-redux'`, true)
-        ng.out(`import { State } from './index'`, true)
+        ng.out(`import { IState } from './index'`, true)
         ng.out(`import * as React from 'react'`, true)
         // Create model of all the variables...
         
         ng.out(``, true)
-        ng.out(`export interface ContainerPropsMethods {`, true)
+        ng.out(`export interface IContainerPropsMethods {`, true)
           ng.indent(1)
           const propsMethods = ng.fork()
           ng.indent(-1)
@@ -165,10 +165,10 @@ export async function createProject( settings:GenerationOptions) {
         ng.out('}', true)
 
         ng.out('', true)
-        ng.out(`export interface ContainerPropsState extends I${c.getName()} {}`, true);
-        ng.out(`export interface Props extends ContainerPropsState, ContainerPropsMethods {}`, true);
+        ng.out(`type IContainerPropsState = I${c.getName()}`, true);
+        ng.out(`export interface IProps extends IContainerPropsState, IContainerPropsMethods {}`, true);
 
-        ng.out('export const mapStateToProps = (state : State) : ContainerPropsState => {', true)
+        ng.out('export const mapStateToProps = (state : IState) : IContainerPropsState => {', true)
           ng.indent(1)
           ng.out('return {', true)
             ng.indent(1)
@@ -180,7 +180,7 @@ export async function createProject( settings:GenerationOptions) {
           ng.indent(-1)
         ng.out('}', true)
 
-        ng.out('export const mapDispatchToProps = (dispatch) : ContainerPropsMethods => {', true)
+        ng.out('export const mapDispatchToProps = (dispatch:any) : IContainerPropsMethods => {', true)
           ng.indent(1)
           ng.out('return {', true)
             ng.indent(1)
@@ -193,7 +193,7 @@ export async function createProject( settings:GenerationOptions) {
         ng.out(`export const StateConnector = connect( mapStateToProps, mapDispatchToProps);`, true)     
         ng.out('', true)
         // Create model of all the variables...
-        ng.out('const init_' + c.getName()+ ' = () => {', true)
+        ng.out('const init' + c.getName()+ ' = () => {', true)
           ng.indent(1)
           ng.out('const o = new '+c.getName()+'();', true);
           ng.out('return {', true)
@@ -228,7 +228,7 @@ export async function createProject( settings:GenerationOptions) {
         ng.out('', true)
 
 
-        ng.out(`export const ${c.getName()}Reducer = (state:I${c.getName()} = init_${c.getName()}(), action) => {`, true)
+        ng.out(`export const ${c.getName()}Reducer = (state:I${c.getName()} = init${c.getName()}(), action:any ) => {`, true)
         ng.indent(1)
           ng.out('return immer.produce(state, draft => {', true)
           ng.indent(1)
@@ -268,7 +268,7 @@ export const ShopCartModelReducer = (state:ITestModel = {}, action) => {
 */
           c.getProperties().forEach( p => {
             const r_name = `${c.getName()}_${p.getName()}`
-            body.out('get ' + p.getName()+'() : ' + p.getTypeNode().print() + '{', true)
+            body.out('get ' + p.getName()+'() : ' + p.getTypeNode().print() + ' | undefined {', true)
             body.indent(1)
             body.out('if(this._getState) {', true)
               body.indent(1)
@@ -277,21 +277,22 @@ export const ShopCartModelReducer = (state:ITestModel = {}, action) => {
               body.indent(-1)
             body.out('} else {', true) 
               body.indent(1) 
-              body.out('return this._state.'+p.getName(), true)
+              body.out('if(this._state) { return this._state.'+p.getName() + ' }', true)
               body.indent(-1)
-            body.out('}', true)              
+            body.out('}', true)             
+            body.out('return undefined') 
             body.indent(-1)
             body.out('}', true)
-            body.out('set ' + p.getName()+'(value:' + p.getTypeNode().print() + ') {', true)
+            body.out('set ' + p.getName()+'(value:' + p.getTypeNode().print() + ' | undefined) {', true)
             body.indent(1)
-            body.out('if(this._state) {', true)
+            body.out(`if(this._state && (typeof(value) !== 'undefined')) {`, true)
               body.indent(1)
               body.out(`this._state.${p.getName()} = value`, true)
               body.indent(-1)
             body.out('} else {', true)
               body.indent(1)
               body.out(`// dispatch change for item ${p.getName()}`, true)
-              body.out(`this._dispatch({type:${c.getName()}Enums.${r_name}, payload:value})`, true)
+              body.out(`if(this._dispatch) { this._dispatch({type:${c.getName()}Enums.${r_name}, payload:value}) }`, true)
               body.indent(-1)
             body.out('}', true)
             // body.out('this._'+p.getName()+' = value', true)
@@ -350,7 +351,7 @@ export const ShopCartModelReducer = (state:ITestModel = {}, action) => {
                   const firstParam = m.getParameters().filter( (a,i) => i<1).map( mod => mod.getName() ).join('')
                   const fpCode = firstParam.length > 0 ? `,payload: ${firstParam} ` : '';
                   body.indent(1)
-                  body.out(`this._dispatch({type:${c.getName()}Enums.${r_name}${fpCode}})`, true)    
+                  body.out(`if(this._dispatch) { this._dispatch({type:${c.getName()}Enums.${r_name}${fpCode}}) }`, true)    
                   body.indent(-1)
                   body.out('}', true)
                 body.indent(-1)
@@ -358,8 +359,8 @@ export const ShopCartModelReducer = (state:ITestModel = {}, action) => {
             } 
             // generate the static version
             body.out('', true)             
-            body.out('static ')
-            body.out( m.getModifiers().filter(mod => mod.getText() != 'async').map( mod => mod.print() +' ' ).join('') )
+            body.out('public static ')
+            body.out( m.getModifiers().filter(mod => ( mod.getText() != 'async' && mod.getText() != 'public')).map( mod => mod.print() +' ' ).join('') )
             body.out( m.getName() + '(' +  m.getParameters().map( mod => mod.print() ).join(', ') + ')')
 
             propsMethods.out( m.getName() + '? : (' +  m.getParameters().map( mod => mod.print() ).join(', ') + ') => any', true)
@@ -372,10 +373,10 @@ export const ShopCartModelReducer = (state:ITestModel = {}, action) => {
             if(m.getReturnTypeNode()) body.out( ': ' + m.getReturnTypeNode().print() )
             body.out( '{', true)
               body.indent(1)
-              body.out(`return (dispatcher, getState) => {`, true)
+              body.out(`return (dispatcher:any, getState:any) => {`, true)
                 body.indent(1)
                 
-                body.out(`(new R${c.getName()}(null, dispatcher, getState)).${m.getName()}(${pName})`, true);
+                body.out(`(new R${c.getName()}(undefined, dispatcher, getState)).${m.getName()}(${pName})`, true);
                 body.indent(-1)
               body.out('}', true)
               body.indent(-1)
@@ -391,15 +392,15 @@ export const ShopCartModelReducer = (state:ITestModel = {}, action) => {
             // ng.raw(outer.getCode())
             createComment( ng, 'React Context API test');            
             // create context...
-            ng.out(`export const ${c.getName()}Context = React.createContext<Props>(null)`, true)
+            ng.out(`export const ${c.getName()}Context = React.createContext<IProps|undefined>(undefined)`, true)
             ng.out(`export const ${c.getName()}Consumer = ${c.getName()}Context.Consumer`, true)
             ng.out(`let instanceCnt = 1`, true)
             ng.out(`export class ${c.getName()}Provider extends React.Component {`, true)
               ng.indent(1)
-              ng.out(`state: I${c.getName()} = init_${c.getName()}() `, true)
-              ng.out(`__devTools:any = null`, true)
+              ng.out(`public state: I${c.getName()} = init${c.getName()}() `, true)
+              ng.out(`private __devTools:any = null`, true)
               // devToolsConnection:any = null  
-              ng.out(`constructor( props ){`, true)
+              ng.out(`constructor( props:any ){`, true)
                 ng.indent(1)
                 ng.out(`super(props)`, true);
                 const binder = ng.fork()
@@ -409,7 +410,7 @@ export const ShopCartModelReducer = (state:ITestModel = {}, action) => {
                     ng.indent(1)
                     ng.out(`this.__devTools = devs.connect({name:'${c.getName()}'+instanceCnt++})`, true)
                     ng.out(`this.__devTools.init(this.state)`, true) 
-                    ng.out(`this.__devTools.subscribe( msg => {`, true)  
+                    ng.out(`this.__devTools.subscribe( (msg:any) => {`, true)  
                       ng.indent(1)
                       ng.out(`if (msg.type === 'DISPATCH' && msg.state) {`, true)
                         ng.indent(1)
@@ -424,27 +425,12 @@ export const ShopCartModelReducer = (state:ITestModel = {}, action) => {
                 ng.indent(-1)
               ng.out(`}`, true)
               if(!settings.disableDevtoolsFromContext) {
-                ng.out(`componentWillUnmount() {`, true)
+                ng.out(`public componentWillUnmount() {`, true)
                   ng.indent(1)
-                  ng.out(`if(this.__devTools) this.__devTools.unsubscribe()`, true)
+                  ng.out(`if(this.__devTools) { this.__devTools.unsubscribe() }`, true)
                   ng.indent(-1)
                 ng.out(`}`, true)
-              }
-
-              // debugger idea
-/*
-      const newState = TodoListReducer( this.state, action )
-      this.devToolsConnection.send('getItems', newState);
-      this.setState( newState )
-*/
-
-/*
-
-        componentWillUnmount() {
-            window.removeEventListener('scroll', this.onScroll.bind(this), false);
-        }
-*/              
-
+              }             
               c.getMethods().forEach( m => {
                 const body = ng
                 body.raw( m.getModifiers().map( mod => mod.print()+' ' ).join('') )
@@ -456,12 +442,12 @@ export const ShopCartModelReducer = (state:ITestModel = {}, action) => {
                   body.indent(1)
                   const firstParam = m.getParameters().filter( (a,i) => i<1).map( mod => mod.getName() ).join('')
                   if(m.isAsync()) {
-body.out(`(new R${c.getName()}(null, (action) => {`, true)
+body.out(`(new R${c.getName()}(undefined, (action:any) => {`, true)
 body.indent(1)
                   
   if(!settings.disableDevtoolsFromContext) { 
     body.out(`const nextState = ${c.getName()}Reducer( this.state, action )`, true) 
-    body.out(`if(this.__devTools) this.__devTools.send(action.type, nextState)`, true)  
+    body.out(`if(this.__devTools) { this.__devTools.send(action.type, nextState) }`, true)  
     body.out(`this.setState(nextState)`, true)
   } else {
     body.out(`this.setState(${c.getName()}Reducer( this.state, action ))`, true)
@@ -482,7 +468,7 @@ if(!settings.disableDevtoolsFromContext) {
                 body.out('}', true) 
 
               })
-              ng.out('render() {', true)
+              ng.out('public render() {', true)
                 ng.indent(1)
                 ng.out(`return (<${c.getName()}Context.Provider value={{...this.state, `, true)
                   ng.indent(1)
@@ -495,26 +481,7 @@ if(!settings.disableDevtoolsFromContext) {
                 ng.indent(-1)
               ng.out('}', true)
               ng.indent(-1)
-            ng.out(`}`, true)  
-
-            // createComment(ng, 'HOC for connecting to properties')
-            
-            // Disable for now...
-            /*            
-            ng.out(`export function ${c.getName()}HOC(Component) {`, true)
-              ng.indent(1)
-              ng.out(`return function Connected${c.getName()}(props) {`, true)
-                ng.indent(1)
-                ng.out(`return (<${c.getName()}Context.Consumer>`, true)
-                 ng.indent(1)
-                 ng.out(`{data => <Component {...props} {...data} />}`, true)
-                 ng.indent(-1)
-                ng.out(`</${c.getName()}Context.Consumer>)`, true)
-                ng.indent(-1)
-              ng.out(`}`, true)
-              ng.indent(-1)
-            ng.out(`}`, true)   
-            */         
+            ng.out(`}`, true)          
 
           }
           tsx(ng)
@@ -532,16 +499,17 @@ if(!settings.disableDevtoolsFromContext) {
 
     wr.out(`import * as redux from 'redux';`, true)
     list.forEach( m => {
-      wr.out(`import { ${m.name}Reducer, I${m.name} } from './${m.name}';`, true)
+      const [first, second] = [`${m.name}Reducer`, `I${m.name}`].sort().reverse()
+      wr.out(`import { ${second}, ${first} } from './${m.name}';`, true)
     })
-    wr.out(`export interface State {`, true)
+    wr.out(`export interface IState {`, true)
       wr.indent(1)
       list.forEach( m => {
         wr.out(`${m.name}: I${m.name}`, true)
       })      
       wr.indent(-1)
     wr.out('}', true)
-    wr.out(`export const reducers = redux.combineReducers<State>({`, true)
+    wr.out(`export const reducers = redux.combineReducers<IState>({`, true)
       wr.indent(1)
       list.forEach( m => {
         wr.out(`${m.name}: ${m.name}Reducer,`, true)

@@ -125,11 +125,11 @@ function createProject(settings) {
                                 ng_1.raw(sourceFile.getText(), true);
                                 ng_1.out("import * as immer from 'immer'", true);
                                 ng_1.out("import { connect } from 'react-redux'", true);
-                                ng_1.out("import { State } from './index'", true);
+                                ng_1.out("import { IState } from './index'", true);
                                 ng_1.out("import * as React from 'react'", true);
                                 // Create model of all the variables...
                                 ng_1.out("", true);
-                                ng_1.out("export interface ContainerPropsMethods {", true);
+                                ng_1.out("export interface IContainerPropsMethods {", true);
                                 ng_1.indent(1);
                                 var propsMethods_1 = ng_1.fork();
                                 ng_1.indent(-1);
@@ -142,9 +142,9 @@ function createProject(settings) {
                                 ng_1.indent(-1);
                                 ng_1.out('}', true);
                                 ng_1.out('', true);
-                                ng_1.out("export interface ContainerPropsState extends I" + c.getName() + " {}", true);
-                                ng_1.out("export interface Props extends ContainerPropsState, ContainerPropsMethods {}", true);
-                                ng_1.out('export const mapStateToProps = (state : State) : ContainerPropsState => {', true);
+                                ng_1.out("type IContainerPropsState = I" + c.getName(), true);
+                                ng_1.out("export interface IProps extends IContainerPropsState, IContainerPropsMethods {}", true);
+                                ng_1.out('export const mapStateToProps = (state : IState) : IContainerPropsState => {', true);
                                 ng_1.indent(1);
                                 ng_1.out('return {', true);
                                 ng_1.indent(1);
@@ -155,7 +155,7 @@ function createProject(settings) {
                                 ng_1.out('}', true);
                                 ng_1.indent(-1);
                                 ng_1.out('}', true);
-                                ng_1.out('export const mapDispatchToProps = (dispatch) : ContainerPropsMethods => {', true);
+                                ng_1.out('export const mapDispatchToProps = (dispatch:any) : IContainerPropsMethods => {', true);
                                 ng_1.indent(1);
                                 ng_1.out('return {', true);
                                 ng_1.indent(1);
@@ -167,7 +167,7 @@ function createProject(settings) {
                                 ng_1.out("export const StateConnector = connect( mapStateToProps, mapDispatchToProps);", true);
                                 ng_1.out('', true);
                                 // Create model of all the variables...
-                                ng_1.out('const init_' + c.getName() + ' = () => {', true);
+                                ng_1.out('const init' + c.getName() + ' = () => {', true);
                                 ng_1.indent(1);
                                 ng_1.out('const o = new ' + c.getName() + '();', true);
                                 ng_1.out('return {', true);
@@ -193,7 +193,7 @@ function createProject(settings) {
                                 ng_1.indent(-1);
                                 ng_1.out('}', true);
                                 ng_1.out('', true);
-                                ng_1.out("export const " + c.getName() + "Reducer = (state:I" + c.getName() + " = init_" + c.getName() + "(), action) => {", true);
+                                ng_1.out("export const " + c.getName() + "Reducer = (state:I" + c.getName() + " = init" + c.getName() + "(), action:any ) => {", true);
                                 ng_1.indent(1);
                                 ng_1.out('return immer.produce(state, draft => {', true);
                                 ng_1.indent(1);
@@ -229,7 +229,7 @@ function createProject(settings) {
                                 */
                                 c.getProperties().forEach(function (p) {
                                     var r_name = c.getName() + "_" + p.getName();
-                                    body_1.out('get ' + p.getName() + '() : ' + p.getTypeNode().print() + '{', true);
+                                    body_1.out('get ' + p.getName() + '() : ' + p.getTypeNode().print() + ' | undefined {', true);
                                     body_1.indent(1);
                                     body_1.out('if(this._getState) {', true);
                                     body_1.indent(1);
@@ -238,21 +238,22 @@ function createProject(settings) {
                                     body_1.indent(-1);
                                     body_1.out('} else {', true);
                                     body_1.indent(1);
-                                    body_1.out('return this._state.' + p.getName(), true);
+                                    body_1.out('if(this._state) { return this._state.' + p.getName() + ' }', true);
                                     body_1.indent(-1);
                                     body_1.out('}', true);
+                                    body_1.out('return undefined');
                                     body_1.indent(-1);
                                     body_1.out('}', true);
-                                    body_1.out('set ' + p.getName() + '(value:' + p.getTypeNode().print() + ') {', true);
+                                    body_1.out('set ' + p.getName() + '(value:' + p.getTypeNode().print() + ' | undefined) {', true);
                                     body_1.indent(1);
-                                    body_1.out('if(this._state) {', true);
+                                    body_1.out("if(this._state && (typeof(value) !== 'undefined')) {", true);
                                     body_1.indent(1);
                                     body_1.out("this._state." + p.getName() + " = value", true);
                                     body_1.indent(-1);
                                     body_1.out('} else {', true);
                                     body_1.indent(1);
                                     body_1.out("// dispatch change for item " + p.getName(), true);
-                                    body_1.out("this._dispatch({type:" + c.getName() + "Enums." + r_name + ", payload:value})", true);
+                                    body_1.out("if(this._dispatch) { this._dispatch({type:" + c.getName() + "Enums." + r_name + ", payload:value}) }", true);
                                     body_1.indent(-1);
                                     body_1.out('}', true);
                                     // body.out('this._'+p.getName()+' = value', true)
@@ -306,7 +307,7 @@ function createProject(settings) {
                                         var firstParam = m.getParameters().filter(function (a, i) { return i < 1; }).map(function (mod) { return mod.getName(); }).join('');
                                         var fpCode = firstParam.length > 0 ? ",payload: " + firstParam + " " : '';
                                         body_1.indent(1);
-                                        body_1.out("this._dispatch({type:" + c.getName() + "Enums." + r_name + fpCode + "})", true);
+                                        body_1.out("if(this._dispatch) { this._dispatch({type:" + c.getName() + "Enums." + r_name + fpCode + "}) }", true);
                                         body_1.indent(-1);
                                         body_1.out('}', true);
                                         body_1.indent(-1);
@@ -314,8 +315,8 @@ function createProject(settings) {
                                     }
                                     // generate the static version
                                     body_1.out('', true);
-                                    body_1.out('static ');
-                                    body_1.out(m.getModifiers().filter(function (mod) { return mod.getText() != 'async'; }).map(function (mod) { return mod.print() + ' '; }).join(''));
+                                    body_1.out('public static ');
+                                    body_1.out(m.getModifiers().filter(function (mod) { return (mod.getText() != 'async' && mod.getText() != 'public'); }).map(function (mod) { return mod.print() + ' '; }).join(''));
                                     body_1.out(m.getName() + '(' + m.getParameters().map(function (mod) { return mod.print(); }).join(', ') + ')');
                                     propsMethods_1.out(m.getName() + '? : (' + m.getParameters().map(function (mod) { return mod.print(); }).join(', ') + ') => any', true);
                                     dispatchMethods_1.out(m.getName() + ' : (' + m.getParameters().map(function (mod) { return mod.print(); }).join(', ') + ') => {', true);
@@ -327,9 +328,9 @@ function createProject(settings) {
                                         body_1.out(': ' + m.getReturnTypeNode().print());
                                     body_1.out('{', true);
                                     body_1.indent(1);
-                                    body_1.out("return (dispatcher, getState) => {", true);
+                                    body_1.out("return (dispatcher:any, getState:any) => {", true);
                                     body_1.indent(1);
-                                    body_1.out("(new R" + c.getName() + "(null, dispatcher, getState))." + m.getName() + "(" + pName + ")", true);
+                                    body_1.out("(new R" + c.getName() + "(undefined, dispatcher, getState))." + m.getName() + "(" + pName + ")", true);
                                     body_1.indent(-1);
                                     body_1.out('}', true);
                                     body_1.indent(-1);
@@ -343,15 +344,15 @@ function createProject(settings) {
                                     // ng.raw(outer.getCode())
                                     createComment(ng, 'React Context API test');
                                     // create context...
-                                    ng.out("export const " + c.getName() + "Context = React.createContext<Props>(null)", true);
+                                    ng.out("export const " + c.getName() + "Context = React.createContext<IProps|undefined>(undefined)", true);
                                     ng.out("export const " + c.getName() + "Consumer = " + c.getName() + "Context.Consumer", true);
                                     ng.out("let instanceCnt = 1", true);
                                     ng.out("export class " + c.getName() + "Provider extends React.Component {", true);
                                     ng.indent(1);
-                                    ng.out("state: I" + c.getName() + " = init_" + c.getName() + "() ", true);
-                                    ng.out("__devTools:any = null", true);
+                                    ng.out("public state: I" + c.getName() + " = init" + c.getName() + "() ", true);
+                                    ng.out("private __devTools:any = null", true);
                                     // devToolsConnection:any = null  
-                                    ng.out("constructor( props ){", true);
+                                    ng.out("constructor( props:any ){", true);
                                     ng.indent(1);
                                     ng.out("super(props)", true);
                                     var binder = ng.fork();
@@ -361,7 +362,7 @@ function createProject(settings) {
                                         ng.indent(1);
                                         ng.out("this.__devTools = devs.connect({name:'" + c.getName() + "'+instanceCnt++})", true);
                                         ng.out("this.__devTools.init(this.state)", true);
-                                        ng.out("this.__devTools.subscribe( msg => {", true);
+                                        ng.out("this.__devTools.subscribe( (msg:any) => {", true);
                                         ng.indent(1);
                                         ng.out("if (msg.type === 'DISPATCH' && msg.state) {", true);
                                         ng.indent(1);
@@ -376,24 +377,12 @@ function createProject(settings) {
                                     ng.indent(-1);
                                     ng.out("}", true);
                                     if (!settings.disableDevtoolsFromContext) {
-                                        ng.out("componentWillUnmount() {", true);
+                                        ng.out("public componentWillUnmount() {", true);
                                         ng.indent(1);
-                                        ng.out("if(this.__devTools) this.__devTools.unsubscribe()", true);
+                                        ng.out("if(this.__devTools) { this.__devTools.unsubscribe() }", true);
                                         ng.indent(-1);
                                         ng.out("}", true);
                                     }
-                                    // debugger idea
-                                    /*
-                                          const newState = TodoListReducer( this.state, action )
-                                          this.devToolsConnection.send('getItems', newState);
-                                          this.setState( newState )
-                                    */
-                                    /*
-                                    
-                                            componentWillUnmount() {
-                                                window.removeEventListener('scroll', this.onScroll.bind(this), false);
-                                            }
-                                    */
                                     c.getMethods().forEach(function (m) {
                                         var body = ng;
                                         body.raw(m.getModifiers().map(function (mod) { return mod.print() + ' '; }).join(''));
@@ -404,11 +393,11 @@ function createProject(settings) {
                                         body.indent(1);
                                         var firstParam = m.getParameters().filter(function (a, i) { return i < 1; }).map(function (mod) { return mod.getName(); }).join('');
                                         if (m.isAsync()) {
-                                            body.out("(new R" + c.getName() + "(null, (action) => {", true);
+                                            body.out("(new R" + c.getName() + "(undefined, (action:any) => {", true);
                                             body.indent(1);
                                             if (!settings.disableDevtoolsFromContext) {
                                                 body.out("const nextState = " + c.getName() + "Reducer( this.state, action )", true);
-                                                body.out("if(this.__devTools) this.__devTools.send(action.type, nextState)", true);
+                                                body.out("if(this.__devTools) { this.__devTools.send(action.type, nextState) }", true);
                                                 body.out("this.setState(nextState)", true);
                                             }
                                             else {
@@ -430,7 +419,7 @@ function createProject(settings) {
                                         body.indent(-1);
                                         body.out('}', true);
                                     });
-                                    ng.out('render() {', true);
+                                    ng.out('public render() {', true);
                                     ng.indent(1);
                                     ng.out("return (<" + c.getName() + "Context.Provider value={{...this.state, ", true);
                                     ng.indent(1);
@@ -444,23 +433,6 @@ function createProject(settings) {
                                     ng.out('}', true);
                                     ng.indent(-1);
                                     ng.out("}", true);
-                                    // createComment(ng, 'HOC for connecting to properties')
-                                    // Disable for now...
-                                    /*
-                                    ng.out(`export function ${c.getName()}HOC(Component) {`, true)
-                                      ng.indent(1)
-                                      ng.out(`return function Connected${c.getName()}(props) {`, true)
-                                        ng.indent(1)
-                                        ng.out(`return (<${c.getName()}Context.Consumer>`, true)
-                                         ng.indent(1)
-                                         ng.out(`{data => <Component {...props} {...data} />}`, true)
-                                         ng.indent(-1)
-                                        ng.out(`</${c.getName()}Context.Consumer>)`, true)
-                                        ng.indent(-1)
-                                      ng.out(`}`, true)
-                                      ng.indent(-1)
-                                    ng.out(`}`, true)
-                                    */
                                 };
                                 tsx(ng_1);
                             }
@@ -472,16 +444,17 @@ function createProject(settings) {
                         createComment(wr, "\n    Combined Reducers for main application\n    Generated by ts2redux\n          ");
                         wr.out("import * as redux from 'redux';", true);
                         list.forEach(function (m) {
-                            wr.out("import { " + m.name + "Reducer, I" + m.name + " } from './" + m.name + "';", true);
+                            var _a = [m.name + "Reducer", "I" + m.name].sort().reverse(), first = _a[0], second = _a[1];
+                            wr.out("import { " + second + ", " + first + " } from './" + m.name + "';", true);
                         });
-                        wr.out("export interface State {", true);
+                        wr.out("export interface IState {", true);
                         wr.indent(1);
                         list.forEach(function (m) {
                             wr.out(m.name + ": I" + m.name, true);
                         });
                         wr.indent(-1);
                         wr.out('}', true);
-                        wr.out("export const reducers = redux.combineReducers<State>({", true);
+                        wr.out("export const reducers = redux.combineReducers<IState>({", true);
                         wr.indent(1);
                         list.forEach(function (m) {
                             wr.out(m.name + ": " + m.name + "Reducer,", true);

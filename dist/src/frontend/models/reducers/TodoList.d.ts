@@ -28,9 +28,9 @@ export declare class TodoList {
      */
     getItems(): Promise<void>;
 }
-import { State } from './index';
+import { IState } from './index';
 import * as React from 'react';
-export interface ContainerPropsMethods {
+export interface IContainerPropsMethods {
     clearTodoList?: () => any;
     reverse?: () => any;
     sortById?: () => any;
@@ -43,12 +43,11 @@ export interface ITodoList {
     state: TaskState;
     stateError: any;
 }
-export interface ContainerPropsState extends ITodoList {
+declare type IContainerPropsState = ITodoList;
+export interface IProps extends IContainerPropsState, IContainerPropsMethods {
 }
-export interface Props extends ContainerPropsState, ContainerPropsMethods {
-}
-export declare const mapStateToProps: (state: State) => ContainerPropsState;
-export declare const mapDispatchToProps: (dispatch: any) => ContainerPropsMethods;
+export declare const mapStateToProps: (state: IState) => ITodoList;
+export declare const mapDispatchToProps: (dispatch: any) => IContainerPropsMethods;
 export declare const StateConnector: any;
 /**
  * @generated true
@@ -58,9 +57,9 @@ export declare class RTodoList {
     private _dispatch?;
     private _getState?;
     constructor(state?: ITodoList, dispatch?: (action: any) => void, getState?: () => any);
-    items: TodoListItem[];
-    state: TaskState;
-    stateError: any;
+    items: TodoListItem[] | undefined;
+    state: TaskState | undefined;
+    stateError: any | undefined;
     clearTodoList(): void;
     static clearTodoList(): (dispatcher: any, getState: any) => void;
     reverse(): void;
@@ -91,11 +90,11 @@ export declare const TodoListReducer: (state: ITodoList, action: any) => ITodoLi
 /***************************
 * React Context API test   *
 ***************************/
-export declare const TodoListContext: React.Context<Props>;
-export declare const TodoListConsumer: React.ComponentType<React.ConsumerProps<Props>>;
+export declare const TodoListContext: React.Context<IProps>;
+export declare const TodoListConsumer: React.ComponentType<React.ConsumerProps<IProps>>;
 export declare class TodoListProvider extends React.Component {
     state: ITodoList;
-    __devTools: any;
+    private __devTools;
     constructor(props: any);
     componentWillUnmount(): void;
     clearTodoList(): void;
@@ -109,3 +108,4 @@ export declare class TodoListProvider extends React.Component {
     getItems(): Promise<void>;
     render(): JSX.Element;
 }
+export {};

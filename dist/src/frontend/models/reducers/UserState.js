@@ -116,7 +116,7 @@ exports.mapDispatchToProps = function (dispatch) {
     };
 };
 exports.StateConnector = react_redux_1.connect(exports.mapStateToProps, exports.mapDispatchToProps);
-var init_UserState = function () {
+var initUserState = function () {
     var o = new UserState();
     return {
         logged: o.logged,
@@ -141,16 +141,21 @@ var RUserState = /** @class */ (function () {
                 return this._getState().UserState.logged;
             }
             else {
-                return this._state.logged;
+                if (this._state) {
+                    return this._state.logged;
+                }
             }
+            return undefined;
         },
         set: function (value) {
-            if (this._state) {
+            if (this._state && (typeof (value) !== 'undefined')) {
                 this._state.logged = value;
             }
             else {
                 // dispatch change for item logged
-                this._dispatch({ type: exports.UserStateEnums.UserState_logged, payload: value });
+                if (this._dispatch) {
+                    this._dispatch({ type: exports.UserStateEnums.UserState_logged, payload: value });
+                }
             }
         },
         enumerable: true,
@@ -162,16 +167,21 @@ var RUserState = /** @class */ (function () {
                 return this._getState().UserState.username;
             }
             else {
-                return this._state.username;
+                if (this._state) {
+                    return this._state.username;
+                }
             }
+            return undefined;
         },
         set: function (value) {
-            if (this._state) {
+            if (this._state && (typeof (value) !== 'undefined')) {
                 this._state.username = value;
             }
             else {
                 // dispatch change for item username
-                this._dispatch({ type: exports.UserStateEnums.UserState_username, payload: value });
+                if (this._dispatch) {
+                    this._dispatch({ type: exports.UserStateEnums.UserState_username, payload: value });
+                }
             }
         },
         enumerable: true,
@@ -183,16 +193,21 @@ var RUserState = /** @class */ (function () {
                 return this._getState().UserState.firstName;
             }
             else {
-                return this._state.firstName;
+                if (this._state) {
+                    return this._state.firstName;
+                }
             }
+            return undefined;
         },
         set: function (value) {
-            if (this._state) {
+            if (this._state && (typeof (value) !== 'undefined')) {
                 this._state.firstName = value;
             }
             else {
                 // dispatch change for item firstName
-                this._dispatch({ type: exports.UserStateEnums.UserState_firstName, payload: value });
+                if (this._dispatch) {
+                    this._dispatch({ type: exports.UserStateEnums.UserState_firstName, payload: value });
+                }
             }
         },
         enumerable: true,
@@ -204,16 +219,21 @@ var RUserState = /** @class */ (function () {
                 return this._getState().UserState.lastName;
             }
             else {
-                return this._state.lastName;
+                if (this._state) {
+                    return this._state.lastName;
+                }
             }
+            return undefined;
         },
         set: function (value) {
-            if (this._state) {
+            if (this._state && (typeof (value) !== 'undefined')) {
                 this._state.lastName = value;
             }
             else {
                 // dispatch change for item lastName
-                this._dispatch({ type: exports.UserStateEnums.UserState_lastName, payload: value });
+                if (this._dispatch) {
+                    this._dispatch({ type: exports.UserStateEnums.UserState_lastName, payload: value });
+                }
             }
         },
         enumerable: true,
@@ -225,16 +245,21 @@ var RUserState = /** @class */ (function () {
                 return this._getState().UserState.lastLogin;
             }
             else {
-                return this._state.lastLogin;
+                if (this._state) {
+                    return this._state.lastLogin;
+                }
             }
+            return undefined;
         },
         set: function (value) {
-            if (this._state) {
+            if (this._state && (typeof (value) !== 'undefined')) {
                 this._state.lastLogin = value;
             }
             else {
                 // dispatch change for item lastLogin
-                this._dispatch({ type: exports.UserStateEnums.UserState_lastLogin, payload: value });
+                if (this._dispatch) {
+                    this._dispatch({ type: exports.UserStateEnums.UserState_lastLogin, payload: value });
+                }
             }
         },
         enumerable: true,
@@ -251,7 +276,7 @@ var RUserState = /** @class */ (function () {
     };
     RUserState.login = function (loginInfo) {
         return function (dispatcher, getState) {
-            (new RUserState(null, dispatcher, getState)).login(loginInfo);
+            (new RUserState(undefined, dispatcher, getState)).login(loginInfo);
         };
     };
     // is task
@@ -264,7 +289,7 @@ var RUserState = /** @class */ (function () {
     };
     RUserState.logout = function () {
         return function (dispatcher, getState) {
-            (new RUserState(null, dispatcher, getState)).logout();
+            (new RUserState(undefined, dispatcher, getState)).logout();
         };
     };
     // is a reducer
@@ -273,12 +298,14 @@ var RUserState = /** @class */ (function () {
             this.username = 'Fake Login';
         }
         else {
-            this._dispatch({ type: exports.UserStateEnums.UserState_fakeLogin });
+            if (this._dispatch) {
+                this._dispatch({ type: exports.UserStateEnums.UserState_fakeLogin });
+            }
         }
     };
     RUserState.fakeLogin = function () {
         return function (dispatcher, getState) {
-            (new RUserState(null, dispatcher, getState)).fakeLogin();
+            (new RUserState(undefined, dispatcher, getState)).fakeLogin();
         };
     };
     return RUserState;
@@ -293,7 +320,7 @@ exports.UserStateEnums = {
     UserState_fakeLogin: 'UserState_fakeLogin',
 };
 exports.UserStateReducer = function (state, action) {
-    if (state === void 0) { state = init_UserState(); }
+    if (state === void 0) { state = initUserState(); }
     return immer.produce(state, function (draft) {
         switch (action.type) {
             case exports.UserStateEnums.UserState_logged:
@@ -320,14 +347,14 @@ exports.UserStateReducer = function (state, action) {
 /***************************
 * React Context API test   *
 ***************************/
-exports.UserStateContext = React.createContext(null);
+exports.UserStateContext = React.createContext(undefined);
 exports.UserStateConsumer = exports.UserStateContext.Consumer;
 var instanceCnt = 1;
 var UserStateProvider = /** @class */ (function (_super) {
     __extends(UserStateProvider, _super);
     function UserStateProvider(props) {
         var _this = _super.call(this, props) || this;
-        _this.state = init_UserState();
+        _this.state = initUserState();
         _this.__devTools = null;
         _this.login = _this.login.bind(_this);
         _this.logout = _this.logout.bind(_this);
@@ -345,17 +372,19 @@ var UserStateProvider = /** @class */ (function (_super) {
         return _this;
     }
     UserStateProvider.prototype.componentWillUnmount = function () {
-        if (this.__devTools)
+        if (this.__devTools) {
             this.__devTools.unsubscribe();
+        }
     };
     UserStateProvider.prototype.login = function (loginInfo) {
         return __awaiter(this, void 0, void 0, function () {
             var _this = this;
             return __generator(this, function (_a) {
-                (new RUserState(null, function (action) {
+                (new RUserState(undefined, function (action) {
                     var nextState = exports.UserStateReducer(_this.state, action);
-                    if (_this.__devTools)
+                    if (_this.__devTools) {
                         _this.__devTools.send(action.type, nextState);
+                    }
                     _this.setState(nextState);
                 }, function () { return ({ UserState: _this.state }); })).login(loginInfo);
                 return [2 /*return*/];
@@ -366,10 +395,11 @@ var UserStateProvider = /** @class */ (function (_super) {
         return __awaiter(this, void 0, void 0, function () {
             var _this = this;
             return __generator(this, function (_a) {
-                (new RUserState(null, function (action) {
+                (new RUserState(undefined, function (action) {
                     var nextState = exports.UserStateReducer(_this.state, action);
-                    if (_this.__devTools)
+                    if (_this.__devTools) {
                         _this.__devTools.send(action.type, nextState);
+                    }
                     _this.setState(nextState);
                 }, function () { return ({ UserState: _this.state }); })).logout();
                 return [2 /*return*/];

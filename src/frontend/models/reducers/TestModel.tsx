@@ -157,10 +157,10 @@ class TestModel {
 
 import * as immer from 'immer'
 import { connect } from 'react-redux'
-import { State } from './index'
+import { IState } from './index'
 import * as React from 'react'
 
-export interface ContainerPropsMethods {
+export interface IContainerPropsMethods {
   setUserMessage? : (value: string) => any
   add? : (item: ShopCartItem) => any
   removeFirst? : () => any
@@ -196,9 +196,9 @@ export interface ITestModel {
   userMessage: string
 }
 
-export interface ContainerPropsState extends ITestModel {}
-export interface Props extends ContainerPropsState, ContainerPropsMethods {}
-export const mapStateToProps = (state : State) : ContainerPropsState => {
+type IContainerPropsState = ITestModel
+export interface IProps extends IContainerPropsState, IContainerPropsMethods {}
+export const mapStateToProps = (state : IState) : IContainerPropsState => {
   return {
     items: state.TestModel.items,
     maxId: state.TestModel.maxId,
@@ -208,7 +208,7 @@ export const mapStateToProps = (state : State) : ContainerPropsState => {
     userMessage: state.TestModel.userMessage,
   }
 }
-export const mapDispatchToProps = (dispatch) : ContainerPropsMethods => {
+export const mapDispatchToProps = (dispatch:any) : IContainerPropsMethods => {
   return {
     setUserMessage : (value: string) => {
       return dispatch(RTestModel.setUserMessage(value))
@@ -262,7 +262,7 @@ export const mapDispatchToProps = (dispatch) : ContainerPropsMethods => {
 }
 export const StateConnector = connect( mapStateToProps, mapDispatchToProps);
 
-const init_TestModel = () => {
+const initTestModel = () => {
   const o = new TestModel();
   return {
     items: o.items,
@@ -286,98 +286,98 @@ export class RTestModel {
     this._dispatch = dispatch
     this._getState = getState
   }
-  get items() : ShopCartItem[]{
+  get items() : ShopCartItem[] | undefined {
     if(this._getState) {
       return this._getState().TestModel.items
     } else {
-      return this._state.items
+      if(this._state) { return this._state.items }
     }
-  }
-  set items(value:ShopCartItem[]) {
-    if(this._state) {
+    return undefined}
+  set items(value:ShopCartItem[] | undefined) {
+    if(this._state && (typeof(value) !== 'undefined')) {
       this._state.items = value
     } else {
       // dispatch change for item items
-      this._dispatch({type:TestModelEnums.TestModel_items, payload:value})
+      if(this._dispatch) { this._dispatch({type:TestModelEnums.TestModel_items, payload:value}) }
     }
   }
-  get maxId() : number{
+  get maxId() : number | undefined {
     if(this._getState) {
       return this._getState().TestModel.maxId
     } else {
-      return this._state.maxId
+      if(this._state) { return this._state.maxId }
     }
-  }
-  set maxId(value:number) {
-    if(this._state) {
+    return undefined}
+  set maxId(value:number | undefined) {
+    if(this._state && (typeof(value) !== 'undefined')) {
       this._state.maxId = value
     } else {
       // dispatch change for item maxId
-      this._dispatch({type:TestModelEnums.TestModel_maxId, payload:value})
+      if(this._dispatch) { this._dispatch({type:TestModelEnums.TestModel_maxId, payload:value}) }
     }
   }
-  get cartId() : number{
+  get cartId() : number | undefined {
     if(this._getState) {
       return this._getState().TestModel.cartId
     } else {
-      return this._state.cartId
+      if(this._state) { return this._state.cartId }
     }
-  }
-  set cartId(value:number) {
-    if(this._state) {
+    return undefined}
+  set cartId(value:number | undefined) {
+    if(this._state && (typeof(value) !== 'undefined')) {
       this._state.cartId = value
     } else {
       // dispatch change for item cartId
-      this._dispatch({type:TestModelEnums.TestModel_cartId, payload:value})
+      if(this._dispatch) { this._dispatch({type:TestModelEnums.TestModel_cartId, payload:value}) }
     }
   }
-  get shopState() : TaskState{
+  get shopState() : TaskState | undefined {
     if(this._getState) {
       return this._getState().TestModel.shopState
     } else {
-      return this._state.shopState
+      if(this._state) { return this._state.shopState }
     }
-  }
-  set shopState(value:TaskState) {
-    if(this._state) {
+    return undefined}
+  set shopState(value:TaskState | undefined) {
+    if(this._state && (typeof(value) !== 'undefined')) {
       this._state.shopState = value
     } else {
       // dispatch change for item shopState
-      this._dispatch({type:TestModelEnums.TestModel_shopState, payload:value})
+      if(this._dispatch) { this._dispatch({type:TestModelEnums.TestModel_shopState, payload:value}) }
     }
   }
   get carts() : {
   [key: string]: ShopCart;
-  }{
+  } | undefined {
     if(this._getState) {
       return this._getState().TestModel.carts
     } else {
-      return this._state.carts
+      if(this._state) { return this._state.carts }
     }
-  }
+    return undefined}
   set carts(value:{
   [key: string]: ShopCart;
-  }) {
-    if(this._state) {
+  } | undefined) {
+    if(this._state && (typeof(value) !== 'undefined')) {
       this._state.carts = value
     } else {
       // dispatch change for item carts
-      this._dispatch({type:TestModelEnums.TestModel_carts, payload:value})
+      if(this._dispatch) { this._dispatch({type:TestModelEnums.TestModel_carts, payload:value}) }
     }
   }
-  get userMessage() : string{
+  get userMessage() : string | undefined {
     if(this._getState) {
       return this._getState().TestModel.userMessage
     } else {
-      return this._state.userMessage
+      if(this._state) { return this._state.userMessage }
     }
-  }
-  set userMessage(value:string) {
-    if(this._state) {
+    return undefined}
+  set userMessage(value:string | undefined) {
+    if(this._state && (typeof(value) !== 'undefined')) {
       this._state.userMessage = value
     } else {
       // dispatch change for item userMessage
-      this._dispatch({type:TestModelEnums.TestModel_userMessage, payload:value})
+      if(this._dispatch) { this._dispatch({type:TestModelEnums.TestModel_userMessage, payload:value}) }
     }
   }
   
@@ -386,13 +386,13 @@ export class RTestModel {
     if(this._state) {
       this.userMessage = value;
     } else {
-      this._dispatch({type:TestModelEnums.TestModel_setUserMessage,payload: value })
+      if(this._dispatch) { this._dispatch({type:TestModelEnums.TestModel_setUserMessage,payload: value }) }
     }
   }
   
-  static setUserMessage(value: string){
-    return (dispatcher, getState) => {
-      (new RTestModel(null, dispatcher, getState)).setUserMessage(value)
+  public static setUserMessage(value: string){
+    return (dispatcher:any, getState:any) => {
+      (new RTestModel(undefined, dispatcher, getState)).setUserMessage(value)
     }
   }
   // is a reducer
@@ -404,13 +404,13 @@ export class RTestModel {
       id: this.maxId++
       });
     } else {
-      this._dispatch({type:TestModelEnums.TestModel_add,payload: item })
+      if(this._dispatch) { this._dispatch({type:TestModelEnums.TestModel_add,payload: item }) }
     }
   }
   
-  static add(item: ShopCartItem){
-    return (dispatcher, getState) => {
-      (new RTestModel(null, dispatcher, getState)).add(item)
+  public static add(item: ShopCartItem){
+    return (dispatcher:any, getState:any) => {
+      (new RTestModel(undefined, dispatcher, getState)).add(item)
     }
   }
   // is a reducer
@@ -418,13 +418,13 @@ export class RTestModel {
     if(this._state) {
       this.items.splice(0, 1);
     } else {
-      this._dispatch({type:TestModelEnums.TestModel_removeFirst})
+      if(this._dispatch) { this._dispatch({type:TestModelEnums.TestModel_removeFirst}) }
     }
   }
   
-  static removeFirst(){
-    return (dispatcher, getState) => {
-      (new RTestModel(null, dispatcher, getState)).removeFirst()
+  public static removeFirst(){
+    return (dispatcher:any, getState:any) => {
+      (new RTestModel(undefined, dispatcher, getState)).removeFirst()
     }
   }
   // is a reducer
@@ -434,13 +434,13 @@ export class RTestModel {
       return a.name.localeCompare(b.name);
       });
     } else {
-      this._dispatch({type:TestModelEnums.TestModel_sort})
+      if(this._dispatch) { this._dispatch({type:TestModelEnums.TestModel_sort}) }
     }
   }
   
-  static sort(){
-    return (dispatcher, getState) => {
-      (new RTestModel(null, dispatcher, getState)).sort()
+  public static sort(){
+    return (dispatcher:any, getState:any) => {
+      (new RTestModel(undefined, dispatcher, getState)).sort()
     }
   }
   // is a reducer
@@ -451,13 +451,13 @@ export class RTestModel {
       items: [{ id: this.maxId++, name: STR_ITEM }]
       };
     } else {
-      this._dispatch({type:TestModelEnums.TestModel_addCart})
+      if(this._dispatch) { this._dispatch({type:TestModelEnums.TestModel_addCart}) }
     }
   }
   
-  static addCart(){
-    return (dispatcher, getState) => {
-      (new RTestModel(null, dispatcher, getState)).addCart()
+  public static addCart(){
+    return (dispatcher:any, getState:any) => {
+      (new RTestModel(undefined, dispatcher, getState)).addCart()
     }
   }
   // is a reducer
@@ -468,13 +468,13 @@ export class RTestModel {
       items: [{ id: this.maxId++, name: STR_ITEM }]
       };
     } else {
-      this._dispatch({type:TestModelEnums.TestModel_addCartSync})
+      if(this._dispatch) { this._dispatch({type:TestModelEnums.TestModel_addCartSync}) }
     }
   }
   
-  static addCartSync(){
-    return (dispatcher, getState) => {
-      (new RTestModel(null, dispatcher, getState)).addCartSync()
+  public static addCartSync(){
+    return (dispatcher:any, getState:any) => {
+      (new RTestModel(undefined, dispatcher, getState)).addCartSync()
     }
   }
   // is a reducer
@@ -488,16 +488,16 @@ export class RTestModel {
       id: this.maxId++
       });
     } else {
-      this._dispatch({type:TestModelEnums.TestModel_addToCart,payload: adding })
+      if(this._dispatch) { this._dispatch({type:TestModelEnums.TestModel_addToCart,payload: adding }) }
     }
   }
   
-  static addToCart(adding: {
+  public static addToCart(adding: {
   cartId: string;
   item: ShopCartItem;
   }){
-    return (dispatcher, getState) => {
-      (new RTestModel(null, dispatcher, getState)).addToCart(adding)
+    return (dispatcher:any, getState:any) => {
+      (new RTestModel(undefined, dispatcher, getState)).addToCart(adding)
     }
   }
   // is a reducer
@@ -508,16 +508,16 @@ export class RTestModel {
     if(this._state) {
       this.carts[adding.cartId].newItemName = name;
     } else {
-      this._dispatch({type:TestModelEnums.TestModel_setCartNewItem,payload: adding })
+      if(this._dispatch) { this._dispatch({type:TestModelEnums.TestModel_setCartNewItem,payload: adding }) }
     }
   }
   
-  static setCartNewItem(adding: {
+  public static setCartNewItem(adding: {
   cartId: string;
   name: string;
   }){
-    return (dispatcher, getState) => {
-      (new RTestModel(null, dispatcher, getState)).setCartNewItem(adding)
+    return (dispatcher:any, getState:any) => {
+      (new RTestModel(undefined, dispatcher, getState)).setCartNewItem(adding)
     }
   }
   // is a reducer
@@ -527,13 +527,13 @@ export class RTestModel {
       this.addToCart({ cartId: cartKey, item: { name: STR_ITEM + this.maxId++ } });
       });
     } else {
-      this._dispatch({type:TestModelEnums.TestModel_addToCartRandom})
+      if(this._dispatch) { this._dispatch({type:TestModelEnums.TestModel_addToCartRandom}) }
     }
   }
   
-  static addToCartRandom(){
-    return (dispatcher, getState) => {
-      (new RTestModel(null, dispatcher, getState)).addToCartRandom()
+  public static addToCartRandom(){
+    return (dispatcher:any, getState:any) => {
+      (new RTestModel(undefined, dispatcher, getState)).addToCartRandom()
     }
   }
   // is a reducer
@@ -541,13 +541,13 @@ export class RTestModel {
     if(this._state) {
       this.items[this.items.length - 1].name = newName;
     } else {
-      this._dispatch({type:TestModelEnums.TestModel_renameLast,payload: newName })
+      if(this._dispatch) { this._dispatch({type:TestModelEnums.TestModel_renameLast,payload: newName }) }
     }
   }
   
-  static renameLast(newName: string){
-    return (dispatcher, getState) => {
-      (new RTestModel(null, dispatcher, getState)).renameLast(newName)
+  public static renameLast(newName: string){
+    return (dispatcher:any, getState:any) => {
+      (new RTestModel(undefined, dispatcher, getState)).renameLast(newName)
     }
   }
   // is task
@@ -566,9 +566,9 @@ export class RTestModel {
       this.shopState = TaskState.SUCCESS;
   }
   
-  static createItem(someName: string){
-    return (dispatcher, getState) => {
-      (new RTestModel(null, dispatcher, getState)).createItem(someName)
+  public static createItem(someName: string){
+    return (dispatcher:any, getState:any) => {
+      (new RTestModel(undefined, dispatcher, getState)).createItem(someName)
     }
   }
   // is task
@@ -576,9 +576,9 @@ export class RTestModel {
       this.add({ name });
   }
   
-  static addOneFriend(name){
-    return (dispatcher, getState) => {
-      (new RTestModel(null, dispatcher, getState)).addOneFriend(name)
+  public static addOneFriend(name){
+    return (dispatcher:any, getState:any) => {
+      (new RTestModel(undefined, dispatcher, getState)).addOneFriend(name)
     }
   }
   // is task
@@ -588,9 +588,9 @@ export class RTestModel {
       });
   }
   
-  static fillSomeFriends(){
-    return (dispatcher, getState) => {
-      (new RTestModel(null, dispatcher, getState)).fillSomeFriends()
+  public static fillSomeFriends(){
+    return (dispatcher:any, getState:any) => {
+      (new RTestModel(undefined, dispatcher, getState)).fillSomeFriends()
     }
   }
   // is task
@@ -598,9 +598,9 @@ export class RTestModel {
       this.renameLast(LAST_NAME);
   }
   
-  static ChangeLastItem(){
-    return (dispatcher, getState) => {
-      (new RTestModel(null, dispatcher, getState)).ChangeLastItem()
+  public static ChangeLastItem(){
+    return (dispatcher:any, getState:any) => {
+      (new RTestModel(undefined, dispatcher, getState)).ChangeLastItem()
     }
   }
 }
@@ -624,7 +624,7 @@ export const TestModelEnums = {
   TestModel_renameLast : 'TestModel_renameLast',
 }
 
-export const TestModelReducer = (state:ITestModel = init_TestModel(), action) => {
+export const TestModelReducer = (state:ITestModel = initTestModel(), action:any ) => {
   return immer.produce(state, draft => {
     switch (action.type) {
       case TestModelEnums.TestModel_items: 
@@ -681,13 +681,13 @@ export const TestModelReducer = (state:ITestModel = init_TestModel(), action) =>
 /***************************
 * React Context API test   *
 ***************************/
-export const TestModelContext = React.createContext<Props>(null)
+export const TestModelContext = React.createContext<IProps|undefined>(undefined)
 export const TestModelConsumer = TestModelContext.Consumer
 let instanceCnt = 1
 export class TestModelProvider extends React.Component {
-  state: ITestModel = init_TestModel() 
-  __devTools:any = null
-  constructor( props ){
+  public state: ITestModel = initTestModel() 
+  private __devTools:any = null
+  constructor( props:any ){
     super(props)
     this.setUserMessage = this.setUserMessage.bind(this)
     this.add = this.add.bind(this)
@@ -707,15 +707,15 @@ export class TestModelProvider extends React.Component {
     if(devs) {
       this.__devTools = devs.connect({name:'TestModel'+instanceCnt++})
       this.__devTools.init(this.state)
-      this.__devTools.subscribe( msg => {
+      this.__devTools.subscribe( (msg:any) => {
         if (msg.type === 'DISPATCH' && msg.state) {
           this.setState(JSON.parse(msg.state))
         }
       })
     }
   }
-  componentWillUnmount() {
-    if(this.__devTools) this.__devTools.unsubscribe()
+  public componentWillUnmount() {
+    if(this.__devTools) { this.__devTools.unsubscribe() }
   }
   setUserMessage(value: string){
     const nextState = immer.produce( this.state, draft => ( new RTestModel(draft) ).setUserMessage(value) )
@@ -775,34 +775,34 @@ export class TestModelProvider extends React.Component {
   }
   // action
   async createItem(someName: string){
-    (new RTestModel(null, (action) => {
+    (new RTestModel(undefined, (action:any) => {
       const nextState = TestModelReducer( this.state, action )
-      if(this.__devTools) this.__devTools.send(action.type, nextState)
+      if(this.__devTools) { this.__devTools.send(action.type, nextState) }
       this.setState(nextState)
     }, () => ({TestModel:this.state})) ).createItem(someName)
   }
   async addOneFriend(name){
-    (new RTestModel(null, (action) => {
+    (new RTestModel(undefined, (action:any) => {
       const nextState = TestModelReducer( this.state, action )
-      if(this.__devTools) this.__devTools.send(action.type, nextState)
+      if(this.__devTools) { this.__devTools.send(action.type, nextState) }
       this.setState(nextState)
     }, () => ({TestModel:this.state})) ).addOneFriend(name)
   }
   async fillSomeFriends(){
-    (new RTestModel(null, (action) => {
+    (new RTestModel(undefined, (action:any) => {
       const nextState = TestModelReducer( this.state, action )
-      if(this.__devTools) this.__devTools.send(action.type, nextState)
+      if(this.__devTools) { this.__devTools.send(action.type, nextState) }
       this.setState(nextState)
     }, () => ({TestModel:this.state})) ).fillSomeFriends()
   }
   async ChangeLastItem(){
-    (new RTestModel(null, (action) => {
+    (new RTestModel(undefined, (action:any) => {
       const nextState = TestModelReducer( this.state, action )
-      if(this.__devTools) this.__devTools.send(action.type, nextState)
+      if(this.__devTools) { this.__devTools.send(action.type, nextState) }
       this.setState(nextState)
     }, () => ({TestModel:this.state})) ).ChangeLastItem()
   }
-  render() {
+  public render() {
     return (<TestModelContext.Provider value={{...this.state, 
       setUserMessage: this.setUserMessage,
       add: this.add,

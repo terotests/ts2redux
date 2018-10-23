@@ -21,9 +21,9 @@ export declare enum TaskState {
     ERROR = 2,
     SUCCESS = 3
 }
-import { State } from './index';
+import { IState } from './index';
 import * as React from 'react';
-export interface ContainerPropsMethods {
+export interface IContainerPropsMethods {
     setUserMessage?: (value: string) => any;
     add?: (item: ShopCartItem) => any;
     removeFirst?: () => any;
@@ -55,12 +55,11 @@ export interface ITestModel {
     };
     userMessage: string;
 }
-export interface ContainerPropsState extends ITestModel {
+declare type IContainerPropsState = ITestModel;
+export interface IProps extends IContainerPropsState, IContainerPropsMethods {
 }
-export interface Props extends ContainerPropsState, ContainerPropsMethods {
-}
-export declare const mapStateToProps: (state: State) => ContainerPropsState;
-export declare const mapDispatchToProps: (dispatch: any) => ContainerPropsMethods;
+export declare const mapStateToProps: (state: IState) => ITestModel;
+export declare const mapDispatchToProps: (dispatch: any) => IContainerPropsMethods;
 export declare const StateConnector: any;
 /**
  * @generated true
@@ -70,14 +69,14 @@ export declare class RTestModel {
     private _dispatch?;
     private _getState?;
     constructor(state?: ITestModel, dispatch?: (action: any) => void, getState?: () => any);
-    items: ShopCartItem[];
-    maxId: number;
-    cartId: number;
-    shopState: TaskState;
+    items: ShopCartItem[] | undefined;
+    maxId: number | undefined;
+    cartId: number | undefined;
+    shopState: TaskState | undefined;
     carts: {
         [key: string]: ShopCart;
-    };
-    userMessage: string;
+    } | undefined;
+    userMessage: string | undefined;
     setUserMessage(value: string): void;
     static setUserMessage(value: string): (dispatcher: any, getState: any) => void;
     add(item: ShopCartItem): void;
@@ -141,11 +140,11 @@ export declare const TestModelReducer: (state: ITestModel, action: any) => ITest
 /***************************
 * React Context API test   *
 ***************************/
-export declare const TestModelContext: React.Context<Props>;
-export declare const TestModelConsumer: React.ComponentType<React.ConsumerProps<Props>>;
+export declare const TestModelContext: React.Context<IProps>;
+export declare const TestModelConsumer: React.ComponentType<React.ConsumerProps<IProps>>;
 export declare class TestModelProvider extends React.Component {
     state: ITestModel;
-    __devTools: any;
+    private __devTools;
     constructor(props: any);
     componentWillUnmount(): void;
     setUserMessage(value: string): void;
@@ -170,3 +169,4 @@ export declare class TestModelProvider extends React.Component {
     ChangeLastItem(): Promise<void>;
     render(): JSX.Element;
 }
+export {};

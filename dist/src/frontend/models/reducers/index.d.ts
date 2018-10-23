@@ -10,11 +10,11 @@ import { ISimpleModel } from './SimpleModel';
 import { ITestModel } from './TestModel';
 import { ITodoList } from './TodoList';
 import { IUserState } from './UserState';
-export interface State {
+export interface IState {
     IncModel: IIncModel;
     SimpleModel: ISimpleModel;
     TestModel: ITestModel;
     TodoList: ITodoList;
     UserState: IUserState;
 }
-export declare const reducers: redux.Reducer<State, redux.AnyAction>;
+export declare const reducers: redux.Reducer<IState, redux.AnyAction>;

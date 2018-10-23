@@ -316,6 +316,11 @@ export const ShopCartModelReducer = (state:ITestModel = {}, action) => {
               throw `Error at ${sourceFile.getFilePath()} in class ${c.getName()} method ${m.getName()} can not have more than 2 parameters at the moment`
             }
             const pName = m.getParameters().filter( (a,i) => i<1).map( mod => mod.getName() ).join('')
+            const rType = m.getReturnTypeNode()
+
+            if(rType) {
+              console.log('** method '+m.getName()+'  with return type ', rType.print())
+            }            
 
             if(m.isAsync()) {
               body.out('// is task', true)

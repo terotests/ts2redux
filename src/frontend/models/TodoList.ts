@@ -15,7 +15,7 @@ export class TodoList {
   items: TodoListItem[] = []
   state: TaskState = 'UNDEFINED'
   stateError: any
-
+  
   clearTodoList() {
     this.items = []
   }

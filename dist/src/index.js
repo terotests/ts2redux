@@ -273,6 +273,10 @@ function createProject(settings) {
                                         throw "Error at " + sourceFile.getFilePath() + " in class " + c.getName() + " method " + m.getName() + " can not have more than 2 parameters at the moment";
                                     }
                                     var pName = m.getParameters().filter(function (a, i) { return i < 1; }).map(function (mod) { return mod.getName(); }).join('');
+                                    var rType = m.getReturnTypeNode();
+                                    if (rType) {
+                                        console.log('** method ' + m.getName() + '  with return type ', rType.print());
+                                    }
                                     if (m.isAsync()) {
                                         body_1.out('// is task', true);
                                         body_1.raw(m.print(), true);

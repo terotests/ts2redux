@@ -165,7 +165,7 @@ export async function createProject( settings:GenerationOptions) {
         ng.out('}', true)
 
         ng.out('', true)
-        ng.out(`type IContainerPropsState = I${c.getName()}`, true);
+        ng.out(`export type IContainerPropsState = I${c.getName()}`, true);
         ng.out(`export interface IProps extends IContainerPropsState, IContainerPropsMethods {}`, true);
 
         ng.out('export const mapStateToProps = (state : IState) : IContainerPropsState => {', true)

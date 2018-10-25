@@ -161,26 +161,26 @@ import { IState } from './index'
 import * as React from 'react'
 
 export interface IContainerPropsMethods {
-  setUserMessage? : (value: string) => any
-  add? : (item: ShopCartItem) => any
-  removeFirst? : () => any
-  sort? : () => any
-  addCart? : () => any
-  addCartSync? : () => any
-  addToCart? : (adding: {
+  setUserMessage : (value: string) => any
+  add : (item: ShopCartItem) => any
+  removeFirst : () => any
+  sort : () => any
+  addCart : () => any
+  addCartSync : () => any
+  addToCart : (adding: {
   cartId: string;
   item: ShopCartItem;
   }) => any
-  setCartNewItem? : (adding: {
+  setCartNewItem : (adding: {
   cartId: string;
   name: string;
   }) => any
-  addToCartRandom? : () => any
-  renameLast? : (newName: string) => any
-  createItem? : (someName: string) => any
-  addOneFriend? : (name) => any
-  fillSomeFriends? : () => any
-  ChangeLastItem? : () => any
+  addToCartRandom : () => any
+  renameLast : (newName: string) => any
+  createItem : (someName: string) => any
+  addOneFriend : (name) => any
+  fillSomeFriends : () => any
+  ChangeLastItem : () => any
 }
 export interface ITestModel {
   // model with initializer
@@ -271,6 +271,31 @@ const initTestModel = () => {
     shopState: o.shopState,
     carts: o.carts,
     userMessage: o.userMessage,
+  }
+}
+const initWithMethodsTestModel = () => {
+  const o = new TestModel();
+  return {
+    items: o.items,
+    maxId: o.maxId,
+    cartId: o.cartId,
+    shopState: o.shopState,
+    carts: o.carts,
+    userMessage: o.userMessage,
+    setUserMessage: o.setUserMessage,
+    add: o.add,
+    removeFirst: o.removeFirst,
+    sort: o.sort,
+    addCart: o.addCart,
+    addCartSync: o.addCartSync,
+    addToCart: o.addToCart,
+    setCartNewItem: o.setCartNewItem,
+    addToCartRandom: o.addToCartRandom,
+    renameLast: o.renameLast,
+    createItem: o.createItem,
+    addOneFriend: o.addOneFriend,
+    fillSomeFriends: o.fillSomeFriends,
+    ChangeLastItem: o.ChangeLastItem,
   }
 }
 
@@ -681,7 +706,7 @@ export const TestModelReducer = (state:ITestModel = initTestModel(), action:any 
 /***************************
 * React Context API test   *
 ***************************/
-export const TestModelContext = React.createContext<IProps>(initTestModel())
+export const TestModelContext = React.createContext<IProps>(initWithMethodsTestModel())
 export const TestModelConsumer = TestModelContext.Consumer
 let instanceCnt = 1
 export class TestModelProvider extends React.Component {

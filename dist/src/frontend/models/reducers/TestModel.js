@@ -276,6 +276,31 @@ var initTestModel = function () {
         userMessage: o.userMessage,
     };
 };
+var initWithMethodsTestModel = function () {
+    var o = new TestModel();
+    return {
+        items: o.items,
+        maxId: o.maxId,
+        cartId: o.cartId,
+        shopState: o.shopState,
+        carts: o.carts,
+        userMessage: o.userMessage,
+        setUserMessage: o.setUserMessage,
+        add: o.add,
+        removeFirst: o.removeFirst,
+        sort: o.sort,
+        addCart: o.addCart,
+        addCartSync: o.addCartSync,
+        addToCart: o.addToCart,
+        setCartNewItem: o.setCartNewItem,
+        addToCartRandom: o.addToCartRandom,
+        renameLast: o.renameLast,
+        createItem: o.createItem,
+        addOneFriend: o.addOneFriend,
+        fillSomeFriends: o.fillSomeFriends,
+        ChangeLastItem: o.ChangeLastItem,
+    };
+};
 /**
  * @generated true
  */
@@ -767,7 +792,7 @@ exports.TestModelReducer = function (state, action) {
 /***************************
 * React Context API test   *
 ***************************/
-exports.TestModelContext = React.createContext(initTestModel());
+exports.TestModelContext = React.createContext(initWithMethodsTestModel());
 exports.TestModelConsumer = exports.TestModelContext.Consumer;
 var instanceCnt = 1;
 var TestModelProvider = /** @class */ (function (_super) {

@@ -12,8 +12,8 @@ export declare class IncModel {
 import { IState } from './index';
 import * as React from 'react';
 export interface IContainerPropsMethods {
-    increment?: () => any;
-    decrement?: () => any;
+    increment: () => any;
+    decrement: () => any;
 }
 export interface IIncModel {
     cnt: number;

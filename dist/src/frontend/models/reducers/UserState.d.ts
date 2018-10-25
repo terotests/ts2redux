@@ -7,12 +7,12 @@
 import { IState } from './index';
 import * as React from 'react';
 export interface IContainerPropsMethods {
-    login?: (loginInfo: {
+    login: (loginInfo: {
         username: string;
         password: string;
     }) => any;
-    logout?: () => any;
-    fakeLogin?: () => any;
+    logout: () => any;
+    fakeLogin: () => any;
 }
 export interface IUserState {
     logged: boolean;

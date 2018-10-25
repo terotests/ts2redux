@@ -29,12 +29,12 @@ import { IState } from './index'
 import * as React from 'react'
 
 export interface IContainerPropsMethods {
-  login? : (loginInfo: {
+  login : (loginInfo: {
   username: string;
   password: string;
   }) => any
-  logout? : () => any
-  fakeLogin? : () => any
+  logout : () => any
+  fakeLogin : () => any
 }
 export interface IUserState {
   logged: boolean
@@ -81,6 +81,19 @@ const initUserState = () => {
     firstName: o.firstName,
     lastName: o.lastName,
     lastLogin: o.lastLogin,
+  }
+}
+const initWithMethodsUserState = () => {
+  const o = new UserState();
+  return {
+    logged: o.logged,
+    username: o.username,
+    firstName: o.firstName,
+    lastName: o.lastName,
+    lastLogin: o.lastLogin,
+    login: o.login,
+    logout: o.logout,
+    fakeLogin: o.fakeLogin,
   }
 }
 
@@ -249,7 +262,7 @@ export const UserStateReducer = (state:IUserState = initUserState(), action:any 
 /***************************
 * React Context API test   *
 ***************************/
-export const UserStateContext = React.createContext<IProps>(initUserState())
+export const UserStateContext = React.createContext<IProps>(initWithMethodsUserState())
 export const UserStateConsumer = UserStateContext.Consumer
 let instanceCnt = 1
 export class UserStateProvider extends React.Component {

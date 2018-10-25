@@ -113,6 +113,13 @@ var initSimpleModel = function () {
         items: o.items,
     };
 };
+var initWithMethodsSimpleModel = function () {
+    var o = new SimpleModel();
+    return {
+        items: o.items,
+        getItems: o.getItems,
+    };
+};
 /**
  * @generated true
  */
@@ -188,7 +195,7 @@ exports.SimpleModelReducer = function (state, action) {
 /***************************
 * React Context API test   *
 ***************************/
-exports.SimpleModelContext = React.createContext(initSimpleModel());
+exports.SimpleModelContext = React.createContext(initWithMethodsSimpleModel());
 exports.SimpleModelConsumer = exports.SimpleModelContext.Consumer;
 var instanceCnt = 1;
 var SimpleModelProvider = /** @class */ (function (_super) {

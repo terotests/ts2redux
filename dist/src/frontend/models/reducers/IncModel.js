@@ -68,6 +68,14 @@ var initIncModel = function () {
         cnt: o.cnt,
     };
 };
+var initWithMethodsIncModel = function () {
+    var o = new IncModel();
+    return {
+        cnt: o.cnt,
+        increment: o.increment,
+        decrement: o.decrement,
+    };
+};
 /**
  * @generated true
  */
@@ -162,7 +170,7 @@ exports.IncModelReducer = function (state, action) {
 /***************************
 * React Context API test   *
 ***************************/
-exports.IncModelContext = React.createContext(initIncModel());
+exports.IncModelContext = React.createContext(initWithMethodsIncModel());
 exports.IncModelConsumer = exports.IncModelContext.Consumer;
 var instanceCnt = 1;
 var IncModelProvider = /** @class */ (function (_super) {

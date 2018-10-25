@@ -20,8 +20,8 @@ import { IState } from './index'
 import * as React from 'react'
 
 export interface IContainerPropsMethods {
-  increment? : () => any
-  decrement? : () => any
+  increment : () => any
+  decrement : () => any
 }
 export interface IIncModel {
   cnt: number
@@ -50,6 +50,14 @@ const initIncModel = () => {
   const o = new IncModel();
   return {
     cnt: o.cnt,
+  }
+}
+const initWithMethodsIncModel = () => {
+  const o = new IncModel();
+  return {
+    cnt: o.cnt,
+    increment: o.increment,
+    decrement: o.decrement,
   }
 }
 
@@ -135,7 +143,7 @@ export const IncModelReducer = (state:IIncModel = initIncModel(), action:any ) =
 /***************************
 * React Context API test   *
 ***************************/
-export const IncModelContext = React.createContext<IProps>(initIncModel())
+export const IncModelContext = React.createContext<IProps>(initWithMethodsIncModel())
 export const IncModelConsumer = IncModelContext.Consumer
 let instanceCnt = 1
 export class IncModelProvider extends React.Component {

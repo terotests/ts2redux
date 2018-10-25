@@ -31,12 +31,12 @@ export declare class TodoList {
 import { IState } from './index';
 import * as React from 'react';
 export interface IContainerPropsMethods {
-    clearTodoList?: () => any;
-    reverse?: () => any;
-    sortById?: () => any;
-    sortByTitle?: () => any;
-    sortByCompletion?: () => any;
-    getItems?: () => any;
+    clearTodoList: () => any;
+    reverse: () => any;
+    sortById: () => any;
+    sortByTitle: () => any;
+    sortByCompletion: () => any;
+    getItems: () => any;
 }
 export interface ITodoList {
     items: TodoListItem[];

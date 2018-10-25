@@ -369,6 +369,14 @@ var initIncModel = function () {
         cnt: o.cnt,
     };
 };
+var initWithMethodsIncModel = function () {
+    var o = new IncModel();
+    return {
+        cnt: o.cnt,
+        increment: o.increment,
+        decrement: o.decrement,
+    };
+};
 /**
  * @generated true
  */
@@ -463,7 +471,7 @@ exports.IncModelReducer = function (state, action) {
 /***************************
 * React Context API test   *
 ***************************/
-exports.IncModelContext = React.createContext(initIncModel());
+exports.IncModelContext = React.createContext(initWithMethodsIncModel());
 exports.IncModelConsumer = exports.IncModelContext.Consumer;
 var instanceCnt = 1;
 var IncModelProvider = /** @class */ (function (_super) {
@@ -628,6 +636,13 @@ var initSimpleModel = function () {
         items: o.items,
     };
 };
+var initWithMethodsSimpleModel = function () {
+    var o = new SimpleModel();
+    return {
+        items: o.items,
+        getItems: o.getItems,
+    };
+};
 /**
  * @generated true
  */
@@ -703,7 +718,7 @@ exports.SimpleModelReducer = function (state, action) {
 /***************************
 * React Context API test   *
 ***************************/
-exports.SimpleModelContext = React.createContext(initSimpleModel());
+exports.SimpleModelContext = React.createContext(initWithMethodsSimpleModel());
 exports.SimpleModelConsumer = exports.SimpleModelContext.Consumer;
 var instanceCnt = 1;
 var SimpleModelProvider = /** @class */ (function (_super) {
@@ -1031,6 +1046,31 @@ var initTestModel = function () {
         shopState: o.shopState,
         carts: o.carts,
         userMessage: o.userMessage,
+    };
+};
+var initWithMethodsTestModel = function () {
+    var o = new TestModel();
+    return {
+        items: o.items,
+        maxId: o.maxId,
+        cartId: o.cartId,
+        shopState: o.shopState,
+        carts: o.carts,
+        userMessage: o.userMessage,
+        setUserMessage: o.setUserMessage,
+        add: o.add,
+        removeFirst: o.removeFirst,
+        sort: o.sort,
+        addCart: o.addCart,
+        addCartSync: o.addCartSync,
+        addToCart: o.addToCart,
+        setCartNewItem: o.setCartNewItem,
+        addToCartRandom: o.addToCartRandom,
+        renameLast: o.renameLast,
+        createItem: o.createItem,
+        addOneFriend: o.addOneFriend,
+        fillSomeFriends: o.fillSomeFriends,
+        ChangeLastItem: o.ChangeLastItem,
     };
 };
 /**
@@ -1524,7 +1564,7 @@ exports.TestModelReducer = function (state, action) {
 /***************************
 * React Context API test   *
 ***************************/
-exports.TestModelContext = React.createContext(initTestModel());
+exports.TestModelContext = React.createContext(initWithMethodsTestModel());
 exports.TestModelConsumer = exports.TestModelContext.Consumer;
 var instanceCnt = 1;
 var TestModelProvider = /** @class */ (function (_super) {
@@ -1862,6 +1902,20 @@ var initTodoList = function () {
         stateError: o.stateError,
     };
 };
+var initWithMethodsTodoList = function () {
+    var o = new TodoList();
+    return {
+        items: o.items,
+        state: o.state,
+        stateError: o.stateError,
+        clearTodoList: o.clearTodoList,
+        reverse: o.reverse,
+        sortById: o.sortById,
+        sortByTitle: o.sortByTitle,
+        sortByCompletion: o.sortByCompletion,
+        getItems: o.getItems,
+    };
+};
 /**
  * @generated true
  */
@@ -2114,7 +2168,7 @@ exports.TodoListReducer = function (state, action) {
 /***************************
 * React Context API test   *
 ***************************/
-exports.TodoListContext = React.createContext(initTodoList());
+exports.TodoListContext = React.createContext(initWithMethodsTodoList());
 exports.TodoListConsumer = exports.TodoListContext.Consumer;
 var instanceCnt = 1;
 var TodoListProvider = /** @class */ (function (_super) {
@@ -2330,6 +2384,19 @@ var initUserState = function () {
         firstName: o.firstName,
         lastName: o.lastName,
         lastLogin: o.lastLogin,
+    };
+};
+var initWithMethodsUserState = function () {
+    var o = new UserState();
+    return {
+        logged: o.logged,
+        username: o.username,
+        firstName: o.firstName,
+        lastName: o.lastName,
+        lastLogin: o.lastLogin,
+        login: o.login,
+        logout: o.logout,
+        fakeLogin: o.fakeLogin,
     };
 };
 /**
@@ -2553,7 +2620,7 @@ exports.UserStateReducer = function (state, action) {
 /***************************
 * React Context API test   *
 ***************************/
-exports.UserStateContext = React.createContext(initUserState());
+exports.UserStateContext = React.createContext(initWithMethodsUserState());
 exports.UserStateConsumer = exports.UserStateContext.Consumer;
 var instanceCnt = 1;
 var UserStateProvider = /** @class */ (function (_super) {

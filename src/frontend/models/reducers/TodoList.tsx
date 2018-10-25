@@ -61,12 +61,12 @@ import { IState } from './index'
 import * as React from 'react'
 
 export interface IContainerPropsMethods {
-  clearTodoList? : () => any
-  reverse? : () => any
-  sortById? : () => any
-  sortByTitle? : () => any
-  sortByCompletion? : () => any
-  getItems? : () => any
+  clearTodoList : () => any
+  reverse : () => any
+  sortById : () => any
+  sortByTitle : () => any
+  sortByCompletion : () => any
+  getItems : () => any
 }
 export interface ITodoList {
   items: TodoListItem[]
@@ -113,6 +113,20 @@ const initTodoList = () => {
     items: o.items,
     state: o.state,
     stateError: o.stateError,
+  }
+}
+const initWithMethodsTodoList = () => {
+  const o = new TodoList();
+  return {
+    items: o.items,
+    state: o.state,
+    stateError: o.stateError,
+    clearTodoList: o.clearTodoList,
+    reverse: o.reverse,
+    sortById: o.sortById,
+    sortByTitle: o.sortByTitle,
+    sortByCompletion: o.sortByCompletion,
+    getItems: o.getItems,
   }
 }
 
@@ -314,7 +328,7 @@ export const TodoListReducer = (state:ITodoList = initTodoList(), action:any ) =
 /***************************
 * React Context API test   *
 ***************************/
-export const TodoListContext = React.createContext<IProps>(initTodoList())
+export const TodoListContext = React.createContext<IProps>(initWithMethodsTodoList())
 export const TodoListConsumer = TodoListContext.Consumer
 let instanceCnt = 1
 export class TodoListProvider extends React.Component {

@@ -14,7 +14,7 @@ export declare class SimpleModel {
 import { IState } from './index';
 import * as React from 'react';
 export interface IContainerPropsMethods {
-    getItems?: () => any;
+    getItems: () => any;
 }
 export interface ISimpleModel {
     items: any[];

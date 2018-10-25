@@ -126,6 +126,19 @@ var initUserState = function () {
         lastLogin: o.lastLogin,
     };
 };
+var initWithMethodsUserState = function () {
+    var o = new UserState();
+    return {
+        logged: o.logged,
+        username: o.username,
+        firstName: o.firstName,
+        lastName: o.lastName,
+        lastLogin: o.lastLogin,
+        login: o.login,
+        logout: o.logout,
+        fakeLogin: o.fakeLogin,
+    };
+};
 /**
  * @generated true
  */
@@ -347,7 +360,7 @@ exports.UserStateReducer = function (state, action) {
 /***************************
 * React Context API test   *
 ***************************/
-exports.UserStateContext = React.createContext(initUserState());
+exports.UserStateContext = React.createContext(initWithMethodsUserState());
 exports.UserStateConsumer = exports.UserStateContext.Consumer;
 var instanceCnt = 1;
 var UserStateProvider = /** @class */ (function (_super) {

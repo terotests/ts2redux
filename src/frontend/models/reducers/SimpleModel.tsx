@@ -23,7 +23,7 @@ import { IState } from './index'
 import * as React from 'react'
 
 export interface IContainerPropsMethods {
-  getItems? : () => any
+  getItems : () => any
 }
 export interface ISimpleModel {
   items: any[]
@@ -49,6 +49,13 @@ const initSimpleModel = () => {
   const o = new SimpleModel();
   return {
     items: o.items,
+  }
+}
+const initWithMethodsSimpleModel = () => {
+  const o = new SimpleModel();
+  return {
+    items: o.items,
+    getItems: o.getItems,
   }
 }
 
@@ -108,7 +115,7 @@ export const SimpleModelReducer = (state:ISimpleModel = initSimpleModel(), actio
 /***************************
 * React Context API test   *
 ***************************/
-export const SimpleModelContext = React.createContext<IProps>(initSimpleModel())
+export const SimpleModelContext = React.createContext<IProps>(initWithMethodsSimpleModel())
 export const SimpleModelConsumer = SimpleModelContext.Consumer
 let instanceCnt = 1
 export class SimpleModelProvider extends React.Component {

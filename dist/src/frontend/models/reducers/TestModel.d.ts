@@ -24,26 +24,26 @@ export declare enum TaskState {
 import { IState } from './index';
 import * as React from 'react';
 export interface IContainerPropsMethods {
-    setUserMessage?: (value: string) => any;
-    add?: (item: ShopCartItem) => any;
-    removeFirst?: () => any;
-    sort?: () => any;
-    addCart?: () => any;
-    addCartSync?: () => any;
-    addToCart?: (adding: {
+    setUserMessage: (value: string) => any;
+    add: (item: ShopCartItem) => any;
+    removeFirst: () => any;
+    sort: () => any;
+    addCart: () => any;
+    addCartSync: () => any;
+    addToCart: (adding: {
         cartId: string;
         item: ShopCartItem;
     }) => any;
-    setCartNewItem?: (adding: {
+    setCartNewItem: (adding: {
         cartId: string;
         name: string;
     }) => any;
-    addToCartRandom?: () => any;
-    renameLast?: (newName: string) => any;
-    createItem?: (someName: string) => any;
-    addOneFriend?: (name: any) => any;
-    fillSomeFriends?: () => any;
-    ChangeLastItem?: () => any;
+    addToCartRandom: () => any;
+    renameLast: (newName: string) => any;
+    createItem: (someName: string) => any;
+    addOneFriend: (name: any) => any;
+    fillSomeFriends: () => any;
+    ChangeLastItem: () => any;
 }
 export interface ITestModel {
     items: ShopCartItem[];

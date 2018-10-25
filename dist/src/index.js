@@ -142,7 +142,7 @@ function createProject(settings) {
                                 ng_1.indent(-1);
                                 ng_1.out('}', true);
                                 ng_1.out('', true);
-                                ng_1.out("type IContainerPropsState = I" + c.getName(), true);
+                                ng_1.out("export type IContainerPropsState = I" + c.getName(), true);
                                 ng_1.out("export interface IProps extends IContainerPropsState, IContainerPropsMethods {}", true);
                                 ng_1.out('export const mapStateToProps = (state : IState) : IContainerPropsState => {', true);
                                 ng_1.indent(1);
@@ -424,7 +424,7 @@ function createProject(settings) {
                                         else {
                                             if (!settings.disableDevtoolsFromContext) {
                                                 body.out("const nextState = immer.produce( this.state, draft => ( new R" + c.getName() + "(draft) )." + m.getName() + "(" + firstParam + ") )", true);
-                                                body.out("if(this.__devTools) this.__devTools.send('" + m.getName() + "', nextState)", true);
+                                                body.out("if(this.__devTools) { this.__devTools.send('" + m.getName() + "', nextState) }", true);
                                                 body.out("this.setState(nextState)", true);
                                             }
                                             else {

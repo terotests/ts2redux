@@ -165,6 +165,20 @@ var initTodoList = function () {
         stateError: o.stateError,
     };
 };
+var initWithMethodsTodoList = function () {
+    var o = new TodoList();
+    return {
+        items: o.items,
+        state: o.state,
+        stateError: o.stateError,
+        clearTodoList: o.clearTodoList,
+        reverse: o.reverse,
+        sortById: o.sortById,
+        sortByTitle: o.sortByTitle,
+        sortByCompletion: o.sortByCompletion,
+        getItems: o.getItems,
+    };
+};
 /**
  * @generated true
  */
@@ -417,7 +431,7 @@ exports.TodoListReducer = function (state, action) {
 /***************************
 * React Context API test   *
 ***************************/
-exports.TodoListContext = React.createContext(initTodoList());
+exports.TodoListContext = React.createContext(initWithMethodsTodoList());
 exports.TodoListConsumer = exports.TodoListContext.Consumer;
 var instanceCnt = 1;
 var TodoListProvider = /** @class */ (function (_super) {

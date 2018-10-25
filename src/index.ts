@@ -474,7 +474,7 @@ body.out(`}, () => ({${c.getName()}:this.state})) ).${m.getName()}(${firstParam}
                   } else {
 if(!settings.disableDevtoolsFromContext) { 
   body.out(`const nextState = immer.produce( this.state, draft => ( new R${c.getName()}(draft) ).${m.getName()}(${firstParam}) )`, true)
-  body.out(`if(this.__devTools) this.__devTools.send('${m.getName()}', nextState)`, true)   
+  body.out(`if(this.__devTools) { this.__devTools.send('${m.getName()}', nextState) }`, true)   
   body.out(`this.setState(nextState)`, true)
 } else {
   body.out(`this.setState(immer.produce( this.state, draft => ( new R${c.getName()}(draft) ).${m.getName()}(${firstParam}) ))`, true)

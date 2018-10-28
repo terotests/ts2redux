@@ -93,6 +93,11 @@ var UserState = /** @class */ (function () {
 var immer = require("immer");
 var react_redux_1 = require("react-redux");
 var React = require("react");
+exports.loggedSelectorFn = function (state) { return state.logged; };
+exports.usernameSelectorFn = function (state) { return state.username; };
+exports.firstNameSelectorFn = function (state) { return state.firstName; };
+exports.lastNameSelectorFn = function (state) { return state.lastName; };
+exports.lastLoginSelectorFn = function (state) { return state.lastLogin; };
 exports.mapStateToProps = function (state) {
     return {
         logged: state.UserState.logged,

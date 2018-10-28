@@ -19,7 +19,8 @@ export interface IContainerPropsMethods {
 export interface ISimpleModel {
     items: any[];
 }
-declare type IContainerPropsState = ISimpleModel;
+export declare const itemsSelectorFn: (state: ISimpleModel) => any[];
+export declare type IContainerPropsState = ISimpleModel;
 export interface IProps extends IContainerPropsState, IContainerPropsMethods {
 }
 export declare const mapStateToProps: (state: IState) => ISimpleModel;
@@ -54,4 +55,3 @@ export declare class SimpleModelProvider extends React.Component {
     getItems(): Promise<void>;
     render(): JSX.Element;
 }
-export {};

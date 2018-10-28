@@ -36,6 +36,16 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var axios_1 = require("axios");
+var SortOrder;
+(function (SortOrder) {
+    SortOrder["ASC"] = "asc";
+    SortOrder["DESC"] = "desc";
+})(SortOrder = exports.SortOrder || (exports.SortOrder = {}));
+var sortFn = function (order) { return function (a, b) {
+    if (order === SortOrder.ASC)
+        return a.id - b.id;
+    return b.id - a.id;
+}; };
 /**
  * @redux true
  */
@@ -43,7 +53,32 @@ var TodoList = /** @class */ (function () {
     function TodoList() {
         this.items = [];
         this.state = 'UNDEFINED';
+        this.sortOrder = SortOrder.ASC;
+        this.listStart = 0;
+        this.listPageLength = 10;
     }
+    Object.defineProperty(TodoList.prototype, "listToDisplay", {
+        // Example of memoized list using reselect
+        get: function () {
+            return this.items
+                .filter(function (item) { return item.completed; })
+                .sort(sortFn(this.sortOrder))
+                .slice(this.listStart, this.listStart + this.listPageLength);
+        },
+        enumerable: true,
+        configurable: true
+    });
+    TodoList.prototype.nextPage = function () {
+        this.listStart += this.listPageLength;
+    };
+    TodoList.prototype.prevPage = function () {
+        this.listStart -= this.listPageLength;
+        if (this.listStart < 0)
+            this.listStart = 0;
+    };
+    TodoList.prototype.toggleSortOrder = function () {
+        this.sortOrder = this.sortOrder == SortOrder.ASC ? SortOrder.DESC : SortOrder.ASC;
+    };
     TodoList.prototype.clearTodoList = function () {
         this.items = [];
     };

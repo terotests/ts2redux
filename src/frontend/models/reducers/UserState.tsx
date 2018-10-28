@@ -24,6 +24,7 @@ class UserState {
 }
 
 import * as immer from 'immer'
+import { createSelector } from 'reselect'
 import { connect } from 'react-redux'
 import { IState } from './index'
 import * as React from 'react'
@@ -43,8 +44,13 @@ export interface IUserState {
   lastName: string
   lastLogin: number
 }
+export const loggedSelectorFn = (state:IUserState) : boolean => state.logged
+export const usernameSelectorFn = (state:IUserState) : string => state.username
+export const firstNameSelectorFn = (state:IUserState) : string => state.firstName
+export const lastNameSelectorFn = (state:IUserState) : string => state.lastName
+export const lastLoginSelectorFn = (state:IUserState) : number => state.lastLogin
 
-type IContainerPropsState = IUserState
+export type IContainerPropsState = IUserState
 export interface IProps extends IContainerPropsState, IContainerPropsMethods {}
 export const mapStateToProps = (state : IState) : IContainerPropsState => {
   return {

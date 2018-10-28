@@ -15,6 +15,16 @@ export interface TodoListItem {
 }
 
 export type TaskState = 'UNDEFINED' | 'RUNNING' |  'LOADED' | 'ERROR'
+export enum SortOrder {
+  ASC = 'asc',
+  DESC = 'desc'
+}
+
+const sortFn = (order:SortOrder) => ( a:TodoListItem, b:TodoListItem ) => {
+  if(order === SortOrder.ASC) return a.id - b.id
+  return b.id - a.id  
+}
+
 /**
  * @redux true
  */
@@ -22,7 +32,27 @@ export class TodoList {
   items: TodoListItem[] = []
   state: TaskState = 'UNDEFINED'
   stateError: any
-  
+  sortOrder:SortOrder = SortOrder.ASC 
+  listStart:number = 0
+  listPageLength:number = 10
+
+  // Example of memoized list using reselect
+  get listToDisplay() : TodoListItem[] {
+    return this.items
+      .filter( item => item.completed )
+      .sort( sortFn(this.sortOrder) )
+      .slice( this.listStart, this.listStart + this.listPageLength)
+  }
+  nextPage() {
+    this.listStart += this.listPageLength
+  }  
+  prevPage() {
+    this.listStart -= this.listPageLength
+    if(this.listStart < 0 ) this.listStart = 0
+  }  
+  toggleSortOrder() {
+    this.sortOrder = this.sortOrder == SortOrder.ASC ? SortOrder.DESC : SortOrder.ASC
+  }
   clearTodoList() {
     this.items = []
   }
@@ -56,11 +86,15 @@ export class TodoList {
 }
 
 import * as immer from 'immer'
+import { createSelector } from 'reselect'
 import { connect } from 'react-redux'
 import { IState } from './index'
 import * as React from 'react'
 
 export interface IContainerPropsMethods {
+  nextPage : () => any
+  prevPage : () => any
+  toggleSortOrder : () => any
   clearTodoList : () => any
   reverse : () => any
   sortById : () => any
@@ -72,19 +106,52 @@ export interface ITodoList {
   items: TodoListItem[]
   state: TaskState
   stateError: any
+  sortOrder: SortOrder
+  listStart: number
+  listPageLength: number
 }
+export const itemsSelectorFn = (state:ITodoList) : TodoListItem[] => state.items
+export const stateSelectorFn = (state:ITodoList) : TaskState => state.state
+export const stateErrorSelectorFn = (state:ITodoList) : any => state.stateError
+export const sortOrderSelectorFn = (state:ITodoList) : SortOrder => state.sortOrder
+export const listStartSelectorFn = (state:ITodoList) : number => state.listStart
+export const listPageLengthSelectorFn = (state:ITodoList) : number => state.listPageLength
+export const listToDisplaySelectorFnCreator = () => createSelector([itemsSelectorFn,sortOrderSelectorFn,listStartSelectorFn,listPageLengthSelectorFn],(items,sortOrder,listStart,listPageLength) => {
+  const o = new TodoList()
+  o.items = items
+  o.sortOrder = sortOrder
+  o.listStart = listStart
+  o.listPageLength = listPageLength
+  return o.listToDisplay
+})
+export const listToDisplaySelector = listToDisplaySelectorFnCreator()
 
-type IContainerPropsState = ITodoList
+export interface IContainerPropsState extends ITodoList {
+  listToDisplay: TodoListItem[]
+}
 export interface IProps extends IContainerPropsState, IContainerPropsMethods {}
 export const mapStateToProps = (state : IState) : IContainerPropsState => {
   return {
     items: state.TodoList.items,
     state: state.TodoList.state,
     stateError: state.TodoList.stateError,
+    sortOrder: state.TodoList.sortOrder,
+    listStart: state.TodoList.listStart,
+    listPageLength: state.TodoList.listPageLength,
+    listToDisplay: listToDisplaySelector(state.TodoList),
   }
 }
 export const mapDispatchToProps = (dispatch:any) : IContainerPropsMethods => {
   return {
+    nextPage : () => {
+      return dispatch(RTodoList.nextPage())
+    },
+    prevPage : () => {
+      return dispatch(RTodoList.prevPage())
+    },
+    toggleSortOrder : () => {
+      return dispatch(RTodoList.toggleSortOrder())
+    },
     clearTodoList : () => {
       return dispatch(RTodoList.clearTodoList())
     },
@@ -113,6 +180,9 @@ const initTodoList = () => {
     items: o.items,
     state: o.state,
     stateError: o.stateError,
+    sortOrder: o.sortOrder,
+    listStart: o.listStart,
+    listPageLength: o.listPageLength,
   }
 }
 const initWithMethodsTodoList = () => {
@@ -121,12 +191,19 @@ const initWithMethodsTodoList = () => {
     items: o.items,
     state: o.state,
     stateError: o.stateError,
+    sortOrder: o.sortOrder,
+    listStart: o.listStart,
+    listPageLength: o.listPageLength,
+    nextPage: o.nextPage,
+    prevPage: o.prevPage,
+    toggleSortOrder: o.toggleSortOrder,
     clearTodoList: o.clearTodoList,
     reverse: o.reverse,
     sortById: o.sortById,
     sortByTitle: o.sortByTitle,
     sortByCompletion: o.sortByCompletion,
     getItems: o.getItems,
+    listToDisplay: o.listToDisplay,
   }
 }
 
@@ -187,7 +264,96 @@ export class RTodoList {
       if(this._dispatch) { this._dispatch({type:TodoListEnums.TodoList_stateError, payload:value}) }
     }
   }
+  get sortOrder() : SortOrder | undefined {
+    if(this._getState) {
+      return this._getState().TodoList.sortOrder
+    } else {
+      if(this._state) { return this._state.sortOrder }
+    }
+    return undefined}
+  set sortOrder(value:SortOrder | undefined) {
+    if(this._state && (typeof(value) !== 'undefined')) {
+      this._state.sortOrder = value
+    } else {
+      // dispatch change for item sortOrder
+      if(this._dispatch) { this._dispatch({type:TodoListEnums.TodoList_sortOrder, payload:value}) }
+    }
+  }
+  get listStart() : number | undefined {
+    if(this._getState) {
+      return this._getState().TodoList.listStart
+    } else {
+      if(this._state) { return this._state.listStart }
+    }
+    return undefined}
+  set listStart(value:number | undefined) {
+    if(this._state && (typeof(value) !== 'undefined')) {
+      this._state.listStart = value
+    } else {
+      // dispatch change for item listStart
+      if(this._dispatch) { this._dispatch({type:TodoListEnums.TodoList_listStart, payload:value}) }
+    }
+  }
+  get listPageLength() : number | undefined {
+    if(this._getState) {
+      return this._getState().TodoList.listPageLength
+    } else {
+      if(this._state) { return this._state.listPageLength }
+    }
+    return undefined}
+  set listPageLength(value:number | undefined) {
+    if(this._state && (typeof(value) !== 'undefined')) {
+      this._state.listPageLength = value
+    } else {
+      // dispatch change for item listPageLength
+      if(this._dispatch) { this._dispatch({type:TodoListEnums.TodoList_listPageLength, payload:value}) }
+    }
+  }
   
+  // is a reducer
+  nextPage(){
+    if(this._state) {
+      this.listStart += this.listPageLength;
+    } else {
+      if(this._dispatch) { this._dispatch({type:TodoListEnums.TodoList_nextPage}) }
+    }
+  }
+  
+  public static nextPage(){
+    return (dispatcher:any, getState:any) => {
+      (new RTodoList(undefined, dispatcher, getState)).nextPage()
+    }
+  }
+  // is a reducer
+  prevPage(){
+    if(this._state) {
+      this.listStart -= this.listPageLength;
+      if (this.listStart < 0)
+          this.listStart = 0;
+    } else {
+      if(this._dispatch) { this._dispatch({type:TodoListEnums.TodoList_prevPage}) }
+    }
+  }
+  
+  public static prevPage(){
+    return (dispatcher:any, getState:any) => {
+      (new RTodoList(undefined, dispatcher, getState)).prevPage()
+    }
+  }
+  // is a reducer
+  toggleSortOrder(){
+    if(this._state) {
+      this.sortOrder = this.sortOrder == SortOrder.ASC ? SortOrder.DESC : SortOrder.ASC;
+    } else {
+      if(this._dispatch) { this._dispatch({type:TodoListEnums.TodoList_toggleSortOrder}) }
+    }
+  }
+  
+  public static toggleSortOrder(){
+    return (dispatcher:any, getState:any) => {
+      (new RTodoList(undefined, dispatcher, getState)).toggleSortOrder()
+    }
+  }
   // is a reducer
   clearTodoList(){
     if(this._state) {
@@ -288,6 +454,12 @@ export const TodoListEnums = {
   TodoList_items : 'TodoList_items',
   TodoList_state : 'TodoList_state',
   TodoList_stateError : 'TodoList_stateError',
+  TodoList_sortOrder : 'TodoList_sortOrder',
+  TodoList_listStart : 'TodoList_listStart',
+  TodoList_listPageLength : 'TodoList_listPageLength',
+  TodoList_nextPage : 'TodoList_nextPage',
+  TodoList_prevPage : 'TodoList_prevPage',
+  TodoList_toggleSortOrder : 'TodoList_toggleSortOrder',
   TodoList_clearTodoList : 'TodoList_clearTodoList',
   TodoList_reverse : 'TodoList_reverse',
   TodoList_sortById : 'TodoList_sortById',
@@ -306,6 +478,24 @@ export const TodoListReducer = (state:ITodoList = initTodoList(), action:any ) =
         break;
       case TodoListEnums.TodoList_stateError: 
         (new RTodoList(draft)).stateError = action.payload
+        break;
+      case TodoListEnums.TodoList_sortOrder: 
+        (new RTodoList(draft)).sortOrder = action.payload
+        break;
+      case TodoListEnums.TodoList_listStart: 
+        (new RTodoList(draft)).listStart = action.payload
+        break;
+      case TodoListEnums.TodoList_listPageLength: 
+        (new RTodoList(draft)).listPageLength = action.payload
+        break;
+      case TodoListEnums.TodoList_nextPage: 
+        (new RTodoList(draft)).nextPage()
+        break;
+      case TodoListEnums.TodoList_prevPage: 
+        (new RTodoList(draft)).prevPage()
+        break;
+      case TodoListEnums.TodoList_toggleSortOrder: 
+        (new RTodoList(draft)).toggleSortOrder()
         break;
       case TodoListEnums.TodoList_clearTodoList: 
         (new RTodoList(draft)).clearTodoList()
@@ -334,14 +524,19 @@ let instanceCnt = 1
 export class TodoListProvider extends React.Component {
   public state: ITodoList = initTodoList() 
   private __devTools:any = null
+  private __selectorlistToDisplay = null
   constructor( props:any ){
     super(props)
+    this.nextPage = this.nextPage.bind(this)
+    this.prevPage = this.prevPage.bind(this)
+    this.toggleSortOrder = this.toggleSortOrder.bind(this)
     this.clearTodoList = this.clearTodoList.bind(this)
     this.reverse = this.reverse.bind(this)
     this.sortById = this.sortById.bind(this)
     this.sortByTitle = this.sortByTitle.bind(this)
     this.sortByCompletion = this.sortByCompletion.bind(this)
     this.getItems = this.getItems.bind(this)
+    this.__selectorlistToDisplay = listToDisplaySelectorFnCreator()
     const devs = window['devToolsExtension'] ? window['devToolsExtension'] : null
     if(devs) {
       this.__devTools = devs.connect({name:'TodoList'+instanceCnt++})
@@ -355,6 +550,21 @@ export class TodoListProvider extends React.Component {
   }
   public componentWillUnmount() {
     if(this.__devTools) { this.__devTools.unsubscribe() }
+  }
+  nextPage(){
+    const nextState = immer.produce( this.state, draft => ( new RTodoList(draft) ).nextPage() )
+    if(this.__devTools) this.__devTools.send('nextPage', nextState)
+    this.setState(nextState)
+  }
+  prevPage(){
+    const nextState = immer.produce( this.state, draft => ( new RTodoList(draft) ).prevPage() )
+    if(this.__devTools) this.__devTools.send('prevPage', nextState)
+    this.setState(nextState)
+  }
+  toggleSortOrder(){
+    const nextState = immer.produce( this.state, draft => ( new RTodoList(draft) ).toggleSortOrder() )
+    if(this.__devTools) this.__devTools.send('toggleSortOrder', nextState)
+    this.setState(nextState)
   }
   clearTodoList(){
     const nextState = immer.produce( this.state, draft => ( new RTodoList(draft) ).clearTodoList() )
@@ -393,12 +603,16 @@ export class TodoListProvider extends React.Component {
   }
   public render() {
     return (<TodoListContext.Provider value={{...this.state, 
+      nextPage: this.nextPage,
+      prevPage: this.prevPage,
+      toggleSortOrder: this.toggleSortOrder,
       clearTodoList: this.clearTodoList,
       reverse: this.reverse,
       sortById: this.sortById,
       sortByTitle: this.sortByTitle,
       sortByCompletion: this.sortByCompletion,
       getItems: this.getItems,
+      listToDisplay: this.__selectorlistToDisplay(this.state),
     }}> {this.props.children} 
     </TodoListContext.Provider>)
   }

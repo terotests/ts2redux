@@ -1,6 +1,6 @@
 
   
-import Project, { InterfaceDeclaration, SourceFile, FunctionDeclaration, ClassDeclaration, ImportDeclaration, ImportDeclarationStructure} from "ts-simple-ast";
+import Project, { InterfaceDeclaration, PropertyDeclaration, SourceFile, FunctionDeclaration, ClassDeclaration, ImportDeclaration, ImportDeclarationStructure, SyntaxKind, MethodDeclaration, Node} from "ts-simple-ast";
 import * as R from 'robowr'
 import {getFunctionDoc, getPropertyTypeName, getTypeName, getTypePath} from './utils'
 import * as path from 'path'
@@ -121,7 +121,16 @@ export async function createProject( settings:GenerationOptions) {
         const reducerFileName = sourceDir + reducerPath + c.getName() + '.tsx'
         const ng = RFs.getFile(sourceDir + reducerPath,  c.getName() + '.tsx' ).getWriter()
 
+        const reducerMethods = c.getMethods().filter( m => typeof( m.getReturnTypeNode() ) === 'undefined' )
+        const selectorMethods = c.getGetAccessors().filter( m => {
+          if( typeof( m.getReturnTypeNode() ) !== 'undefined') {
+            return true
+          } 
+          return false
+        })
+
         if(!dirReducers[sourceDir]) dirReducers[sourceDir] = []
+        // const inputSet:{[key:string]:Node} = {}
 
         // in the end create index.ts for each reducer
         dirReducers[sourceDir].push({
@@ -144,6 +153,7 @@ export async function createProject( settings:GenerationOptions) {
         ng.raw(sourceFile.getText(), true)
 
         ng.out(`import * as immer from 'immer'`, true)
+        ng.out(`import { createSelector } from 'reselect'`, true)
         ng.out(`import { connect } from 'react-redux'`, true)
         ng.out(`import { IState } from './index'`, true)
         ng.out(`import * as React from 'react'`, true)
@@ -164,8 +174,27 @@ export async function createProject( settings:GenerationOptions) {
         ng.indent(-1)
         ng.out('}', true)
 
+        const selFns = ng.fork()
+
         ng.out('', true)
-        ng.out(`export type IContainerPropsState = I${c.getName()}`, true);
+/*
+export interface IContainerPropsState extends ITodoList {
+  getSortedList: TodoListItem[]
+}
+*/        
+// AND
+// getSortedList: getSortedListSelector(state.TodoList)
+        if( selectorMethods.length > 0 ) {
+          ng.out(`export interface IContainerPropsState extends I${c.getName()} {`, true)
+            ng.indent(1)
+            selectorMethods.forEach( m => {
+              ng.out( m.getName() + ': ' + m.getReturnTypeNode().print(), true)
+            })
+            ng.indent(-1)
+          ng.out(`}`, true)
+        } else {
+          ng.out(`export type IContainerPropsState = I${c.getName()}`, true);
+        }
         ng.out(`export interface IProps extends IContainerPropsState, IContainerPropsMethods {}`, true);
 
         ng.out('export const mapStateToProps = (state : IState) : IContainerPropsState => {', true)
@@ -175,6 +204,9 @@ export async function createProject( settings:GenerationOptions) {
             c.getProperties().forEach( p => {
               ng.out(p.getName()+`: state.${c.getName()}.` +  p.getName() + ',', true)
             })            
+            selectorMethods.forEach( m => {
+              ng.out( m.getName() + ': ' + m.getName() + `Selector(state.${c.getName()}),`, true)
+            })
             ng.indent(-1)
           ng.out('}', true)
           ng.indent(-1)
@@ -214,7 +246,10 @@ export async function createProject( settings:GenerationOptions) {
             c.getProperties().forEach( p => {
               ng.out(p.getName() + ': o.' + p.getName()  + ',', true)
             })
-            c.getMethods().forEach( m => {
+            reducerMethods.forEach( m => {
+              ng.out(m.getName() + ': o.' + m.getName()  + ',', true)
+            })            
+            selectorMethods.forEach( m => {
               ng.out(m.getName() + ': o.' + m.getName()  + ',', true)
             })            
             ng.indent(-1)
@@ -271,18 +306,11 @@ export async function createProject( settings:GenerationOptions) {
             body.out('this._getState = getState', true)
             body.indent(-1)
           body.out('}', true)
-          /*c.getProperties().forEach( p => {
-            body.out('private _' + p.getName()+': ' + printNode(p.getTypeNode().compilerNode), true)
-          })
-          */
-/*
-export const ShopCartModelReducer = (state:ITestModel = {}, action) => {
-  switch (action.type) {
-    (new TestModel(state)).
-  }
-}
-*/
+
           c.getProperties().forEach( p => {
+
+            selFns.out(`export const ${p.getName()}SelectorFn = (state:I${c.getName()}) : ${p.getTypeNode().print()} => state.${p.getName()}`, true)
+
             const r_name = `${c.getName()}_${p.getName()}`
             body.out('get ' + p.getName()+'() : ' + p.getTypeNode().print() + ' | undefined {', true)
             body.indent(1)
@@ -327,16 +355,62 @@ export const ShopCartModelReducer = (state:ITestModel = {}, action) => {
           })
 
           body.out('', true)
+          selectorMethods.forEach( m => {
+            const rvNode = m.getReturnTypeNode()
+            if(rvNode) {
+              const inputSet:{[key:string]:Node} = {}
+              m.getBody().forEachDescendant((node, traversal) => {
+                switch (node.getKind()) {
+                  case SyntaxKind.PropertyAccessExpression:
+                    // could be this.
+                    if( node.getFirstChild().getKind() === SyntaxKind.ThisKeyword ) {
+                      inputSet[node.getChildAtIndex(2).print()] = node
+                    }
+                    break
+                }
+              })
+              
+              const properties:{[key:string]:PropertyDeclaration} = {}
+              const methods:{[key:string]:MethodDeclaration} = {}
+              c.getMethods().forEach( m => {
+                methods[m.getName()] = m
+              })
+              c.getProperties().forEach( p => {
+                properties[p.getName()] = p
+              })              
+              Object.keys(inputSet).forEach( key => {
+                if(methods[key]) throw `Using Methods in selectors not allowed: ${c.getName()}.${key}`
+              })
+
+              const propsKeys = Object.keys(inputSet).filter( key => properties[key] != null )
+
+              selFns.out(`export const ${m.getName()}SelectorFnCreator = () => createSelector([`)
+              selFns.out( propsKeys.map( key => key + 'SelectorFn').join(',') )
+              selFns.out(`],(`)
+              selFns.out( propsKeys.map( key => key ).join(',') )
+              selFns.out(') => {', true)
+                selFns.indent(1)
+                selFns.out(`const o = new ${c.getName()}()`, true)
+                propsKeys.forEach( key => selFns.out(`o.${key} = ${key}`, true))
+                selFns.out(`return o.${m.getName()}`, true)
+                selFns.indent(-1)
+              selFns.out(`})`, true)
+
+              selFns.out(`export const ${m.getName()}Selector = ${m.getName()}SelectorFnCreator()`, true)
+              return
+            }             
+          })
           c.getMethods().forEach( m => {
             if(m.getParameters().length > 1) {
               throw `Error at ${sourceFile.getFilePath()} in class ${c.getName()} method ${m.getName()} can not have more than 2 parameters at the moment`
             }
             const pName = m.getParameters().filter( (a,i) => i<1).map( mod => mod.getName() ).join('')
-            const rType = m.getReturnTypeNode()
 
-            if(rType) {
-              console.log('** method '+m.getName()+'  with return type ', rType.print())
-            }            
+            const rvNode = m.getReturnTypeNode()
+            if(rvNode) {
+              throw `Error at ${sourceFile.getFilePath()} in class ${c.getName()} method ${m.getName()} can not return values, use getter instead!`
+              return
+            }    
 
             if(m.isAsync()) {
               body.out('// is task', true)
@@ -415,11 +489,24 @@ export const ShopCartModelReducer = (state:ITestModel = {}, action) => {
               ng.indent(1)
               ng.out(`public state: I${c.getName()} = init${c.getName()}() `, true)
               ng.out(`private __devTools:any = null`, true)
+
+              // for each selector...
+              // this.__selector1 = getCompletedListSelectorFnCreator()
+              selectorMethods.forEach( m => {
+                ng.out(`private __selector${m.getName()} = null`, true)
+              })
+
               // devToolsConnection:any = null  
               ng.out(`constructor( props:any ){`, true)
                 ng.indent(1)
                 ng.out(`super(props)`, true);
                 const binder = ng.fork()
+                // for each selector
+                // this.__selector1 = getCompletedListSelectorFnCreator()
+                selectorMethods.forEach( m => {
+                  ng.out(`this.__selector${m.getName()} = ${m.getName()}SelectorFnCreator()`, true)
+                })
+
                 if(!settings.disableDevtoolsFromContext) {
                   ng.out(`const devs = window['devToolsExtension'] ? window['devToolsExtension'] : null`, true)
                   ng.out(`if(devs) {`, true)
@@ -447,7 +534,7 @@ export const ShopCartModelReducer = (state:ITestModel = {}, action) => {
                   ng.indent(-1)
                 ng.out(`}`, true)
               }             
-              c.getMethods().forEach( m => {
+              reducerMethods.forEach( m => {
                 const body = ng
                 body.raw( m.getModifiers().map( mod => mod.print()+' ' ).join('') )
 
@@ -474,7 +561,7 @@ body.out(`}, () => ({${c.getName()}:this.state})) ).${m.getName()}(${firstParam}
                   } else {
 if(!settings.disableDevtoolsFromContext) { 
   body.out(`const nextState = immer.produce( this.state, draft => ( new R${c.getName()}(draft) ).${m.getName()}(${firstParam}) )`, true)
-  body.out(`if(this.__devTools) { this.__devTools.send('${m.getName()}', nextState) }`, true)   
+  body.out(`if(this.__devTools) this.__devTools.send('${m.getName()}', nextState)`, true)   
   body.out(`this.setState(nextState)`, true)
 } else {
   body.out(`this.setState(immer.produce( this.state, draft => ( new R${c.getName()}(draft) ).${m.getName()}(${firstParam}) ))`, true)
@@ -488,9 +575,14 @@ if(!settings.disableDevtoolsFromContext) {
                 ng.indent(1)
                 ng.out(`return (<${c.getName()}Context.Provider value={{...this.state, `, true)
                   ng.indent(1)
-                    c.getMethods().forEach( m => {
+                    reducerMethods.forEach( m => {
                       ng.out(m.getName() + ': this.'+m.getName() + ',', true)
                     })
+                    // getCompletedList: this.__selector1(this.state), // TODO: fix this
+                    selectorMethods.forEach( m => {
+                      // ng.out(`this.__selector${m.getName()} = ${m.getName()}SelectorFnCreator()`, true)
+                      ng.out(m.getName() + `: this.__selector${m.getName()}(this.state),`, true)
+                    })                    
                   ng.indent(-1)
                 ng.out(`}}> {this.props.children} `, true)
                 ng.out(`</${c.getName()}Context.Provider>)`, true)

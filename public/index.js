@@ -97,16 +97,19 @@ var container = require("../models/reducers/TodoList");
 // this component can be re-used
 exports.AbstractTodoList = function (props) {
     return (React.createElement("div", null,
-        React.createElement("div", null, "TodoList Component"),
+        React.createElement("h2", null, "TodoList Component, with memoization"),
         React.createElement("button", { onClick: function () { return props.getItems(); } }, "Load"),
         React.createElement("button", { onClick: function () { return props.sortById(); } }, "Sort by Id"),
         React.createElement("button", { onClick: function () { return props.sortByTitle(); } }, "Sort by Title"),
         React.createElement("button", { onClick: function () { return props.sortByCompletion(); } }, "Sort by Completion"),
+        React.createElement("button", { onClick: function () { return props.toggleSortOrder(); } }, "Toggle Order"),
+        React.createElement("button", { onClick: function () { return props.prevPage(); } }, "Prev"),
+        React.createElement("button", { onClick: function () { return props.nextPage(); } }, "Next"),
         React.createElement("div", null,
             React.createElement("div", null, props.state),
             React.createElement("div", null, props.state === 'ERROR' ? (new String(props.stateError)) : ''),
             React.createElement("table", null,
-                React.createElement("tbody", null, props.items.map(function (m) {
+                React.createElement("tbody", null, props.listToDisplay.map(function (m) {
                     return React.createElement("tr", { key: m.id },
                         React.createElement("td", null, m.id),
                         React.createElement("td", null, m.title),
@@ -174,7 +177,7 @@ ReactDOM.render(React.createElement(react_redux_1.Provider, { store: store },
                                 todolist.items.length),
                             React.createElement("button", { onClick: function () { return todolist.getItems(); } }, "Load"),
                             React.createElement("button", { onClick: function () { return todolist.reverse(); } }, "Revert"),
-                            React.createElement("ul", null, todolist.items.slice(0, 6).map(function (item) { return React.createElement("li", { key: item.id }, item.title); })));
+                            React.createElement("ul", null, todolist.listToDisplay.map(function (item) { return React.createElement("li", { key: item.id }, item.title); })));
                     })),
                 React.createElement(TodoList_1.TodoListProvider, null,
                     React.createElement(TodoList_1.TodoListConsumer, null, function (todolist) {
@@ -183,7 +186,12 @@ ReactDOM.render(React.createElement(react_redux_1.Provider, { store: store },
                             React.createElement("button", { onClick: function () { return todolist.getItems(); } }, "Load"),
                             React.createElement("button", { onClick: todolist.reverse }, "Revert List"),
                             React.createElement("button", { onClick: function () { return todolist.clearTodoList(); } }, "Clear"),
-                            React.createElement("ul", null, todolist.items.slice(0, 10).map(function (item) { return React.createElement("li", { key: item.id },
+                            React.createElement("button", { onClick: function () { return todolist.toggleSortOrder(); } }, "Toggle"),
+                            React.createElement("button", { onClick: function () { return todolist.nextPage(); } }, "Next"),
+                            React.createElement("button", { onClick: function () { return todolist.prevPage(); } }, "Prev"),
+                            React.createElement("ul", null, todolist.listToDisplay.map(function (item) { return React.createElement("li", { key: item.id },
+                                item.id,
+                                " ",
                                 item.title,
                                 " ",
                                 React.createElement(UserState_1.UserStateProvider, null,
@@ -239,6 +247,16 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var axios_1 = require("axios");
+var SortOrder;
+(function (SortOrder) {
+    SortOrder["ASC"] = "asc";
+    SortOrder["DESC"] = "desc";
+})(SortOrder = exports.SortOrder || (exports.SortOrder = {}));
+var sortFn = function (order) { return function (a, b) {
+    if (order === SortOrder.ASC)
+        return a.id - b.id;
+    return b.id - a.id;
+}; };
 /**
  * @redux true
  */
@@ -246,7 +264,32 @@ var TodoList = /** @class */ (function () {
     function TodoList() {
         this.items = [];
         this.state = 'UNDEFINED';
+        this.sortOrder = SortOrder.ASC;
+        this.listStart = 0;
+        this.listPageLength = 10;
     }
+    Object.defineProperty(TodoList.prototype, "listToDisplay", {
+        // Example of memoized list using reselect
+        get: function () {
+            return this.items
+                .filter(function (item) { return item.completed; })
+                .sort(sortFn(this.sortOrder))
+                .slice(this.listStart, this.listStart + this.listPageLength);
+        },
+        enumerable: true,
+        configurable: true
+    });
+    TodoList.prototype.nextPage = function () {
+        this.listStart += this.listPageLength;
+    };
+    TodoList.prototype.prevPage = function () {
+        this.listStart -= this.listPageLength;
+        if (this.listStart < 0)
+            this.listStart = 0;
+    };
+    TodoList.prototype.toggleSortOrder = function () {
+        this.sortOrder = this.sortOrder == SortOrder.ASC ? SortOrder.DESC : SortOrder.ASC;
+    };
     TodoList.prototype.clearTodoList = function () {
         this.items = [];
     };
@@ -347,6 +390,7 @@ exports.IncModel = IncModel;
 var immer = require("immer");
 var react_redux_1 = require("react-redux");
 var React = require("react");
+exports.cntSelectorFn = function (state) { return state.cnt; };
 exports.mapStateToProps = function (state) {
     return {
         cnt: state.IncModel.cnt,
@@ -617,6 +661,7 @@ exports.SimpleModel = SimpleModel;
 var immer = require("immer");
 var react_redux_1 = require("react-redux");
 var React = require("react");
+exports.itemsSelectorFn = function (state) { return state.items; };
 exports.mapStateToProps = function (state) {
     return {
         items: state.SimpleModel.items,
@@ -980,6 +1025,12 @@ var TestModel = /** @class */ (function () {
 var immer = require("immer");
 var react_redux_1 = require("react-redux");
 var React = require("react");
+exports.itemsSelectorFn = function (state) { return state.items; };
+exports.maxIdSelectorFn = function (state) { return state.maxId; };
+exports.cartIdSelectorFn = function (state) { return state.cartId; };
+exports.shopStateSelectorFn = function (state) { return state.shopState; };
+exports.cartsSelectorFn = function (state) { return state.carts; };
+exports.userMessageSelectorFn = function (state) { return state.userMessage; };
 exports.mapStateToProps = function (state) {
     return {
         items: state.TestModel.items,
@@ -1734,7 +1785,7 @@ var TestModelProvider = /** @class */ (function (_super) {
 }(React.Component));
 exports.TestModelProvider = TestModelProvider;
 
-},{"immer":39,"react":79,"react-redux":71,"timers":90}],10:[function(require,module,exports){
+},{"immer":39,"react":79,"react-redux":71,"timers":91}],10:[function(require,module,exports){
 "use strict";
 /********************************************************************************
 *                                                                               *
@@ -1803,6 +1854,16 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var axios_1 = require("axios");
+var SortOrder;
+(function (SortOrder) {
+    SortOrder["ASC"] = "asc";
+    SortOrder["DESC"] = "desc";
+})(SortOrder = exports.SortOrder || (exports.SortOrder = {}));
+var sortFn = function (order) { return function (a, b) {
+    if (order === SortOrder.ASC)
+        return a.id - b.id;
+    return b.id - a.id;
+}; };
 /**
  * @redux true
  */
@@ -1810,7 +1871,32 @@ var TodoList = /** @class */ (function () {
     function TodoList() {
         this.items = [];
         this.state = 'UNDEFINED';
+        this.sortOrder = SortOrder.ASC;
+        this.listStart = 0;
+        this.listPageLength = 10;
     }
+    Object.defineProperty(TodoList.prototype, "listToDisplay", {
+        // Example of memoized list using reselect
+        get: function () {
+            return this.items
+                .filter(function (item) { return item.completed; })
+                .sort(sortFn(this.sortOrder))
+                .slice(this.listStart, this.listStart + this.listPageLength);
+        },
+        enumerable: true,
+        configurable: true
+    });
+    TodoList.prototype.nextPage = function () {
+        this.listStart += this.listPageLength;
+    };
+    TodoList.prototype.prevPage = function () {
+        this.listStart -= this.listPageLength;
+        if (this.listStart < 0)
+            this.listStart = 0;
+    };
+    TodoList.prototype.toggleSortOrder = function () {
+        this.sortOrder = this.sortOrder == SortOrder.ASC ? SortOrder.DESC : SortOrder.ASC;
+    };
     TodoList.prototype.clearTodoList = function () {
         this.items = [];
     };
@@ -1862,17 +1948,46 @@ var TodoList = /** @class */ (function () {
 }());
 exports.TodoList = TodoList;
 var immer = require("immer");
+var reselect_1 = require("reselect");
 var react_redux_1 = require("react-redux");
 var React = require("react");
+exports.itemsSelectorFn = function (state) { return state.items; };
+exports.stateSelectorFn = function (state) { return state.state; };
+exports.stateErrorSelectorFn = function (state) { return state.stateError; };
+exports.sortOrderSelectorFn = function (state) { return state.sortOrder; };
+exports.listStartSelectorFn = function (state) { return state.listStart; };
+exports.listPageLengthSelectorFn = function (state) { return state.listPageLength; };
+exports.listToDisplaySelectorFnCreator = function () { return reselect_1.createSelector([exports.itemsSelectorFn, exports.sortOrderSelectorFn, exports.listStartSelectorFn, exports.listPageLengthSelectorFn], function (items, sortOrder, listStart, listPageLength) {
+    var o = new TodoList();
+    o.items = items;
+    o.sortOrder = sortOrder;
+    o.listStart = listStart;
+    o.listPageLength = listPageLength;
+    return o.listToDisplay;
+}); };
+exports.listToDisplaySelector = exports.listToDisplaySelectorFnCreator();
 exports.mapStateToProps = function (state) {
     return {
         items: state.TodoList.items,
         state: state.TodoList.state,
         stateError: state.TodoList.stateError,
+        sortOrder: state.TodoList.sortOrder,
+        listStart: state.TodoList.listStart,
+        listPageLength: state.TodoList.listPageLength,
+        listToDisplay: exports.listToDisplaySelector(state.TodoList),
     };
 };
 exports.mapDispatchToProps = function (dispatch) {
     return {
+        nextPage: function () {
+            return dispatch(RTodoList.nextPage());
+        },
+        prevPage: function () {
+            return dispatch(RTodoList.prevPage());
+        },
+        toggleSortOrder: function () {
+            return dispatch(RTodoList.toggleSortOrder());
+        },
         clearTodoList: function () {
             return dispatch(RTodoList.clearTodoList());
         },
@@ -1900,6 +2015,9 @@ var initTodoList = function () {
         items: o.items,
         state: o.state,
         stateError: o.stateError,
+        sortOrder: o.sortOrder,
+        listStart: o.listStart,
+        listPageLength: o.listPageLength,
     };
 };
 var initWithMethodsTodoList = function () {
@@ -1908,12 +2026,19 @@ var initWithMethodsTodoList = function () {
         items: o.items,
         state: o.state,
         stateError: o.stateError,
+        sortOrder: o.sortOrder,
+        listStart: o.listStart,
+        listPageLength: o.listPageLength,
+        nextPage: o.nextPage,
+        prevPage: o.prevPage,
+        toggleSortOrder: o.toggleSortOrder,
         clearTodoList: o.clearTodoList,
         reverse: o.reverse,
         sortById: o.sortById,
         sortByTitle: o.sortByTitle,
         sortByCompletion: o.sortByCompletion,
         getItems: o.getItems,
+        listToDisplay: o.listToDisplay,
     };
 };
 /**
@@ -2003,6 +2128,134 @@ var RTodoList = /** @class */ (function () {
         enumerable: true,
         configurable: true
     });
+    Object.defineProperty(RTodoList.prototype, "sortOrder", {
+        get: function () {
+            if (this._getState) {
+                return this._getState().TodoList.sortOrder;
+            }
+            else {
+                if (this._state) {
+                    return this._state.sortOrder;
+                }
+            }
+            return undefined;
+        },
+        set: function (value) {
+            if (this._state && (typeof (value) !== 'undefined')) {
+                this._state.sortOrder = value;
+            }
+            else {
+                // dispatch change for item sortOrder
+                if (this._dispatch) {
+                    this._dispatch({ type: exports.TodoListEnums.TodoList_sortOrder, payload: value });
+                }
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(RTodoList.prototype, "listStart", {
+        get: function () {
+            if (this._getState) {
+                return this._getState().TodoList.listStart;
+            }
+            else {
+                if (this._state) {
+                    return this._state.listStart;
+                }
+            }
+            return undefined;
+        },
+        set: function (value) {
+            if (this._state && (typeof (value) !== 'undefined')) {
+                this._state.listStart = value;
+            }
+            else {
+                // dispatch change for item listStart
+                if (this._dispatch) {
+                    this._dispatch({ type: exports.TodoListEnums.TodoList_listStart, payload: value });
+                }
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(RTodoList.prototype, "listPageLength", {
+        get: function () {
+            if (this._getState) {
+                return this._getState().TodoList.listPageLength;
+            }
+            else {
+                if (this._state) {
+                    return this._state.listPageLength;
+                }
+            }
+            return undefined;
+        },
+        set: function (value) {
+            if (this._state && (typeof (value) !== 'undefined')) {
+                this._state.listPageLength = value;
+            }
+            else {
+                // dispatch change for item listPageLength
+                if (this._dispatch) {
+                    this._dispatch({ type: exports.TodoListEnums.TodoList_listPageLength, payload: value });
+                }
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
+    // is a reducer
+    RTodoList.prototype.nextPage = function () {
+        if (this._state) {
+            this.listStart += this.listPageLength;
+        }
+        else {
+            if (this._dispatch) {
+                this._dispatch({ type: exports.TodoListEnums.TodoList_nextPage });
+            }
+        }
+    };
+    RTodoList.nextPage = function () {
+        return function (dispatcher, getState) {
+            (new RTodoList(undefined, dispatcher, getState)).nextPage();
+        };
+    };
+    // is a reducer
+    RTodoList.prototype.prevPage = function () {
+        if (this._state) {
+            this.listStart -= this.listPageLength;
+            if (this.listStart < 0)
+                this.listStart = 0;
+        }
+        else {
+            if (this._dispatch) {
+                this._dispatch({ type: exports.TodoListEnums.TodoList_prevPage });
+            }
+        }
+    };
+    RTodoList.prevPage = function () {
+        return function (dispatcher, getState) {
+            (new RTodoList(undefined, dispatcher, getState)).prevPage();
+        };
+    };
+    // is a reducer
+    RTodoList.prototype.toggleSortOrder = function () {
+        if (this._state) {
+            this.sortOrder = this.sortOrder == SortOrder.ASC ? SortOrder.DESC : SortOrder.ASC;
+        }
+        else {
+            if (this._dispatch) {
+                this._dispatch({ type: exports.TodoListEnums.TodoList_toggleSortOrder });
+            }
+        }
+    };
+    RTodoList.toggleSortOrder = function () {
+        return function (dispatcher, getState) {
+            (new RTodoList(undefined, dispatcher, getState)).toggleSortOrder();
+        };
+    };
     // is a reducer
     RTodoList.prototype.clearTodoList = function () {
         if (this._state) {
@@ -2128,6 +2381,12 @@ exports.TodoListEnums = {
     TodoList_items: 'TodoList_items',
     TodoList_state: 'TodoList_state',
     TodoList_stateError: 'TodoList_stateError',
+    TodoList_sortOrder: 'TodoList_sortOrder',
+    TodoList_listStart: 'TodoList_listStart',
+    TodoList_listPageLength: 'TodoList_listPageLength',
+    TodoList_nextPage: 'TodoList_nextPage',
+    TodoList_prevPage: 'TodoList_prevPage',
+    TodoList_toggleSortOrder: 'TodoList_toggleSortOrder',
     TodoList_clearTodoList: 'TodoList_clearTodoList',
     TodoList_reverse: 'TodoList_reverse',
     TodoList_sortById: 'TodoList_sortById',
@@ -2146,6 +2405,24 @@ exports.TodoListReducer = function (state, action) {
                 break;
             case exports.TodoListEnums.TodoList_stateError:
                 (new RTodoList(draft)).stateError = action.payload;
+                break;
+            case exports.TodoListEnums.TodoList_sortOrder:
+                (new RTodoList(draft)).sortOrder = action.payload;
+                break;
+            case exports.TodoListEnums.TodoList_listStart:
+                (new RTodoList(draft)).listStart = action.payload;
+                break;
+            case exports.TodoListEnums.TodoList_listPageLength:
+                (new RTodoList(draft)).listPageLength = action.payload;
+                break;
+            case exports.TodoListEnums.TodoList_nextPage:
+                (new RTodoList(draft)).nextPage();
+                break;
+            case exports.TodoListEnums.TodoList_prevPage:
+                (new RTodoList(draft)).prevPage();
+                break;
+            case exports.TodoListEnums.TodoList_toggleSortOrder:
+                (new RTodoList(draft)).toggleSortOrder();
                 break;
             case exports.TodoListEnums.TodoList_clearTodoList:
                 (new RTodoList(draft)).clearTodoList();
@@ -2177,12 +2454,17 @@ var TodoListProvider = /** @class */ (function (_super) {
         var _this = _super.call(this, props) || this;
         _this.state = initTodoList();
         _this.__devTools = null;
+        _this.__selectorlistToDisplay = null;
+        _this.nextPage = _this.nextPage.bind(_this);
+        _this.prevPage = _this.prevPage.bind(_this);
+        _this.toggleSortOrder = _this.toggleSortOrder.bind(_this);
         _this.clearTodoList = _this.clearTodoList.bind(_this);
         _this.reverse = _this.reverse.bind(_this);
         _this.sortById = _this.sortById.bind(_this);
         _this.sortByTitle = _this.sortByTitle.bind(_this);
         _this.sortByCompletion = _this.sortByCompletion.bind(_this);
         _this.getItems = _this.getItems.bind(_this);
+        _this.__selectorlistToDisplay = exports.listToDisplaySelectorFnCreator();
         var devs = window['devToolsExtension'] ? window['devToolsExtension'] : null;
         if (devs) {
             _this.__devTools = devs.connect({ name: 'TodoList' + instanceCnt++ });
@@ -2199,6 +2481,24 @@ var TodoListProvider = /** @class */ (function (_super) {
         if (this.__devTools) {
             this.__devTools.unsubscribe();
         }
+    };
+    TodoListProvider.prototype.nextPage = function () {
+        var nextState = immer.produce(this.state, function (draft) { return (new RTodoList(draft)).nextPage(); });
+        if (this.__devTools)
+            this.__devTools.send('nextPage', nextState);
+        this.setState(nextState);
+    };
+    TodoListProvider.prototype.prevPage = function () {
+        var nextState = immer.produce(this.state, function (draft) { return (new RTodoList(draft)).prevPage(); });
+        if (this.__devTools)
+            this.__devTools.send('prevPage', nextState);
+        this.setState(nextState);
+    };
+    TodoListProvider.prototype.toggleSortOrder = function () {
+        var nextState = immer.produce(this.state, function (draft) { return (new RTodoList(draft)).toggleSortOrder(); });
+        if (this.__devTools)
+            this.__devTools.send('toggleSortOrder', nextState);
+        this.setState(nextState);
     };
     TodoListProvider.prototype.clearTodoList = function () {
         var nextState = immer.produce(this.state, function (draft) { return (new RTodoList(draft)).clearTodoList(); });
@@ -2249,7 +2549,7 @@ var TodoListProvider = /** @class */ (function (_super) {
         });
     };
     TodoListProvider.prototype.render = function () {
-        return (React.createElement(exports.TodoListContext.Provider, { value: __assign({}, this.state, { clearTodoList: this.clearTodoList, reverse: this.reverse, sortById: this.sortById, sortByTitle: this.sortByTitle, sortByCompletion: this.sortByCompletion, getItems: this.getItems }) },
+        return (React.createElement(exports.TodoListContext.Provider, { value: __assign({}, this.state, { nextPage: this.nextPage, prevPage: this.prevPage, toggleSortOrder: this.toggleSortOrder, clearTodoList: this.clearTodoList, reverse: this.reverse, sortById: this.sortById, sortByTitle: this.sortByTitle, sortByCompletion: this.sortByCompletion, getItems: this.getItems, listToDisplay: this.__selectorlistToDisplay(this.state) }) },
             " ",
             this.props.children));
     };
@@ -2257,7 +2557,7 @@ var TodoListProvider = /** @class */ (function (_super) {
 }(React.Component));
 exports.TodoListProvider = TodoListProvider;
 
-},{"axios":13,"immer":39,"react":79,"react-redux":71}],11:[function(require,module,exports){
+},{"axios":13,"immer":39,"react":79,"react-redux":71,"reselect":82}],11:[function(require,module,exports){
 "use strict";
 /*********************************************************************************
 *                                                                                *
@@ -2353,6 +2653,11 @@ var UserState = /** @class */ (function () {
 var immer = require("immer");
 var react_redux_1 = require("react-redux");
 var React = require("react");
+exports.loggedSelectorFn = function (state) { return state.logged; };
+exports.usernameSelectorFn = function (state) { return state.username; };
+exports.firstNameSelectorFn = function (state) { return state.firstName; };
+exports.lastNameSelectorFn = function (state) { return state.lastName; };
+exports.lastLoginSelectorFn = function (state) { return state.lastLogin; };
 exports.mapStateToProps = function (state) {
     return {
         logged: state.UserState.logged,
@@ -24596,7 +24901,7 @@ module.exports = reactDom;
 }
 
 }).call(this,require('_process'))
-},{"_process":53,"object-assign":52,"prop-types/checkPropTypes":54,"react":79,"schedule":86,"schedule/tracing":87}],60:[function(require,module,exports){
+},{"_process":53,"object-assign":52,"prop-types/checkPropTypes":54,"react":79,"schedule":87,"schedule/tracing":88}],60:[function(require,module,exports){
 /** @license React v16.5.2
  * react-dom.production.min.js
  *
@@ -24833,7 +25138,7 @@ void 0:t("40");return a._reactRootContainer?(th(function(){Gh(null,null,a,!1,fun
 Ma,Na,Ea.injectEventPluginsByName,qa,Ua,function(a){za(a,Ta)},Jb,Kb,Id,Ga]},unstable_createRoot:function(a,b){Eh(a)?void 0:t("278");return new Dh(a,!0,null!=b&&!0===b.hydrate)}};(function(a){var b=a.findFiberByHostInstance;return Re(n({},a,{findHostInstanceByFiber:function(a){a=md(a);return null===a?null:a.stateNode},findFiberByHostInstance:function(a){return b?b(a):null}}))})({findFiberByHostInstance:Ka,bundleType:0,version:"16.5.2",rendererPackageName:"react-dom"});
 var Nh={default:Mh},Oh=Nh&&Mh||Nh;module.exports=Oh.default||Oh;
 
-},{"object-assign":52,"react":79,"schedule":86}],61:[function(require,module,exports){
+},{"object-assign":52,"react":79,"schedule":87}],61:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -28357,7 +28662,134 @@ exports.compose = compose;
 exports.__DO_NOT_USE__ActionTypes = ActionTypes;
 
 }).call(this,require('_process'))
-},{"_process":53,"symbol-observable":88}],82:[function(require,module,exports){
+},{"_process":53,"symbol-observable":89}],82:[function(require,module,exports){
+'use strict';
+
+exports.__esModule = true;
+exports.defaultMemoize = defaultMemoize;
+exports.createSelectorCreator = createSelectorCreator;
+exports.createStructuredSelector = createStructuredSelector;
+function defaultEqualityCheck(a, b) {
+  return a === b;
+}
+
+function areArgumentsShallowlyEqual(equalityCheck, prev, next) {
+  if (prev === null || next === null || prev.length !== next.length) {
+    return false;
+  }
+
+  // Do this in a for loop (and not a `forEach` or an `every`) so we can determine equality as fast as possible.
+  var length = prev.length;
+  for (var i = 0; i < length; i++) {
+    if (!equalityCheck(prev[i], next[i])) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+function defaultMemoize(func) {
+  var equalityCheck = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : defaultEqualityCheck;
+
+  var lastArgs = null;
+  var lastResult = null;
+  // we reference arguments instead of spreading them for performance reasons
+  return function () {
+    if (!areArgumentsShallowlyEqual(equalityCheck, lastArgs, arguments)) {
+      // apply arguments instead of spreading for performance.
+      lastResult = func.apply(null, arguments);
+    }
+
+    lastArgs = arguments;
+    return lastResult;
+  };
+}
+
+function getDependencies(funcs) {
+  var dependencies = Array.isArray(funcs[0]) ? funcs[0] : funcs;
+
+  if (!dependencies.every(function (dep) {
+    return typeof dep === 'function';
+  })) {
+    var dependencyTypes = dependencies.map(function (dep) {
+      return typeof dep;
+    }).join(', ');
+    throw new Error('Selector creators expect all input-selectors to be functions, ' + ('instead received the following types: [' + dependencyTypes + ']'));
+  }
+
+  return dependencies;
+}
+
+function createSelectorCreator(memoize) {
+  for (var _len = arguments.length, memoizeOptions = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+    memoizeOptions[_key - 1] = arguments[_key];
+  }
+
+  return function () {
+    for (var _len2 = arguments.length, funcs = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+      funcs[_key2] = arguments[_key2];
+    }
+
+    var recomputations = 0;
+    var resultFunc = funcs.pop();
+    var dependencies = getDependencies(funcs);
+
+    var memoizedResultFunc = memoize.apply(undefined, [function () {
+      recomputations++;
+      // apply arguments instead of spreading for performance.
+      return resultFunc.apply(null, arguments);
+    }].concat(memoizeOptions));
+
+    // If a selector is called with the exact same arguments we don't need to traverse our dependencies again.
+    var selector = memoize(function () {
+      var params = [];
+      var length = dependencies.length;
+
+      for (var i = 0; i < length; i++) {
+        // apply arguments instead of spreading and mutate a local list of params for performance.
+        params.push(dependencies[i].apply(null, arguments));
+      }
+
+      // apply arguments instead of spreading for performance.
+      return memoizedResultFunc.apply(null, params);
+    });
+
+    selector.resultFunc = resultFunc;
+    selector.dependencies = dependencies;
+    selector.recomputations = function () {
+      return recomputations;
+    };
+    selector.resetRecomputations = function () {
+      return recomputations = 0;
+    };
+    return selector;
+  };
+}
+
+var createSelector = exports.createSelector = createSelectorCreator(defaultMemoize);
+
+function createStructuredSelector(selectors) {
+  var selectorCreator = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : createSelector;
+
+  if (typeof selectors !== 'object') {
+    throw new Error('createStructuredSelector expects first argument to be an object ' + ('where each property is a selector, instead received a ' + typeof selectors));
+  }
+  var objectKeys = Object.keys(selectors);
+  return selectorCreator(objectKeys.map(function (key) {
+    return selectors[key];
+  }), function () {
+    for (var _len3 = arguments.length, values = Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
+      values[_key3] = arguments[_key3];
+    }
+
+    return values.reduce(function (composition, value, index) {
+      composition[objectKeys[index]] = value;
+      return composition;
+    }, {});
+  });
+}
+},{}],83:[function(require,module,exports){
 (function (process){
 /** @license React v16.5.2
  * schedule-tracing.development.js
@@ -28788,7 +29220,7 @@ exports.unstable_unsubscribe = unstable_unsubscribe;
 }
 
 }).call(this,require('_process'))
-},{"_process":53}],83:[function(require,module,exports){
+},{"_process":53}],84:[function(require,module,exports){
 /** @license React v16.5.2
  * schedule-tracing.production.min.js
  *
@@ -28800,7 +29232,7 @@ exports.unstable_unsubscribe = unstable_unsubscribe;
 
 'use strict';Object.defineProperty(exports,"__esModule",{value:!0});var b=0;exports.__interactionsRef=null;exports.__subscriberRef=null;exports.unstable_clear=function(a){return a()};exports.unstable_getCurrent=function(){return null};exports.unstable_getThreadID=function(){return++b};exports.unstable_trace=function(a,d,c){return c()};exports.unstable_wrap=function(a){return a};exports.unstable_subscribe=function(){};exports.unstable_unsubscribe=function(){};
 
-},{}],84:[function(require,module,exports){
+},{}],85:[function(require,module,exports){
 (function (process){
 /** @license React v16.5.2
  * schedule.development.js
@@ -29226,7 +29658,7 @@ exports.unstable_cancelScheduledWork = unstable_cancelScheduledWork;
 }
 
 }).call(this,require('_process'))
-},{"_process":53}],85:[function(require,module,exports){
+},{"_process":53}],86:[function(require,module,exports){
 /** @license React v16.5.2
  * schedule.production.min.js
  *
@@ -29244,7 +29676,7 @@ var E=null,F=!1,G=-1,H=!1,I=!1,J=0,K=33,L=33;h=function(){return J};var M="__rea
 b){E=a;G=b;I?window.postMessage(M,"*"):H||(H=!0,A(N))};n=function(){E=null;F=!1;G=-1}}exports.unstable_scheduleWork=function(a,b){var d=exports.unstable_now();b=void 0!==b&&null!==b&&null!==b.timeout&&void 0!==b.timeout?d+b.timeout:d+5E3;a={callback:a,timesOutAt:b,next:null,previous:null};if(null===c)c=a.next=a.previous=a,m(c);else{d=null;var k=c;do{if(k.timesOutAt>b){d=k;break}k=k.next}while(k!==c);null===d?d=c:d===c&&(c=a,m(c));b=d.previous;b.next=d.previous=a;a.next=d;a.previous=b}return a};
 exports.unstable_cancelScheduledWork=function(a){var b=a.next;if(null!==b){if(b===a)c=null;else{a===c&&(c=b);var d=a.previous;d.next=b;b.previous=d}a.next=a.previous=null}};
 
-},{}],86:[function(require,module,exports){
+},{}],87:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -29255,7 +29687,7 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 }).call(this,require('_process'))
-},{"./cjs/schedule.development.js":84,"./cjs/schedule.production.min.js":85,"_process":53}],87:[function(require,module,exports){
+},{"./cjs/schedule.development.js":85,"./cjs/schedule.production.min.js":86,"_process":53}],88:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -29266,7 +29698,7 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 }).call(this,require('_process'))
-},{"./cjs/schedule-tracing.development.js":82,"./cjs/schedule-tracing.production.min.js":83,"_process":53}],88:[function(require,module,exports){
+},{"./cjs/schedule-tracing.development.js":83,"./cjs/schedule-tracing.production.min.js":84,"_process":53}],89:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -29298,7 +29730,7 @@ if (typeof self !== 'undefined') {
 var result = (0, _ponyfill2['default'])(root);
 exports['default'] = result;
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./ponyfill.js":89}],89:[function(require,module,exports){
+},{"./ponyfill.js":90}],90:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -29322,7 +29754,7 @@ function symbolObservablePonyfill(root) {
 
 	return result;
 };
-},{}],90:[function(require,module,exports){
+},{}],91:[function(require,module,exports){
 (function (setImmediate,clearImmediate){
 var nextTick = require('process/browser.js').nextTick;
 var apply = Function.prototype.apply;
@@ -29401,4 +29833,4 @@ exports.clearImmediate = typeof clearImmediate === "function" ? clearImmediate :
   delete immediateIds[id];
 };
 }).call(this,require("timers").setImmediate,require("timers").clearImmediate)
-},{"process/browser.js":53,"timers":90}]},{},[5]);
+},{"process/browser.js":53,"timers":91}]},{},[5]);

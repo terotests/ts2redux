@@ -8,6 +8,16 @@ export interface TodoListItem {
 }
 
 export type TaskState = 'UNDEFINED' | 'RUNNING' |  'LOADED' | 'ERROR'
+export enum SortOrder {
+  ASC = 'asc',
+  DESC = 'desc'
+}
+
+const sortFn = (order:SortOrder) => ( a:TodoListItem, b:TodoListItem ) => {
+  if(order === SortOrder.ASC) return a.id - b.id
+  return b.id - a.id  
+}
+
 /**
  * @redux true
  */
@@ -15,7 +25,27 @@ export class TodoList {
   items: TodoListItem[] = []
   state: TaskState = 'UNDEFINED'
   stateError: any
-  
+  sortOrder:SortOrder = SortOrder.ASC 
+  listStart:number = 0
+  listPageLength:number = 10
+
+  // Example of memoized list using reselect
+  get listToDisplay() : TodoListItem[] {
+    return this.items
+      .filter( item => item.completed )
+      .sort( sortFn(this.sortOrder) )
+      .slice( this.listStart, this.listStart + this.listPageLength)
+  }
+  nextPage() {
+    this.listStart += this.listPageLength
+  }  
+  prevPage() {
+    this.listStart -= this.listPageLength
+    if(this.listStart < 0 ) this.listStart = 0
+  }  
+  toggleSortOrder() {
+    this.sortOrder = this.sortOrder == SortOrder.ASC ? SortOrder.DESC : SortOrder.ASC
+  }
   clearTodoList() {
     this.items = []
   }

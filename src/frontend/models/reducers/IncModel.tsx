@@ -15,6 +15,7 @@ export class IncModel {
   }  
 }
 import * as immer from 'immer'
+import { createSelector } from 'reselect'
 import { connect } from 'react-redux'
 import { IState } from './index'
 import * as React from 'react'
@@ -26,8 +27,9 @@ export interface IContainerPropsMethods {
 export interface IIncModel {
   cnt: number
 }
+export const cntSelectorFn = (state:IIncModel) : number => state.cnt
 
-type IContainerPropsState = IIncModel
+export type IContainerPropsState = IIncModel
 export interface IProps extends IContainerPropsState, IContainerPropsMethods {}
 export const mapStateToProps = (state : IState) : IContainerPropsState => {
   return {

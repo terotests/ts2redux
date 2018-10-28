@@ -1,6 +1,6 @@
 {
   "name": "ts2redux",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "Convert TypeScript classes into Reducers",
   "main": "dist/src/index.js",
   "bin": {
@@ -52,6 +52,7 @@
     "react-redux": "^5.0.7",
     "redux": "^4.0.1",
     "redux-thunk": "^2.3.0",
+    "reselect": "^4.0.0",
     "swagger-ui-express": "^4.0.1"
   },
   "bugs": {

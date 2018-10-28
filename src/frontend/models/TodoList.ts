@@ -28,7 +28,7 @@ export class TodoList {
   sortOrder:SortOrder = SortOrder.ASC 
   listStart:number = 0
   listPageLength:number = 10
-
+  listTitle: string = 'Title of List' 
   // Example of memoized list using reselect
   get listToDisplay() : TodoListItem[] {
     return this.items
@@ -62,6 +62,9 @@ export class TodoList {
     const toNumber = (value:boolean) : number => value ? 1 : 0;
     this.items.sort( (a, b) => toNumber(a.completed) - toNumber(b.completed) )
   }
+  setTitle(value:string) {
+    this.listTitle = value
+  }  
   /**
    * Fetch items from json placeholder service
    */

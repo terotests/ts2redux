@@ -18,7 +18,8 @@ export interface IContainerPropsMethods {
 export interface IIncModel {
     cnt: number;
 }
-declare type IContainerPropsState = IIncModel;
+export declare const cntSelectorFn: (state: IIncModel) => number;
+export declare type IContainerPropsState = IIncModel;
 export interface IProps extends IContainerPropsState, IContainerPropsMethods {
 }
 export declare const mapStateToProps: (state: IState) => IIncModel;
@@ -58,4 +59,3 @@ export declare class IncModelProvider extends React.Component {
     decrement(): void;
     render(): JSX.Element;
 }
-export {};

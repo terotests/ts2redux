@@ -94,6 +94,7 @@ exports.SimpleModel = SimpleModel;
 var immer = require("immer");
 var react_redux_1 = require("react-redux");
 var React = require("react");
+exports.itemsSelectorFn = function (state) { return state.items; };
 exports.mapStateToProps = function (state) {
     return {
         items: state.SimpleModel.items,

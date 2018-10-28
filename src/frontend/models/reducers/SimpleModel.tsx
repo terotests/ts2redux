@@ -18,6 +18,7 @@ export class SimpleModel {
 }
 
 import * as immer from 'immer'
+import { createSelector } from 'reselect'
 import { connect } from 'react-redux'
 import { IState } from './index'
 import * as React from 'react'
@@ -28,8 +29,9 @@ export interface IContainerPropsMethods {
 export interface ISimpleModel {
   items: any[]
 }
+export const itemsSelectorFn = (state:ISimpleModel) : any[] => state.items
 
-type IContainerPropsState = ISimpleModel
+export type IContainerPropsState = ISimpleModel
 export interface IProps extends IContainerPropsState, IContainerPropsMethods {}
 export const mapStateToProps = (state : IState) : IContainerPropsState => {
   return {

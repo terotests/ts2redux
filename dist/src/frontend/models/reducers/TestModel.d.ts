@@ -55,7 +55,15 @@ export interface ITestModel {
     };
     userMessage: string;
 }
-declare type IContainerPropsState = ITestModel;
+export declare const itemsSelectorFn: (state: ITestModel) => ShopCartItem[];
+export declare const maxIdSelectorFn: (state: ITestModel) => number;
+export declare const cartIdSelectorFn: (state: ITestModel) => number;
+export declare const shopStateSelectorFn: (state: ITestModel) => TaskState;
+export declare const cartsSelectorFn: (state: ITestModel) => {
+    [key: string]: ShopCart;
+};
+export declare const userMessageSelectorFn: (state: ITestModel) => string;
+export declare type IContainerPropsState = ITestModel;
 export interface IProps extends IContainerPropsState, IContainerPropsMethods {
 }
 export declare const mapStateToProps: (state: IState) => ITestModel;
@@ -169,4 +177,3 @@ export declare class TestModelProvider extends React.Component {
     ChangeLastItem(): Promise<void>;
     render(): JSX.Element;
 }
-export {};

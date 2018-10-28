@@ -74,7 +74,7 @@ ReactDOM.render(
                   <button onClick={() => todolist.getItems()}>Load</button>
                   <button onClick={() => todolist.reverse()}>Revert</button>
                   <ul>{
-                    todolist.items.slice(0,6).map( item => <li key={item.id}>{item.title}</li>)
+                    todolist.listToDisplay.map( item => <li key={item.id}>{item.title}</li>)
                   }</ul>
                 </div>
             }
@@ -89,8 +89,11 @@ ReactDOM.render(
                   <button onClick={() => todolist.getItems()}>Load</button>
                   <button onClick={todolist.reverse}>Revert List</button>
                   <button onClick={() => todolist.clearTodoList()}>Clear</button>
+                  <button onClick={() => todolist.toggleSortOrder()}>Toggle</button>
+                  <button onClick={() => todolist.nextPage()}>Next</button>
+                  <button onClick={() => todolist.prevPage()}>Prev</button>
                   <ul>{
-                    todolist.items.slice(0,10).map( item => <li key={item.id}>{item.title} <UserStateProvider><UserInfo/></UserStateProvider></li>) 
+                    todolist.listToDisplay.map( item => <li key={item.id}>{item.id} {item.title} <UserStateProvider><UserInfo/></UserStateProvider></li>) 
                   }</ul>
                 </div>
             }

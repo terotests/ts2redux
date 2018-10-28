@@ -208,6 +208,12 @@ var TestModel = /** @class */ (function () {
 var immer = require("immer");
 var react_redux_1 = require("react-redux");
 var React = require("react");
+exports.itemsSelectorFn = function (state) { return state.items; };
+exports.maxIdSelectorFn = function (state) { return state.maxId; };
+exports.cartIdSelectorFn = function (state) { return state.cartId; };
+exports.shopStateSelectorFn = function (state) { return state.shopState; };
+exports.cartsSelectorFn = function (state) { return state.carts; };
+exports.userMessageSelectorFn = function (state) { return state.userMessage; };
 exports.mapStateToProps = function (state) {
     return {
         items: state.TestModel.items,

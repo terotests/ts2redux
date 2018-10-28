@@ -11,6 +11,10 @@ export interface TodoListItem {
     completed: boolean;
 }
 export declare type TaskState = 'UNDEFINED' | 'RUNNING' | 'LOADED' | 'ERROR';
+export declare enum SortOrder {
+    ASC = "asc",
+    DESC = "desc"
+}
 /**
  * @redux true
  */
@@ -18,6 +22,13 @@ export declare class TodoList {
     items: TodoListItem[];
     state: TaskState;
     stateError: any;
+    sortOrder: SortOrder;
+    listStart: number;
+    listPageLength: number;
+    readonly listToDisplay: TodoListItem[];
+    nextPage(): void;
+    prevPage(): void;
+    toggleSortOrder(): void;
     clearTodoList(): void;
     reverse(): void;
     sortById(): void;
@@ -31,6 +42,9 @@ export declare class TodoList {
 import { IState } from './index';
 import * as React from 'react';
 export interface IContainerPropsMethods {
+    nextPage: () => any;
+    prevPage: () => any;
+    toggleSortOrder: () => any;
     clearTodoList: () => any;
     reverse: () => any;
     sortById: () => any;
@@ -42,11 +56,24 @@ export interface ITodoList {
     items: TodoListItem[];
     state: TaskState;
     stateError: any;
+    sortOrder: SortOrder;
+    listStart: number;
+    listPageLength: number;
 }
-declare type IContainerPropsState = ITodoList;
+export declare const itemsSelectorFn: (state: ITodoList) => TodoListItem[];
+export declare const stateSelectorFn: (state: ITodoList) => TaskState;
+export declare const stateErrorSelectorFn: (state: ITodoList) => any;
+export declare const sortOrderSelectorFn: (state: ITodoList) => SortOrder;
+export declare const listStartSelectorFn: (state: ITodoList) => number;
+export declare const listPageLengthSelectorFn: (state: ITodoList) => number;
+export declare const listToDisplaySelectorFnCreator: () => import("reselect").OutputSelector<ITodoList, TodoListItem[], (res1: TodoListItem[], res2: SortOrder, res3: number, res4: number) => TodoListItem[]>;
+export declare const listToDisplaySelector: import("reselect").OutputSelector<ITodoList, TodoListItem[], (res1: TodoListItem[], res2: SortOrder, res3: number, res4: number) => TodoListItem[]>;
+export interface IContainerPropsState extends ITodoList {
+    listToDisplay: TodoListItem[];
+}
 export interface IProps extends IContainerPropsState, IContainerPropsMethods {
 }
-export declare const mapStateToProps: (state: IState) => ITodoList;
+export declare const mapStateToProps: (state: IState) => IContainerPropsState;
 export declare const mapDispatchToProps: (dispatch: any) => IContainerPropsMethods;
 export declare const StateConnector: any;
 /**
@@ -60,6 +87,15 @@ export declare class RTodoList {
     items: TodoListItem[] | undefined;
     state: TaskState | undefined;
     stateError: any | undefined;
+    sortOrder: SortOrder | undefined;
+    listStart: number | undefined;
+    listPageLength: number | undefined;
+    nextPage(): void;
+    static nextPage(): (dispatcher: any, getState: any) => void;
+    prevPage(): void;
+    static prevPage(): (dispatcher: any, getState: any) => void;
+    toggleSortOrder(): void;
+    static toggleSortOrder(): (dispatcher: any, getState: any) => void;
     clearTodoList(): void;
     static clearTodoList(): (dispatcher: any, getState: any) => void;
     reverse(): void;
@@ -80,6 +116,12 @@ export declare const TodoListEnums: {
     TodoList_items: string;
     TodoList_state: string;
     TodoList_stateError: string;
+    TodoList_sortOrder: string;
+    TodoList_listStart: string;
+    TodoList_listPageLength: string;
+    TodoList_nextPage: string;
+    TodoList_prevPage: string;
+    TodoList_toggleSortOrder: string;
     TodoList_clearTodoList: string;
     TodoList_reverse: string;
     TodoList_sortById: string;
@@ -95,8 +137,12 @@ export declare const TodoListConsumer: React.ComponentType<React.ConsumerProps<I
 export declare class TodoListProvider extends React.Component {
     state: ITodoList;
     private __devTools;
+    private __selectorlistToDisplay;
     constructor(props: any);
     componentWillUnmount(): void;
+    nextPage(): void;
+    prevPage(): void;
+    toggleSortOrder(): void;
     clearTodoList(): void;
     reverse(): void;
     sortById(): void;
@@ -108,4 +154,3 @@ export declare class TodoListProvider extends React.Component {
     getItems(): Promise<void>;
     render(): JSX.Element;
 }
-export {};

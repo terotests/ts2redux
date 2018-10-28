@@ -107,8 +107,66 @@ function createProject(settings) {
                                 var sourceDir = path.normalize(path.relative(process.cwd(), path.dirname(sourceFile.getFilePath())));
                                 var reducerFileName = sourceDir + reducerPath + c.getName() + '.tsx';
                                 var ng_1 = RFs.getFile(sourceDir + reducerPath, c.getName() + '.tsx').getWriter();
+                                var reducerMethods_1 = c.getMethods().filter(function (m) { return typeof (m.getReturnTypeNode()) === 'undefined'; });
+                                var selectorMethods_1 = c.getGetAccessors().filter(function (m) {
+                                    if (typeof (m.getReturnTypeNode()) !== 'undefined') {
+                                        return true;
+                                    }
+                                    return false;
+                                });
+                                // Reduxiin
+                                /*
+                                export interface IContainerPropsState extends ITodoList {
+                                  getFilteredList: () => any
+                                }
+                                */
+                                /*
+                                export interface IPropsWithSelectors extends IProps {
+                                  getFilteredList: () => any
+                                }
+                                
+                                const itemsSelectorFn = (state:ITodoList) :  TodoListItem[] => state.items
+                                const filterByKeySelectorFn = (state:ITodoList) :  FilterByKey => state.filterByKey
+                                const getFilteredListSelectorFnCreator = () => createSelector([itemsSelectorFn, filterByKeySelectorFn], (items,filterByKey) => {
+                                  const o = new TodoList()
+                                  o.items = items
+                                  o.filterByKey = filterByKey
+                                  return o.getFilteredList()
+                                })
+                                const getFilteredListSelectorFn = getFilteredListSelectorFnCreator()
+                                
+                                
+                                mapStateToProsiin sit
+                                  getFilteredList: () => getFilteredListSelectorFn(state.TodoList)
+                                
+                                
+                                */
+                                // Then create functions for transtions
+                                /*
+                                  // simple functions for selector
+                                  _selItems = (state:ITodoList) :  TodoListItem[] => state.items
+                                  _selfiterByKey = (state:ITodoList) : FilterByKey => state.filterByKey
+                                
+                                  // the selector function using the state and props maybe
+                                  selectorGetFilteredList = null
+                                */
+                                // And in constructor
+                                /*
+                                    const sel1 = createSelector([this._selItems,this. _selfiterByKey], (items,filterByKey)=>{
+                                      const o = new TodoList()
+                                      o.items = items
+                                      o.filterByKey = filterByKey
+                                      return o.getFilteredList()
+                                    })
+                                    this.selectorGetFilteredList = () => sel1(this.state)
+                                */
+                                // And finally
+                                /*
+                                getFilteredList: this.selectorGetFilteredList,
+                                */
                                 if (!dirReducers[sourceDir])
                                     dirReducers[sourceDir] = [];
+                                // const inputSet:{[key:string]:Node} = {}
                                 // in the end create index.ts for each reducer
                                 dirReducers[sourceDir].push({
                                     name: c.getName(),
@@ -124,6 +182,7 @@ function createProject(settings) {
                                 ng_1.out("", true);
                                 ng_1.raw(sourceFile.getText(), true);
                                 ng_1.out("import * as immer from 'immer'", true);
+                                ng_1.out("import { createSelector } from 'reselect'", true);
                                 ng_1.out("import { connect } from 'react-redux'", true);
                                 ng_1.out("import { IState } from './index'", true);
                                 ng_1.out("import * as React from 'react'", true);
@@ -141,8 +200,27 @@ function createProject(settings) {
                                 });
                                 ng_1.indent(-1);
                                 ng_1.out('}', true);
+                                var selFns_1 = ng_1.fork();
                                 ng_1.out('', true);
-                                ng_1.out("export type IContainerPropsState = I" + c.getName(), true);
+                                /*
+                                export interface IContainerPropsState extends ITodoList {
+                                  getSortedList: TodoListItem[]
+                                }
+                                */
+                                // AND
+                                // getSortedList: getSortedListSelector(state.TodoList)
+                                if (selectorMethods_1.length > 0) {
+                                    ng_1.out("export interface IContainerPropsState extends I" + c.getName() + " {", true);
+                                    ng_1.indent(1);
+                                    selectorMethods_1.forEach(function (m) {
+                                        ng_1.out(m.getName() + ': ' + m.getReturnTypeNode().print(), true);
+                                    });
+                                    ng_1.indent(-1);
+                                    ng_1.out("}", true);
+                                }
+                                else {
+                                    ng_1.out("export type IContainerPropsState = I" + c.getName(), true);
+                                }
                                 ng_1.out("export interface IProps extends IContainerPropsState, IContainerPropsMethods {}", true);
                                 ng_1.out('export const mapStateToProps = (state : IState) : IContainerPropsState => {', true);
                                 ng_1.indent(1);
@@ -150,6 +228,9 @@ function createProject(settings) {
                                 ng_1.indent(1);
                                 c.getProperties().forEach(function (p) {
                                     ng_1.out(p.getName() + (": state." + c.getName() + ".") + p.getName() + ',', true);
+                                });
+                                selectorMethods_1.forEach(function (m) {
+                                    ng_1.out(m.getName() + ': ' + m.getName() + ("Selector(state." + c.getName() + "),"), true);
                                 });
                                 ng_1.indent(-1);
                                 ng_1.out('}', true);
@@ -187,7 +268,10 @@ function createProject(settings) {
                                 c.getProperties().forEach(function (p) {
                                     ng_1.out(p.getName() + ': o.' + p.getName() + ',', true);
                                 });
-                                c.getMethods().forEach(function (m) {
+                                reducerMethods_1.forEach(function (m) {
+                                    ng_1.out(m.getName() + ': o.' + m.getName() + ',', true);
+                                });
+                                selectorMethods_1.forEach(function (m) {
                                     ng_1.out(m.getName() + ': o.' + m.getName() + ',', true);
                                 });
                                 ng_1.indent(-1);
@@ -231,18 +315,8 @@ function createProject(settings) {
                                 body_1.out('this._getState = getState', true);
                                 body_1.indent(-1);
                                 body_1.out('}', true);
-                                /*c.getProperties().forEach( p => {
-                                  body.out('private _' + p.getName()+': ' + printNode(p.getTypeNode().compilerNode), true)
-                                })
-                                */
-                                /*
-                                export const ShopCartModelReducer = (state:ITestModel = {}, action) => {
-                                  switch (action.type) {
-                                    (new TestModel(state)).
-                                  }
-                                }
-                                */
                                 c.getProperties().forEach(function (p) {
+                                    selFns_1.out("export const " + p.getName() + "SelectorFn = (state:I" + c.getName() + ") : " + p.getTypeNode().print() + " => state." + p.getName(), true);
                                     var r_name = c.getName() + "_" + p.getName();
                                     body_1.out('get ' + p.getName() + '() : ' + p.getTypeNode().print() + ' | undefined {', true);
                                     body_1.indent(1);
@@ -283,14 +357,57 @@ function createProject(settings) {
                                     // ng_reducers
                                 });
                                 body_1.out('', true);
+                                selectorMethods_1.forEach(function (m) {
+                                    var rvNode = m.getReturnTypeNode();
+                                    if (rvNode) {
+                                        var inputSet_1 = {};
+                                        m.getBody().forEachDescendant(function (node, traversal) {
+                                            switch (node.getKind()) {
+                                                case ts_simple_ast_1.SyntaxKind.PropertyAccessExpression:
+                                                    // could be this.
+                                                    if (node.getFirstChild().getKind() === ts_simple_ast_1.SyntaxKind.ThisKeyword) {
+                                                        inputSet_1[node.getChildAtIndex(2).print()] = node;
+                                                    }
+                                                    break;
+                                            }
+                                        });
+                                        var properties_1 = {};
+                                        var methods_1 = {};
+                                        c.getMethods().forEach(function (m) {
+                                            methods_1[m.getName()] = m;
+                                        });
+                                        c.getProperties().forEach(function (p) {
+                                            properties_1[p.getName()] = p;
+                                        });
+                                        Object.keys(inputSet_1).forEach(function (key) {
+                                            if (methods_1[key])
+                                                throw "Using Methods in selectors not allowed: " + c.getName() + "." + key;
+                                        });
+                                        var propsKeys = Object.keys(inputSet_1).filter(function (key) { return properties_1[key] != null; });
+                                        selFns_1.out("export const " + m.getName() + "SelectorFnCreator = () => createSelector([");
+                                        selFns_1.out(propsKeys.map(function (key) { return key + 'SelectorFn'; }).join(','));
+                                        selFns_1.out("],(");
+                                        selFns_1.out(propsKeys.map(function (key) { return key; }).join(','));
+                                        selFns_1.out(') => {', true);
+                                        selFns_1.indent(1);
+                                        selFns_1.out("const o = new " + c.getName() + "()", true);
+                                        propsKeys.forEach(function (key) { return selFns_1.out("o." + key + " = " + key, true); });
+                                        selFns_1.out("return o." + m.getName(), true);
+                                        selFns_1.indent(-1);
+                                        selFns_1.out("})", true);
+                                        selFns_1.out("export const " + m.getName() + "Selector = " + m.getName() + "SelectorFnCreator()", true);
+                                        return;
+                                    }
+                                });
                                 c.getMethods().forEach(function (m) {
                                     if (m.getParameters().length > 1) {
                                         throw "Error at " + sourceFile.getFilePath() + " in class " + c.getName() + " method " + m.getName() + " can not have more than 2 parameters at the moment";
                                     }
                                     var pName = m.getParameters().filter(function (a, i) { return i < 1; }).map(function (mod) { return mod.getName(); }).join('');
-                                    var rType = m.getReturnTypeNode();
-                                    if (rType) {
-                                        console.log('** method ' + m.getName() + '  with return type ', rType.print());
+                                    var rvNode = m.getReturnTypeNode();
+                                    if (rvNode) {
+                                        throw "Error at " + sourceFile.getFilePath() + " in class " + c.getName() + " method " + m.getName() + " can not return values, use getter instead!";
+                                        return;
                                     }
                                     if (m.isAsync()) {
                                         body_1.out('// is task', true);
@@ -366,11 +483,21 @@ function createProject(settings) {
                                     ng.indent(1);
                                     ng.out("public state: I" + c.getName() + " = init" + c.getName() + "() ", true);
                                     ng.out("private __devTools:any = null", true);
+                                    // for each selector...
+                                    // this.__selector1 = getCompletedListSelectorFnCreator()
+                                    selectorMethods_1.forEach(function (m) {
+                                        ng.out("private __selector" + m.getName() + " = null", true);
+                                    });
                                     // devToolsConnection:any = null  
                                     ng.out("constructor( props:any ){", true);
                                     ng.indent(1);
                                     ng.out("super(props)", true);
                                     var binder = ng.fork();
+                                    // for each selector
+                                    // this.__selector1 = getCompletedListSelectorFnCreator()
+                                    selectorMethods_1.forEach(function (m) {
+                                        ng.out("this.__selector" + m.getName() + " = " + m.getName() + "SelectorFnCreator()", true);
+                                    });
                                     if (!settings.disableDevtoolsFromContext) {
                                         ng.out("const devs = window['devToolsExtension'] ? window['devToolsExtension'] : null", true);
                                         ng.out("if(devs) {", true);
@@ -398,7 +525,7 @@ function createProject(settings) {
                                         ng.indent(-1);
                                         ng.out("}", true);
                                     }
-                                    c.getMethods().forEach(function (m) {
+                                    reducerMethods_1.forEach(function (m) {
                                         var body = ng;
                                         body.raw(m.getModifiers().map(function (mod) { return mod.print() + ' '; }).join(''));
                                         binder.out("this." + m.getName() + " = this." + m.getName() + ".bind(this)", true);
@@ -424,7 +551,7 @@ function createProject(settings) {
                                         else {
                                             if (!settings.disableDevtoolsFromContext) {
                                                 body.out("const nextState = immer.produce( this.state, draft => ( new R" + c.getName() + "(draft) )." + m.getName() + "(" + firstParam + ") )", true);
-                                                body.out("if(this.__devTools) { this.__devTools.send('" + m.getName() + "', nextState) }", true);
+                                                body.out("if(this.__devTools) this.__devTools.send('" + m.getName() + "', nextState)", true);
                                                 body.out("this.setState(nextState)", true);
                                             }
                                             else {
@@ -438,8 +565,13 @@ function createProject(settings) {
                                     ng.indent(1);
                                     ng.out("return (<" + c.getName() + "Context.Provider value={{...this.state, ", true);
                                     ng.indent(1);
-                                    c.getMethods().forEach(function (m) {
+                                    reducerMethods_1.forEach(function (m) {
                                         ng.out(m.getName() + ': this.' + m.getName() + ',', true);
+                                    });
+                                    // getCompletedList: this.__selector1(this.state), // TODO: fix this
+                                    selectorMethods_1.forEach(function (m) {
+                                        // ng.out(`this.__selector${m.getName()} = ${m.getName()}SelectorFnCreator()`, true)
+                                        ng.out(m.getName() + (": this.__selector" + m.getName() + "(this.state),"), true);
                                     });
                                     ng.indent(-1);
                                     ng.out("}}> {this.props.children} ", true);

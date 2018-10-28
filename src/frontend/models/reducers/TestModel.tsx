@@ -156,6 +156,7 @@ class TestModel {
 }
 
 import * as immer from 'immer'
+import { createSelector } from 'reselect'
 import { connect } from 'react-redux'
 import { IState } from './index'
 import * as React from 'react'
@@ -195,8 +196,16 @@ export interface ITestModel {
   // message to user
   userMessage: string
 }
+export const itemsSelectorFn = (state:ITestModel) : ShopCartItem[] => state.items
+export const maxIdSelectorFn = (state:ITestModel) : number => state.maxId
+export const cartIdSelectorFn = (state:ITestModel) : number => state.cartId
+export const shopStateSelectorFn = (state:ITestModel) : TaskState => state.shopState
+export const cartsSelectorFn = (state:ITestModel) : {
+[key: string]: ShopCart;
+} => state.carts
+export const userMessageSelectorFn = (state:ITestModel) : string => state.userMessage
 
-type IContainerPropsState = ITestModel
+export type IContainerPropsState = ITestModel
 export interface IProps extends IContainerPropsState, IContainerPropsMethods {}
 export const mapStateToProps = (state : IState) : IContainerPropsState => {
   return {

@@ -21,7 +21,12 @@ export interface IUserState {
     lastName: string;
     lastLogin: number;
 }
-declare type IContainerPropsState = IUserState;
+export declare const loggedSelectorFn: (state: IUserState) => boolean;
+export declare const usernameSelectorFn: (state: IUserState) => string;
+export declare const firstNameSelectorFn: (state: IUserState) => string;
+export declare const lastNameSelectorFn: (state: IUserState) => string;
+export declare const lastLoginSelectorFn: (state: IUserState) => number;
+export declare type IContainerPropsState = IUserState;
 export interface IProps extends IContainerPropsState, IContainerPropsMethods {
 }
 export declare const mapStateToProps: (state: IState) => IUserState;
@@ -80,4 +85,3 @@ export declare class UserStateProvider extends React.Component {
     fakeLogin(): void;
     render(): JSX.Element;
 }
-export {};

@@ -30,11 +30,14 @@ It is not likely that state management gets much easier than this:
 
 Also the library imposes no direct dependencies, after it has compiled the sources, you do not need the compiler any more - the resulting files have not dependencies to anything else than proven libraries like React, Immer etc.
 
+And as an added bonus, we get selector support with `reselect` using method getters! 
+
 ## Acknowledgements
 
 This library would not have been possible without following great OS tools:
 - [ts-simple-ast](https://github.com/dsherret/ts-simple-ast) for AST code management (special thanks for library author David Sherret for extremely fast responses while I was having problems during development!)
 - [immer](https://github.com/mweststrate/immer) for easy immutable transformations
+- [reselect](https://github.com/reduxjs/reselect) selector library for Redux
 - [yargs](https://github.com/yargs/yargs) for command line processing
 - [Redux Devtools Extensions](https://github.com/zalmoxisus/redux-devtools-extension)
 - and of course [Redux](https://github.com/reduxjs/redux) and [React and the new Context API](https://reactjs.org/docs/context.html)
@@ -202,6 +205,38 @@ export const AbstractInc = (props : Props) => {
 export const ReduxInc = container.StateConnector( AbstractInc )
 ```
 
+# Selectors
+
+Selectors are great, if you want to avoid expensive recalculations and optimize rendering performance using PureComponents.
+
+To create a selector, define function with `get` -modifier like `get someProperty() : someReturnValueType`. This will create a new property `someProperty` which can be used as a cached result of some computation based on the model.
+
+For example see code from [TodoList.ts](https://github.com/terotests/ts2redux/blob/master/src/frontend/models/TodoList.ts#L33-L38)
+
+```typescript
+export class TodoList {
+
+  // ... some model parameters used to transform the list...
+  items: TodoListItem[] = []
+  sortOrder:SortOrder = SortOrder.ASC 
+  listStart:number = 0
+  listPageLength:number = 10
+
+  // use this like <PureList items={props.listToDisplay}/> 
+  get listToDisplay() : TodoListItem[] {
+    return this.items
+      .filter( item => item.completed )
+      .sort( sortFn(this.sortOrder) )
+      .slice( this.listStart, this.listStart + this.listPageLength)
+  }
+```
+The advantage of selector is that value is memoized and will only update if parameters affecting it's value will change. In the example above,`listToDisplay` is recalculated only if the value of `items`, `sortOrder`, `listStart` or `listPageLength`changes.
+
+If property above is given to a `PureComponent` like this
+```jsx
+<PureList items={props.listToDisplay}/> 
+```
+The component will render only when parameters affecting it's computation change.
 
 # Examples
 

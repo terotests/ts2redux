@@ -19,6 +19,7 @@ export declare class TodoList {
     sortOrder: SortOrder;
     listStart: number;
     listPageLength: number;
+    listTitle: string;
     readonly listToDisplay: TodoListItem[];
     nextPage(): void;
     prevPage(): void;
@@ -28,6 +29,7 @@ export declare class TodoList {
     sortById(): void;
     sortByTitle(): void;
     sortByCompletion(): void;
+    setTitle(value: string): void;
     /**
      * Fetch items from json placeholder service
      */

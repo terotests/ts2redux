@@ -56,6 +56,7 @@ var TodoList = /** @class */ (function () {
         this.sortOrder = SortOrder.ASC;
         this.listStart = 0;
         this.listPageLength = 10;
+        this.listTitle = 'Title of List';
     }
     Object.defineProperty(TodoList.prototype, "listToDisplay", {
         // Example of memoized list using reselect
@@ -94,6 +95,9 @@ var TodoList = /** @class */ (function () {
     TodoList.prototype.sortByCompletion = function () {
         var toNumber = function (value) { return value ? 1 : 0; };
         this.items.sort(function (a, b) { return toNumber(a.completed) - toNumber(b.completed); });
+    };
+    TodoList.prototype.setTitle = function (value) {
+        this.listTitle = value;
     };
     /**
      * Fetch items from json placeholder service

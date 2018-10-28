@@ -25,6 +25,7 @@ export declare class TodoList {
     sortOrder: SortOrder;
     listStart: number;
     listPageLength: number;
+    listTitle: string;
     readonly listToDisplay: TodoListItem[];
     nextPage(): void;
     prevPage(): void;
@@ -34,6 +35,7 @@ export declare class TodoList {
     sortById(): void;
     sortByTitle(): void;
     sortByCompletion(): void;
+    setTitle(value: string): void;
     /**
      * Fetch items from json placeholder service
      */
@@ -50,6 +52,7 @@ export interface IContainerPropsMethods {
     sortById: () => any;
     sortByTitle: () => any;
     sortByCompletion: () => any;
+    setTitle: (value: string) => any;
     getItems: () => any;
 }
 export interface ITodoList {
@@ -59,6 +62,7 @@ export interface ITodoList {
     sortOrder: SortOrder;
     listStart: number;
     listPageLength: number;
+    listTitle: string;
 }
 export declare const itemsSelectorFn: (state: ITodoList) => TodoListItem[];
 export declare const stateSelectorFn: (state: ITodoList) => TaskState;
@@ -66,6 +70,7 @@ export declare const stateErrorSelectorFn: (state: ITodoList) => any;
 export declare const sortOrderSelectorFn: (state: ITodoList) => SortOrder;
 export declare const listStartSelectorFn: (state: ITodoList) => number;
 export declare const listPageLengthSelectorFn: (state: ITodoList) => number;
+export declare const listTitleSelectorFn: (state: ITodoList) => string;
 export declare const listToDisplaySelectorFnCreator: () => import("reselect").OutputSelector<ITodoList, TodoListItem[], (res1: TodoListItem[], res2: SortOrder, res3: number, res4: number) => TodoListItem[]>;
 export declare const listToDisplaySelector: import("reselect").OutputSelector<ITodoList, TodoListItem[], (res1: TodoListItem[], res2: SortOrder, res3: number, res4: number) => TodoListItem[]>;
 export interface IContainerPropsState extends ITodoList {
@@ -90,6 +95,7 @@ export declare class RTodoList {
     sortOrder: SortOrder | undefined;
     listStart: number | undefined;
     listPageLength: number | undefined;
+    listTitle: string | undefined;
     nextPage(): void;
     static nextPage(): (dispatcher: any, getState: any) => void;
     prevPage(): void;
@@ -106,6 +112,8 @@ export declare class RTodoList {
     static sortByTitle(): (dispatcher: any, getState: any) => void;
     sortByCompletion(): void;
     static sortByCompletion(): (dispatcher: any, getState: any) => void;
+    setTitle(value: string): void;
+    static setTitle(value: string): (dispatcher: any, getState: any) => void;
     /**
      * Fetch items from json placeholder service
      */
@@ -119,6 +127,7 @@ export declare const TodoListEnums: {
     TodoList_sortOrder: string;
     TodoList_listStart: string;
     TodoList_listPageLength: string;
+    TodoList_listTitle: string;
     TodoList_nextPage: string;
     TodoList_prevPage: string;
     TodoList_toggleSortOrder: string;
@@ -127,6 +136,7 @@ export declare const TodoListEnums: {
     TodoList_sortById: string;
     TodoList_sortByTitle: string;
     TodoList_sortByCompletion: string;
+    TodoList_setTitle: string;
 };
 export declare const TodoListReducer: (state: ITodoList, action: any) => ITodoList;
 /***************************
@@ -148,6 +158,7 @@ export declare class TodoListProvider extends React.Component {
     sortById(): void;
     sortByTitle(): void;
     sortByCompletion(): void;
+    setTitle(value: string): void;
     /**
      * Fetch items from json placeholder service
      */

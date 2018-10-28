@@ -35,7 +35,7 @@ export class TodoList {
   sortOrder:SortOrder = SortOrder.ASC 
   listStart:number = 0
   listPageLength:number = 10
-
+  listTitle: string = 'Title of List' 
   // Example of memoized list using reselect
   get listToDisplay() : TodoListItem[] {
     return this.items
@@ -69,6 +69,9 @@ export class TodoList {
     const toNumber = (value:boolean) : number => value ? 1 : 0;
     this.items.sort( (a, b) => toNumber(a.completed) - toNumber(b.completed) )
   }
+  setTitle(value:string) {
+    this.listTitle = value
+  }  
   /**
    * Fetch items from json placeholder service
    */
@@ -100,6 +103,7 @@ export interface IContainerPropsMethods {
   sortById : () => any
   sortByTitle : () => any
   sortByCompletion : () => any
+  setTitle : (value: string) => any
   getItems : () => any
 }
 export interface ITodoList {
@@ -109,6 +113,7 @@ export interface ITodoList {
   sortOrder: SortOrder
   listStart: number
   listPageLength: number
+  listTitle: string
 }
 export const itemsSelectorFn = (state:ITodoList) : TodoListItem[] => state.items
 export const stateSelectorFn = (state:ITodoList) : TaskState => state.state
@@ -116,6 +121,7 @@ export const stateErrorSelectorFn = (state:ITodoList) : any => state.stateError
 export const sortOrderSelectorFn = (state:ITodoList) : SortOrder => state.sortOrder
 export const listStartSelectorFn = (state:ITodoList) : number => state.listStart
 export const listPageLengthSelectorFn = (state:ITodoList) : number => state.listPageLength
+export const listTitleSelectorFn = (state:ITodoList) : string => state.listTitle
 export const listToDisplaySelectorFnCreator = () => createSelector([itemsSelectorFn,sortOrderSelectorFn,listStartSelectorFn,listPageLengthSelectorFn],(items,sortOrder,listStart,listPageLength) => {
   const o = new TodoList()
   o.items = items
@@ -138,6 +144,7 @@ export const mapStateToProps = (state : IState) : IContainerPropsState => {
     sortOrder: state.TodoList.sortOrder,
     listStart: state.TodoList.listStart,
     listPageLength: state.TodoList.listPageLength,
+    listTitle: state.TodoList.listTitle,
     listToDisplay: listToDisplaySelector(state.TodoList),
   }
 }
@@ -167,6 +174,9 @@ export const mapDispatchToProps = (dispatch:any) : IContainerPropsMethods => {
     sortByCompletion : () => {
       return dispatch(RTodoList.sortByCompletion())
     },
+    setTitle : (value: string) => {
+      return dispatch(RTodoList.setTitle(value))
+    },
     getItems : () => {
       return dispatch(RTodoList.getItems())
     },
@@ -183,6 +193,7 @@ const initTodoList = () => {
     sortOrder: o.sortOrder,
     listStart: o.listStart,
     listPageLength: o.listPageLength,
+    listTitle: o.listTitle,
   }
 }
 const initWithMethodsTodoList = () => {
@@ -194,6 +205,7 @@ const initWithMethodsTodoList = () => {
     sortOrder: o.sortOrder,
     listStart: o.listStart,
     listPageLength: o.listPageLength,
+    listTitle: o.listTitle,
     nextPage: o.nextPage,
     prevPage: o.prevPage,
     toggleSortOrder: o.toggleSortOrder,
@@ -202,6 +214,7 @@ const initWithMethodsTodoList = () => {
     sortById: o.sortById,
     sortByTitle: o.sortByTitle,
     sortByCompletion: o.sortByCompletion,
+    setTitle: o.setTitle,
     getItems: o.getItems,
     listToDisplay: o.listToDisplay,
   }
@@ -307,6 +320,21 @@ export class RTodoList {
     } else {
       // dispatch change for item listPageLength
       if(this._dispatch) { this._dispatch({type:TodoListEnums.TodoList_listPageLength, payload:value}) }
+    }
+  }
+  get listTitle() : string | undefined {
+    if(this._getState) {
+      return this._getState().TodoList.listTitle
+    } else {
+      if(this._state) { return this._state.listTitle }
+    }
+    return undefined}
+  set listTitle(value:string | undefined) {
+    if(this._state && (typeof(value) !== 'undefined')) {
+      this._state.listTitle = value
+    } else {
+      // dispatch change for item listTitle
+      if(this._dispatch) { this._dispatch({type:TodoListEnums.TodoList_listTitle, payload:value}) }
     }
   }
   
@@ -425,6 +453,20 @@ export class RTodoList {
       (new RTodoList(undefined, dispatcher, getState)).sortByCompletion()
     }
   }
+  // is a reducer
+  setTitle(value: string){
+    if(this._state) {
+      this.listTitle = value;
+    } else {
+      if(this._dispatch) { this._dispatch({type:TodoListEnums.TodoList_setTitle,payload: value }) }
+    }
+  }
+  
+  public static setTitle(value: string){
+    return (dispatcher:any, getState:any) => {
+      (new RTodoList(undefined, dispatcher, getState)).setTitle(value)
+    }
+  }
   // is task
   /**
    * Fetch items from json placeholder service
@@ -457,6 +499,7 @@ export const TodoListEnums = {
   TodoList_sortOrder : 'TodoList_sortOrder',
   TodoList_listStart : 'TodoList_listStart',
   TodoList_listPageLength : 'TodoList_listPageLength',
+  TodoList_listTitle : 'TodoList_listTitle',
   TodoList_nextPage : 'TodoList_nextPage',
   TodoList_prevPage : 'TodoList_prevPage',
   TodoList_toggleSortOrder : 'TodoList_toggleSortOrder',
@@ -465,6 +508,7 @@ export const TodoListEnums = {
   TodoList_sortById : 'TodoList_sortById',
   TodoList_sortByTitle : 'TodoList_sortByTitle',
   TodoList_sortByCompletion : 'TodoList_sortByCompletion',
+  TodoList_setTitle : 'TodoList_setTitle',
 }
 
 export const TodoListReducer = (state:ITodoList = initTodoList(), action:any ) => {
@@ -487,6 +531,9 @@ export const TodoListReducer = (state:ITodoList = initTodoList(), action:any ) =
         break;
       case TodoListEnums.TodoList_listPageLength: 
         (new RTodoList(draft)).listPageLength = action.payload
+        break;
+      case TodoListEnums.TodoList_listTitle: 
+        (new RTodoList(draft)).listTitle = action.payload
         break;
       case TodoListEnums.TodoList_nextPage: 
         (new RTodoList(draft)).nextPage()
@@ -512,6 +559,9 @@ export const TodoListReducer = (state:ITodoList = initTodoList(), action:any ) =
       case TodoListEnums.TodoList_sortByCompletion: 
         (new RTodoList(draft)).sortByCompletion()
         break;
+      case TodoListEnums.TodoList_setTitle: 
+        (new RTodoList(draft)).setTitle(action.payload)
+        break;
     }
   })
 }
@@ -535,6 +585,7 @@ export class TodoListProvider extends React.Component {
     this.sortById = this.sortById.bind(this)
     this.sortByTitle = this.sortByTitle.bind(this)
     this.sortByCompletion = this.sortByCompletion.bind(this)
+    this.setTitle = this.setTitle.bind(this)
     this.getItems = this.getItems.bind(this)
     this.__selectorlistToDisplay = listToDisplaySelectorFnCreator()
     const devs = window['devToolsExtension'] ? window['devToolsExtension'] : null
@@ -591,6 +642,11 @@ export class TodoListProvider extends React.Component {
     if(this.__devTools) this.__devTools.send('sortByCompletion', nextState)
     this.setState(nextState)
   }
+  setTitle(value: string){
+    const nextState = immer.produce( this.state, draft => ( new RTodoList(draft) ).setTitle(value) )
+    if(this.__devTools) this.__devTools.send('setTitle', nextState)
+    this.setState(nextState)
+  }
   /**
    * Fetch items from json placeholder service
    */
@@ -611,6 +667,7 @@ export class TodoListProvider extends React.Component {
       sortById: this.sortById,
       sortByTitle: this.sortByTitle,
       sortByCompletion: this.sortByCompletion,
+      setTitle: this.setTitle,
       getItems: this.getItems,
       listToDisplay: this.__selectorlistToDisplay(this.state),
     }}> {this.props.children} 

@@ -114,56 +114,6 @@ function createProject(settings) {
                                     }
                                     return false;
                                 });
-                                // Reduxiin
-                                /*
-                                export interface IContainerPropsState extends ITodoList {
-                                  getFilteredList: () => any
-                                }
-                                */
-                                /*
-                                export interface IPropsWithSelectors extends IProps {
-                                  getFilteredList: () => any
-                                }
-                                
-                                const itemsSelectorFn = (state:ITodoList) :  TodoListItem[] => state.items
-                                const filterByKeySelectorFn = (state:ITodoList) :  FilterByKey => state.filterByKey
-                                const getFilteredListSelectorFnCreator = () => createSelector([itemsSelectorFn, filterByKeySelectorFn], (items,filterByKey) => {
-                                  const o = new TodoList()
-                                  o.items = items
-                                  o.filterByKey = filterByKey
-                                  return o.getFilteredList()
-                                })
-                                const getFilteredListSelectorFn = getFilteredListSelectorFnCreator()
-                                
-                                
-                                mapStateToProsiin sit
-                                  getFilteredList: () => getFilteredListSelectorFn(state.TodoList)
-                                
-                                
-                                */
-                                // Then create functions for transtions
-                                /*
-                                  // simple functions for selector
-                                  _selItems = (state:ITodoList) :  TodoListItem[] => state.items
-                                  _selfiterByKey = (state:ITodoList) : FilterByKey => state.filterByKey
-                                
-                                  // the selector function using the state and props maybe
-                                  selectorGetFilteredList = null
-                                */
-                                // And in constructor
-                                /*
-                                    const sel1 = createSelector([this._selItems,this. _selfiterByKey], (items,filterByKey)=>{
-                                      const o = new TodoList()
-                                      o.items = items
-                                      o.filterByKey = filterByKey
-                                      return o.getFilteredList()
-                                    })
-                                    this.selectorGetFilteredList = () => sel1(this.state)
-                                */
-                                // And finally
-                                /*
-                                getFilteredList: this.selectorGetFilteredList,
-                                */
                                 if (!dirReducers[sourceDir])
                                     dirReducers[sourceDir] = [];
                                 // const inputSet:{[key:string]:Node} = {}

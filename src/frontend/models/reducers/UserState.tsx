@@ -312,7 +312,7 @@ export class UserStateProvider extends React.Component {
   }
   fakeLogin(){
     const nextState = immer.produce( this.state, draft => ( new RUserState(draft) ).fakeLogin() )
-    if(this.__devTools) this.__devTools.send('fakeLogin', nextState)
+    if(this.__devTools) { this.__devTools.send('fakeLogin', nextState) } 
     this.setState(nextState)
   }
   public render() {

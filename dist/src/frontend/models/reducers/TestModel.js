@@ -840,62 +840,72 @@ var TestModelProvider = /** @class */ (function (_super) {
     };
     TestModelProvider.prototype.setUserMessage = function (value) {
         var nextState = immer.produce(this.state, function (draft) { return (new RTestModel(draft)).setUserMessage(value); });
-        if (this.__devTools)
+        if (this.__devTools) {
             this.__devTools.send('setUserMessage', nextState);
+        }
         this.setState(nextState);
     };
     TestModelProvider.prototype.add = function (item) {
         var nextState = immer.produce(this.state, function (draft) { return (new RTestModel(draft)).add(item); });
-        if (this.__devTools)
+        if (this.__devTools) {
             this.__devTools.send('add', nextState);
+        }
         this.setState(nextState);
     };
     TestModelProvider.prototype.removeFirst = function () {
         var nextState = immer.produce(this.state, function (draft) { return (new RTestModel(draft)).removeFirst(); });
-        if (this.__devTools)
+        if (this.__devTools) {
             this.__devTools.send('removeFirst', nextState);
+        }
         this.setState(nextState);
     };
     TestModelProvider.prototype.sort = function () {
         var nextState = immer.produce(this.state, function (draft) { return (new RTestModel(draft)).sort(); });
-        if (this.__devTools)
+        if (this.__devTools) {
             this.__devTools.send('sort', nextState);
+        }
         this.setState(nextState);
     };
     TestModelProvider.prototype.addCart = function () {
         var nextState = immer.produce(this.state, function (draft) { return (new RTestModel(draft)).addCart(); });
-        if (this.__devTools)
+        if (this.__devTools) {
             this.__devTools.send('addCart', nextState);
+        }
         this.setState(nextState);
     };
     TestModelProvider.prototype.addCartSync = function () {
         var nextState = immer.produce(this.state, function (draft) { return (new RTestModel(draft)).addCartSync(); });
-        if (this.__devTools)
+        if (this.__devTools) {
             this.__devTools.send('addCartSync', nextState);
+        }
         this.setState(nextState);
     };
     TestModelProvider.prototype.addToCart = function (adding) {
         var nextState = immer.produce(this.state, function (draft) { return (new RTestModel(draft)).addToCart(adding); });
-        if (this.__devTools)
+        if (this.__devTools) {
             this.__devTools.send('addToCart', nextState);
+        }
         this.setState(nextState);
     };
     TestModelProvider.prototype.setCartNewItem = function (adding) {
         var nextState = immer.produce(this.state, function (draft) { return (new RTestModel(draft)).setCartNewItem(adding); });
-        if (this.__devTools)
+        if (this.__devTools) {
             this.__devTools.send('setCartNewItem', nextState);
+        }
         this.setState(nextState);
     };
     TestModelProvider.prototype.addToCartRandom = function () {
         var nextState = immer.produce(this.state, function (draft) { return (new RTestModel(draft)).addToCartRandom(); });
-        if (this.__devTools)
+        if (this.__devTools) {
             this.__devTools.send('addToCartRandom', nextState);
+        }
         this.setState(nextState);
     };
     TestModelProvider.prototype.renameLast = function (newName) {
         var nextState = immer.produce(this.state, function (draft) { return (new RTestModel(draft)).renameLast(newName); });
-        if (this.__devTools)
+        if (this.__devTools) {
             this.__devTools.send('renameLast', nextState);
+        }
         this.setState(nextState);
     };
     // action

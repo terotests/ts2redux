@@ -436,7 +436,7 @@ function createProject(settings) {
                                     // for each selector...
                                     // this.__selector1 = getCompletedListSelectorFnCreator()
                                     selectorMethods_1.forEach(function (m) {
-                                        ng.out("private __selector" + m.getName() + " = null", true);
+                                        ng.out("private __selector" + m.getName() + ":any = null", true);
                                     });
                                     // devToolsConnection:any = null  
                                     ng.out("constructor( props:any ){", true);
@@ -501,7 +501,7 @@ function createProject(settings) {
                                         else {
                                             if (!settings.disableDevtoolsFromContext) {
                                                 body.out("const nextState = immer.produce( this.state, draft => ( new R" + c.getName() + "(draft) )." + m.getName() + "(" + firstParam + ") )", true);
-                                                body.out("if(this.__devTools) this.__devTools.send('" + m.getName() + "', nextState)", true);
+                                                body.out("if(this.__devTools) { this.__devTools.send('" + m.getName() + "', nextState) } ", true);
                                                 body.out("this.setState(nextState)", true);
                                             }
                                             else {

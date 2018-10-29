@@ -426,8 +426,9 @@ var UserStateProvider = /** @class */ (function (_super) {
     };
     UserStateProvider.prototype.fakeLogin = function () {
         var nextState = immer.produce(this.state, function (draft) { return (new RUserState(draft)).fakeLogin(); });
-        if (this.__devTools)
+        if (this.__devTools) {
             this.__devTools.send('fakeLogin', nextState);
+        }
         this.setState(nextState);
     };
     UserStateProvider.prototype.render = function () {

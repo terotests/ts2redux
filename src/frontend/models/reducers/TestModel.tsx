@@ -753,32 +753,32 @@ export class TestModelProvider extends React.Component {
   }
   setUserMessage(value: string){
     const nextState = immer.produce( this.state, draft => ( new RTestModel(draft) ).setUserMessage(value) )
-    if(this.__devTools) this.__devTools.send('setUserMessage', nextState)
+    if(this.__devTools) { this.__devTools.send('setUserMessage', nextState) } 
     this.setState(nextState)
   }
   add(item: ShopCartItem){
     const nextState = immer.produce( this.state, draft => ( new RTestModel(draft) ).add(item) )
-    if(this.__devTools) this.__devTools.send('add', nextState)
+    if(this.__devTools) { this.__devTools.send('add', nextState) } 
     this.setState(nextState)
   }
   removeFirst(){
     const nextState = immer.produce( this.state, draft => ( new RTestModel(draft) ).removeFirst() )
-    if(this.__devTools) this.__devTools.send('removeFirst', nextState)
+    if(this.__devTools) { this.__devTools.send('removeFirst', nextState) } 
     this.setState(nextState)
   }
   sort(){
     const nextState = immer.produce( this.state, draft => ( new RTestModel(draft) ).sort() )
-    if(this.__devTools) this.__devTools.send('sort', nextState)
+    if(this.__devTools) { this.__devTools.send('sort', nextState) } 
     this.setState(nextState)
   }
   addCart(){
     const nextState = immer.produce( this.state, draft => ( new RTestModel(draft) ).addCart() )
-    if(this.__devTools) this.__devTools.send('addCart', nextState)
+    if(this.__devTools) { this.__devTools.send('addCart', nextState) } 
     this.setState(nextState)
   }
   addCartSync(){
     const nextState = immer.produce( this.state, draft => ( new RTestModel(draft) ).addCartSync() )
-    if(this.__devTools) this.__devTools.send('addCartSync', nextState)
+    if(this.__devTools) { this.__devTools.send('addCartSync', nextState) } 
     this.setState(nextState)
   }
   addToCart(adding: {
@@ -786,7 +786,7 @@ export class TestModelProvider extends React.Component {
   item: ShopCartItem;
   }){
     const nextState = immer.produce( this.state, draft => ( new RTestModel(draft) ).addToCart(adding) )
-    if(this.__devTools) this.__devTools.send('addToCart', nextState)
+    if(this.__devTools) { this.__devTools.send('addToCart', nextState) } 
     this.setState(nextState)
   }
   setCartNewItem(adding: {
@@ -794,17 +794,17 @@ export class TestModelProvider extends React.Component {
   name: string;
   }){
     const nextState = immer.produce( this.state, draft => ( new RTestModel(draft) ).setCartNewItem(adding) )
-    if(this.__devTools) this.__devTools.send('setCartNewItem', nextState)
+    if(this.__devTools) { this.__devTools.send('setCartNewItem', nextState) } 
     this.setState(nextState)
   }
   addToCartRandom(){
     const nextState = immer.produce( this.state, draft => ( new RTestModel(draft) ).addToCartRandom() )
-    if(this.__devTools) this.__devTools.send('addToCartRandom', nextState)
+    if(this.__devTools) { this.__devTools.send('addToCartRandom', nextState) } 
     this.setState(nextState)
   }
   renameLast(newName: string){
     const nextState = immer.produce( this.state, draft => ( new RTestModel(draft) ).renameLast(newName) )
-    if(this.__devTools) this.__devTools.send('renameLast', nextState)
+    if(this.__devTools) { this.__devTools.send('renameLast', nextState) } 
     this.setState(nextState)
   }
   // action

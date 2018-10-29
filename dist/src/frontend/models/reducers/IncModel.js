@@ -201,14 +201,16 @@ var IncModelProvider = /** @class */ (function (_super) {
     };
     IncModelProvider.prototype.increment = function () {
         var nextState = immer.produce(this.state, function (draft) { return (new RIncModel(draft)).increment(); });
-        if (this.__devTools)
+        if (this.__devTools) {
             this.__devTools.send('increment', nextState);
+        }
         this.setState(nextState);
     };
     IncModelProvider.prototype.decrement = function () {
         var nextState = immer.produce(this.state, function (draft) { return (new RIncModel(draft)).decrement(); });
-        if (this.__devTools)
+        if (this.__devTools) {
             this.__devTools.send('decrement', nextState);
+        }
         this.setState(nextState);
     };
     IncModelProvider.prototype.render = function () {

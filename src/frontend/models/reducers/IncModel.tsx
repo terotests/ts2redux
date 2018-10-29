@@ -171,12 +171,12 @@ export class IncModelProvider extends React.Component {
   }
   increment(){
     const nextState = immer.produce( this.state, draft => ( new RIncModel(draft) ).increment() )
-    if(this.__devTools) this.__devTools.send('increment', nextState)
+    if(this.__devTools) { this.__devTools.send('increment', nextState) } 
     this.setState(nextState)
   }
   decrement(){
     const nextState = immer.produce( this.state, draft => ( new RIncModel(draft) ).decrement() )
-    if(this.__devTools) this.__devTools.send('decrement', nextState)
+    if(this.__devTools) { this.__devTools.send('decrement', nextState) } 
     this.setState(nextState)
   }
   public render() {

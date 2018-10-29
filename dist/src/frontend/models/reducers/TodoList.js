@@ -759,56 +759,65 @@ var TodoListProvider = /** @class */ (function (_super) {
     };
     TodoListProvider.prototype.nextPage = function () {
         var nextState = immer.produce(this.state, function (draft) { return (new RTodoList(draft)).nextPage(); });
-        if (this.__devTools)
+        if (this.__devTools) {
             this.__devTools.send('nextPage', nextState);
+        }
         this.setState(nextState);
     };
     TodoListProvider.prototype.prevPage = function () {
         var nextState = immer.produce(this.state, function (draft) { return (new RTodoList(draft)).prevPage(); });
-        if (this.__devTools)
+        if (this.__devTools) {
             this.__devTools.send('prevPage', nextState);
+        }
         this.setState(nextState);
     };
     TodoListProvider.prototype.toggleSortOrder = function () {
         var nextState = immer.produce(this.state, function (draft) { return (new RTodoList(draft)).toggleSortOrder(); });
-        if (this.__devTools)
+        if (this.__devTools) {
             this.__devTools.send('toggleSortOrder', nextState);
+        }
         this.setState(nextState);
     };
     TodoListProvider.prototype.clearTodoList = function () {
         var nextState = immer.produce(this.state, function (draft) { return (new RTodoList(draft)).clearTodoList(); });
-        if (this.__devTools)
+        if (this.__devTools) {
             this.__devTools.send('clearTodoList', nextState);
+        }
         this.setState(nextState);
     };
     TodoListProvider.prototype.reverse = function () {
         var nextState = immer.produce(this.state, function (draft) { return (new RTodoList(draft)).reverse(); });
-        if (this.__devTools)
+        if (this.__devTools) {
             this.__devTools.send('reverse', nextState);
+        }
         this.setState(nextState);
     };
     TodoListProvider.prototype.sortById = function () {
         var nextState = immer.produce(this.state, function (draft) { return (new RTodoList(draft)).sortById(); });
-        if (this.__devTools)
+        if (this.__devTools) {
             this.__devTools.send('sortById', nextState);
+        }
         this.setState(nextState);
     };
     TodoListProvider.prototype.sortByTitle = function () {
         var nextState = immer.produce(this.state, function (draft) { return (new RTodoList(draft)).sortByTitle(); });
-        if (this.__devTools)
+        if (this.__devTools) {
             this.__devTools.send('sortByTitle', nextState);
+        }
         this.setState(nextState);
     };
     TodoListProvider.prototype.sortByCompletion = function () {
         var nextState = immer.produce(this.state, function (draft) { return (new RTodoList(draft)).sortByCompletion(); });
-        if (this.__devTools)
+        if (this.__devTools) {
             this.__devTools.send('sortByCompletion', nextState);
+        }
         this.setState(nextState);
     };
     TodoListProvider.prototype.setTitle = function (value) {
         var nextState = immer.produce(this.state, function (draft) { return (new RTodoList(draft)).setTitle(value); });
-        if (this.__devTools)
+        if (this.__devTools) {
             this.__devTools.send('setTitle', nextState);
+        }
         this.setState(nextState);
     };
     /**

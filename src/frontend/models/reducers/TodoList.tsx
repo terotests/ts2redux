@@ -574,7 +574,7 @@ let instanceCnt = 1
 export class TodoListProvider extends React.Component {
   public state: ITodoList = initTodoList() 
   private __devTools:any = null
-  private __selectorlistToDisplay = null
+  private __selectorlistToDisplay:any = null
   constructor( props:any ){
     super(props)
     this.nextPage = this.nextPage.bind(this)
@@ -604,47 +604,47 @@ export class TodoListProvider extends React.Component {
   }
   nextPage(){
     const nextState = immer.produce( this.state, draft => ( new RTodoList(draft) ).nextPage() )
-    if(this.__devTools) this.__devTools.send('nextPage', nextState)
+    if(this.__devTools) { this.__devTools.send('nextPage', nextState) } 
     this.setState(nextState)
   }
   prevPage(){
     const nextState = immer.produce( this.state, draft => ( new RTodoList(draft) ).prevPage() )
-    if(this.__devTools) this.__devTools.send('prevPage', nextState)
+    if(this.__devTools) { this.__devTools.send('prevPage', nextState) } 
     this.setState(nextState)
   }
   toggleSortOrder(){
     const nextState = immer.produce( this.state, draft => ( new RTodoList(draft) ).toggleSortOrder() )
-    if(this.__devTools) this.__devTools.send('toggleSortOrder', nextState)
+    if(this.__devTools) { this.__devTools.send('toggleSortOrder', nextState) } 
     this.setState(nextState)
   }
   clearTodoList(){
     const nextState = immer.produce( this.state, draft => ( new RTodoList(draft) ).clearTodoList() )
-    if(this.__devTools) this.__devTools.send('clearTodoList', nextState)
+    if(this.__devTools) { this.__devTools.send('clearTodoList', nextState) } 
     this.setState(nextState)
   }
   reverse(){
     const nextState = immer.produce( this.state, draft => ( new RTodoList(draft) ).reverse() )
-    if(this.__devTools) this.__devTools.send('reverse', nextState)
+    if(this.__devTools) { this.__devTools.send('reverse', nextState) } 
     this.setState(nextState)
   }
   sortById(){
     const nextState = immer.produce( this.state, draft => ( new RTodoList(draft) ).sortById() )
-    if(this.__devTools) this.__devTools.send('sortById', nextState)
+    if(this.__devTools) { this.__devTools.send('sortById', nextState) } 
     this.setState(nextState)
   }
   sortByTitle(){
     const nextState = immer.produce( this.state, draft => ( new RTodoList(draft) ).sortByTitle() )
-    if(this.__devTools) this.__devTools.send('sortByTitle', nextState)
+    if(this.__devTools) { this.__devTools.send('sortByTitle', nextState) } 
     this.setState(nextState)
   }
   sortByCompletion(){
     const nextState = immer.produce( this.state, draft => ( new RTodoList(draft) ).sortByCompletion() )
-    if(this.__devTools) this.__devTools.send('sortByCompletion', nextState)
+    if(this.__devTools) { this.__devTools.send('sortByCompletion', nextState) } 
     this.setState(nextState)
   }
   setTitle(value: string){
     const nextState = immer.produce( this.state, draft => ( new RTodoList(draft) ).setTitle(value) )
-    if(this.__devTools) this.__devTools.send('setTitle', nextState)
+    if(this.__devTools) { this.__devTools.send('setTitle', nextState) } 
     this.setState(nextState)
   }
   /**

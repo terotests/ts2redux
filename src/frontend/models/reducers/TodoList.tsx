@@ -6,13 +6,7 @@
 ********************************************************************************/
 
 import axios from 'axios'
-
-export interface TodoListItem {
-  userId: number
-  id: number
-  title: string
-  completed: boolean
-}
+import {TodoListItem} from '.././testModels'
 
 export type TaskState = 'UNDEFINED' | 'RUNNING' |  'LOADED' | 'ERROR'
 export enum SortOrder {

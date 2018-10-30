@@ -1,9 +1,4 @@
-export interface TodoListItem {
-    userId: number;
-    id: number;
-    title: string;
-    completed: boolean;
-}
+import { TodoListItem } from './testModels';
 export declare type TaskState = 'UNDEFINED' | 'RUNNING' | 'LOADED' | 'ERROR';
 export declare enum SortOrder {
     ASC = "asc",

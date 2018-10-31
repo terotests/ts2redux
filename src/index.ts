@@ -154,14 +154,15 @@ export async function createProject( settings:GenerationOptions) {
 
         const myFile = project.createSourceFile("tmpSourceFile.ts", sourceFile.getText());        
 
-        // TODO: temporary fix for the import locations...
         const imports = myFile.getImportDeclarations();
         for( let importDeclaration of imports) {
           const moduleSpecifier = importDeclaration.getModuleSpecifier(); 
           const moduleSpecifierValue = importDeclaration.getModuleSpecifierValue(); 
           if(moduleSpecifierValue.indexOf('.') == 0) {
-            // TODO: change this from fixed value to something better...
-            importDeclaration.setModuleSpecifier('../' + moduleSpecifierValue);
+            importDeclaration.setModuleSpecifier(
+                path.relative(
+                  targetPath,
+                  path.normalize( sourcePath + '/' + moduleSpecifierValue) ))
           }          
         }        
         ng.raw(myFile.getText(), true)

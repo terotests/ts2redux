@@ -1,4 +1,4 @@
-import { TodoListItem } from './testModels';
+import { TodoListItem } from './interfaces';
 export declare type TaskState = 'UNDEFINED' | 'RUNNING' | 'LOADED' | 'ERROR';
 export declare enum SortOrder {
     ASC = "asc",

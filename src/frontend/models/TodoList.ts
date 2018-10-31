@@ -1,5 +1,5 @@
 import axios from 'axios'
-import {TodoListItem} from './testModels'
+import {TodoListItem} from './interfaces'
 
 export type TaskState = 'UNDEFINED' | 'RUNNING' |  'LOADED' | 'ERROR'
 export enum SortOrder {

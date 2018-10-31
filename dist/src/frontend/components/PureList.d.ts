@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { TodoListItem } from '../models/TodoList';
+import { TodoListItem } from '../models/interfaces';
 export interface IPureList {
     items: TodoListItem[];
 }

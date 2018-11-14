@@ -570,7 +570,7 @@ function createProject(settings) {
                         wr.indent(-1);
                         wr.out('})', true);
                     });
-                    return [4 /*yield*/, RFs.saveTo('./', false)];
+                    return [4 /*yield*/, RFs.saveTo('./', { usePrettier: true })];
                 case 1:
                     _a.sent();
                     return [4 /*yield*/, project.save()];

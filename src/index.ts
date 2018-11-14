@@ -641,6 +641,6 @@ if(!settings.disableDevtoolsFromContext) {
       wr.indent(-1)
     wr.out('})', true)
   })
-  await RFs.saveTo('./', false );
+  await RFs.saveTo('./', {usePrettier:true} );
   await project.save()  
 }

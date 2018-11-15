@@ -171,9 +171,11 @@ export const IncModelConsumer = IncModelContext.Consumer;
 let instanceCnt = 1;
 export class IncModelProvider extends React.Component {
   public state: IIncModel = initIncModel();
+  public lastSetState: IIncModel;
   private __devTools: any = null;
   constructor(props: any) {
     super(props);
+    this.lastSetState = this.state;
     this.increment = this.increment.bind(this);
     this.decrement = this.decrement.bind(this);
     const devs = window["devToolsExtension"]
@@ -194,6 +196,10 @@ export class IncModelProvider extends React.Component {
       this.__devTools.unsubscribe();
     }
   }
+  public setStateSync(state: IIncModel) {
+    this.lastSetState = state;
+    this.setState(state);
+  }
   increment() {
     const nextState = immer.produce(this.state, draft =>
       new RIncModel(draft).increment()
@@ -201,7 +207,7 @@ export class IncModelProvider extends React.Component {
     if (this.__devTools) {
       this.__devTools.send("increment", nextState);
     }
-    this.setState(nextState);
+    this.setStateSync(nextState);
   }
   decrement() {
     const nextState = immer.produce(this.state, draft =>
@@ -210,7 +216,7 @@ export class IncModelProvider extends React.Component {
     if (this.__devTools) {
       this.__devTools.send("decrement", nextState);
     }
-    this.setState(nextState);
+    this.setStateSync(nextState);
   }
   public render() {
     return (

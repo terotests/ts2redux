@@ -766,6 +766,7 @@ var TodoListProvider = /** @class */ (function (_super) {
         _this.state = initTodoList();
         _this.__devTools = null;
         _this.__selectorlistToDisplay = null;
+        _this.lastSetState = _this.state;
         _this.nextPage = _this.nextPage.bind(_this);
         _this.prevPage = _this.prevPage.bind(_this);
         _this.toggleSortOrder = _this.toggleSortOrder.bind(_this);
@@ -796,6 +797,10 @@ var TodoListProvider = /** @class */ (function (_super) {
             this.__devTools.unsubscribe();
         }
     };
+    TodoListProvider.prototype.setStateSync = function (state) {
+        this.lastSetState = state;
+        this.setState(state);
+    };
     TodoListProvider.prototype.nextPage = function () {
         var nextState = immer.produce(this.state, function (draft) {
             return new RTodoList(draft).nextPage();
@@ -803,7 +808,7 @@ var TodoListProvider = /** @class */ (function (_super) {
         if (this.__devTools) {
             this.__devTools.send("nextPage", nextState);
         }
-        this.setState(nextState);
+        this.setStateSync(nextState);
     };
     TodoListProvider.prototype.prevPage = function () {
         var nextState = immer.produce(this.state, function (draft) {
@@ -812,7 +817,7 @@ var TodoListProvider = /** @class */ (function (_super) {
         if (this.__devTools) {
             this.__devTools.send("prevPage", nextState);
         }
-        this.setState(nextState);
+        this.setStateSync(nextState);
     };
     TodoListProvider.prototype.toggleSortOrder = function () {
         var nextState = immer.produce(this.state, function (draft) {
@@ -821,7 +826,7 @@ var TodoListProvider = /** @class */ (function (_super) {
         if (this.__devTools) {
             this.__devTools.send("toggleSortOrder", nextState);
         }
-        this.setState(nextState);
+        this.setStateSync(nextState);
     };
     TodoListProvider.prototype.clearTodoList = function () {
         var nextState = immer.produce(this.state, function (draft) {
@@ -830,7 +835,7 @@ var TodoListProvider = /** @class */ (function (_super) {
         if (this.__devTools) {
             this.__devTools.send("clearTodoList", nextState);
         }
-        this.setState(nextState);
+        this.setStateSync(nextState);
     };
     TodoListProvider.prototype.reverse = function () {
         var nextState = immer.produce(this.state, function (draft) {
@@ -839,7 +844,7 @@ var TodoListProvider = /** @class */ (function (_super) {
         if (this.__devTools) {
             this.__devTools.send("reverse", nextState);
         }
-        this.setState(nextState);
+        this.setStateSync(nextState);
     };
     TodoListProvider.prototype.sortById = function () {
         var nextState = immer.produce(this.state, function (draft) {
@@ -848,7 +853,7 @@ var TodoListProvider = /** @class */ (function (_super) {
         if (this.__devTools) {
             this.__devTools.send("sortById", nextState);
         }
-        this.setState(nextState);
+        this.setStateSync(nextState);
     };
     TodoListProvider.prototype.sortByTitle = function () {
         var nextState = immer.produce(this.state, function (draft) {
@@ -857,7 +862,7 @@ var TodoListProvider = /** @class */ (function (_super) {
         if (this.__devTools) {
             this.__devTools.send("sortByTitle", nextState);
         }
-        this.setState(nextState);
+        this.setStateSync(nextState);
     };
     TodoListProvider.prototype.sortByCompletion = function () {
         var nextState = immer.produce(this.state, function (draft) {
@@ -866,7 +871,7 @@ var TodoListProvider = /** @class */ (function (_super) {
         if (this.__devTools) {
             this.__devTools.send("sortByCompletion", nextState);
         }
-        this.setState(nextState);
+        this.setStateSync(nextState);
     };
     TodoListProvider.prototype.setTitle = function (value) {
         var nextState = immer.produce(this.state, function (draft) {
@@ -875,7 +880,7 @@ var TodoListProvider = /** @class */ (function (_super) {
         if (this.__devTools) {
             this.__devTools.send("setTitle", nextState);
         }
-        this.setState(nextState);
+        this.setStateSync(nextState);
     };
     /**
      * Fetch items from json placeholder service
@@ -885,12 +890,12 @@ var TodoListProvider = /** @class */ (function (_super) {
             var _this = this;
             return __generator(this, function (_a) {
                 new RTodoList(undefined, function (action) {
-                    var nextState = exports.TodoListReducer(_this.state, action);
+                    var nextState = exports.TodoListReducer(_this.lastSetState, action);
                     if (_this.__devTools) {
                         _this.__devTools.send(action.type, nextState);
                     }
-                    _this.setState(nextState);
-                }, function () { return ({ TodoList: _this.state }); }).getItems();
+                    _this.setStateSync(nextState);
+                }, function () { return ({ TodoList: _this.lastSetState }); }).getItems();
                 return [2 /*return*/];
             });
         });

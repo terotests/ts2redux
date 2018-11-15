@@ -389,6 +389,7 @@ var UserStateProvider = /** @class */ (function (_super) {
         var _this = _super.call(this, props) || this;
         _this.state = initUserState();
         _this.__devTools = null;
+        _this.lastSetState = _this.state;
         _this.login = _this.login.bind(_this);
         _this.logout = _this.logout.bind(_this);
         _this.fakeLogin = _this.fakeLogin.bind(_this);
@@ -411,17 +412,21 @@ var UserStateProvider = /** @class */ (function (_super) {
             this.__devTools.unsubscribe();
         }
     };
+    UserStateProvider.prototype.setStateSync = function (state) {
+        this.lastSetState = state;
+        this.setState(state);
+    };
     UserStateProvider.prototype.login = function (loginInfo) {
         return __awaiter(this, void 0, void 0, function () {
             var _this = this;
             return __generator(this, function (_a) {
                 new RUserState(undefined, function (action) {
-                    var nextState = exports.UserStateReducer(_this.state, action);
+                    var nextState = exports.UserStateReducer(_this.lastSetState, action);
                     if (_this.__devTools) {
                         _this.__devTools.send(action.type, nextState);
                     }
-                    _this.setState(nextState);
-                }, function () { return ({ UserState: _this.state }); }).login(loginInfo);
+                    _this.setStateSync(nextState);
+                }, function () { return ({ UserState: _this.lastSetState }); }).login(loginInfo);
                 return [2 /*return*/];
             });
         });
@@ -431,12 +436,12 @@ var UserStateProvider = /** @class */ (function (_super) {
             var _this = this;
             return __generator(this, function (_a) {
                 new RUserState(undefined, function (action) {
-                    var nextState = exports.UserStateReducer(_this.state, action);
+                    var nextState = exports.UserStateReducer(_this.lastSetState, action);
                     if (_this.__devTools) {
                         _this.__devTools.send(action.type, nextState);
                     }
-                    _this.setState(nextState);
-                }, function () { return ({ UserState: _this.state }); }).logout();
+                    _this.setStateSync(nextState);
+                }, function () { return ({ UserState: _this.lastSetState }); }).logout();
                 return [2 /*return*/];
             });
         });
@@ -448,7 +453,7 @@ var UserStateProvider = /** @class */ (function (_super) {
         if (this.__devTools) {
             this.__devTools.send("fakeLogin", nextState);
         }
-        this.setState(nextState);
+        this.setStateSync(nextState);
     };
     UserStateProvider.prototype.render = function () {
         return (React.createElement(exports.UserStateContext.Provider, { value: __assign({}, this.state, { login: this.login, logout: this.logout, fakeLogin: this.fakeLogin }) },

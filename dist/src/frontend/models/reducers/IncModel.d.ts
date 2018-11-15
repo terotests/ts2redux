@@ -52,9 +52,11 @@ export declare const IncModelContext: React.Context<IProps>;
 export declare const IncModelConsumer: React.ComponentType<React.ConsumerProps<IProps>>;
 export declare class IncModelProvider extends React.Component {
     state: IIncModel;
+    lastSetState: IIncModel;
     private __devTools;
     constructor(props: any);
     componentWillUnmount(): void;
+    setStateSync(state: IIncModel): void;
     increment(): void;
     decrement(): void;
     render(): JSX.Element;

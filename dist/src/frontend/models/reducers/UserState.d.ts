@@ -74,9 +74,11 @@ export declare const UserStateContext: React.Context<IProps>;
 export declare const UserStateConsumer: React.ComponentType<React.ConsumerProps<IProps>>;
 export declare class UserStateProvider extends React.Component {
     state: IUserState;
+    lastSetState: IUserState;
     private __devTools;
     constructor(props: any);
     componentWillUnmount(): void;
+    setStateSync(state: IUserState): void;
     login(loginInfo: {
         username: string;
         password: string;

@@ -16,6 +16,10 @@ var todoList_1 = require("./components/todoList");
 var ReduxInc_1 = require("./components/ReduxInc");
 var combinedState_1 = require("./components/combinedState");
 var todo = require("./models/TodoList");
+var WaspModel_1 = require("./models/reducers/WaspModel");
+var WaspComponent_1 = require("./components/WaspComponent");
+var WaspContextComponent_1 = require("./components/WaspContextComponent");
+var UIHelperModel_1 = require("./models/reducers/UIHelperModel");
 var store = redux_1.createStore(reducers_1.reducers, redux_1.compose(redux_1.applyMiddleware(redux_thunk_1.default), window['devToolsExtension'] ? window['devToolsExtension']() : function (f) { return f; }));
 var listValue = new todo.TodoList();
 var Ctx = React.createContext(listValue);
@@ -29,6 +33,15 @@ var UserInfo = function (props) { return React.createElement(UserState_1.UserSta
 ReactDOM.render(React.createElement(react_redux_1.Provider, { store: store },
     React.createElement(Ctx.Provider, { value: listValue },
         React.createElement(UserState_1.UserStateProvider, null,
+            React.createElement(UIHelperModel_1.UIHelperModelProvider, null,
+                React.createElement(UIHelperModel_1.UIHelperModelConsumer, null, function (state) { return React.createElement("div", null,
+                    React.createElement("button", { onClick: state.toggle }, "Show / Hide Wasps"),
+                    state.showWasps ?
+                        React.createElement("div", null,
+                            React.createElement(WaspComponent_1.WaspComponent, null),
+                            React.createElement(WaspModel_1.WaspModelProvider, null,
+                                React.createElement(WaspContextComponent_1.WaspContextComponent, null)))
+                        : ''); })),
             React.createElement(IncModel_1.IncModelProvider, null,
                 React.createElement(IncModel_1.IncModelConsumer, null, function (state) { return React.createElement("div", null,
                     React.createElement("div", null, state.cnt),
@@ -55,7 +68,7 @@ ReactDOM.render(React.createElement(react_redux_1.Provider, { store: store },
                                 todolist.items.length),
                             React.createElement("button", { onClick: function () { return todolist.getItems(); } }, "Load"),
                             React.createElement("button", { onClick: function () { return todolist.reverse(); } }, "Revert"),
-                            React.createElement("ul", null, todolist.listToDisplay.map(function (item) { return React.createElement("li", { key: item.id }, item.title); })));
+                            React.createElement("ul", null, todolist.items.map(function (item) { return React.createElement("li", { key: item.id }, item.title); })));
                     })),
                 React.createElement(TodoList_1.TodoListProvider, null,
                     React.createElement(TodoList_1.TodoListConsumer, null, function (todolist) {
@@ -67,7 +80,7 @@ ReactDOM.render(React.createElement(react_redux_1.Provider, { store: store },
                             React.createElement("button", { onClick: function () { return todolist.toggleSortOrder(); } }, "Toggle"),
                             React.createElement("button", { onClick: function () { return todolist.nextPage(); } }, "Next"),
                             React.createElement("button", { onClick: function () { return todolist.prevPage(); } }, "Prev"),
-                            React.createElement("ul", null, todolist.listToDisplay.map(function (item) { return React.createElement("li", { key: item.id },
+                            React.createElement("ul", null, todolist.items.map(function (item) { return React.createElement("li", { key: item.id },
                                 item.id,
                                 " ",
                                 item.title,

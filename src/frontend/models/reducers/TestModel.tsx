@@ -810,9 +810,11 @@ export const TestModelConsumer = TestModelContext.Consumer;
 let instanceCnt = 1;
 export class TestModelProvider extends React.Component {
   public state: ITestModel = initTestModel();
+  public lastSetState: ITestModel;
   private __devTools: any = null;
   constructor(props: any) {
     super(props);
+    this.lastSetState = this.state;
     this.setUserMessage = this.setUserMessage.bind(this);
     this.add = this.add.bind(this);
     this.removeFirst = this.removeFirst.bind(this);
@@ -845,6 +847,10 @@ export class TestModelProvider extends React.Component {
       this.__devTools.unsubscribe();
     }
   }
+  public setStateSync(state: ITestModel) {
+    this.lastSetState = state;
+    this.setState(state);
+  }
   setUserMessage(value: string) {
     const nextState = immer.produce(this.state, draft =>
       new RTestModel(draft).setUserMessage(value)
@@ -852,7 +858,7 @@ export class TestModelProvider extends React.Component {
     if (this.__devTools) {
       this.__devTools.send("setUserMessage", nextState);
     }
-    this.setState(nextState);
+    this.setStateSync(nextState);
   }
   add(item: ShopCartItem) {
     const nextState = immer.produce(this.state, draft =>
@@ -861,7 +867,7 @@ export class TestModelProvider extends React.Component {
     if (this.__devTools) {
       this.__devTools.send("add", nextState);
     }
-    this.setState(nextState);
+    this.setStateSync(nextState);
   }
   removeFirst() {
     const nextState = immer.produce(this.state, draft =>
@@ -870,7 +876,7 @@ export class TestModelProvider extends React.Component {
     if (this.__devTools) {
       this.__devTools.send("removeFirst", nextState);
     }
-    this.setState(nextState);
+    this.setStateSync(nextState);
   }
   sort() {
     const nextState = immer.produce(this.state, draft =>
@@ -879,7 +885,7 @@ export class TestModelProvider extends React.Component {
     if (this.__devTools) {
       this.__devTools.send("sort", nextState);
     }
-    this.setState(nextState);
+    this.setStateSync(nextState);
   }
   addCart() {
     const nextState = immer.produce(this.state, draft =>
@@ -888,7 +894,7 @@ export class TestModelProvider extends React.Component {
     if (this.__devTools) {
       this.__devTools.send("addCart", nextState);
     }
-    this.setState(nextState);
+    this.setStateSync(nextState);
   }
   addCartSync() {
     const nextState = immer.produce(this.state, draft =>
@@ -897,7 +903,7 @@ export class TestModelProvider extends React.Component {
     if (this.__devTools) {
       this.__devTools.send("addCartSync", nextState);
     }
-    this.setState(nextState);
+    this.setStateSync(nextState);
   }
   addToCart(adding: { cartId: string; item: ShopCartItem }) {
     const nextState = immer.produce(this.state, draft =>
@@ -906,7 +912,7 @@ export class TestModelProvider extends React.Component {
     if (this.__devTools) {
       this.__devTools.send("addToCart", nextState);
     }
-    this.setState(nextState);
+    this.setStateSync(nextState);
   }
   setCartNewItem(adding: { cartId: string; name: string }) {
     const nextState = immer.produce(this.state, draft =>
@@ -915,7 +921,7 @@ export class TestModelProvider extends React.Component {
     if (this.__devTools) {
       this.__devTools.send("setCartNewItem", nextState);
     }
-    this.setState(nextState);
+    this.setStateSync(nextState);
   }
   addToCartRandom() {
     const nextState = immer.produce(this.state, draft =>
@@ -924,7 +930,7 @@ export class TestModelProvider extends React.Component {
     if (this.__devTools) {
       this.__devTools.send("addToCartRandom", nextState);
     }
-    this.setState(nextState);
+    this.setStateSync(nextState);
   }
   renameLast(newName: string) {
     const nextState = immer.produce(this.state, draft =>
@@ -933,59 +939,59 @@ export class TestModelProvider extends React.Component {
     if (this.__devTools) {
       this.__devTools.send("renameLast", nextState);
     }
-    this.setState(nextState);
+    this.setStateSync(nextState);
   }
   // action
   async createItem(someName: string) {
     new RTestModel(
       undefined,
       (action: any) => {
-        const nextState = TestModelReducer(this.state, action);
+        const nextState = TestModelReducer(this.lastSetState, action);
         if (this.__devTools) {
           this.__devTools.send(action.type, nextState);
         }
-        this.setState(nextState);
+        this.setStateSync(nextState);
       },
-      () => ({ TestModel: this.state })
+      () => ({ TestModel: this.lastSetState })
     ).createItem(someName);
   }
   async addOneFriend(name) {
     new RTestModel(
       undefined,
       (action: any) => {
-        const nextState = TestModelReducer(this.state, action);
+        const nextState = TestModelReducer(this.lastSetState, action);
         if (this.__devTools) {
           this.__devTools.send(action.type, nextState);
         }
-        this.setState(nextState);
+        this.setStateSync(nextState);
       },
-      () => ({ TestModel: this.state })
+      () => ({ TestModel: this.lastSetState })
     ).addOneFriend(name);
   }
   async fillSomeFriends() {
     new RTestModel(
       undefined,
       (action: any) => {
-        const nextState = TestModelReducer(this.state, action);
+        const nextState = TestModelReducer(this.lastSetState, action);
         if (this.__devTools) {
           this.__devTools.send(action.type, nextState);
         }
-        this.setState(nextState);
+        this.setStateSync(nextState);
       },
-      () => ({ TestModel: this.state })
+      () => ({ TestModel: this.lastSetState })
     ).fillSomeFriends();
   }
   async ChangeLastItem() {
     new RTestModel(
       undefined,
       (action: any) => {
-        const nextState = TestModelReducer(this.state, action);
+        const nextState = TestModelReducer(this.lastSetState, action);
         if (this.__devTools) {
           this.__devTools.send(action.type, nextState);
         }
-        this.setState(nextState);
+        this.setStateSync(nextState);
       },
-      () => ({ TestModel: this.state })
+      () => ({ TestModel: this.lastSetState })
     ).ChangeLastItem();
   }
   public render() {

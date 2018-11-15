@@ -9,12 +9,16 @@ import { IIncModel } from "./IncModel";
 import { ISimpleModel } from "./SimpleModel";
 import { ITestModel } from "./TestModel";
 import { ITodoList } from "./TodoList";
+import { IUIHelperModel } from "./UIHelperModel";
 import { IUserState } from "./UserState";
+import { IWaspModel } from "./WaspModel";
 export interface IState {
     IncModel: IIncModel;
     SimpleModel: ISimpleModel;
     TestModel: ITestModel;
     TodoList: ITodoList;
+    UIHelperModel: IUIHelperModel;
     UserState: IUserState;
+    WaspModel: IWaspModel;
 }
 export declare const reducers: redux.Reducer<IState, redux.AnyAction>;

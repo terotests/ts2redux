@@ -146,9 +146,11 @@ export const SimpleModelConsumer = SimpleModelContext.Consumer;
 let instanceCnt = 1;
 export class SimpleModelProvider extends React.Component {
   public state: ISimpleModel = initSimpleModel();
+  public lastSetState: ISimpleModel;
   private __devTools: any = null;
   constructor(props: any) {
     super(props);
+    this.lastSetState = this.state;
     this.getItems = this.getItems.bind(this);
     const devs = window["devToolsExtension"]
       ? window["devToolsExtension"]
@@ -168,17 +170,21 @@ export class SimpleModelProvider extends React.Component {
       this.__devTools.unsubscribe();
     }
   }
+  public setStateSync(state: ISimpleModel) {
+    this.lastSetState = state;
+    this.setState(state);
+  }
   async getItems() {
     new RSimpleModel(
       undefined,
       (action: any) => {
-        const nextState = SimpleModelReducer(this.state, action);
+        const nextState = SimpleModelReducer(this.lastSetState, action);
         if (this.__devTools) {
           this.__devTools.send(action.type, nextState);
         }
-        this.setState(nextState);
+        this.setStateSync(nextState);
       },
-      () => ({ SimpleModel: this.state })
+      () => ({ SimpleModel: this.lastSetState })
     ).getItems();
   }
   public render() {

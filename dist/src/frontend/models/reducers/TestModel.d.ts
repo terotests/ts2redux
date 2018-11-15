@@ -152,9 +152,11 @@ export declare const TestModelContext: React.Context<IProps>;
 export declare const TestModelConsumer: React.ComponentType<React.ConsumerProps<IProps>>;
 export declare class TestModelProvider extends React.Component {
     state: ITestModel;
+    lastSetState: ITestModel;
     private __devTools;
     constructor(props: any);
     componentWillUnmount(): void;
+    setStateSync(state: ITestModel): void;
     setUserMessage(value: string): void;
     add(item: ShopCartItem): void;
     removeFirst(): void;

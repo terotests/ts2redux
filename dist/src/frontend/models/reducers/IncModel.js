@@ -180,6 +180,7 @@ var IncModelProvider = /** @class */ (function (_super) {
         var _this = _super.call(this, props) || this;
         _this.state = initIncModel();
         _this.__devTools = null;
+        _this.lastSetState = _this.state;
         _this.increment = _this.increment.bind(_this);
         _this.decrement = _this.decrement.bind(_this);
         var devs = window["devToolsExtension"]
@@ -201,6 +202,10 @@ var IncModelProvider = /** @class */ (function (_super) {
             this.__devTools.unsubscribe();
         }
     };
+    IncModelProvider.prototype.setStateSync = function (state) {
+        this.lastSetState = state;
+        this.setState(state);
+    };
     IncModelProvider.prototype.increment = function () {
         var nextState = immer.produce(this.state, function (draft) {
             return new RIncModel(draft).increment();
@@ -208,7 +213,7 @@ var IncModelProvider = /** @class */ (function (_super) {
         if (this.__devTools) {
             this.__devTools.send("increment", nextState);
         }
-        this.setState(nextState);
+        this.setStateSync(nextState);
     };
     IncModelProvider.prototype.decrement = function () {
         var nextState = immer.produce(this.state, function (draft) {
@@ -217,7 +222,7 @@ var IncModelProvider = /** @class */ (function (_super) {
         if (this.__devTools) {
             this.__devTools.send("decrement", nextState);
         }
-        this.setState(nextState);
+        this.setStateSync(nextState);
     };
     IncModelProvider.prototype.render = function () {
         return (React.createElement(exports.IncModelContext.Provider, { value: __assign({}, this.state, { increment: this.increment, decrement: this.decrement }) },

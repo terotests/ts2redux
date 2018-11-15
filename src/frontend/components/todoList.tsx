@@ -13,9 +13,6 @@ export const AbstractTodoList = (props : Props) => {
       <h2>TodoList Component, with memoization</h2>
       <div>Title: {props.listTitle}</div>
       <button onClick={() => props.getItems()}>Load</button>
-      <button onClick={() => props.sortById()}>Sort by Id</button>
-      <button onClick={() => props.sortByTitle()}>Sort by Title</button>
-      <button onClick={() => props.sortByCompletion()}>Sort by Completion</button>
       <button onClick={() => props.toggleSortOrder()}>Toggle Order</button>
       <button onClick={() => props.prevPage()}>Prev</button>   
       <button onClick={() => props.nextPage()}>Next</button>   

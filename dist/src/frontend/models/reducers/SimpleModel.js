@@ -208,6 +208,7 @@ var SimpleModelProvider = /** @class */ (function (_super) {
         var _this = _super.call(this, props) || this;
         _this.state = initSimpleModel();
         _this.__devTools = null;
+        _this.lastSetState = _this.state;
         _this.getItems = _this.getItems.bind(_this);
         var devs = window["devToolsExtension"]
             ? window["devToolsExtension"]
@@ -228,17 +229,21 @@ var SimpleModelProvider = /** @class */ (function (_super) {
             this.__devTools.unsubscribe();
         }
     };
+    SimpleModelProvider.prototype.setStateSync = function (state) {
+        this.lastSetState = state;
+        this.setState(state);
+    };
     SimpleModelProvider.prototype.getItems = function () {
         return __awaiter(this, void 0, void 0, function () {
             var _this = this;
             return __generator(this, function (_a) {
                 new RSimpleModel(undefined, function (action) {
-                    var nextState = exports.SimpleModelReducer(_this.state, action);
+                    var nextState = exports.SimpleModelReducer(_this.lastSetState, action);
                     if (_this.__devTools) {
                         _this.__devTools.send(action.type, nextState);
                     }
-                    _this.setState(nextState);
-                }, function () { return ({ SimpleModel: _this.state }); }).getItems();
+                    _this.setStateSync(nextState);
+                }, function () { return ({ SimpleModel: _this.lastSetState }); }).getItems();
                 return [2 /*return*/];
             });
         });

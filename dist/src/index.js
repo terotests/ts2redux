@@ -38,6 +38,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var ts_simple_ast_1 = require("ts-simple-ast");
 var R = require("robowr");
 var path = require("path");
+var prettier = require("prettier");
 var createComment = function (wr, txt) {
     var lines = txt.split('\n');
     var longest = lines.map(function (line) { return line.length; }).reduce(function (prev, curr) { return Math.max(prev, curr); }, 0);
@@ -58,7 +59,7 @@ var createComment = function (wr, txt) {
 };
 function createProject(settings) {
     return __awaiter(this, void 0, void 0, function () {
-        var project, reducerPath, RFs, targetFiles, modelsList, generatedFiles, dirReducers, JSTags;
+        var project, reducerPath, RFs, targetFiles, modelsList, generatedFiles, dirReducers, JSTags, prettierConfig;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -443,6 +444,7 @@ function createProject(settings) {
                                     ng.out("export class " + c.getName() + "Provider extends React.Component {", true);
                                     ng.indent(1);
                                     ng.out("public state: I" + c.getName() + " = init" + c.getName() + "() ", true);
+                                    ng.out("public lastSetState: I" + c.getName(), true);
                                     ng.out("private __devTools:any = null", true);
                                     // for each selector...
                                     // this.__selector1 = getCompletedListSelectorFnCreator()
@@ -453,6 +455,7 @@ function createProject(settings) {
                                     ng.out("constructor( props:any ){", true);
                                     ng.indent(1);
                                     ng.out("super(props)", true);
+                                    ng.out("this.lastSetState = this.state", true);
                                     var binder = ng.fork();
                                     // for each selector
                                     // this.__selector1 = getCompletedListSelectorFnCreator()
@@ -486,6 +489,12 @@ function createProject(settings) {
                                         ng.indent(-1);
                                         ng.out("}", true);
                                     }
+                                    ng.out("public setStateSync(state: I" + c.getName() + ") {", true);
+                                    ng.indent(1);
+                                    ng.out("this.lastSetState = state", true);
+                                    ng.out("this.setState(state)", true);
+                                    ng.indent(-1);
+                                    ng.out("}", true);
                                     reducerMethods_1.forEach(function (m) {
                                         var body = ng;
                                         body.raw(m.getModifiers().map(function (mod) { return mod.print() + ' '; }).join(''));
@@ -499,24 +508,24 @@ function createProject(settings) {
                                             body.out("(new R" + c.getName() + "(undefined, (action:any) => {", true);
                                             body.indent(1);
                                             if (!settings.disableDevtoolsFromContext) {
-                                                body.out("const nextState = " + c.getName() + "Reducer( this.state, action )", true);
+                                                body.out("const nextState = " + c.getName() + "Reducer( this.lastSetState, action )", true);
                                                 body.out("if(this.__devTools) { this.__devTools.send(action.type, nextState) }", true);
-                                                body.out("this.setState(nextState)", true);
+                                                body.out("this.setStateSync(nextState)", true);
                                             }
                                             else {
-                                                body.out("this.setState(" + c.getName() + "Reducer( this.state, action ))", true);
+                                                body.out("this.setStateSync(" + c.getName() + "Reducer( this.lastSetState, action ))", true);
                                             }
                                             body.indent(-1);
-                                            body.out("}, () => ({" + c.getName() + ":this.state})) )." + m.getName() + "(" + firstParam + ")", true);
+                                            body.out("}, () => ({" + c.getName() + ":this.lastSetState})) )." + m.getName() + "(" + firstParam + ")", true);
                                         }
                                         else {
                                             if (!settings.disableDevtoolsFromContext) {
                                                 body.out("const nextState = immer.produce( this.state, draft => ( new R" + c.getName() + "(draft) )." + m.getName() + "(" + firstParam + ") )", true);
                                                 body.out("if(this.__devTools) { this.__devTools.send('" + m.getName() + "', nextState) } ", true);
-                                                body.out("this.setState(nextState)", true);
+                                                body.out("this.setStateSync(nextState)", true);
                                             }
                                             else {
-                                                body.out("this.setState(immer.produce( this.state, draft => ( new R" + c.getName() + "(draft) )." + m.getName() + "(" + firstParam + ") ))", true);
+                                                body.out("this.setStateSync(immer.produce( this.state, draft => ( new R" + c.getName() + "(draft) )." + m.getName() + "(" + firstParam + ") ))", true);
                                             }
                                         }
                                         body.indent(-1);
@@ -570,11 +579,14 @@ function createProject(settings) {
                         wr.indent(-1);
                         wr.out('})', true);
                     });
-                    return [4 /*yield*/, RFs.saveTo('./', { usePrettier: true })];
+                    return [4 /*yield*/, prettier.resolveConfig(process.cwd())];
                 case 1:
+                    prettierConfig = _a.sent();
+                    return [4 /*yield*/, RFs.saveTo('./', { usePrettier: true, prettierConfig: prettierConfig })];
+                case 2:
                     _a.sent();
                     return [4 /*yield*/, project.save()];
-                case 2:
+                case 3:
                     _a.sent();
                     return [2 /*return*/];
             }

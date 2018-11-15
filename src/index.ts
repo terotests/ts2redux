@@ -7,7 +7,7 @@ import * as path from 'path'
 import { getJSDocTypeParameterTags } from "typescript";
 import * as immer from 'immer'
 import { dirname } from "path";
-
+import * as prettier from 'prettier'
 
 export interface GenerationOptions {
   path: string
@@ -504,6 +504,7 @@ export interface IContainerPropsState extends ITodoList {
             ng.out(`export class ${c.getName()}Provider extends React.Component {`, true)
               ng.indent(1)
               ng.out(`public state: I${c.getName()} = init${c.getName()}() `, true)
+              ng.out(`public lastSetState: I${c.getName()}`, true)
               ng.out(`private __devTools:any = null`, true)
 
               // for each selector...
@@ -516,6 +517,7 @@ export interface IContainerPropsState extends ITodoList {
               ng.out(`constructor( props:any ){`, true)
                 ng.indent(1)
                 ng.out(`super(props)`, true);
+                ng.out(`this.lastSetState = this.state`, true);
                 const binder = ng.fork()
                 // for each selector
                 // this.__selector1 = getCompletedListSelectorFnCreator()
@@ -549,7 +551,14 @@ export interface IContainerPropsState extends ITodoList {
                   ng.out(`if(this.__devTools) { this.__devTools.unsubscribe() }`, true)
                   ng.indent(-1)
                 ng.out(`}`, true)
-              }             
+              }  
+              ng.out(`public setStateSync(state: I${c.getName()}) {`, true)
+                ng.indent(1)
+                ng.out(`this.lastSetState = state`, true)
+                ng.out(`this.setState(state)`, true)
+                ng.indent(-1)
+              ng.out(`}`, true)              
+                
               reducerMethods.forEach( m => {
                 const body = ng
                 body.raw( m.getModifiers().map( mod => mod.print()+' ' ).join('') )
@@ -565,22 +574,22 @@ body.out(`(new R${c.getName()}(undefined, (action:any) => {`, true)
 body.indent(1)
                   
   if(!settings.disableDevtoolsFromContext) { 
-    body.out(`const nextState = ${c.getName()}Reducer( this.state, action )`, true) 
+    body.out(`const nextState = ${c.getName()}Reducer( this.lastSetState, action )`, true) 
     body.out(`if(this.__devTools) { this.__devTools.send(action.type, nextState) }`, true)  
-    body.out(`this.setState(nextState)`, true)
+    body.out(`this.setStateSync(nextState)`, true)
   } else {
-    body.out(`this.setState(${c.getName()}Reducer( this.state, action ))`, true)
+    body.out(`this.setStateSync(${c.getName()}Reducer( this.lastSetState, action ))`, true)
   }               
   
 body.indent(-1)
-body.out(`}, () => ({${c.getName()}:this.state})) ).${m.getName()}(${firstParam})`, true);
+body.out(`}, () => ({${c.getName()}:this.lastSetState})) ).${m.getName()}(${firstParam})`, true);
                   } else {
 if(!settings.disableDevtoolsFromContext) { 
   body.out(`const nextState = immer.produce( this.state, draft => ( new R${c.getName()}(draft) ).${m.getName()}(${firstParam}) )`, true)
   body.out(`if(this.__devTools) { this.__devTools.send('${m.getName()}', nextState) } `, true)   
-  body.out(`this.setState(nextState)`, true)
+  body.out(`this.setStateSync(nextState)`, true)
 } else {
-  body.out(`this.setState(immer.produce( this.state, draft => ( new R${c.getName()}(draft) ).${m.getName()}(${firstParam}) ))`, true)
+  body.out(`this.setStateSync(immer.produce( this.state, draft => ( new R${c.getName()}(draft) ).${m.getName()}(${firstParam}) ))`, true)
 }           
 }
                   body.indent(-1)
@@ -641,6 +650,8 @@ if(!settings.disableDevtoolsFromContext) {
       wr.indent(-1)
     wr.out('})', true)
   })
-  await RFs.saveTo('./', {usePrettier:true} );
+  
+  const prettierConfig = await prettier.resolveConfig(process.cwd())
+  await RFs.saveTo('./', {usePrettier:true, prettierConfig } );
   await project.save()  
 }

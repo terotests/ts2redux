@@ -1,6 +1,6 @@
 {
   "name": "ts2redux",
-  "version": "1.0.13",
+  "version": "1.0.15",
   "description": "Convert TypeScript classes into Reducers",
   "main": "dist/src/index.js",
   "bin": {
@@ -25,7 +25,7 @@
   "license": "MIT",
   "dependencies": {
     "prettier": "^1.15.1",
-    "robowr": "^1.0.9",
+    "robowr": "^1.0.10",
     "ts-simple-ast": "^17.1.1",
     "tsc": "^1.20150623.0",
     "typescript": "^3.1.6",

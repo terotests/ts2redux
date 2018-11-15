@@ -16,6 +16,10 @@ import { TodoList } from './components/todoList';
 import { ReduxInc } from './components/ReduxInc';
 import { CombinedStates } from './components/combinedState';
 import * as todo from './models/TodoList'
+import { WaspModelProvider, WaspModelConsumer } from './models/reducers/WaspModel';
+import { WaspComponent } from './components/WaspComponent';
+import { WaspContextComponent } from './components/WaspContextComponent'
+import { UIHelperModelProvider, UIHelperModelConsumer } from './models/reducers/UIHelperModel';
 
 let store = createStore(
   reducers,
@@ -41,6 +45,23 @@ ReactDOM.render(
   <Provider store={store}>
     <Ctx.Provider value={listValue}>
       <UserStateProvider>
+      <UIHelperModelProvider>
+        <UIHelperModelConsumer>
+          {
+            state => <div>
+                <button onClick={state.toggle}>Show / Hide Wasps</button>
+                {state.showWasps ?  
+                <div>
+                  <WaspComponent/>
+                  <WaspModelProvider>
+                    <WaspContextComponent/>
+                  </WaspModelProvider>
+                </div>
+                : ''}
+              </div>
+          }
+        </UIHelperModelConsumer>
+      </UIHelperModelProvider>
       
       <IncModelProvider>
           <IncModelConsumer>{state=><div>
@@ -74,7 +95,7 @@ ReactDOM.render(
                   <button onClick={() => todolist.getItems()}>Load</button>
                   <button onClick={() => todolist.reverse()}>Revert</button>
                   <ul>{
-                    todolist.listToDisplay.map( item => <li key={item.id}>{item.title}</li>)
+                    todolist.items.map( item => <li key={item.id}>{item.title}</li>)
                   }</ul>
                 </div>
             }
@@ -93,7 +114,7 @@ ReactDOM.render(
                   <button onClick={() => todolist.nextPage()}>Next</button>
                   <button onClick={() => todolist.prevPage()}>Prev</button>
                   <ul>{
-                    todolist.listToDisplay.map( item => <li key={item.id}>{item.id} {item.title} <UserStateProvider><UserInfo/></UserStateProvider></li>) 
+                    todolist.items.map( item => <li key={item.id}>{item.id} {item.title} <UserStateProvider><UserInfo/></UserStateProvider></li>) 
                   }</ul>
                 </div>
             }

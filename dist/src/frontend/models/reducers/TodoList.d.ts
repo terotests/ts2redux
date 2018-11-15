@@ -141,10 +141,12 @@ export declare const TodoListContext: React.Context<IProps>;
 export declare const TodoListConsumer: React.ComponentType<React.ConsumerProps<IProps>>;
 export declare class TodoListProvider extends React.Component {
     state: ITodoList;
+    lastSetState: ITodoList;
     private __devTools;
     private __selectorlistToDisplay;
     constructor(props: any);
     componentWillUnmount(): void;
+    setStateSync(state: ITodoList): void;
     nextPage(): void;
     prevPage(): void;
     toggleSortOrder(): void;

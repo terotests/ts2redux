@@ -844,6 +844,7 @@ var TestModelProvider = /** @class */ (function (_super) {
         var _this = _super.call(this, props) || this;
         _this.state = initTestModel();
         _this.__devTools = null;
+        _this.lastSetState = _this.state;
         _this.setUserMessage = _this.setUserMessage.bind(_this);
         _this.add = _this.add.bind(_this);
         _this.removeFirst = _this.removeFirst.bind(_this);
@@ -877,6 +878,10 @@ var TestModelProvider = /** @class */ (function (_super) {
             this.__devTools.unsubscribe();
         }
     };
+    TestModelProvider.prototype.setStateSync = function (state) {
+        this.lastSetState = state;
+        this.setState(state);
+    };
     TestModelProvider.prototype.setUserMessage = function (value) {
         var nextState = immer.produce(this.state, function (draft) {
             return new RTestModel(draft).setUserMessage(value);
@@ -884,7 +889,7 @@ var TestModelProvider = /** @class */ (function (_super) {
         if (this.__devTools) {
             this.__devTools.send("setUserMessage", nextState);
         }
-        this.setState(nextState);
+        this.setStateSync(nextState);
     };
     TestModelProvider.prototype.add = function (item) {
         var nextState = immer.produce(this.state, function (draft) {
@@ -893,7 +898,7 @@ var TestModelProvider = /** @class */ (function (_super) {
         if (this.__devTools) {
             this.__devTools.send("add", nextState);
         }
-        this.setState(nextState);
+        this.setStateSync(nextState);
     };
     TestModelProvider.prototype.removeFirst = function () {
         var nextState = immer.produce(this.state, function (draft) {
@@ -902,7 +907,7 @@ var TestModelProvider = /** @class */ (function (_super) {
         if (this.__devTools) {
             this.__devTools.send("removeFirst", nextState);
         }
-        this.setState(nextState);
+        this.setStateSync(nextState);
     };
     TestModelProvider.prototype.sort = function () {
         var nextState = immer.produce(this.state, function (draft) {
@@ -911,7 +916,7 @@ var TestModelProvider = /** @class */ (function (_super) {
         if (this.__devTools) {
             this.__devTools.send("sort", nextState);
         }
-        this.setState(nextState);
+        this.setStateSync(nextState);
     };
     TestModelProvider.prototype.addCart = function () {
         var nextState = immer.produce(this.state, function (draft) {
@@ -920,7 +925,7 @@ var TestModelProvider = /** @class */ (function (_super) {
         if (this.__devTools) {
             this.__devTools.send("addCart", nextState);
         }
-        this.setState(nextState);
+        this.setStateSync(nextState);
     };
     TestModelProvider.prototype.addCartSync = function () {
         var nextState = immer.produce(this.state, function (draft) {
@@ -929,7 +934,7 @@ var TestModelProvider = /** @class */ (function (_super) {
         if (this.__devTools) {
             this.__devTools.send("addCartSync", nextState);
         }
-        this.setState(nextState);
+        this.setStateSync(nextState);
     };
     TestModelProvider.prototype.addToCart = function (adding) {
         var nextState = immer.produce(this.state, function (draft) {
@@ -938,7 +943,7 @@ var TestModelProvider = /** @class */ (function (_super) {
         if (this.__devTools) {
             this.__devTools.send("addToCart", nextState);
         }
-        this.setState(nextState);
+        this.setStateSync(nextState);
     };
     TestModelProvider.prototype.setCartNewItem = function (adding) {
         var nextState = immer.produce(this.state, function (draft) {
@@ -947,7 +952,7 @@ var TestModelProvider = /** @class */ (function (_super) {
         if (this.__devTools) {
             this.__devTools.send("setCartNewItem", nextState);
         }
-        this.setState(nextState);
+        this.setStateSync(nextState);
     };
     TestModelProvider.prototype.addToCartRandom = function () {
         var nextState = immer.produce(this.state, function (draft) {
@@ -956,7 +961,7 @@ var TestModelProvider = /** @class */ (function (_super) {
         if (this.__devTools) {
             this.__devTools.send("addToCartRandom", nextState);
         }
-        this.setState(nextState);
+        this.setStateSync(nextState);
     };
     TestModelProvider.prototype.renameLast = function (newName) {
         var nextState = immer.produce(this.state, function (draft) {
@@ -965,7 +970,7 @@ var TestModelProvider = /** @class */ (function (_super) {
         if (this.__devTools) {
             this.__devTools.send("renameLast", nextState);
         }
-        this.setState(nextState);
+        this.setStateSync(nextState);
     };
     // action
     TestModelProvider.prototype.createItem = function (someName) {
@@ -973,12 +978,12 @@ var TestModelProvider = /** @class */ (function (_super) {
             var _this = this;
             return __generator(this, function (_a) {
                 new RTestModel(undefined, function (action) {
-                    var nextState = exports.TestModelReducer(_this.state, action);
+                    var nextState = exports.TestModelReducer(_this.lastSetState, action);
                     if (_this.__devTools) {
                         _this.__devTools.send(action.type, nextState);
                     }
-                    _this.setState(nextState);
-                }, function () { return ({ TestModel: _this.state }); }).createItem(someName);
+                    _this.setStateSync(nextState);
+                }, function () { return ({ TestModel: _this.lastSetState }); }).createItem(someName);
                 return [2 /*return*/];
             });
         });
@@ -988,12 +993,12 @@ var TestModelProvider = /** @class */ (function (_super) {
             var _this = this;
             return __generator(this, function (_a) {
                 new RTestModel(undefined, function (action) {
-                    var nextState = exports.TestModelReducer(_this.state, action);
+                    var nextState = exports.TestModelReducer(_this.lastSetState, action);
                     if (_this.__devTools) {
                         _this.__devTools.send(action.type, nextState);
                     }
-                    _this.setState(nextState);
-                }, function () { return ({ TestModel: _this.state }); }).addOneFriend(name);
+                    _this.setStateSync(nextState);
+                }, function () { return ({ TestModel: _this.lastSetState }); }).addOneFriend(name);
                 return [2 /*return*/];
             });
         });
@@ -1003,12 +1008,12 @@ var TestModelProvider = /** @class */ (function (_super) {
             var _this = this;
             return __generator(this, function (_a) {
                 new RTestModel(undefined, function (action) {
-                    var nextState = exports.TestModelReducer(_this.state, action);
+                    var nextState = exports.TestModelReducer(_this.lastSetState, action);
                     if (_this.__devTools) {
                         _this.__devTools.send(action.type, nextState);
                     }
-                    _this.setState(nextState);
-                }, function () { return ({ TestModel: _this.state }); }).fillSomeFriends();
+                    _this.setStateSync(nextState);
+                }, function () { return ({ TestModel: _this.lastSetState }); }).fillSomeFriends();
                 return [2 /*return*/];
             });
         });
@@ -1018,12 +1023,12 @@ var TestModelProvider = /** @class */ (function (_super) {
             var _this = this;
             return __generator(this, function (_a) {
                 new RTestModel(undefined, function (action) {
-                    var nextState = exports.TestModelReducer(_this.state, action);
+                    var nextState = exports.TestModelReducer(_this.lastSetState, action);
                     if (_this.__devTools) {
                         _this.__devTools.send(action.type, nextState);
                     }
-                    _this.setState(nextState);
-                }, function () { return ({ TestModel: _this.state }); }).ChangeLastItem();
+                    _this.setStateSync(nextState);
+                }, function () { return ({ TestModel: _this.lastSetState }); }).ChangeLastItem();
                 return [2 /*return*/];
             });
         });

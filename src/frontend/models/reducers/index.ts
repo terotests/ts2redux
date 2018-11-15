@@ -9,18 +9,24 @@ import { IIncModel, IncModelReducer } from "./IncModel";
 import { ISimpleModel, SimpleModelReducer } from "./SimpleModel";
 import { ITestModel, TestModelReducer } from "./TestModel";
 import { ITodoList, TodoListReducer } from "./TodoList";
+import { IUIHelperModel, UIHelperModelReducer } from "./UIHelperModel";
 import { IUserState, UserStateReducer } from "./UserState";
+import { IWaspModel, WaspModelReducer } from "./WaspModel";
 export interface IState {
   IncModel: IIncModel;
   SimpleModel: ISimpleModel;
   TestModel: ITestModel;
   TodoList: ITodoList;
+  UIHelperModel: IUIHelperModel;
   UserState: IUserState;
+  WaspModel: IWaspModel;
 }
 export const reducers = redux.combineReducers<IState>({
   IncModel: IncModelReducer,
   SimpleModel: SimpleModelReducer,
   TestModel: TestModelReducer,
   TodoList: TodoListReducer,
-  UserState: UserStateReducer
+  UIHelperModel: UIHelperModelReducer,
+  UserState: UserStateReducer,
+  WaspModel: WaspModelReducer
 });

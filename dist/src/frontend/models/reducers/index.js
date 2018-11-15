@@ -11,12 +11,16 @@ var IncModel_1 = require("./IncModel");
 var SimpleModel_1 = require("./SimpleModel");
 var TestModel_1 = require("./TestModel");
 var TodoList_1 = require("./TodoList");
+var UIHelperModel_1 = require("./UIHelperModel");
 var UserState_1 = require("./UserState");
+var WaspModel_1 = require("./WaspModel");
 exports.reducers = redux.combineReducers({
     IncModel: IncModel_1.IncModelReducer,
     SimpleModel: SimpleModel_1.SimpleModelReducer,
     TestModel: TestModel_1.TestModelReducer,
     TodoList: TodoList_1.TodoListReducer,
-    UserState: UserState_1.UserStateReducer
+    UIHelperModel: UIHelperModel_1.UIHelperModelReducer,
+    UserState: UserState_1.UserStateReducer,
+    WaspModel: WaspModel_1.WaspModelReducer
 });
 //# sourceMappingURL=index.js.map

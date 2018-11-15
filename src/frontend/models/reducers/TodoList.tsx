@@ -667,10 +667,12 @@ export const TodoListConsumer = TodoListContext.Consumer;
 let instanceCnt = 1;
 export class TodoListProvider extends React.Component {
   public state: ITodoList = initTodoList();
+  public lastSetState: ITodoList;
   private __devTools: any = null;
   private __selectorlistToDisplay: any = null;
   constructor(props: any) {
     super(props);
+    this.lastSetState = this.state;
     this.nextPage = this.nextPage.bind(this);
     this.prevPage = this.prevPage.bind(this);
     this.toggleSortOrder = this.toggleSortOrder.bind(this);
@@ -700,6 +702,10 @@ export class TodoListProvider extends React.Component {
       this.__devTools.unsubscribe();
     }
   }
+  public setStateSync(state: ITodoList) {
+    this.lastSetState = state;
+    this.setState(state);
+  }
   nextPage() {
     const nextState = immer.produce(this.state, draft =>
       new RTodoList(draft).nextPage()
@@ -707,7 +713,7 @@ export class TodoListProvider extends React.Component {
     if (this.__devTools) {
       this.__devTools.send("nextPage", nextState);
     }
-    this.setState(nextState);
+    this.setStateSync(nextState);
   }
   prevPage() {
     const nextState = immer.produce(this.state, draft =>
@@ -716,7 +722,7 @@ export class TodoListProvider extends React.Component {
     if (this.__devTools) {
       this.__devTools.send("prevPage", nextState);
     }
-    this.setState(nextState);
+    this.setStateSync(nextState);
   }
   toggleSortOrder() {
     const nextState = immer.produce(this.state, draft =>
@@ -725,7 +731,7 @@ export class TodoListProvider extends React.Component {
     if (this.__devTools) {
       this.__devTools.send("toggleSortOrder", nextState);
     }
-    this.setState(nextState);
+    this.setStateSync(nextState);
   }
   clearTodoList() {
     const nextState = immer.produce(this.state, draft =>
@@ -734,7 +740,7 @@ export class TodoListProvider extends React.Component {
     if (this.__devTools) {
       this.__devTools.send("clearTodoList", nextState);
     }
-    this.setState(nextState);
+    this.setStateSync(nextState);
   }
   reverse() {
     const nextState = immer.produce(this.state, draft =>
@@ -743,7 +749,7 @@ export class TodoListProvider extends React.Component {
     if (this.__devTools) {
       this.__devTools.send("reverse", nextState);
     }
-    this.setState(nextState);
+    this.setStateSync(nextState);
   }
   sortById() {
     const nextState = immer.produce(this.state, draft =>
@@ -752,7 +758,7 @@ export class TodoListProvider extends React.Component {
     if (this.__devTools) {
       this.__devTools.send("sortById", nextState);
     }
-    this.setState(nextState);
+    this.setStateSync(nextState);
   }
   sortByTitle() {
     const nextState = immer.produce(this.state, draft =>
@@ -761,7 +767,7 @@ export class TodoListProvider extends React.Component {
     if (this.__devTools) {
       this.__devTools.send("sortByTitle", nextState);
     }
-    this.setState(nextState);
+    this.setStateSync(nextState);
   }
   sortByCompletion() {
     const nextState = immer.produce(this.state, draft =>
@@ -770,7 +776,7 @@ export class TodoListProvider extends React.Component {
     if (this.__devTools) {
       this.__devTools.send("sortByCompletion", nextState);
     }
-    this.setState(nextState);
+    this.setStateSync(nextState);
   }
   setTitle(value: string) {
     const nextState = immer.produce(this.state, draft =>
@@ -779,7 +785,7 @@ export class TodoListProvider extends React.Component {
     if (this.__devTools) {
       this.__devTools.send("setTitle", nextState);
     }
-    this.setState(nextState);
+    this.setStateSync(nextState);
   }
   /**
    * Fetch items from json placeholder service
@@ -788,13 +794,13 @@ export class TodoListProvider extends React.Component {
     new RTodoList(
       undefined,
       (action: any) => {
-        const nextState = TodoListReducer(this.state, action);
+        const nextState = TodoListReducer(this.lastSetState, action);
         if (this.__devTools) {
           this.__devTools.send(action.type, nextState);
         }
-        this.setState(nextState);
+        this.setStateSync(nextState);
       },
-      () => ({ TodoList: this.state })
+      () => ({ TodoList: this.lastSetState })
     ).getItems();
   }
   public render() {

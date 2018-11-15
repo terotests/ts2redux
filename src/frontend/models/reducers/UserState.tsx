@@ -318,9 +318,11 @@ export const UserStateConsumer = UserStateContext.Consumer;
 let instanceCnt = 1;
 export class UserStateProvider extends React.Component {
   public state: IUserState = initUserState();
+  public lastSetState: IUserState;
   private __devTools: any = null;
   constructor(props: any) {
     super(props);
+    this.lastSetState = this.state;
     this.login = this.login.bind(this);
     this.logout = this.logout.bind(this);
     this.fakeLogin = this.fakeLogin.bind(this);
@@ -342,30 +344,34 @@ export class UserStateProvider extends React.Component {
       this.__devTools.unsubscribe();
     }
   }
+  public setStateSync(state: IUserState) {
+    this.lastSetState = state;
+    this.setState(state);
+  }
   async login(loginInfo: { username: string; password: string }) {
     new RUserState(
       undefined,
       (action: any) => {
-        const nextState = UserStateReducer(this.state, action);
+        const nextState = UserStateReducer(this.lastSetState, action);
         if (this.__devTools) {
           this.__devTools.send(action.type, nextState);
         }
-        this.setState(nextState);
+        this.setStateSync(nextState);
       },
-      () => ({ UserState: this.state })
+      () => ({ UserState: this.lastSetState })
     ).login(loginInfo);
   }
   async logout() {
     new RUserState(
       undefined,
       (action: any) => {
-        const nextState = UserStateReducer(this.state, action);
+        const nextState = UserStateReducer(this.lastSetState, action);
         if (this.__devTools) {
           this.__devTools.send(action.type, nextState);
         }
-        this.setState(nextState);
+        this.setStateSync(nextState);
       },
-      () => ({ UserState: this.state })
+      () => ({ UserState: this.lastSetState })
     ).logout();
   }
   fakeLogin() {
@@ -375,7 +381,7 @@ export class UserStateProvider extends React.Component {
     if (this.__devTools) {
       this.__devTools.send("fakeLogin", nextState);
     }
-    this.setState(nextState);
+    this.setStateSync(nextState);
   }
   public render() {
     return (

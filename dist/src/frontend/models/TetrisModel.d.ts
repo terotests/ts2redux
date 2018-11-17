@@ -11,8 +11,11 @@ export interface ActivePiece {
     height: number;
     cells: Cell[][];
 }
-export declare const doesCollide: (pieceX: number, pieceY: number, cells: Cell[][], pieceCells: Cell[][], width: number, height: number) => boolean;
-export declare const rotateCells: (cells: Cell[][]) => Cell[][];
+/**
+ * [' O '],
+*  ['OOO'],
+*  [' O ']
+ */
 export declare const createNewPiece: (usingColor: string) => ActivePiece;
 /**
  * @redux true
@@ -29,6 +32,7 @@ export declare class TetrisModel {
     gameEnded: boolean;
     ticksPerMove: number;
     tickCnt: number;
+    doesCollide(pieceX: number, pieceY: number, pieceCells?: Cell[][]): boolean;
     tick(): void;
     left(): void;
     right(): void;

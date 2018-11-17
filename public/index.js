@@ -468,136 +468,56 @@ var Colors;
 (function (Colors) {
     Colors["EMPTY"] = "";
 })(Colors = exports.Colors || (exports.Colors = {}));
-exports.doesCollide = function (pieceX, pieceY, cells, pieceCells, width, height) {
-    var collides = false;
-    pieceCells.forEach(function (row, y) {
-        row.forEach(function (cell, x) {
-            if (cell.color === Colors.EMPTY)
-                return;
-            if (pieceY + y >= height) {
-                collides = true;
-                return;
+var pieceDeclaration = function (color, rows) {
+    var cells = new Array(rows.length);
+    for (var i = 0; i < rows.length; i++) {
+        var row = rows[i];
+        cells[i] = new Array(row.length);
+        for (var c = 0; c < row.length; c++) {
+            if (row.charAt(c) == ' ') {
+                cells[i][c] = { color: Colors.EMPTY };
             }
-            if (((pieceX + x) < 0) || ((pieceX + x) >= width)) {
-                collides = true;
-                return;
+            else {
+                cells[i][c] = { color: color };
             }
-            if (cell.color !== Colors.EMPTY) {
-                if (pieceY + y < 0)
-                    return;
-                if (cells[pieceY + y][pieceX + x].color !== Colors.EMPTY) {
-                    collides = true;
-                }
-            }
-        });
-    });
-    return collides;
-};
-exports.rotateCells = function (cells) {
-    var res = new Array(cells.length);
-    for (var j = 0; j < cells.length; j++) {
-        res[j] = new Array(cells[j].length);
-    }
-    for (var j = 0; j < cells.length; j++) {
-        var row = cells[j];
-        for (var i = 0; i < row.length; i++) {
-            res[i][j] = { color: Colors.EMPTY };
         }
     }
-    for (var j = 0; j < cells.length; j++) {
-        var row = cells[j];
-        for (var i = 0; i < row.length; i++) {
-            res[i][cells.length - j - 1] = row[i];
-        }
-    }
-    return res;
+    return {
+        x: 0,
+        y: rows.length * -1,
+        width: rows.length,
+        height: rows.length,
+        cells: cells
+    };
 };
+/**
+ * [' O '],
+*  ['OOO'],
+*  [' O ']
+ */
 exports.createNewPiece = function (usingColor) {
     var items = [
-        {
-            x: 0,
-            y: -2,
-            width: 2,
-            height: 2,
-            cells: [
-                [{ color: usingColor }, { color: usingColor }],
-                [{ color: usingColor }, { color: usingColor }]
-            ]
-        },
-        {
-            x: 0,
-            y: -2,
-            width: 3,
-            height: 3,
-            cells: [
-                [
-                    { color: Colors.EMPTY },
-                    { color: Colors.EMPTY },
-                    { color: Colors.EMPTY }
-                ],
-                [{ color: usingColor }, { color: usingColor }, { color: usingColor }],
-                [
-                    { color: Colors.EMPTY },
-                    { color: usingColor },
-                    { color: Colors.EMPTY }
-                ]
-            ]
-        },
-        {
-            x: 0,
-            y: -2,
-            width: 3,
-            height: 3,
-            cells: [
-                [
-                    { color: Colors.EMPTY },
-                    { color: Colors.EMPTY },
-                    { color: Colors.EMPTY }
-                ],
-                [{ color: usingColor }, { color: usingColor }, { color: usingColor }],
-                [
-                    { color: Colors.EMPTY },
-                    { color: Colors.EMPTY },
-                    { color: usingColor }
-                ]
-            ]
-        },
-        {
-            x: 0,
-            y: -2,
-            width: 3,
-            height: 3,
-            cells: [
-                [
-                    { color: Colors.EMPTY },
-                    { color: Colors.EMPTY },
-                    { color: Colors.EMPTY }
-                ],
-                [{ color: usingColor }, { color: usingColor }, { color: usingColor }],
-                [
-                    { color: usingColor },
-                    { color: Colors.EMPTY },
-                    { color: Colors.EMPTY }
-                ]
-            ]
-        },
-        {
-            x: 0,
-            y: -2,
-            width: 4,
-            height: 4,
-            cells: [
-                [
-                    { color: Colors.EMPTY },
-                    { color: usingColor },
-                    { color: Colors.EMPTY },
-                    { color: Colors.EMPTY },
-                ],
-                [{ color: Colors.EMPTY }, { color: usingColor }, { color: Colors.EMPTY }, { color: Colors.EMPTY }],
-                [{ color: Colors.EMPTY }, { color: usingColor }, { color: Colors.EMPTY }, { color: Colors.EMPTY }],
-                [{ color: Colors.EMPTY }, { color: usingColor }, { color: Colors.EMPTY }, { color: Colors.EMPTY }],
-            ]
-        }
+        pieceDeclaration(usingColor, ['xx',
+            'xx']),
+        pieceDeclaration(usingColor, ['   ',
+            'xxx',
+            ' x ']),
+        pieceDeclaration(usingColor, [' x ',
+            'xxx',
+            ' x ']),
+        pieceDeclaration(usingColor, [' x ',
+            ' x ',
+            'xx ']),
+        pieceDeclaration(usingColor, [' x ',
+            ' x ',
+            ' xx']),
+        pieceDeclaration(usingColor, [' xx',
+            'xxx',
+            'xx ']),
+        pieceDeclaration(usingColor, [' x  ',
+            ' x  ',
+            ' x  ',
+            ' x  ']),
     ];
     return items[Math.floor(Math.random() * items.length)];
 };
@@ -617,6 +537,34 @@ var TetrisModel = /** @class */ (function () {
         this.ticksPerMove = 10;
         this.tickCnt = 0;
     }
+    TetrisModel.prototype.doesCollide = function (pieceX, pieceY, pieceCells) {
+        var _this = this;
+        var collides = false;
+        var compareAgainst = pieceCells || this.activePiece.cells;
+        compareAgainst.forEach(function (row, y) {
+            row.forEach(function (cell, x) {
+                if (cell.color === Colors.EMPTY)
+                    return;
+                if (pieceY + y >= _this.rows) {
+                    collides = true;
+                    return;
+                }
+                if (((pieceX + x) < 0) || ((pieceX + x) >= _this.cols)) {
+                    collides = true;
+                    return;
+                }
+                if (cell.color !== Colors.EMPTY) {
+                    if (pieceY + y < 0)
+                        return;
+                    if (_this.cells[pieceY + y][pieceX + x].color !== Colors.EMPTY) {
+                        collides = true;
+                    }
+                }
+            });
+        });
+        return collides;
+    };
+    ;
     TetrisModel.prototype.tick = function () {
         this.tickCnt++;
         if (this.tickCnt >= this.ticksPerMove) {
@@ -625,12 +573,12 @@ var TetrisModel = /** @class */ (function () {
         }
     };
     TetrisModel.prototype.left = function () {
-        if (!exports.doesCollide(this.activePiece.x - 1, this.activePiece.y, this.cells, this.activePiece.cells, this.cols, this.rows)) {
+        if (!this.doesCollide(this.activePiece.x - 1, this.activePiece.y)) {
             this.activePiece.x--;
         }
     };
     TetrisModel.prototype.right = function () {
-        if (!exports.doesCollide(this.activePiece.x + 1, this.activePiece.y, this.cells, this.activePiece.cells, this.cols, this.rows)) {
+        if (!this.doesCollide(this.activePiece.x + 1, this.activePiece.y)) {
             this.activePiece.x++;
         }
     };
@@ -656,15 +604,13 @@ var TetrisModel = /** @class */ (function () {
     ;
     TetrisModel.prototype.rotate = function () {
         var newOrientation = this.rotateCells(this.activePiece.cells);
-        if (!exports.doesCollide(this.activePiece.x, this.activePiece.y, this.cells, newOrientation, this.cols, this.rows)) {
+        if (!this.doesCollide(this.activePiece.x, this.activePiece.y, newOrientation)) {
             this.activePiece.cells = newOrientation;
         }
     };
     TetrisModel.prototype.step = function () {
         if (this.gameOn) {
-            var freezePiece = false;
-            if (!freezePiece &&
-                !exports.doesCollide(this.activePiece.x, this.activePiece.y + 1, this.cells, this.activePiece.cells, this.cols, this.rows)) {
+            if (!this.doesCollide(this.activePiece.x, this.activePiece.y + 1)) {
                 this.activePiece.y++;
             }
             else {
@@ -673,14 +619,11 @@ var TetrisModel = /** @class */ (function () {
                     this.gameOn = false;
                 }
                 else {
-                    freezePiece = true;
+                    this.addPiece();
+                    this.dropRows();
+                    this.activePiece = exports.createNewPiece(this.pickNextColor());
+                    this.activePiece.x = Math.floor(Math.random() * 5);
                 }
-            }
-            if (freezePiece) {
-                this.addPiece();
-                this.dropRows();
-                this.activePiece = exports.createNewPiece(this.pickNextColor());
-                this.activePiece.x = Math.floor(Math.random() * 5);
             }
         }
     };
@@ -2466,151 +2409,42 @@ var Colors;
 (function (Colors) {
     Colors["EMPTY"] = "";
 })(Colors = exports.Colors || (exports.Colors = {}));
-exports.doesCollide = function (pieceX, pieceY, cells, pieceCells, width, height) {
-    var collides = false;
-    pieceCells.forEach(function (row, y) {
-        row.forEach(function (cell, x) {
-            if (cell.color === Colors.EMPTY)
-                return;
-            if (pieceY + y >= height) {
-                collides = true;
-                return;
+var pieceDeclaration = function (color, rows) {
+    var cells = new Array(rows.length);
+    for (var i = 0; i < rows.length; i++) {
+        var row = rows[i];
+        cells[i] = new Array(row.length);
+        for (var c = 0; c < row.length; c++) {
+            if (row.charAt(c) == " ") {
+                cells[i][c] = { color: Colors.EMPTY };
             }
-            if (pieceX + x < 0 || pieceX + x >= width) {
-                collides = true;
-                return;
+            else {
+                cells[i][c] = { color: color };
             }
-            if (cell.color !== Colors.EMPTY) {
-                if (pieceY + y < 0)
-                    return;
-                if (cells[pieceY + y][pieceX + x].color !== Colors.EMPTY) {
-                    collides = true;
-                }
-            }
-        });
-    });
-    return collides;
-};
-exports.rotateCells = function (cells) {
-    var res = new Array(cells.length);
-    for (var j = 0; j < cells.length; j++) {
-        res[j] = new Array(cells[j].length);
-    }
-    for (var j = 0; j < cells.length; j++) {
-        var row = cells[j];
-        for (var i = 0; i < row.length; i++) {
-            res[i][j] = { color: Colors.EMPTY };
         }
     }
-    for (var j = 0; j < cells.length; j++) {
-        var row = cells[j];
-        for (var i = 0; i < row.length; i++) {
-            res[i][cells.length - j - 1] = row[i];
-        }
-    }
-    return res;
+    return {
+        x: 0,
+        y: rows.length * -1,
+        width: rows.length,
+        height: rows.length,
+        cells: cells
+    };
 };
+/**
+ * [' O '],
+ *  ['OOO'],
+ *  [' O ']
+ */
 exports.createNewPiece = function (usingColor) {
     var items = [
-        {
-            x: 0,
-            y: -2,
-            width: 2,
-            height: 2,
-            cells: [
-                [{ color: usingColor }, { color: usingColor }],
-                [{ color: usingColor }, { color: usingColor }]
-            ]
-        },
-        {
-            x: 0,
-            y: -2,
-            width: 3,
-            height: 3,
-            cells: [
-                [
-                    { color: Colors.EMPTY },
-                    { color: Colors.EMPTY },
-                    { color: Colors.EMPTY }
-                ],
-                [{ color: usingColor }, { color: usingColor }, { color: usingColor }],
-                [
-                    { color: Colors.EMPTY },
-                    { color: usingColor },
-                    { color: Colors.EMPTY }
-                ]
-            ]
-        },
-        {
-            x: 0,
-            y: -2,
-            width: 3,
-            height: 3,
-            cells: [
-                [
-                    { color: Colors.EMPTY },
-                    { color: Colors.EMPTY },
-                    { color: Colors.EMPTY }
-                ],
-                [{ color: usingColor }, { color: usingColor }, { color: usingColor }],
-                [
-                    { color: Colors.EMPTY },
-                    { color: Colors.EMPTY },
-                    { color: usingColor }
-                ]
-            ]
-        },
-        {
-            x: 0,
-            y: -2,
-            width: 3,
-            height: 3,
-            cells: [
-                [
-                    { color: Colors.EMPTY },
-                    { color: Colors.EMPTY },
-                    { color: Colors.EMPTY }
-                ],
-                [{ color: usingColor }, { color: usingColor }, { color: usingColor }],
-                [
-                    { color: usingColor },
-                    { color: Colors.EMPTY },
-                    { color: Colors.EMPTY }
-                ]
-            ]
-        },
-        {
-            x: 0,
-            y: -2,
-            width: 4,
-            height: 4,
-            cells: [
-                [
-                    { color: Colors.EMPTY },
-                    { color: usingColor },
-                    { color: Colors.EMPTY },
-                    { color: Colors.EMPTY }
-                ],
-                [
-                    { color: Colors.EMPTY },
-                    { color: usingColor },
-                    { color: Colors.EMPTY },
-                    { color: Colors.EMPTY }
-                ],
-                [
-                    { color: Colors.EMPTY },
-                    { color: usingColor },
-                    { color: Colors.EMPTY },
-                    { color: Colors.EMPTY }
-                ],
-                [
-                    { color: Colors.EMPTY },
-                    { color: usingColor },
-                    { color: Colors.EMPTY },
-                    { color: Colors.EMPTY }
-                ]
-            ]
-        }
+        pieceDeclaration(usingColor, ["xx", "xx"]),
+        pieceDeclaration(usingColor, ["   ", "xxx", " x "]),
+        pieceDeclaration(usingColor, [" x ", "xxx", " x "]),
+        pieceDeclaration(usingColor, [" x ", " x ", "xx "]),
+        pieceDeclaration(usingColor, [" x ", " x ", " xx"]),
+        pieceDeclaration(usingColor, [" xx", "xxx", "xx "]),
+        pieceDeclaration(usingColor, [" x  ", " x  ", " x  ", " x  "])
     ];
     return items[Math.floor(Math.random() * items.length)];
 };
@@ -2630,6 +2464,33 @@ var TetrisModel = /** @class */ (function () {
         this.ticksPerMove = 10;
         this.tickCnt = 0;
     }
+    TetrisModel.prototype.doesCollide = function (pieceX, pieceY, pieceCells) {
+        var _this = this;
+        var collides = false;
+        var compareAgainst = pieceCells || this.activePiece.cells;
+        compareAgainst.forEach(function (row, y) {
+            row.forEach(function (cell, x) {
+                if (cell.color === Colors.EMPTY)
+                    return;
+                if (pieceY + y >= _this.rows) {
+                    collides = true;
+                    return;
+                }
+                if (pieceX + x < 0 || pieceX + x >= _this.cols) {
+                    collides = true;
+                    return;
+                }
+                if (cell.color !== Colors.EMPTY) {
+                    if (pieceY + y < 0)
+                        return;
+                    if (_this.cells[pieceY + y][pieceX + x].color !== Colors.EMPTY) {
+                        collides = true;
+                    }
+                }
+            });
+        });
+        return collides;
+    };
     TetrisModel.prototype.tick = function () {
         this.tickCnt++;
         if (this.tickCnt >= this.ticksPerMove) {
@@ -2638,12 +2499,12 @@ var TetrisModel = /** @class */ (function () {
         }
     };
     TetrisModel.prototype.left = function () {
-        if (!exports.doesCollide(this.activePiece.x - 1, this.activePiece.y, this.cells, this.activePiece.cells, this.cols, this.rows)) {
+        if (!this.doesCollide(this.activePiece.x - 1, this.activePiece.y)) {
             this.activePiece.x--;
         }
     };
     TetrisModel.prototype.right = function () {
-        if (!exports.doesCollide(this.activePiece.x + 1, this.activePiece.y, this.cells, this.activePiece.cells, this.cols, this.rows)) {
+        if (!this.doesCollide(this.activePiece.x + 1, this.activePiece.y)) {
             this.activePiece.x++;
         }
     };
@@ -2668,15 +2529,13 @@ var TetrisModel = /** @class */ (function () {
     };
     TetrisModel.prototype.rotate = function () {
         var newOrientation = this.rotateCells(this.activePiece.cells);
-        if (!exports.doesCollide(this.activePiece.x, this.activePiece.y, this.cells, newOrientation, this.cols, this.rows)) {
+        if (!this.doesCollide(this.activePiece.x, this.activePiece.y, newOrientation)) {
             this.activePiece.cells = newOrientation;
         }
     };
     TetrisModel.prototype.step = function () {
         if (this.gameOn) {
-            var freezePiece = false;
-            if (!freezePiece &&
-                !exports.doesCollide(this.activePiece.x, this.activePiece.y + 1, this.cells, this.activePiece.cells, this.cols, this.rows)) {
+            if (!this.doesCollide(this.activePiece.x, this.activePiece.y + 1)) {
                 this.activePiece.y++;
             }
             else {
@@ -2685,14 +2544,11 @@ var TetrisModel = /** @class */ (function () {
                     this.gameOn = false;
                 }
                 else {
-                    freezePiece = true;
+                    this.addPiece();
+                    this.dropRows();
+                    this.activePiece = exports.createNewPiece(this.pickNextColor());
+                    this.activePiece.x = Math.floor(Math.random() * 5);
                 }
-            }
-            if (freezePiece) {
-                this.addPiece();
-                this.dropRows();
-                this.activePiece = exports.createNewPiece(this.pickNextColor());
-                this.activePiece.x = Math.floor(Math.random() * 5);
             }
         }
     };
@@ -3203,6 +3059,34 @@ var RTetrisModel = /** @class */ (function () {
         configurable: true
     });
     // is a reducer
+    RTetrisModel.prototype.doesCollide = function (pieceX, pieceY, pieceCells) {
+        var _this = this;
+        var collides = false;
+        var compareAgainst = pieceCells || this.activePiece.cells;
+        compareAgainst.forEach(function (row, y) {
+            row.forEach(function (cell, x) {
+                if (cell.color === Colors.EMPTY)
+                    return;
+                if (pieceY + y >= _this.rows) {
+                    collides = true;
+                    return;
+                }
+                if (pieceX + x < 0 || pieceX + x >= _this.cols) {
+                    collides = true;
+                    return;
+                }
+                if (cell.color !== Colors.EMPTY) {
+                    if (pieceY + y < 0)
+                        return;
+                    if (_this.cells[pieceY + y][pieceX + x].color !== Colors.EMPTY) {
+                        collides = true;
+                    }
+                }
+            });
+        });
+        return collides;
+    };
+    // is a reducer
     RTetrisModel.prototype.tick = function () {
         if (this._state) {
             this.tickCnt++;
@@ -3225,7 +3109,7 @@ var RTetrisModel = /** @class */ (function () {
     // is a reducer
     RTetrisModel.prototype.left = function () {
         if (this._state) {
-            if (!exports.doesCollide(this.activePiece.x - 1, this.activePiece.y, this.cells, this.activePiece.cells, this.cols, this.rows)) {
+            if (!this.doesCollide(this.activePiece.x - 1, this.activePiece.y)) {
                 this.activePiece.x--;
             }
         }
@@ -3243,7 +3127,7 @@ var RTetrisModel = /** @class */ (function () {
     // is a reducer
     RTetrisModel.prototype.right = function () {
         if (this._state) {
-            if (!exports.doesCollide(this.activePiece.x + 1, this.activePiece.y, this.cells, this.activePiece.cells, this.cols, this.rows)) {
+            if (!this.doesCollide(this.activePiece.x + 1, this.activePiece.y)) {
                 this.activePiece.x++;
             }
         }
@@ -3282,7 +3166,7 @@ var RTetrisModel = /** @class */ (function () {
     RTetrisModel.prototype.rotate = function () {
         if (this._state) {
             var newOrientation = this.rotateCells(this.activePiece.cells);
-            if (!exports.doesCollide(this.activePiece.x, this.activePiece.y, this.cells, newOrientation, this.cols, this.rows)) {
+            if (!this.doesCollide(this.activePiece.x, this.activePiece.y, newOrientation)) {
                 this.activePiece.cells = newOrientation;
             }
         }
@@ -3301,9 +3185,7 @@ var RTetrisModel = /** @class */ (function () {
     RTetrisModel.prototype.step = function () {
         if (this._state) {
             if (this.gameOn) {
-                var freezePiece = false;
-                if (!freezePiece &&
-                    !exports.doesCollide(this.activePiece.x, this.activePiece.y + 1, this.cells, this.activePiece.cells, this.cols, this.rows)) {
+                if (!this.doesCollide(this.activePiece.x, this.activePiece.y + 1)) {
                     this.activePiece.y++;
                 }
                 else {
@@ -3312,14 +3194,11 @@ var RTetrisModel = /** @class */ (function () {
                         this.gameOn = false;
                     }
                     else {
-                        freezePiece = true;
+                        this.addPiece();
+                        this.dropRows();
+                        this.activePiece = exports.createNewPiece(this.pickNextColor());
+                        this.activePiece.x = Math.floor(Math.random() * 5);
                     }
-                }
-                if (freezePiece) {
-                    this.addPiece();
-                    this.dropRows();
-                    this.activePiece = exports.createNewPiece(this.pickNextColor());
-                    this.activePiece.x = Math.floor(Math.random() * 5);
                 }
             }
         }
@@ -3465,6 +3344,7 @@ exports.TetrisModelEnums = {
     TetrisModel_gameEnded: "TetrisModel_gameEnded",
     TetrisModel_ticksPerMove: "TetrisModel_ticksPerMove",
     TetrisModel_tickCnt: "TetrisModel_tickCnt",
+    TetrisModel_doesCollide: "TetrisModel_doesCollide",
     TetrisModel_tick: "TetrisModel_tick",
     TetrisModel_left: "TetrisModel_left",
     TetrisModel_right: "TetrisModel_right",
@@ -3523,17 +3403,11 @@ exports.TetrisModelReducer = function (state, action) {
             case exports.TetrisModelEnums.TetrisModel_right:
                 new RTetrisModel(draft).right();
                 break;
-            case exports.TetrisModelEnums.TetrisModel_rotateCells:
-                new RTetrisModel(draft).rotateCells(action.payload);
-                break;
             case exports.TetrisModelEnums.TetrisModel_rotate:
                 new RTetrisModel(draft).rotate();
                 break;
             case exports.TetrisModelEnums.TetrisModel_step:
                 new RTetrisModel(draft).step();
-                break;
-            case exports.TetrisModelEnums.TetrisModel_pickNextColor:
-                new RTetrisModel(draft).pickNextColor();
                 break;
             case exports.TetrisModelEnums.TetrisModel_addPiece:
                 new RTetrisModel(draft).addPiece();

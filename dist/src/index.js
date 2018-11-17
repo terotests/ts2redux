@@ -362,17 +362,15 @@ function createProject(settings) {
                                     }
                                 });
                                 c.getMethods().forEach(function (m) {
-                                    if (m.getParameters().length > 1) {
-                                        throw "Error at " + sourceFile.getFilePath() + " in class " + c.getName() + " method " + m.getName() + " can not have more than 2 parameters at the moment";
-                                    }
-                                    var pName = m.getParameters().filter(function (a, i) { return i < 1; }).map(function (mod) { return mod.getName(); }).join('');
                                     var rvNode = m.getReturnTypeNode();
                                     var rvMethod = false;
                                     if (rvNode) {
-                                        // throw `Error at ${sourceFile.getFilePath()} in class ${c.getName()} method ${m.getName()} can not return values, use getter instead!`
-                                        // return
                                         rvMethod = true;
                                     }
+                                    if (!rvMethod && m.getParameters().length > 1) {
+                                        throw "Error at " + sourceFile.getFilePath() + " in class " + c.getName() + " method " + m.getName() + " can not have more than 2 parameters at the moment";
+                                    }
+                                    var pName = m.getParameters().filter(function (a, i) { return i < 1; }).map(function (mod) { return mod.getName(); }).join('');
                                     if (m.isAsync()) {
                                         body_1.out('// is task', true);
                                         body_1.raw(m.print(), true);
@@ -382,11 +380,13 @@ function createProject(settings) {
                                         var r_name = c.getName() + "_" + m.getName();
                                         var param_name = m.getParameters().length > 0 ? 'action.payload' : '';
                                         ng_enums_1.out(r_name + " : '" + r_name + "',", true);
-                                        ng_reducers_1.out("case " + c.getName() + "Enums." + r_name + ": ", true);
-                                        ng_reducers_1.indent(1);
-                                        ng_reducers_1.out("(new R" + c.getName() + "(draft))." + m.getName() + "(" + param_name + ")", true);
-                                        ng_reducers_1.out('break;', true);
-                                        ng_reducers_1.indent(-1);
+                                        if (!rvMethod) {
+                                            ng_reducers_1.out("case " + c.getName() + "Enums." + r_name + ": ", true);
+                                            ng_reducers_1.indent(1);
+                                            ng_reducers_1.out("(new R" + c.getName() + "(draft))." + m.getName() + "(" + param_name + ")", true);
+                                            ng_reducers_1.out('break;', true);
+                                            ng_reducers_1.indent(-1);
+                                        }
                                         body_1.raw(m.getModifiers().map(function (mod) { return mod.print() + ' '; }).join(''));
                                         body_1.out(m.getName() + '(' + m.getParameters().map(function (mod) { return mod.print(); }).join(', ') + ')');
                                         if (m.getReturnTypeNode())

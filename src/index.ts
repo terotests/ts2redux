@@ -417,18 +417,19 @@ export interface IContainerPropsState extends ITodoList {
             }             
           })
           c.getMethods().forEach( m => {
-            if(m.getParameters().length > 1) {
-              throw `Error at ${sourceFile.getFilePath()} in class ${c.getName()} method ${m.getName()} can not have more than 2 parameters at the moment`
-            }
-            const pName = m.getParameters().filter( (a,i) => i<1).map( mod => mod.getName() ).join('')
 
             const rvNode = m.getReturnTypeNode()
             let rvMethod = false
             if(rvNode) {
-              // throw `Error at ${sourceFile.getFilePath()} in class ${c.getName()} method ${m.getName()} can not return values, use getter instead!`
-              // return
               rvMethod = true
-            }    
+            }               
+            if(!rvMethod && m.getParameters().length > 1) {
+              throw `Error at ${sourceFile.getFilePath()} in class ${c.getName()} method ${m.getName()} can not have more than 2 parameters at the moment`
+            }
+            const pName = m.getParameters().filter( (a,i) => i<1).map( mod => mod.getName() ).join('')
+
+            
+ 
 
             if(m.isAsync()) {
               body.out('// is task', true)
@@ -437,12 +438,14 @@ export interface IContainerPropsState extends ITodoList {
               body.out('// is a reducer', true)
               const r_name = `${c.getName()}_${m.getName()}`
               const param_name = m.getParameters().length > 0 ? 'action.payload' : '';
-              ng_enums.out(`${r_name} : '${r_name}',`, true)              
-              ng_reducers.out(`case ${c.getName()}Enums.${r_name}: `, true)
-              ng_reducers.indent(1)
-              ng_reducers.out(`(new R${c.getName()}(draft)).${m.getName()}(${param_name})`, true);
-              ng_reducers.out('break;', true)
-              ng_reducers.indent(-1)
+              ng_enums.out(`${r_name} : '${r_name}',`, true)       
+              if(!rvMethod) {       
+                ng_reducers.out(`case ${c.getName()}Enums.${r_name}: `, true)
+                ng_reducers.indent(1)
+                ng_reducers.out(`(new R${c.getName()}(draft)).${m.getName()}(${param_name})`, true);
+                ng_reducers.out('break;', true)
+                ng_reducers.indent(-1)
+              }
               
               body.raw( m.getModifiers().map( mod => mod.print()+' ' ).join('') )
               body.out( m.getName() + '(' +  m.getParameters().map( mod => mod.print() ).join(', ') + ')')

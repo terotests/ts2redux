@@ -17,8 +17,11 @@ export interface ActivePiece {
     height: number;
     cells: Cell[][];
 }
-export declare const doesCollide: (pieceX: number, pieceY: number, cells: Cell[][], pieceCells: Cell[][], width: number, height: number) => boolean;
-export declare const rotateCells: (cells: Cell[][]) => Cell[][];
+/**
+ * [' O '],
+ *  ['OOO'],
+ *  [' O ']
+ */
 export declare const createNewPiece: (usingColor: string) => ActivePiece;
 /**
  * @redux true
@@ -35,6 +38,7 @@ export declare class TetrisModel {
     gameEnded: boolean;
     ticksPerMove: number;
     tickCnt: number;
+    doesCollide(pieceX: number, pieceY: number, pieceCells?: Cell[][]): boolean;
     tick(): void;
     left(): void;
     right(): void;
@@ -109,6 +113,7 @@ export declare class RTetrisModel {
     gameEnded: boolean | undefined;
     ticksPerMove: number | undefined;
     tickCnt: number | undefined;
+    doesCollide(pieceX: number, pieceY: number, pieceCells?: Cell[][]): boolean;
     tick(): void;
     static tick(): (dispatcher: any, getState: any) => void;
     left(): void;
@@ -142,6 +147,7 @@ export declare const TetrisModelEnums: {
     TetrisModel_gameEnded: string;
     TetrisModel_ticksPerMove: string;
     TetrisModel_tickCnt: string;
+    TetrisModel_doesCollide: string;
     TetrisModel_tick: string;
     TetrisModel_left: string;
     TetrisModel_right: string;

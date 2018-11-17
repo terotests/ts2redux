@@ -133,6 +133,15 @@ var TetrisModel = /** @class */ (function () {
             this.activePiece.x++;
         }
     };
+    // keyboard control for rotation, tries to rotate activePiece and if
+    // it does not collide, rotation can be done
+    TetrisModel.prototype.rotate = function () {
+        var newOrientation = this.rotateCells(this.activePiece.cells);
+        if (!this.doesCollide(this.activePiece.x, this.activePiece.y, newOrientation)) {
+            this.activePiece.cells = newOrientation;
+        }
+    };
+    // creates a new piece with rotated values
     TetrisModel.prototype.rotateCells = function (cells) {
         var res = new Array(cells.length);
         for (var j = 0; j < cells.length; j++) {
@@ -152,12 +161,6 @@ var TetrisModel = /** @class */ (function () {
         }
         return res;
     };
-    TetrisModel.prototype.rotate = function () {
-        var newOrientation = this.rotateCells(this.activePiece.cells);
-        if (!this.doesCollide(this.activePiece.x, this.activePiece.y, newOrientation)) {
-            this.activePiece.cells = newOrientation;
-        }
-    };
     TetrisModel.prototype.step = function () {
         if (this.gameOn) {
             if (!this.doesCollide(this.activePiece.x, this.activePiece.y + 1)) {
@@ -169,7 +172,7 @@ var TetrisModel = /** @class */ (function () {
                     this.gameOn = false;
                 }
                 else {
-                    this.addPiece();
+                    this.masonPiece();
                     this.dropRows();
                     this.activePiece = exports.createNewPiece(this.pickNextColor());
                     this.activePiece.x = Math.floor(Math.random() * 5);
@@ -184,7 +187,8 @@ var TetrisModel = /** @class */ (function () {
         }
         return this.useColors[this.lastUsedColor];
     };
-    TetrisModel.prototype.addPiece = function () {
+    // adds the piece permanently to the structure
+    TetrisModel.prototype.masonPiece = function () {
         var _this = this;
         var piece = this.activePiece;
         piece.cells.forEach(function (row, y) {
@@ -197,6 +201,7 @@ var TetrisModel = /** @class */ (function () {
             });
         });
     };
+    // drops full rows and adds points to the user
     TetrisModel.prototype.dropRows = function () {
         var nextRows = [];
         var emptyCnt = 0;
@@ -222,7 +227,7 @@ var TetrisModel = /** @class */ (function () {
             this.ticksPerMove--;
         }
     };
-    TetrisModel.prototype.resetGame = function () {
+    TetrisModel.prototype.clearCells = function () {
         this.cells = new Array(this.rows);
         for (var row = 0; row < this.rows; row++) {
             this.cells[row] = new Array(this.cols);
@@ -230,6 +235,9 @@ var TetrisModel = /** @class */ (function () {
                 this.cells[row][col] = { color: Colors.EMPTY };
             }
         }
+    };
+    TetrisModel.prototype.resetGame = function () {
+        this.clearCells();
         this.activePiece = exports.createNewPiece(this.pickNextColor());
         this.ticksPerMove = 10;
         this.tickCnt = 0;
@@ -299,11 +307,14 @@ exports.mapDispatchToProps = function (dispatch) {
         step: function () {
             return dispatch(RTetrisModel.step());
         },
-        addPiece: function () {
-            return dispatch(RTetrisModel.addPiece());
+        masonPiece: function () {
+            return dispatch(RTetrisModel.masonPiece());
         },
         dropRows: function () {
             return dispatch(RTetrisModel.dropRows());
+        },
+        clearCells: function () {
+            return dispatch(RTetrisModel.clearCells());
         },
         resetGame: function () {
             return dispatch(RTetrisModel.resetGame());
@@ -349,8 +360,9 @@ var initWithMethodsTetrisModel = function () {
         right: o.right,
         rotate: o.rotate,
         step: o.step,
-        addPiece: o.addPiece,
+        masonPiece: o.masonPiece,
         dropRows: o.dropRows,
+        clearCells: o.clearCells,
         resetGame: o.resetGame,
         start: o.start
     };
@@ -768,6 +780,25 @@ var RTetrisModel = /** @class */ (function () {
         };
     };
     // is a reducer
+    RTetrisModel.prototype.rotate = function () {
+        if (this._state) {
+            var newOrientation = this.rotateCells(this.activePiece.cells);
+            if (!this.doesCollide(this.activePiece.x, this.activePiece.y, newOrientation)) {
+                this.activePiece.cells = newOrientation;
+            }
+        }
+        else {
+            if (this._dispatch) {
+                this._dispatch({ type: exports.TetrisModelEnums.TetrisModel_rotate });
+            }
+        }
+    };
+    RTetrisModel.rotate = function () {
+        return function (dispatcher, getState) {
+            new RTetrisModel(undefined, dispatcher, getState).rotate();
+        };
+    };
+    // is a reducer
     RTetrisModel.prototype.rotateCells = function (cells) {
         var res = new Array(cells.length);
         for (var j = 0; j < cells.length; j++) {
@@ -788,25 +819,6 @@ var RTetrisModel = /** @class */ (function () {
         return res;
     };
     // is a reducer
-    RTetrisModel.prototype.rotate = function () {
-        if (this._state) {
-            var newOrientation = this.rotateCells(this.activePiece.cells);
-            if (!this.doesCollide(this.activePiece.x, this.activePiece.y, newOrientation)) {
-                this.activePiece.cells = newOrientation;
-            }
-        }
-        else {
-            if (this._dispatch) {
-                this._dispatch({ type: exports.TetrisModelEnums.TetrisModel_rotate });
-            }
-        }
-    };
-    RTetrisModel.rotate = function () {
-        return function (dispatcher, getState) {
-            new RTetrisModel(undefined, dispatcher, getState).rotate();
-        };
-    };
-    // is a reducer
     RTetrisModel.prototype.step = function () {
         if (this._state) {
             if (this.gameOn) {
@@ -819,7 +831,7 @@ var RTetrisModel = /** @class */ (function () {
                         this.gameOn = false;
                     }
                     else {
-                        this.addPiece();
+                        this.masonPiece();
                         this.dropRows();
                         this.activePiece = exports.createNewPiece(this.pickNextColor());
                         this.activePiece.x = Math.floor(Math.random() * 5);
@@ -847,7 +859,7 @@ var RTetrisModel = /** @class */ (function () {
         return this.useColors[this.lastUsedColor];
     };
     // is a reducer
-    RTetrisModel.prototype.addPiece = function () {
+    RTetrisModel.prototype.masonPiece = function () {
         var _this = this;
         if (this._state) {
             var piece_1 = this.activePiece;
@@ -863,13 +875,13 @@ var RTetrisModel = /** @class */ (function () {
         }
         else {
             if (this._dispatch) {
-                this._dispatch({ type: exports.TetrisModelEnums.TetrisModel_addPiece });
+                this._dispatch({ type: exports.TetrisModelEnums.TetrisModel_masonPiece });
             }
         }
     };
-    RTetrisModel.addPiece = function () {
+    RTetrisModel.masonPiece = function () {
         return function (dispatcher, getState) {
-            new RTetrisModel(undefined, dispatcher, getState).addPiece();
+            new RTetrisModel(undefined, dispatcher, getState).masonPiece();
         };
     };
     // is a reducer
@@ -911,7 +923,7 @@ var RTetrisModel = /** @class */ (function () {
         };
     };
     // is a reducer
-    RTetrisModel.prototype.resetGame = function () {
+    RTetrisModel.prototype.clearCells = function () {
         if (this._state) {
             this.cells = new Array(this.rows);
             for (var row = 0; row < this.rows; row++) {
@@ -920,6 +932,22 @@ var RTetrisModel = /** @class */ (function () {
                     this.cells[row][col] = { color: Colors.EMPTY };
                 }
             }
+        }
+        else {
+            if (this._dispatch) {
+                this._dispatch({ type: exports.TetrisModelEnums.TetrisModel_clearCells });
+            }
+        }
+    };
+    RTetrisModel.clearCells = function () {
+        return function (dispatcher, getState) {
+            new RTetrisModel(undefined, dispatcher, getState).clearCells();
+        };
+    };
+    // is a reducer
+    RTetrisModel.prototype.resetGame = function () {
+        if (this._state) {
+            this.clearCells();
             this.activePiece = exports.createNewPiece(this.pickNextColor());
             this.ticksPerMove = 10;
             this.tickCnt = 0;
@@ -973,12 +1001,13 @@ exports.TetrisModelEnums = {
     TetrisModel_tick: "TetrisModel_tick",
     TetrisModel_left: "TetrisModel_left",
     TetrisModel_right: "TetrisModel_right",
-    TetrisModel_rotateCells: "TetrisModel_rotateCells",
     TetrisModel_rotate: "TetrisModel_rotate",
+    TetrisModel_rotateCells: "TetrisModel_rotateCells",
     TetrisModel_step: "TetrisModel_step",
     TetrisModel_pickNextColor: "TetrisModel_pickNextColor",
-    TetrisModel_addPiece: "TetrisModel_addPiece",
+    TetrisModel_masonPiece: "TetrisModel_masonPiece",
     TetrisModel_dropRows: "TetrisModel_dropRows",
+    TetrisModel_clearCells: "TetrisModel_clearCells",
     TetrisModel_resetGame: "TetrisModel_resetGame",
     TetrisModel_start: "TetrisModel_start"
 };
@@ -1034,11 +1063,14 @@ exports.TetrisModelReducer = function (state, action) {
             case exports.TetrisModelEnums.TetrisModel_step:
                 new RTetrisModel(draft).step();
                 break;
-            case exports.TetrisModelEnums.TetrisModel_addPiece:
-                new RTetrisModel(draft).addPiece();
+            case exports.TetrisModelEnums.TetrisModel_masonPiece:
+                new RTetrisModel(draft).masonPiece();
                 break;
             case exports.TetrisModelEnums.TetrisModel_dropRows:
                 new RTetrisModel(draft).dropRows();
+                break;
+            case exports.TetrisModelEnums.TetrisModel_clearCells:
+                new RTetrisModel(draft).clearCells();
                 break;
             case exports.TetrisModelEnums.TetrisModel_resetGame:
                 new RTetrisModel(draft).resetGame();
@@ -1067,8 +1099,9 @@ var TetrisModelProvider = /** @class */ (function (_super) {
         _this.right = _this.right.bind(_this);
         _this.rotate = _this.rotate.bind(_this);
         _this.step = _this.step.bind(_this);
-        _this.addPiece = _this.addPiece.bind(_this);
+        _this.masonPiece = _this.masonPiece.bind(_this);
         _this.dropRows = _this.dropRows.bind(_this);
+        _this.clearCells = _this.clearCells.bind(_this);
         _this.resetGame = _this.resetGame.bind(_this);
         _this.start = _this.start.bind(_this);
         var devs = window["devToolsExtension"]
@@ -1139,12 +1172,12 @@ var TetrisModelProvider = /** @class */ (function (_super) {
         }
         this.setStateSync(nextState);
     };
-    TetrisModelProvider.prototype.addPiece = function () {
+    TetrisModelProvider.prototype.masonPiece = function () {
         var nextState = immer.produce(this.state, function (draft) {
-            return new RTetrisModel(draft).addPiece();
+            return new RTetrisModel(draft).masonPiece();
         });
         if (this.__devTools) {
-            this.__devTools.send("addPiece", nextState);
+            this.__devTools.send("masonPiece", nextState);
         }
         this.setStateSync(nextState);
     };
@@ -1154,6 +1187,15 @@ var TetrisModelProvider = /** @class */ (function (_super) {
         });
         if (this.__devTools) {
             this.__devTools.send("dropRows", nextState);
+        }
+        this.setStateSync(nextState);
+    };
+    TetrisModelProvider.prototype.clearCells = function () {
+        var nextState = immer.produce(this.state, function (draft) {
+            return new RTetrisModel(draft).clearCells();
+        });
+        if (this.__devTools) {
+            this.__devTools.send("clearCells", nextState);
         }
         this.setStateSync(nextState);
     };
@@ -1176,7 +1218,7 @@ var TetrisModelProvider = /** @class */ (function (_super) {
         this.setStateSync(nextState);
     };
     TetrisModelProvider.prototype.render = function () {
-        return (React.createElement(exports.TetrisModelContext.Provider, { value: __assign({}, this.state, { tick: this.tick, left: this.left, right: this.right, rotate: this.rotate, step: this.step, addPiece: this.addPiece, dropRows: this.dropRows, resetGame: this.resetGame, start: this.start }) },
+        return (React.createElement(exports.TetrisModelContext.Provider, { value: __assign({}, this.state, { tick: this.tick, left: this.left, right: this.right, rotate: this.rotate, step: this.step, masonPiece: this.masonPiece, dropRows: this.dropRows, clearCells: this.clearCells, resetGame: this.resetGame, start: this.start }) },
             " ",
             this.props.children));
     };

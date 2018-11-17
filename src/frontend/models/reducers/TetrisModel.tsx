@@ -125,7 +125,17 @@ export class TetrisModel {
       this.activePiece.x++;
     }
   }
-
+  // keyboard control for rotation, tries to rotate activePiece and if
+  // it does not collide, rotation can be done
+  rotate() {
+    const newOrientation = this.rotateCells(this.activePiece.cells);
+    if (
+      !this.doesCollide(this.activePiece.x, this.activePiece.y, newOrientation)
+    ) {
+      this.activePiece.cells = newOrientation;
+    }
+  }
+  // creates a new piece with rotated values
   rotateCells(cells: Cell[][]): Cell[][] {
     const res: Cell[][] = new Array(cells.length);
     for (let j = 0; j < cells.length; j++) {
@@ -146,15 +156,6 @@ export class TetrisModel {
     return res;
   }
 
-  rotate() {
-    const newOrientation = this.rotateCells(this.activePiece.cells);
-    if (
-      !this.doesCollide(this.activePiece.x, this.activePiece.y, newOrientation)
-    ) {
-      this.activePiece.cells = newOrientation;
-    }
-  }
-
   step() {
     if (this.gameOn) {
       if (!this.doesCollide(this.activePiece.x, this.activePiece.y + 1)) {
@@ -164,7 +165,7 @@ export class TetrisModel {
           this.gameEnded = true;
           this.gameOn = false;
         } else {
-          this.addPiece();
+          this.masonPiece();
           this.dropRows();
           this.activePiece = createNewPiece(this.pickNextColor());
           this.activePiece.x = Math.floor(Math.random() * 5);
@@ -181,7 +182,8 @@ export class TetrisModel {
     return this.useColors[this.lastUsedColor];
   }
 
-  addPiece() {
+  // adds the piece permanently to the structure
+  masonPiece() {
     const piece = this.activePiece;
     piece.cells.forEach((row, y) => {
       if (piece.y + y < 0) return;
@@ -193,6 +195,7 @@ export class TetrisModel {
     });
   }
 
+  // drops full rows and adds points to the user
   dropRows() {
     const nextRows = [];
     let emptyCnt = 0;
@@ -218,7 +221,7 @@ export class TetrisModel {
     }
   }
 
-  resetGame() {
+  clearCells() {
     this.cells = new Array(this.rows);
     for (let row = 0; row < this.rows; row++) {
       this.cells[row] = new Array(this.cols);
@@ -226,6 +229,10 @@ export class TetrisModel {
         this.cells[row][col] = { color: Colors.EMPTY };
       }
     }
+  }
+
+  resetGame() {
+    this.clearCells();
     this.activePiece = createNewPiece(this.pickNextColor());
     this.ticksPerMove = 10;
     this.tickCnt = 0;
@@ -250,8 +257,9 @@ export interface IContainerPropsMethods {
   right: () => any;
   rotate: () => any;
   step: () => any;
-  addPiece: () => any;
+  masonPiece: () => any;
   dropRows: () => any;
+  clearCells: () => any;
   resetGame: () => any;
   start: () => any;
 }
@@ -319,11 +327,14 @@ export const mapDispatchToProps = (dispatch: any): IContainerPropsMethods => {
     step: () => {
       return dispatch(RTetrisModel.step());
     },
-    addPiece: () => {
-      return dispatch(RTetrisModel.addPiece());
+    masonPiece: () => {
+      return dispatch(RTetrisModel.masonPiece());
     },
     dropRows: () => {
       return dispatch(RTetrisModel.dropRows());
+    },
+    clearCells: () => {
+      return dispatch(RTetrisModel.clearCells());
     },
     resetGame: () => {
       return dispatch(RTetrisModel.resetGame());
@@ -373,8 +384,9 @@ const initWithMethodsTetrisModel = () => {
     right: o.right,
     rotate: o.rotate,
     step: o.step,
-    addPiece: o.addPiece,
+    masonPiece: o.masonPiece,
     dropRows: o.dropRows,
+    clearCells: o.clearCells,
     resetGame: o.resetGame,
     start: o.start
   };
@@ -732,26 +744,6 @@ export class RTetrisModel {
     };
   }
   // is a reducer
-  rotateCells(cells: Cell[][]): Cell[][] {
-    const res: Cell[][] = new Array(cells.length);
-    for (let j = 0; j < cells.length; j++) {
-      res[j] = new Array(cells[j].length);
-    }
-    for (let j = 0; j < cells.length; j++) {
-      const row = cells[j];
-      for (let i = 0; i < row.length; i++) {
-        res[i][j] = { color: Colors.EMPTY };
-      }
-    }
-    for (let j = 0; j < cells.length; j++) {
-      const row = cells[j];
-      for (let i = 0; i < row.length; i++) {
-        res[i][cells.length - j - 1] = row[i];
-      }
-    }
-    return res;
-  }
-  // is a reducer
   rotate() {
     if (this._state) {
       const newOrientation = this.rotateCells(this.activePiece.cells);
@@ -777,6 +769,26 @@ export class RTetrisModel {
     };
   }
   // is a reducer
+  rotateCells(cells: Cell[][]): Cell[][] {
+    const res: Cell[][] = new Array(cells.length);
+    for (let j = 0; j < cells.length; j++) {
+      res[j] = new Array(cells[j].length);
+    }
+    for (let j = 0; j < cells.length; j++) {
+      const row = cells[j];
+      for (let i = 0; i < row.length; i++) {
+        res[i][j] = { color: Colors.EMPTY };
+      }
+    }
+    for (let j = 0; j < cells.length; j++) {
+      const row = cells[j];
+      for (let i = 0; i < row.length; i++) {
+        res[i][cells.length - j - 1] = row[i];
+      }
+    }
+    return res;
+  }
+  // is a reducer
   step() {
     if (this._state) {
       if (this.gameOn) {
@@ -787,7 +799,7 @@ export class RTetrisModel {
             this.gameEnded = true;
             this.gameOn = false;
           } else {
-            this.addPiece();
+            this.masonPiece();
             this.dropRows();
             this.activePiece = createNewPiece(this.pickNextColor());
             this.activePiece.x = Math.floor(Math.random() * 5);
@@ -815,7 +827,7 @@ export class RTetrisModel {
     return this.useColors[this.lastUsedColor];
   }
   // is a reducer
-  addPiece() {
+  masonPiece() {
     if (this._state) {
       const piece = this.activePiece;
       piece.cells.forEach((row, y) => {
@@ -828,14 +840,14 @@ export class RTetrisModel {
       });
     } else {
       if (this._dispatch) {
-        this._dispatch({ type: TetrisModelEnums.TetrisModel_addPiece });
+        this._dispatch({ type: TetrisModelEnums.TetrisModel_masonPiece });
       }
     }
   }
 
-  public static addPiece() {
+  public static masonPiece() {
     return (dispatcher: any, getState: any) => {
-      new RTetrisModel(undefined, dispatcher, getState).addPiece();
+      new RTetrisModel(undefined, dispatcher, getState).masonPiece();
     };
   }
   // is a reducer
@@ -876,7 +888,7 @@ export class RTetrisModel {
     };
   }
   // is a reducer
-  resetGame() {
+  clearCells() {
     if (this._state) {
       this.cells = new Array(this.rows);
       for (let row = 0; row < this.rows; row++) {
@@ -885,6 +897,22 @@ export class RTetrisModel {
           this.cells[row][col] = { color: Colors.EMPTY };
         }
       }
+    } else {
+      if (this._dispatch) {
+        this._dispatch({ type: TetrisModelEnums.TetrisModel_clearCells });
+      }
+    }
+  }
+
+  public static clearCells() {
+    return (dispatcher: any, getState: any) => {
+      new RTetrisModel(undefined, dispatcher, getState).clearCells();
+    };
+  }
+  // is a reducer
+  resetGame() {
+    if (this._state) {
+      this.clearCells();
       this.activePiece = createNewPiece(this.pickNextColor());
       this.ticksPerMove = 10;
       this.tickCnt = 0;
@@ -937,12 +965,13 @@ export const TetrisModelEnums = {
   TetrisModel_tick: "TetrisModel_tick",
   TetrisModel_left: "TetrisModel_left",
   TetrisModel_right: "TetrisModel_right",
-  TetrisModel_rotateCells: "TetrisModel_rotateCells",
   TetrisModel_rotate: "TetrisModel_rotate",
+  TetrisModel_rotateCells: "TetrisModel_rotateCells",
   TetrisModel_step: "TetrisModel_step",
   TetrisModel_pickNextColor: "TetrisModel_pickNextColor",
-  TetrisModel_addPiece: "TetrisModel_addPiece",
+  TetrisModel_masonPiece: "TetrisModel_masonPiece",
   TetrisModel_dropRows: "TetrisModel_dropRows",
+  TetrisModel_clearCells: "TetrisModel_clearCells",
   TetrisModel_resetGame: "TetrisModel_resetGame",
   TetrisModel_start: "TetrisModel_start"
 };
@@ -1001,11 +1030,14 @@ export const TetrisModelReducer = (
       case TetrisModelEnums.TetrisModel_step:
         new RTetrisModel(draft).step();
         break;
-      case TetrisModelEnums.TetrisModel_addPiece:
-        new RTetrisModel(draft).addPiece();
+      case TetrisModelEnums.TetrisModel_masonPiece:
+        new RTetrisModel(draft).masonPiece();
         break;
       case TetrisModelEnums.TetrisModel_dropRows:
         new RTetrisModel(draft).dropRows();
+        break;
+      case TetrisModelEnums.TetrisModel_clearCells:
+        new RTetrisModel(draft).clearCells();
         break;
       case TetrisModelEnums.TetrisModel_resetGame:
         new RTetrisModel(draft).resetGame();
@@ -1036,8 +1068,9 @@ export class TetrisModelProvider extends React.Component {
     this.right = this.right.bind(this);
     this.rotate = this.rotate.bind(this);
     this.step = this.step.bind(this);
-    this.addPiece = this.addPiece.bind(this);
+    this.masonPiece = this.masonPiece.bind(this);
     this.dropRows = this.dropRows.bind(this);
+    this.clearCells = this.clearCells.bind(this);
     this.resetGame = this.resetGame.bind(this);
     this.start = this.start.bind(this);
     const devs = window["devToolsExtension"]
@@ -1107,12 +1140,12 @@ export class TetrisModelProvider extends React.Component {
     }
     this.setStateSync(nextState);
   }
-  addPiece() {
+  masonPiece() {
     const nextState = immer.produce(this.state, draft =>
-      new RTetrisModel(draft).addPiece()
+      new RTetrisModel(draft).masonPiece()
     );
     if (this.__devTools) {
-      this.__devTools.send("addPiece", nextState);
+      this.__devTools.send("masonPiece", nextState);
     }
     this.setStateSync(nextState);
   }
@@ -1122,6 +1155,15 @@ export class TetrisModelProvider extends React.Component {
     );
     if (this.__devTools) {
       this.__devTools.send("dropRows", nextState);
+    }
+    this.setStateSync(nextState);
+  }
+  clearCells() {
+    const nextState = immer.produce(this.state, draft =>
+      new RTetrisModel(draft).clearCells()
+    );
+    if (this.__devTools) {
+      this.__devTools.send("clearCells", nextState);
     }
     this.setStateSync(nextState);
   }
@@ -1153,8 +1195,9 @@ export class TetrisModelProvider extends React.Component {
           right: this.right,
           rotate: this.rotate,
           step: this.step,
-          addPiece: this.addPiece,
+          masonPiece: this.masonPiece,
           dropRows: this.dropRows,
+          clearCells: this.clearCells,
           resetGame: this.resetGame,
           start: this.start
         }}

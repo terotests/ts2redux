@@ -53,11 +53,6 @@ export const createNewPiece = (usingColor: string): ActivePiece => {
          ' x ']
       ),
     pieceDeclaration( usingColor,
-        [' x ',
-         'xxx',
-         ' x ']
-      ),
-    pieceDeclaration( usingColor,
       [' x ',
        ' x ',
        'xx ']
@@ -67,11 +62,6 @@ export const createNewPiece = (usingColor: string): ActivePiece => {
        ' x ',
        ' xx']
       ),            
-    pieceDeclaration( usingColor,
-        [' xx',
-         'xxx',
-         'xx ']
-      ),
     pieceDeclaration( usingColor,
       [' x  ',
        ' x  ',

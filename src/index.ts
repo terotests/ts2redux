@@ -417,16 +417,19 @@ export interface IContainerPropsState extends ITodoList {
             }             
           })
           c.getMethods().forEach( m => {
-            if(m.getParameters().length > 1) {
+
+            const rvNode = m.getReturnTypeNode()
+            let rvMethod = false
+            if(rvNode) {
+              rvMethod = true
+            }               
+            if(!rvMethod && m.getParameters().length > 1) {
               throw `Error at ${sourceFile.getFilePath()} in class ${c.getName()} method ${m.getName()} can not have more than 2 parameters at the moment`
             }
             const pName = m.getParameters().filter( (a,i) => i<1).map( mod => mod.getName() ).join('')
 
-            const rvNode = m.getReturnTypeNode()
-            if(rvNode) {
-              throw `Error at ${sourceFile.getFilePath()} in class ${c.getName()} method ${m.getName()} can not return values, use getter instead!`
-              return
-            }    
+            
+ 
 
             if(m.isAsync()) {
               body.out('// is task', true)
@@ -435,58 +438,70 @@ export interface IContainerPropsState extends ITodoList {
               body.out('// is a reducer', true)
               const r_name = `${c.getName()}_${m.getName()}`
               const param_name = m.getParameters().length > 0 ? 'action.payload' : '';
-              ng_enums.out(`${r_name} : '${r_name}',`, true)              
-              ng_reducers.out(`case ${c.getName()}Enums.${r_name}: `, true)
-              ng_reducers.indent(1)
-              ng_reducers.out(`(new R${c.getName()}(draft)).${m.getName()}(${param_name})`, true);
-              ng_reducers.out('break;', true)
-              ng_reducers.indent(-1)
+              ng_enums.out(`${r_name} : '${r_name}',`, true)       
+              if(!rvMethod) {       
+                ng_reducers.out(`case ${c.getName()}Enums.${r_name}: `, true)
+                ng_reducers.indent(1)
+                ng_reducers.out(`(new R${c.getName()}(draft)).${m.getName()}(${param_name})`, true);
+                ng_reducers.out('break;', true)
+                ng_reducers.indent(-1)
+              }
               
               body.raw( m.getModifiers().map( mod => mod.print()+' ' ).join('') )
               body.out( m.getName() + '(' +  m.getParameters().map( mod => mod.print() ).join(', ') + ')')
               if(m.getReturnTypeNode()) body.out( ': ' + m.getReturnTypeNode().print() ) 
               body.out( '{', true)
                 body.indent(1)
-                body.out('if(this._state) {', true)
+                if(rvMethod) {
+                  m.getBody().forEachChild( ch => {
+                    body.out(ch.print(), true)
+                  })
+                } else {
+                  body.out('if(this._state) {', true)
                   body.indent(1)
                   m.getBody().forEachChild( ch => {
                     body.out(ch.print(), true)
                   })
                   body.indent(-1)
-                body.out('} else {', true)
+                  body.out('} else {', true)
                   const firstParam = m.getParameters().filter( (a,i) => i<1).map( mod => mod.getName() ).join('')
                   const fpCode = firstParam.length > 0 ? `,payload: ${firstParam} ` : '';
                   body.indent(1)
                   body.out(`if(this._dispatch) { this._dispatch({type:${c.getName()}Enums.${r_name}${fpCode}}) }`, true)    
                   body.indent(-1)
                   body.out('}', true)
+                }
+
                 body.indent(-1)
               body.out('}', true)  
             } 
             // generate the static version
-            body.out('', true)             
-            body.out('public static ')
-            body.out( m.getModifiers().filter(mod => ( mod.getText() != 'async' && mod.getText() != 'public')).map( mod => mod.print() +' ' ).join('') )
-            body.out( m.getName() + '(' +  m.getParameters().map( mod => mod.print() ).join(', ') + ')')
 
-            propsMethods.out( m.getName() + ' : (' +  m.getParameters().map( mod => mod.print() ).join(', ') + ') => any', true)
-            dispatchMethods.out( m.getName() + ' : (' +  m.getParameters().map( mod => mod.print() ).join(', ') + ') => {', true)
-              dispatchMethods.indent(1)
-              dispatchMethods.out(`return dispatch(R${c.getName()}.${m.getName()}(${pName}))`, true)
-              dispatchMethods.indent(-1)
-            dispatchMethods.out('},', true)
+            if(!rvMethod) {
+              body.out('', true)             
+              body.out('public static ')
+              body.out( m.getModifiers().filter(mod => ( mod.getText() != 'async' && mod.getText() != 'public')).map( mod => mod.print() +' ' ).join('') )
+              body.out( m.getName() + '(' +  m.getParameters().map( mod => mod.print() ).join(', ') + ')')
 
-            if(m.getReturnTypeNode()) body.out( ': ' + m.getReturnTypeNode().print() )
-            body.out( '{', true)
-              body.indent(1)
-              body.out(`return (dispatcher:any, getState:any) => {`, true)
+              propsMethods.out( m.getName() + ' : (' +  m.getParameters().map( mod => mod.print() ).join(', ') + ') => any', true)
+              dispatchMethods.out( m.getName() + ' : (' +  m.getParameters().map( mod => mod.print() ).join(', ') + ') => {', true)
+                dispatchMethods.indent(1)
+                dispatchMethods.out(`return dispatch(R${c.getName()}.${m.getName()}(${pName}))`, true)
+                dispatchMethods.indent(-1)
+              dispatchMethods.out('},', true)
+
+              if(m.getReturnTypeNode()) body.out( ': ' + m.getReturnTypeNode().print() )
+              body.out( '{', true)
                 body.indent(1)
-                
-                body.out(`(new R${c.getName()}(undefined, dispatcher, getState)).${m.getName()}(${pName})`, true);
+                body.out(`return (dispatcher:any, getState:any) => {`, true)
+                  body.indent(1)
+                  
+                  body.out(`(new R${c.getName()}(undefined, dispatcher, getState)).${m.getName()}(${pName})`, true);
+                  body.indent(-1)
+                body.out('}', true)
                 body.indent(-1)
-              body.out('}', true)
-              body.indent(-1)
-            body.out('}', true)       
+              body.out('}', true)       
+            }
           })         
 
           // https://hackernoon.com/how-to-use-the-new-react-context-api-fce011e7d87

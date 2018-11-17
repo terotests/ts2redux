@@ -33,7 +33,7 @@ var PureList = /** @class */ (function (_super) {
 }(React.PureComponent));
 exports.PureList = PureList;
 
-},{"react":84}],2:[function(require,module,exports){
+},{"react":87}],2:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var React = require("react");
@@ -48,7 +48,99 @@ exports.AbstractInc = function (props) {
 // This is the specialized version of the component
 exports.ReduxInc = container.StateConnector(exports.AbstractInc);
 
-},{"../models/reducers/IncModel":10,"react":84}],3:[function(require,module,exports){
+},{"../models/reducers/IncModel":12,"react":87}],3:[function(require,module,exports){
+"use strict";
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    }
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var React = require("react");
+var container = require("../models/reducers/TetrisModel");
+var TetrisModel_1 = require("../models/TetrisModel");
+// this component can be re-used
+var TetrisC = /** @class */ (function (_super) {
+    __extends(TetrisC, _super);
+    function TetrisC() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.keyFunction = function (event) {
+            if (_this.props.gameOn) {
+                if (event.keyCode == 37) {
+                    _this.props.left();
+                }
+                if (event.keyCode == 38) {
+                    _this.props.rotate();
+                }
+                if (event.keyCode == 39) {
+                    _this.props.right();
+                }
+                if (event.keyCode == 40) {
+                    _this.props.step();
+                }
+            }
+            event.preventDefault();
+        };
+        return _this;
+    }
+    TetrisC.prototype.componentDidMount = function () {
+        var _this = this;
+        this.interval = setInterval(function () {
+            if (_this.props.gameOn)
+                _this.props.tick();
+        }, 100);
+        document.addEventListener("keydown", this.keyFunction, false);
+    };
+    TetrisC.prototype.componentWillUnmount = function () {
+        clearInterval(this.interval);
+        document.removeEventListener("keydown", this.keyFunction, false);
+    };
+    TetrisC.prototype.render = function () {
+        var _this = this;
+        return (React.createElement("div", { style: { margin: 20,
+                fontFamily: 'Arial', fontSize: '10px', color: '#333333',
+                padding: 20, backgroundColor: 'white', borderRadius: '5px', display: 'inline-block' } },
+            !this.props.gameOn ?
+                React.createElement("div", null,
+                    React.createElement("button", { onClick: this.props.start }, "Start Game"))
+                : '',
+            React.createElement("div", null,
+                "Points:",
+                this.props.points,
+                " ",
+                this.props.gameEnded ? 'Game Over' : ''),
+            React.createElement("div", { style: { width: this.props.cols * 20, height: this.props.rows * 20, position: 'relative', backgroundColor: '#222222' } }, this.props.cells.map(function (row, y) { return React.createElement("div", { style: { width: _this.props.cols * 20, height: 21 }, key: 'row_' + y }, row.map(function (cell, x) {
+                var hasActive = false;
+                var active = _this.props.activePiece;
+                var color = cell.color;
+                active.cells.forEach(function (arow, ay) {
+                    arow.forEach(function (acell, ax) {
+                        if (((active.x + ax) == x) && ((active.y + ay) == y)) {
+                            if (acell.color !== TetrisModel_1.Colors.EMPTY)
+                                color = acell.color;
+                        }
+                    });
+                });
+                return React.createElement("div", { key: 'cell' + y + '_' + x, style: { backgroundColor: color,
+                        boxShadow: color !== TetrisModel_1.Colors.EMPTY ? 'inset 0 0 3px rgba(0,0,0,0.6)' : '',
+                        position: 'absolute', left: x * 20, top: 20 * y, width: 20, height: 20 } });
+            })); }))));
+    };
+    return TetrisC;
+}(React.PureComponent));
+exports.TetrisC = TetrisC;
+// This is the specialized version of the component
+exports.TetrisComponent = container.StateConnector(TetrisC);
+
+},{"../models/TetrisModel":10,"../models/reducers/TetrisModel":15,"react":87}],4:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -100,7 +192,7 @@ exports.WaspC = WaspC;
 // This is the specialized version of the component
 exports.WaspComponent = container.StateConnector(WaspC);
 
-},{"../models/reducers/WaspModel":16,"react":84}],4:[function(require,module,exports){
+},{"../models/reducers/WaspModel":19,"react":87}],5:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -163,7 +255,7 @@ var WaspContextComponent = /** @class */ (function (_super) {
 }(React.PureComponent));
 exports.WaspContextComponent = WaspContextComponent;
 
-},{"../models/reducers/WaspModel":16,"react":84}],5:[function(require,module,exports){
+},{"../models/reducers/WaspModel":19,"react":87}],6:[function(require,module,exports){
 "use strict";
 var __assign = (this && this.__assign) || function () {
     __assign = Object.assign || function(t) {
@@ -200,7 +292,7 @@ exports.StateConnector = react_redux_1.connect(function (state) { return (__assi
 // This is the specialized version of the component
 exports.CombinedStates = exports.StateConnector(exports.AbstractCombinedStates);
 
-},{"../models/reducers/TodoList":13,"../models/reducers/UserState":15,"react":84,"react-redux":75}],6:[function(require,module,exports){
+},{"../models/reducers/TodoList":16,"../models/reducers/UserState":18,"react":87,"react-redux":78}],7:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var React = require("react");
@@ -239,7 +331,7 @@ exports.AbstractMemberArea = function (props) {
 // This is the specialized version of the component
 exports.MemberArea = container.StateConnector(exports.AbstractMemberArea);
 
-},{"../models/reducers/TestModel":12,"react":84}],7:[function(require,module,exports){
+},{"../models/reducers/TestModel":14,"react":87}],8:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var React = require("react");
@@ -265,7 +357,7 @@ exports.AbstractTodoList = function (props) {
 // This is the specialized version of the component
 exports.TodoList = container.StateConnector(exports.AbstractTodoList);
 
-},{"../models/reducers/TodoList":13,"./PureList":1,"react":84}],8:[function(require,module,exports){
+},{"../models/reducers/TodoList":16,"./PureList":1,"react":87}],9:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var React = require("react");
@@ -286,6 +378,7 @@ var combinedState_1 = require("./components/combinedState");
 var todo = require("./models/TodoList");
 var WaspModel_1 = require("./models/reducers/WaspModel");
 var WaspComponent_1 = require("./components/WaspComponent");
+var TetrisComponent_1 = require("./components/TetrisComponent");
 var WaspContextComponent_1 = require("./components/WaspContextComponent");
 var UIHelperModel_1 = require("./models/reducers/UIHelperModel");
 var store = redux_1.createStore(reducers_1.reducers, redux_1.compose(redux_1.applyMiddleware(redux_thunk_1.default), window['devToolsExtension'] ? window['devToolsExtension']() : function (f) { return f; }));
@@ -300,6 +393,7 @@ var UserInfo = function (props) { return React.createElement(UserState_1.UserSta
 }); };
 ReactDOM.render(React.createElement(react_redux_1.Provider, { store: store },
     React.createElement(Ctx.Provider, { value: listValue },
+        React.createElement(TetrisComponent_1.TetrisComponent, null),
         React.createElement(UserState_1.UserStateProvider, null,
             React.createElement(UIHelperModel_1.UIHelperModelProvider, null,
                 React.createElement(UIHelperModel_1.UIHelperModelConsumer, null, function (state) { return React.createElement("div", null,
@@ -367,7 +461,240 @@ ReactDOM.render(React.createElement(react_redux_1.Provider, { store: store },
       </Router>
 */ 
 
-},{"./components/ReduxInc":2,"./components/WaspComponent":3,"./components/WaspContextComponent":4,"./components/combinedState":5,"./components/memberArea":6,"./components/todoList":7,"./models/TodoList":9,"./models/reducers/":17,"./models/reducers/IncModel":10,"./models/reducers/TodoList":13,"./models/reducers/UIHelperModel":14,"./models/reducers/UserState":15,"./models/reducers/WaspModel":16,"react":84,"react-dom":62,"react-redux":75,"redux":86,"redux-thunk":85}],9:[function(require,module,exports){
+},{"./components/ReduxInc":2,"./components/TetrisComponent":3,"./components/WaspComponent":4,"./components/WaspContextComponent":5,"./components/combinedState":6,"./components/memberArea":7,"./components/todoList":8,"./models/TodoList":11,"./models/reducers/":20,"./models/reducers/IncModel":12,"./models/reducers/TodoList":16,"./models/reducers/UIHelperModel":17,"./models/reducers/UserState":18,"./models/reducers/WaspModel":19,"react":87,"react-dom":65,"react-redux":78,"redux":89,"redux-thunk":88}],10:[function(require,module,exports){
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var Colors;
+(function (Colors) {
+    Colors["EMPTY"] = "";
+})(Colors = exports.Colors || (exports.Colors = {}));
+var pieceDeclaration = function (color, rows) {
+    var cells = new Array(rows.length);
+    for (var i = 0; i < rows.length; i++) {
+        var row = rows[i];
+        cells[i] = new Array(row.length);
+        for (var c = 0; c < row.length; c++) {
+            if (row.charAt(c) == ' ') {
+                cells[i][c] = { color: Colors.EMPTY };
+            }
+            else {
+                cells[i][c] = { color: color };
+            }
+        }
+    }
+    return {
+        x: 0,
+        y: rows.length * -1,
+        width: rows.length,
+        height: rows.length,
+        cells: cells
+    };
+};
+/**
+ * [' O '],
+*  ['OOO'],
+*  [' O ']
+ */
+exports.createNewPiece = function (usingColor) {
+    var items = [
+        pieceDeclaration(usingColor, ['xx',
+            'xx']),
+        pieceDeclaration(usingColor, ['   ',
+            'xxx',
+            ' x ']),
+        pieceDeclaration(usingColor, [' x ',
+            'xxx',
+            ' x ']),
+        pieceDeclaration(usingColor, [' x ',
+            ' x ',
+            'xx ']),
+        pieceDeclaration(usingColor, [' x ',
+            ' x ',
+            ' xx']),
+        pieceDeclaration(usingColor, [' xx',
+            'xxx',
+            'xx ']),
+        pieceDeclaration(usingColor, [' x  ',
+            ' x  ',
+            ' x  ',
+            ' x  ']),
+    ];
+    return items[Math.floor(Math.random() * items.length)];
+};
+/**
+ * @redux true
+ */
+var TetrisModel = /** @class */ (function () {
+    function TetrisModel() {
+        this.useColors = ["red", "blue", "green", "yellow", "brown"];
+        this.lastUsedColor = 0;
+        this.points = 0;
+        this.rows = 20;
+        this.cols = 10;
+        this.cells = [];
+        this.gameOn = false;
+        this.gameEnded = false;
+        this.ticksPerMove = 10;
+        this.tickCnt = 0;
+    }
+    TetrisModel.prototype.doesCollide = function (pieceX, pieceY, pieceCells) {
+        var _this = this;
+        var collides = false;
+        var compareAgainst = pieceCells || this.activePiece.cells;
+        compareAgainst.forEach(function (row, y) {
+            row.forEach(function (cell, x) {
+                if (cell.color === Colors.EMPTY)
+                    return;
+                if (pieceY + y >= _this.rows) {
+                    collides = true;
+                    return;
+                }
+                if (((pieceX + x) < 0) || ((pieceX + x) >= _this.cols)) {
+                    collides = true;
+                    return;
+                }
+                if (cell.color !== Colors.EMPTY) {
+                    if (pieceY + y < 0)
+                        return;
+                    if (_this.cells[pieceY + y][pieceX + x].color !== Colors.EMPTY) {
+                        collides = true;
+                    }
+                }
+            });
+        });
+        return collides;
+    };
+    ;
+    TetrisModel.prototype.tick = function () {
+        this.tickCnt++;
+        if (this.tickCnt >= this.ticksPerMove) {
+            this.tickCnt = 0;
+            this.step();
+        }
+    };
+    TetrisModel.prototype.left = function () {
+        if (!this.doesCollide(this.activePiece.x - 1, this.activePiece.y)) {
+            this.activePiece.x--;
+        }
+    };
+    TetrisModel.prototype.right = function () {
+        if (!this.doesCollide(this.activePiece.x + 1, this.activePiece.y)) {
+            this.activePiece.x++;
+        }
+    };
+    TetrisModel.prototype.rotateCells = function (cells) {
+        var res = new Array(cells.length);
+        for (var j = 0; j < cells.length; j++) {
+            res[j] = new Array(cells[j].length);
+        }
+        for (var j = 0; j < cells.length; j++) {
+            var row = cells[j];
+            for (var i = 0; i < row.length; i++) {
+                res[i][j] = { color: Colors.EMPTY };
+            }
+        }
+        for (var j = 0; j < cells.length; j++) {
+            var row = cells[j];
+            for (var i = 0; i < row.length; i++) {
+                res[i][cells.length - j - 1] = row[i];
+            }
+        }
+        return res;
+    };
+    ;
+    TetrisModel.prototype.rotate = function () {
+        var newOrientation = this.rotateCells(this.activePiece.cells);
+        if (!this.doesCollide(this.activePiece.x, this.activePiece.y, newOrientation)) {
+            this.activePiece.cells = newOrientation;
+        }
+    };
+    TetrisModel.prototype.step = function () {
+        if (this.gameOn) {
+            if (!this.doesCollide(this.activePiece.x, this.activePiece.y + 1)) {
+                this.activePiece.y++;
+            }
+            else {
+                if (this.activePiece.y < 0) {
+                    this.gameEnded = true;
+                    this.gameOn = false;
+                }
+                else {
+                    this.addPiece();
+                    this.dropRows();
+                    this.activePiece = exports.createNewPiece(this.pickNextColor());
+                    this.activePiece.x = Math.floor(Math.random() * 5);
+                }
+            }
+        }
+    };
+    TetrisModel.prototype.pickNextColor = function () {
+        this.lastUsedColor++;
+        if (this.lastUsedColor >= this.useColors.length) {
+            this.lastUsedColor = 0;
+        }
+        return this.useColors[this.lastUsedColor];
+    };
+    TetrisModel.prototype.addPiece = function () {
+        var _this = this;
+        var piece = this.activePiece;
+        piece.cells.forEach(function (row, y) {
+            if (piece.y + y < 0)
+                return;
+            row.forEach(function (cell, x) {
+                if (cell.color !== Colors.EMPTY) {
+                    _this.cells[piece.y + y][piece.x + x].color = cell.color;
+                }
+            });
+        });
+    };
+    TetrisModel.prototype.dropRows = function () {
+        var nextRows = [];
+        var emptyCnt = 0;
+        for (var i = 0; i < this.cells.length; i++) {
+            var row = this.cells[i];
+            if (row.filter(function (cell) { return cell.color === Colors.EMPTY; }).length > 0) {
+                nextRows.push(row);
+            }
+            else {
+                emptyCnt++;
+            }
+        }
+        if (emptyCnt > 0) {
+            this.points += emptyCnt * emptyCnt * 10;
+            while (emptyCnt-- > 0) {
+                var newEmpty = new Array(this.cols);
+                for (var col = 0; col < this.cols; col++) {
+                    newEmpty[col] = { color: Colors.EMPTY };
+                }
+                nextRows.unshift(newEmpty);
+            }
+            this.cells = nextRows;
+            this.ticksPerMove--;
+        }
+    };
+    TetrisModel.prototype.resetGame = function () {
+        this.cells = new Array(this.rows);
+        for (var row = 0; row < this.rows; row++) {
+            this.cells[row] = new Array(this.cols);
+            for (var col = 0; col < this.cols; col++) {
+                this.cells[row][col] = { color: Colors.EMPTY };
+            }
+        }
+        this.activePiece = exports.createNewPiece(this.pickNextColor());
+        this.ticksPerMove = 10;
+        this.tickCnt = 0;
+    };
+    TetrisModel.prototype.start = function () {
+        this.resetGame();
+        this.gameOn = true;
+        this.gameEnded = false;
+        this.points = 0;
+    };
+    return TetrisModel;
+}());
+exports.TetrisModel = TetrisModel;
+
+},{}],11:[function(require,module,exports){
 "use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -504,7 +831,7 @@ var TodoList = /** @class */ (function () {
 }());
 exports.TodoList = TodoList;
 
-},{"axios":24}],10:[function(require,module,exports){
+},{"axios":27}],12:[function(require,module,exports){
 "use strict";
 /********************************************************************************
  *                                                                               *
@@ -740,7 +1067,7 @@ var IncModelProvider = /** @class */ (function (_super) {
 }(React.Component));
 exports.IncModelProvider = IncModelProvider;
 
-},{"immer":50,"react":84,"react-redux":75}],11:[function(require,module,exports){
+},{"immer":53,"react":87,"react-redux":78}],13:[function(require,module,exports){
 "use strict";
 /***********************************************************************************
  *                                                                                  *
@@ -1000,7 +1327,7 @@ var SimpleModelProvider = /** @class */ (function (_super) {
 }(React.Component));
 exports.SimpleModelProvider = SimpleModelProvider;
 
-},{"axios":24,"immer":50,"react":84,"react-redux":75}],12:[function(require,module,exports){
+},{"axios":27,"immer":53,"react":87,"react-redux":78}],14:[function(require,module,exports){
 "use strict";
 /*********************************************************************************
  *                                                                                *
@@ -2045,7 +2372,1194 @@ var TestModelProvider = /** @class */ (function (_super) {
 }(React.Component));
 exports.TestModelProvider = TestModelProvider;
 
-},{"immer":50,"react":84,"react-redux":75,"timers":96}],13:[function(require,module,exports){
+},{"immer":53,"react":87,"react-redux":78,"timers":99}],15:[function(require,module,exports){
+"use strict";
+/***********************************************************************************
+ *                                                                                  *
+ *   Redux Reducers and React Context API Provider/Consumer for state TetrisModel   *
+ *   Generated by ts2redux from Source file ../TetrisModel.ts                       *
+ *                                                                                  *
+ ***********************************************************************************/
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    }
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+var Colors;
+(function (Colors) {
+    Colors["EMPTY"] = "";
+})(Colors = exports.Colors || (exports.Colors = {}));
+var pieceDeclaration = function (color, rows) {
+    var cells = new Array(rows.length);
+    for (var i = 0; i < rows.length; i++) {
+        var row = rows[i];
+        cells[i] = new Array(row.length);
+        for (var c = 0; c < row.length; c++) {
+            if (row.charAt(c) == " ") {
+                cells[i][c] = { color: Colors.EMPTY };
+            }
+            else {
+                cells[i][c] = { color: color };
+            }
+        }
+    }
+    return {
+        x: 0,
+        y: rows.length * -1,
+        width: rows.length,
+        height: rows.length,
+        cells: cells
+    };
+};
+/**
+ * [' O '],
+ *  ['OOO'],
+ *  [' O ']
+ */
+exports.createNewPiece = function (usingColor) {
+    var items = [
+        pieceDeclaration(usingColor, ["xx", "xx"]),
+        pieceDeclaration(usingColor, ["   ", "xxx", " x "]),
+        pieceDeclaration(usingColor, [" x ", "xxx", " x "]),
+        pieceDeclaration(usingColor, [" x ", " x ", "xx "]),
+        pieceDeclaration(usingColor, [" x ", " x ", " xx"]),
+        pieceDeclaration(usingColor, [" xx", "xxx", "xx "]),
+        pieceDeclaration(usingColor, [" x  ", " x  ", " x  ", " x  "])
+    ];
+    return items[Math.floor(Math.random() * items.length)];
+};
+/**
+ * @redux true
+ */
+var TetrisModel = /** @class */ (function () {
+    function TetrisModel() {
+        this.useColors = ["red", "blue", "green", "yellow", "brown"];
+        this.lastUsedColor = 0;
+        this.points = 0;
+        this.rows = 20;
+        this.cols = 10;
+        this.cells = [];
+        this.gameOn = false;
+        this.gameEnded = false;
+        this.ticksPerMove = 10;
+        this.tickCnt = 0;
+    }
+    TetrisModel.prototype.doesCollide = function (pieceX, pieceY, pieceCells) {
+        var _this = this;
+        var collides = false;
+        var compareAgainst = pieceCells || this.activePiece.cells;
+        compareAgainst.forEach(function (row, y) {
+            row.forEach(function (cell, x) {
+                if (cell.color === Colors.EMPTY)
+                    return;
+                if (pieceY + y >= _this.rows) {
+                    collides = true;
+                    return;
+                }
+                if (pieceX + x < 0 || pieceX + x >= _this.cols) {
+                    collides = true;
+                    return;
+                }
+                if (cell.color !== Colors.EMPTY) {
+                    if (pieceY + y < 0)
+                        return;
+                    if (_this.cells[pieceY + y][pieceX + x].color !== Colors.EMPTY) {
+                        collides = true;
+                    }
+                }
+            });
+        });
+        return collides;
+    };
+    TetrisModel.prototype.tick = function () {
+        this.tickCnt++;
+        if (this.tickCnt >= this.ticksPerMove) {
+            this.tickCnt = 0;
+            this.step();
+        }
+    };
+    TetrisModel.prototype.left = function () {
+        if (!this.doesCollide(this.activePiece.x - 1, this.activePiece.y)) {
+            this.activePiece.x--;
+        }
+    };
+    TetrisModel.prototype.right = function () {
+        if (!this.doesCollide(this.activePiece.x + 1, this.activePiece.y)) {
+            this.activePiece.x++;
+        }
+    };
+    TetrisModel.prototype.rotateCells = function (cells) {
+        var res = new Array(cells.length);
+        for (var j = 0; j < cells.length; j++) {
+            res[j] = new Array(cells[j].length);
+        }
+        for (var j = 0; j < cells.length; j++) {
+            var row = cells[j];
+            for (var i = 0; i < row.length; i++) {
+                res[i][j] = { color: Colors.EMPTY };
+            }
+        }
+        for (var j = 0; j < cells.length; j++) {
+            var row = cells[j];
+            for (var i = 0; i < row.length; i++) {
+                res[i][cells.length - j - 1] = row[i];
+            }
+        }
+        return res;
+    };
+    TetrisModel.prototype.rotate = function () {
+        var newOrientation = this.rotateCells(this.activePiece.cells);
+        if (!this.doesCollide(this.activePiece.x, this.activePiece.y, newOrientation)) {
+            this.activePiece.cells = newOrientation;
+        }
+    };
+    TetrisModel.prototype.step = function () {
+        if (this.gameOn) {
+            if (!this.doesCollide(this.activePiece.x, this.activePiece.y + 1)) {
+                this.activePiece.y++;
+            }
+            else {
+                if (this.activePiece.y < 0) {
+                    this.gameEnded = true;
+                    this.gameOn = false;
+                }
+                else {
+                    this.addPiece();
+                    this.dropRows();
+                    this.activePiece = exports.createNewPiece(this.pickNextColor());
+                    this.activePiece.x = Math.floor(Math.random() * 5);
+                }
+            }
+        }
+    };
+    TetrisModel.prototype.pickNextColor = function () {
+        this.lastUsedColor++;
+        if (this.lastUsedColor >= this.useColors.length) {
+            this.lastUsedColor = 0;
+        }
+        return this.useColors[this.lastUsedColor];
+    };
+    TetrisModel.prototype.addPiece = function () {
+        var _this = this;
+        var piece = this.activePiece;
+        piece.cells.forEach(function (row, y) {
+            if (piece.y + y < 0)
+                return;
+            row.forEach(function (cell, x) {
+                if (cell.color !== Colors.EMPTY) {
+                    _this.cells[piece.y + y][piece.x + x].color = cell.color;
+                }
+            });
+        });
+    };
+    TetrisModel.prototype.dropRows = function () {
+        var nextRows = [];
+        var emptyCnt = 0;
+        for (var i = 0; i < this.cells.length; i++) {
+            var row = this.cells[i];
+            if (row.filter(function (cell) { return cell.color === Colors.EMPTY; }).length > 0) {
+                nextRows.push(row);
+            }
+            else {
+                emptyCnt++;
+            }
+        }
+        if (emptyCnt > 0) {
+            this.points += emptyCnt * emptyCnt * 10;
+            while (emptyCnt-- > 0) {
+                var newEmpty = new Array(this.cols);
+                for (var col = 0; col < this.cols; col++) {
+                    newEmpty[col] = { color: Colors.EMPTY };
+                }
+                nextRows.unshift(newEmpty);
+            }
+            this.cells = nextRows;
+            this.ticksPerMove--;
+        }
+    };
+    TetrisModel.prototype.resetGame = function () {
+        this.cells = new Array(this.rows);
+        for (var row = 0; row < this.rows; row++) {
+            this.cells[row] = new Array(this.cols);
+            for (var col = 0; col < this.cols; col++) {
+                this.cells[row][col] = { color: Colors.EMPTY };
+            }
+        }
+        this.activePiece = exports.createNewPiece(this.pickNextColor());
+        this.ticksPerMove = 10;
+        this.tickCnt = 0;
+    };
+    TetrisModel.prototype.start = function () {
+        this.resetGame();
+        this.gameOn = true;
+        this.gameEnded = false;
+        this.points = 0;
+    };
+    return TetrisModel;
+}());
+exports.TetrisModel = TetrisModel;
+var immer = require("immer");
+var react_redux_1 = require("react-redux");
+var React = require("react");
+exports.useColorsSelectorFn = function (state) {
+    return state.useColors;
+};
+exports.lastUsedColorSelectorFn = function (state) {
+    return state.lastUsedColor;
+};
+exports.pointsSelectorFn = function (state) { return state.points; };
+exports.rowsSelectorFn = function (state) { return state.rows; };
+exports.colsSelectorFn = function (state) { return state.cols; };
+exports.cellsSelectorFn = function (state) { return state.cells; };
+exports.activePieceSelectorFn = function (state) {
+    return state.activePiece;
+};
+exports.gameOnSelectorFn = function (state) { return state.gameOn; };
+exports.gameEndedSelectorFn = function (state) {
+    return state.gameEnded;
+};
+exports.ticksPerMoveSelectorFn = function (state) {
+    return state.ticksPerMove;
+};
+exports.tickCntSelectorFn = function (state) { return state.tickCnt; };
+exports.mapStateToProps = function (state) {
+    return {
+        useColors: state.TetrisModel.useColors,
+        lastUsedColor: state.TetrisModel.lastUsedColor,
+        points: state.TetrisModel.points,
+        rows: state.TetrisModel.rows,
+        cols: state.TetrisModel.cols,
+        cells: state.TetrisModel.cells,
+        activePiece: state.TetrisModel.activePiece,
+        gameOn: state.TetrisModel.gameOn,
+        gameEnded: state.TetrisModel.gameEnded,
+        ticksPerMove: state.TetrisModel.ticksPerMove,
+        tickCnt: state.TetrisModel.tickCnt
+    };
+};
+exports.mapDispatchToProps = function (dispatch) {
+    return {
+        tick: function () {
+            return dispatch(RTetrisModel.tick());
+        },
+        left: function () {
+            return dispatch(RTetrisModel.left());
+        },
+        right: function () {
+            return dispatch(RTetrisModel.right());
+        },
+        rotate: function () {
+            return dispatch(RTetrisModel.rotate());
+        },
+        step: function () {
+            return dispatch(RTetrisModel.step());
+        },
+        addPiece: function () {
+            return dispatch(RTetrisModel.addPiece());
+        },
+        dropRows: function () {
+            return dispatch(RTetrisModel.dropRows());
+        },
+        resetGame: function () {
+            return dispatch(RTetrisModel.resetGame());
+        },
+        start: function () {
+            return dispatch(RTetrisModel.start());
+        }
+    };
+};
+exports.StateConnector = react_redux_1.connect(exports.mapStateToProps, exports.mapDispatchToProps);
+var initTetrisModel = function () {
+    var o = new TetrisModel();
+    return {
+        useColors: o.useColors,
+        lastUsedColor: o.lastUsedColor,
+        points: o.points,
+        rows: o.rows,
+        cols: o.cols,
+        cells: o.cells,
+        activePiece: o.activePiece,
+        gameOn: o.gameOn,
+        gameEnded: o.gameEnded,
+        ticksPerMove: o.ticksPerMove,
+        tickCnt: o.tickCnt
+    };
+};
+var initWithMethodsTetrisModel = function () {
+    var o = new TetrisModel();
+    return {
+        useColors: o.useColors,
+        lastUsedColor: o.lastUsedColor,
+        points: o.points,
+        rows: o.rows,
+        cols: o.cols,
+        cells: o.cells,
+        activePiece: o.activePiece,
+        gameOn: o.gameOn,
+        gameEnded: o.gameEnded,
+        ticksPerMove: o.ticksPerMove,
+        tickCnt: o.tickCnt,
+        tick: o.tick,
+        left: o.left,
+        right: o.right,
+        rotate: o.rotate,
+        step: o.step,
+        addPiece: o.addPiece,
+        dropRows: o.dropRows,
+        resetGame: o.resetGame,
+        start: o.start
+    };
+};
+/**
+ * @generated true
+ */
+var RTetrisModel = /** @class */ (function () {
+    function RTetrisModel(state, dispatch, getState) {
+        this._state = state;
+        this._dispatch = dispatch;
+        this._getState = getState;
+    }
+    Object.defineProperty(RTetrisModel.prototype, "useColors", {
+        get: function () {
+            if (this._getState) {
+                return this._getState().TetrisModel.useColors;
+            }
+            else {
+                if (this._state) {
+                    return this._state.useColors;
+                }
+            }
+            return undefined;
+        },
+        set: function (value) {
+            if (this._state && typeof value !== "undefined") {
+                this._state.useColors = value;
+            }
+            else {
+                // dispatch change for item useColors
+                if (this._dispatch) {
+                    this._dispatch({
+                        type: exports.TetrisModelEnums.TetrisModel_useColors,
+                        payload: value
+                    });
+                }
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(RTetrisModel.prototype, "lastUsedColor", {
+        get: function () {
+            if (this._getState) {
+                return this._getState().TetrisModel.lastUsedColor;
+            }
+            else {
+                if (this._state) {
+                    return this._state.lastUsedColor;
+                }
+            }
+            return undefined;
+        },
+        set: function (value) {
+            if (this._state && typeof value !== "undefined") {
+                this._state.lastUsedColor = value;
+            }
+            else {
+                // dispatch change for item lastUsedColor
+                if (this._dispatch) {
+                    this._dispatch({
+                        type: exports.TetrisModelEnums.TetrisModel_lastUsedColor,
+                        payload: value
+                    });
+                }
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(RTetrisModel.prototype, "points", {
+        get: function () {
+            if (this._getState) {
+                return this._getState().TetrisModel.points;
+            }
+            else {
+                if (this._state) {
+                    return this._state.points;
+                }
+            }
+            return undefined;
+        },
+        set: function (value) {
+            if (this._state && typeof value !== "undefined") {
+                this._state.points = value;
+            }
+            else {
+                // dispatch change for item points
+                if (this._dispatch) {
+                    this._dispatch({
+                        type: exports.TetrisModelEnums.TetrisModel_points,
+                        payload: value
+                    });
+                }
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(RTetrisModel.prototype, "rows", {
+        get: function () {
+            if (this._getState) {
+                return this._getState().TetrisModel.rows;
+            }
+            else {
+                if (this._state) {
+                    return this._state.rows;
+                }
+            }
+            return undefined;
+        },
+        set: function (value) {
+            if (this._state && typeof value !== "undefined") {
+                this._state.rows = value;
+            }
+            else {
+                // dispatch change for item rows
+                if (this._dispatch) {
+                    this._dispatch({
+                        type: exports.TetrisModelEnums.TetrisModel_rows,
+                        payload: value
+                    });
+                }
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(RTetrisModel.prototype, "cols", {
+        get: function () {
+            if (this._getState) {
+                return this._getState().TetrisModel.cols;
+            }
+            else {
+                if (this._state) {
+                    return this._state.cols;
+                }
+            }
+            return undefined;
+        },
+        set: function (value) {
+            if (this._state && typeof value !== "undefined") {
+                this._state.cols = value;
+            }
+            else {
+                // dispatch change for item cols
+                if (this._dispatch) {
+                    this._dispatch({
+                        type: exports.TetrisModelEnums.TetrisModel_cols,
+                        payload: value
+                    });
+                }
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(RTetrisModel.prototype, "cells", {
+        get: function () {
+            if (this._getState) {
+                return this._getState().TetrisModel.cells;
+            }
+            else {
+                if (this._state) {
+                    return this._state.cells;
+                }
+            }
+            return undefined;
+        },
+        set: function (value) {
+            if (this._state && typeof value !== "undefined") {
+                this._state.cells = value;
+            }
+            else {
+                // dispatch change for item cells
+                if (this._dispatch) {
+                    this._dispatch({
+                        type: exports.TetrisModelEnums.TetrisModel_cells,
+                        payload: value
+                    });
+                }
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(RTetrisModel.prototype, "activePiece", {
+        get: function () {
+            if (this._getState) {
+                return this._getState().TetrisModel.activePiece;
+            }
+            else {
+                if (this._state) {
+                    return this._state.activePiece;
+                }
+            }
+            return undefined;
+        },
+        set: function (value) {
+            if (this._state && typeof value !== "undefined") {
+                this._state.activePiece = value;
+            }
+            else {
+                // dispatch change for item activePiece
+                if (this._dispatch) {
+                    this._dispatch({
+                        type: exports.TetrisModelEnums.TetrisModel_activePiece,
+                        payload: value
+                    });
+                }
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(RTetrisModel.prototype, "gameOn", {
+        get: function () {
+            if (this._getState) {
+                return this._getState().TetrisModel.gameOn;
+            }
+            else {
+                if (this._state) {
+                    return this._state.gameOn;
+                }
+            }
+            return undefined;
+        },
+        set: function (value) {
+            if (this._state && typeof value !== "undefined") {
+                this._state.gameOn = value;
+            }
+            else {
+                // dispatch change for item gameOn
+                if (this._dispatch) {
+                    this._dispatch({
+                        type: exports.TetrisModelEnums.TetrisModel_gameOn,
+                        payload: value
+                    });
+                }
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(RTetrisModel.prototype, "gameEnded", {
+        get: function () {
+            if (this._getState) {
+                return this._getState().TetrisModel.gameEnded;
+            }
+            else {
+                if (this._state) {
+                    return this._state.gameEnded;
+                }
+            }
+            return undefined;
+        },
+        set: function (value) {
+            if (this._state && typeof value !== "undefined") {
+                this._state.gameEnded = value;
+            }
+            else {
+                // dispatch change for item gameEnded
+                if (this._dispatch) {
+                    this._dispatch({
+                        type: exports.TetrisModelEnums.TetrisModel_gameEnded,
+                        payload: value
+                    });
+                }
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(RTetrisModel.prototype, "ticksPerMove", {
+        get: function () {
+            if (this._getState) {
+                return this._getState().TetrisModel.ticksPerMove;
+            }
+            else {
+                if (this._state) {
+                    return this._state.ticksPerMove;
+                }
+            }
+            return undefined;
+        },
+        set: function (value) {
+            if (this._state && typeof value !== "undefined") {
+                this._state.ticksPerMove = value;
+            }
+            else {
+                // dispatch change for item ticksPerMove
+                if (this._dispatch) {
+                    this._dispatch({
+                        type: exports.TetrisModelEnums.TetrisModel_ticksPerMove,
+                        payload: value
+                    });
+                }
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(RTetrisModel.prototype, "tickCnt", {
+        get: function () {
+            if (this._getState) {
+                return this._getState().TetrisModel.tickCnt;
+            }
+            else {
+                if (this._state) {
+                    return this._state.tickCnt;
+                }
+            }
+            return undefined;
+        },
+        set: function (value) {
+            if (this._state && typeof value !== "undefined") {
+                this._state.tickCnt = value;
+            }
+            else {
+                // dispatch change for item tickCnt
+                if (this._dispatch) {
+                    this._dispatch({
+                        type: exports.TetrisModelEnums.TetrisModel_tickCnt,
+                        payload: value
+                    });
+                }
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
+    // is a reducer
+    RTetrisModel.prototype.doesCollide = function (pieceX, pieceY, pieceCells) {
+        var _this = this;
+        var collides = false;
+        var compareAgainst = pieceCells || this.activePiece.cells;
+        compareAgainst.forEach(function (row, y) {
+            row.forEach(function (cell, x) {
+                if (cell.color === Colors.EMPTY)
+                    return;
+                if (pieceY + y >= _this.rows) {
+                    collides = true;
+                    return;
+                }
+                if (pieceX + x < 0 || pieceX + x >= _this.cols) {
+                    collides = true;
+                    return;
+                }
+                if (cell.color !== Colors.EMPTY) {
+                    if (pieceY + y < 0)
+                        return;
+                    if (_this.cells[pieceY + y][pieceX + x].color !== Colors.EMPTY) {
+                        collides = true;
+                    }
+                }
+            });
+        });
+        return collides;
+    };
+    // is a reducer
+    RTetrisModel.prototype.tick = function () {
+        if (this._state) {
+            this.tickCnt++;
+            if (this.tickCnt >= this.ticksPerMove) {
+                this.tickCnt = 0;
+                this.step();
+            }
+        }
+        else {
+            if (this._dispatch) {
+                this._dispatch({ type: exports.TetrisModelEnums.TetrisModel_tick });
+            }
+        }
+    };
+    RTetrisModel.tick = function () {
+        return function (dispatcher, getState) {
+            new RTetrisModel(undefined, dispatcher, getState).tick();
+        };
+    };
+    // is a reducer
+    RTetrisModel.prototype.left = function () {
+        if (this._state) {
+            if (!this.doesCollide(this.activePiece.x - 1, this.activePiece.y)) {
+                this.activePiece.x--;
+            }
+        }
+        else {
+            if (this._dispatch) {
+                this._dispatch({ type: exports.TetrisModelEnums.TetrisModel_left });
+            }
+        }
+    };
+    RTetrisModel.left = function () {
+        return function (dispatcher, getState) {
+            new RTetrisModel(undefined, dispatcher, getState).left();
+        };
+    };
+    // is a reducer
+    RTetrisModel.prototype.right = function () {
+        if (this._state) {
+            if (!this.doesCollide(this.activePiece.x + 1, this.activePiece.y)) {
+                this.activePiece.x++;
+            }
+        }
+        else {
+            if (this._dispatch) {
+                this._dispatch({ type: exports.TetrisModelEnums.TetrisModel_right });
+            }
+        }
+    };
+    RTetrisModel.right = function () {
+        return function (dispatcher, getState) {
+            new RTetrisModel(undefined, dispatcher, getState).right();
+        };
+    };
+    // is a reducer
+    RTetrisModel.prototype.rotateCells = function (cells) {
+        var res = new Array(cells.length);
+        for (var j = 0; j < cells.length; j++) {
+            res[j] = new Array(cells[j].length);
+        }
+        for (var j = 0; j < cells.length; j++) {
+            var row = cells[j];
+            for (var i = 0; i < row.length; i++) {
+                res[i][j] = { color: Colors.EMPTY };
+            }
+        }
+        for (var j = 0; j < cells.length; j++) {
+            var row = cells[j];
+            for (var i = 0; i < row.length; i++) {
+                res[i][cells.length - j - 1] = row[i];
+            }
+        }
+        return res;
+    };
+    // is a reducer
+    RTetrisModel.prototype.rotate = function () {
+        if (this._state) {
+            var newOrientation = this.rotateCells(this.activePiece.cells);
+            if (!this.doesCollide(this.activePiece.x, this.activePiece.y, newOrientation)) {
+                this.activePiece.cells = newOrientation;
+            }
+        }
+        else {
+            if (this._dispatch) {
+                this._dispatch({ type: exports.TetrisModelEnums.TetrisModel_rotate });
+            }
+        }
+    };
+    RTetrisModel.rotate = function () {
+        return function (dispatcher, getState) {
+            new RTetrisModel(undefined, dispatcher, getState).rotate();
+        };
+    };
+    // is a reducer
+    RTetrisModel.prototype.step = function () {
+        if (this._state) {
+            if (this.gameOn) {
+                if (!this.doesCollide(this.activePiece.x, this.activePiece.y + 1)) {
+                    this.activePiece.y++;
+                }
+                else {
+                    if (this.activePiece.y < 0) {
+                        this.gameEnded = true;
+                        this.gameOn = false;
+                    }
+                    else {
+                        this.addPiece();
+                        this.dropRows();
+                        this.activePiece = exports.createNewPiece(this.pickNextColor());
+                        this.activePiece.x = Math.floor(Math.random() * 5);
+                    }
+                }
+            }
+        }
+        else {
+            if (this._dispatch) {
+                this._dispatch({ type: exports.TetrisModelEnums.TetrisModel_step });
+            }
+        }
+    };
+    RTetrisModel.step = function () {
+        return function (dispatcher, getState) {
+            new RTetrisModel(undefined, dispatcher, getState).step();
+        };
+    };
+    // is a reducer
+    RTetrisModel.prototype.pickNextColor = function () {
+        this.lastUsedColor++;
+        if (this.lastUsedColor >= this.useColors.length) {
+            this.lastUsedColor = 0;
+        }
+        return this.useColors[this.lastUsedColor];
+    };
+    // is a reducer
+    RTetrisModel.prototype.addPiece = function () {
+        var _this = this;
+        if (this._state) {
+            var piece_1 = this.activePiece;
+            piece_1.cells.forEach(function (row, y) {
+                if (piece_1.y + y < 0)
+                    return;
+                row.forEach(function (cell, x) {
+                    if (cell.color !== Colors.EMPTY) {
+                        _this.cells[piece_1.y + y][piece_1.x + x].color = cell.color;
+                    }
+                });
+            });
+        }
+        else {
+            if (this._dispatch) {
+                this._dispatch({ type: exports.TetrisModelEnums.TetrisModel_addPiece });
+            }
+        }
+    };
+    RTetrisModel.addPiece = function () {
+        return function (dispatcher, getState) {
+            new RTetrisModel(undefined, dispatcher, getState).addPiece();
+        };
+    };
+    // is a reducer
+    RTetrisModel.prototype.dropRows = function () {
+        if (this._state) {
+            var nextRows = [];
+            var emptyCnt = 0;
+            for (var i = 0; i < this.cells.length; i++) {
+                var row = this.cells[i];
+                if (row.filter(function (cell) { return cell.color === Colors.EMPTY; }).length > 0) {
+                    nextRows.push(row);
+                }
+                else {
+                    emptyCnt++;
+                }
+            }
+            if (emptyCnt > 0) {
+                this.points += emptyCnt * emptyCnt * 10;
+                while (emptyCnt-- > 0) {
+                    var newEmpty = new Array(this.cols);
+                    for (var col = 0; col < this.cols; col++) {
+                        newEmpty[col] = { color: Colors.EMPTY };
+                    }
+                    nextRows.unshift(newEmpty);
+                }
+                this.cells = nextRows;
+                this.ticksPerMove--;
+            }
+        }
+        else {
+            if (this._dispatch) {
+                this._dispatch({ type: exports.TetrisModelEnums.TetrisModel_dropRows });
+            }
+        }
+    };
+    RTetrisModel.dropRows = function () {
+        return function (dispatcher, getState) {
+            new RTetrisModel(undefined, dispatcher, getState).dropRows();
+        };
+    };
+    // is a reducer
+    RTetrisModel.prototype.resetGame = function () {
+        if (this._state) {
+            this.cells = new Array(this.rows);
+            for (var row = 0; row < this.rows; row++) {
+                this.cells[row] = new Array(this.cols);
+                for (var col = 0; col < this.cols; col++) {
+                    this.cells[row][col] = { color: Colors.EMPTY };
+                }
+            }
+            this.activePiece = exports.createNewPiece(this.pickNextColor());
+            this.ticksPerMove = 10;
+            this.tickCnt = 0;
+        }
+        else {
+            if (this._dispatch) {
+                this._dispatch({ type: exports.TetrisModelEnums.TetrisModel_resetGame });
+            }
+        }
+    };
+    RTetrisModel.resetGame = function () {
+        return function (dispatcher, getState) {
+            new RTetrisModel(undefined, dispatcher, getState).resetGame();
+        };
+    };
+    // is a reducer
+    RTetrisModel.prototype.start = function () {
+        if (this._state) {
+            this.resetGame();
+            this.gameOn = true;
+            this.gameEnded = false;
+            this.points = 0;
+        }
+        else {
+            if (this._dispatch) {
+                this._dispatch({ type: exports.TetrisModelEnums.TetrisModel_start });
+            }
+        }
+    };
+    RTetrisModel.start = function () {
+        return function (dispatcher, getState) {
+            new RTetrisModel(undefined, dispatcher, getState).start();
+        };
+    };
+    return RTetrisModel;
+}());
+exports.RTetrisModel = RTetrisModel;
+exports.TetrisModelEnums = {
+    TetrisModel_useColors: "TetrisModel_useColors",
+    TetrisModel_lastUsedColor: "TetrisModel_lastUsedColor",
+    TetrisModel_points: "TetrisModel_points",
+    TetrisModel_rows: "TetrisModel_rows",
+    TetrisModel_cols: "TetrisModel_cols",
+    TetrisModel_cells: "TetrisModel_cells",
+    TetrisModel_activePiece: "TetrisModel_activePiece",
+    TetrisModel_gameOn: "TetrisModel_gameOn",
+    TetrisModel_gameEnded: "TetrisModel_gameEnded",
+    TetrisModel_ticksPerMove: "TetrisModel_ticksPerMove",
+    TetrisModel_tickCnt: "TetrisModel_tickCnt",
+    TetrisModel_doesCollide: "TetrisModel_doesCollide",
+    TetrisModel_tick: "TetrisModel_tick",
+    TetrisModel_left: "TetrisModel_left",
+    TetrisModel_right: "TetrisModel_right",
+    TetrisModel_rotateCells: "TetrisModel_rotateCells",
+    TetrisModel_rotate: "TetrisModel_rotate",
+    TetrisModel_step: "TetrisModel_step",
+    TetrisModel_pickNextColor: "TetrisModel_pickNextColor",
+    TetrisModel_addPiece: "TetrisModel_addPiece",
+    TetrisModel_dropRows: "TetrisModel_dropRows",
+    TetrisModel_resetGame: "TetrisModel_resetGame",
+    TetrisModel_start: "TetrisModel_start"
+};
+exports.TetrisModelReducer = function (state, action) {
+    if (state === void 0) { state = initTetrisModel(); }
+    return immer.produce(state, function (draft) {
+        switch (action.type) {
+            case exports.TetrisModelEnums.TetrisModel_useColors:
+                new RTetrisModel(draft).useColors = action.payload;
+                break;
+            case exports.TetrisModelEnums.TetrisModel_lastUsedColor:
+                new RTetrisModel(draft).lastUsedColor = action.payload;
+                break;
+            case exports.TetrisModelEnums.TetrisModel_points:
+                new RTetrisModel(draft).points = action.payload;
+                break;
+            case exports.TetrisModelEnums.TetrisModel_rows:
+                new RTetrisModel(draft).rows = action.payload;
+                break;
+            case exports.TetrisModelEnums.TetrisModel_cols:
+                new RTetrisModel(draft).cols = action.payload;
+                break;
+            case exports.TetrisModelEnums.TetrisModel_cells:
+                new RTetrisModel(draft).cells = action.payload;
+                break;
+            case exports.TetrisModelEnums.TetrisModel_activePiece:
+                new RTetrisModel(draft).activePiece = action.payload;
+                break;
+            case exports.TetrisModelEnums.TetrisModel_gameOn:
+                new RTetrisModel(draft).gameOn = action.payload;
+                break;
+            case exports.TetrisModelEnums.TetrisModel_gameEnded:
+                new RTetrisModel(draft).gameEnded = action.payload;
+                break;
+            case exports.TetrisModelEnums.TetrisModel_ticksPerMove:
+                new RTetrisModel(draft).ticksPerMove = action.payload;
+                break;
+            case exports.TetrisModelEnums.TetrisModel_tickCnt:
+                new RTetrisModel(draft).tickCnt = action.payload;
+                break;
+            case exports.TetrisModelEnums.TetrisModel_tick:
+                new RTetrisModel(draft).tick();
+                break;
+            case exports.TetrisModelEnums.TetrisModel_left:
+                new RTetrisModel(draft).left();
+                break;
+            case exports.TetrisModelEnums.TetrisModel_right:
+                new RTetrisModel(draft).right();
+                break;
+            case exports.TetrisModelEnums.TetrisModel_rotate:
+                new RTetrisModel(draft).rotate();
+                break;
+            case exports.TetrisModelEnums.TetrisModel_step:
+                new RTetrisModel(draft).step();
+                break;
+            case exports.TetrisModelEnums.TetrisModel_addPiece:
+                new RTetrisModel(draft).addPiece();
+                break;
+            case exports.TetrisModelEnums.TetrisModel_dropRows:
+                new RTetrisModel(draft).dropRows();
+                break;
+            case exports.TetrisModelEnums.TetrisModel_resetGame:
+                new RTetrisModel(draft).resetGame();
+                break;
+            case exports.TetrisModelEnums.TetrisModel_start:
+                new RTetrisModel(draft).start();
+                break;
+        }
+    });
+};
+/***************************
+ * React Context API test   *
+ ***************************/
+exports.TetrisModelContext = React.createContext(initWithMethodsTetrisModel());
+exports.TetrisModelConsumer = exports.TetrisModelContext.Consumer;
+var instanceCnt = 1;
+var TetrisModelProvider = /** @class */ (function (_super) {
+    __extends(TetrisModelProvider, _super);
+    function TetrisModelProvider(props) {
+        var _this = _super.call(this, props) || this;
+        _this.state = initTetrisModel();
+        _this.__devTools = null;
+        _this.lastSetState = _this.state;
+        _this.tick = _this.tick.bind(_this);
+        _this.left = _this.left.bind(_this);
+        _this.right = _this.right.bind(_this);
+        _this.rotate = _this.rotate.bind(_this);
+        _this.step = _this.step.bind(_this);
+        _this.addPiece = _this.addPiece.bind(_this);
+        _this.dropRows = _this.dropRows.bind(_this);
+        _this.resetGame = _this.resetGame.bind(_this);
+        _this.start = _this.start.bind(_this);
+        var devs = window["devToolsExtension"]
+            ? window["devToolsExtension"]
+            : null;
+        if (devs) {
+            _this.__devTools = devs.connect({ name: "TetrisModel" + instanceCnt++ });
+            _this.__devTools.init(_this.state);
+            _this.__devTools.subscribe(function (msg) {
+                if (msg.type === "DISPATCH" && msg.state) {
+                    _this.setState(JSON.parse(msg.state));
+                }
+            });
+        }
+        return _this;
+    }
+    TetrisModelProvider.prototype.componentWillUnmount = function () {
+        if (this.__devTools) {
+            this.__devTools.unsubscribe();
+        }
+    };
+    TetrisModelProvider.prototype.setStateSync = function (state) {
+        this.lastSetState = state;
+        this.setState(state);
+    };
+    TetrisModelProvider.prototype.tick = function () {
+        var nextState = immer.produce(this.state, function (draft) {
+            return new RTetrisModel(draft).tick();
+        });
+        if (this.__devTools) {
+            this.__devTools.send("tick", nextState);
+        }
+        this.setStateSync(nextState);
+    };
+    TetrisModelProvider.prototype.left = function () {
+        var nextState = immer.produce(this.state, function (draft) {
+            return new RTetrisModel(draft).left();
+        });
+        if (this.__devTools) {
+            this.__devTools.send("left", nextState);
+        }
+        this.setStateSync(nextState);
+    };
+    TetrisModelProvider.prototype.right = function () {
+        var nextState = immer.produce(this.state, function (draft) {
+            return new RTetrisModel(draft).right();
+        });
+        if (this.__devTools) {
+            this.__devTools.send("right", nextState);
+        }
+        this.setStateSync(nextState);
+    };
+    TetrisModelProvider.prototype.rotate = function () {
+        var nextState = immer.produce(this.state, function (draft) {
+            return new RTetrisModel(draft).rotate();
+        });
+        if (this.__devTools) {
+            this.__devTools.send("rotate", nextState);
+        }
+        this.setStateSync(nextState);
+    };
+    TetrisModelProvider.prototype.step = function () {
+        var nextState = immer.produce(this.state, function (draft) {
+            return new RTetrisModel(draft).step();
+        });
+        if (this.__devTools) {
+            this.__devTools.send("step", nextState);
+        }
+        this.setStateSync(nextState);
+    };
+    TetrisModelProvider.prototype.addPiece = function () {
+        var nextState = immer.produce(this.state, function (draft) {
+            return new RTetrisModel(draft).addPiece();
+        });
+        if (this.__devTools) {
+            this.__devTools.send("addPiece", nextState);
+        }
+        this.setStateSync(nextState);
+    };
+    TetrisModelProvider.prototype.dropRows = function () {
+        var nextState = immer.produce(this.state, function (draft) {
+            return new RTetrisModel(draft).dropRows();
+        });
+        if (this.__devTools) {
+            this.__devTools.send("dropRows", nextState);
+        }
+        this.setStateSync(nextState);
+    };
+    TetrisModelProvider.prototype.resetGame = function () {
+        var nextState = immer.produce(this.state, function (draft) {
+            return new RTetrisModel(draft).resetGame();
+        });
+        if (this.__devTools) {
+            this.__devTools.send("resetGame", nextState);
+        }
+        this.setStateSync(nextState);
+    };
+    TetrisModelProvider.prototype.start = function () {
+        var nextState = immer.produce(this.state, function (draft) {
+            return new RTetrisModel(draft).start();
+        });
+        if (this.__devTools) {
+            this.__devTools.send("start", nextState);
+        }
+        this.setStateSync(nextState);
+    };
+    TetrisModelProvider.prototype.render = function () {
+        return (React.createElement(exports.TetrisModelContext.Provider, { value: __assign({}, this.state, { tick: this.tick, left: this.left, right: this.right, rotate: this.rotate, step: this.step, addPiece: this.addPiece, dropRows: this.dropRows, resetGame: this.resetGame, start: this.start }) },
+            " ",
+            this.props.children));
+    };
+    return TetrisModelProvider;
+}(React.Component));
+exports.TetrisModelProvider = TetrisModelProvider;
+
+},{"immer":53,"react":87,"react-redux":78}],16:[function(require,module,exports){
 "use strict";
 /********************************************************************************
  *                                                                               *
@@ -2957,7 +4471,7 @@ var TodoListProvider = /** @class */ (function (_super) {
 }(React.Component));
 exports.TodoListProvider = TodoListProvider;
 
-},{"axios":24,"immer":50,"react":84,"react-redux":75,"reselect":87}],14:[function(require,module,exports){
+},{"axios":27,"immer":53,"react":87,"react-redux":78,"reselect":90}],17:[function(require,module,exports){
 "use strict";
 /*************************************************************************************
  *                                                                                    *
@@ -3160,7 +4674,7 @@ var UIHelperModelProvider = /** @class */ (function (_super) {
 }(React.Component));
 exports.UIHelperModelProvider = UIHelperModelProvider;
 
-},{"immer":50,"react":84,"react-redux":75}],15:[function(require,module,exports){
+},{"immer":53,"react":87,"react-redux":78}],18:[function(require,module,exports){
 "use strict";
 /*********************************************************************************
  *                                                                                *
@@ -3627,7 +5141,7 @@ var UserStateProvider = /** @class */ (function (_super) {
 }(React.Component));
 exports.UserStateProvider = UserStateProvider;
 
-},{"immer":50,"react":84,"react-redux":75}],16:[function(require,module,exports){
+},{"immer":53,"react":87,"react-redux":78}],19:[function(require,module,exports){
 "use strict";
 /*********************************************************************************
  *                                                                                *
@@ -4105,7 +5619,7 @@ var WaspModelProvider = /** @class */ (function (_super) {
 }(React.Component));
 exports.WaspModelProvider = WaspModelProvider;
 
-},{"immer":50,"react":84,"react-redux":75}],17:[function(require,module,exports){
+},{"immer":53,"react":87,"react-redux":78}],20:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 /***********************************************
@@ -4118,6 +5632,7 @@ var redux = require("redux");
 var IncModel_1 = require("./IncModel");
 var SimpleModel_1 = require("./SimpleModel");
 var TestModel_1 = require("./TestModel");
+var TetrisModel_1 = require("./TetrisModel");
 var TodoList_1 = require("./TodoList");
 var UIHelperModel_1 = require("./UIHelperModel");
 var UserState_1 = require("./UserState");
@@ -4126,13 +5641,14 @@ exports.reducers = redux.combineReducers({
     IncModel: IncModel_1.IncModelReducer,
     SimpleModel: SimpleModel_1.SimpleModelReducer,
     TestModel: TestModel_1.TestModelReducer,
+    TetrisModel: TetrisModel_1.TetrisModelReducer,
     TodoList: TodoList_1.TodoListReducer,
     UIHelperModel: UIHelperModel_1.UIHelperModelReducer,
     UserState: UserState_1.UserStateReducer,
     WaspModel: WaspModel_1.WaspModelReducer
 });
 
-},{"./IncModel":10,"./SimpleModel":11,"./TestModel":12,"./TodoList":13,"./UIHelperModel":14,"./UserState":15,"./WaspModel":16,"redux":86}],18:[function(require,module,exports){
+},{"./IncModel":12,"./SimpleModel":13,"./TestModel":14,"./TetrisModel":15,"./TodoList":16,"./UIHelperModel":17,"./UserState":18,"./WaspModel":19,"redux":89}],21:[function(require,module,exports){
 function _assertThisInitialized(self) {
   if (self === void 0) {
     throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
@@ -4142,7 +5658,7 @@ function _assertThisInitialized(self) {
 }
 
 module.exports = _assertThisInitialized;
-},{}],19:[function(require,module,exports){
+},{}],22:[function(require,module,exports){
 function _extends() {
   module.exports = _extends = Object.assign || function (target) {
     for (var i = 1; i < arguments.length; i++) {
@@ -4162,7 +5678,7 @@ function _extends() {
 }
 
 module.exports = _extends;
-},{}],20:[function(require,module,exports){
+},{}],23:[function(require,module,exports){
 function _inheritsLoose(subClass, superClass) {
   subClass.prototype = Object.create(superClass.prototype);
   subClass.prototype.constructor = subClass;
@@ -4170,7 +5686,7 @@ function _inheritsLoose(subClass, superClass) {
 }
 
 module.exports = _inheritsLoose;
-},{}],21:[function(require,module,exports){
+},{}],24:[function(require,module,exports){
 function _interopRequireDefault(obj) {
   return obj && obj.__esModule ? obj : {
     default: obj
@@ -4178,7 +5694,7 @@ function _interopRequireDefault(obj) {
 }
 
 module.exports = _interopRequireDefault;
-},{}],22:[function(require,module,exports){
+},{}],25:[function(require,module,exports){
 function _interopRequireWildcard(obj) {
   if (obj && obj.__esModule) {
     return obj;
@@ -4205,7 +5721,7 @@ function _interopRequireWildcard(obj) {
 }
 
 module.exports = _interopRequireWildcard;
-},{}],23:[function(require,module,exports){
+},{}],26:[function(require,module,exports){
 function _objectWithoutPropertiesLoose(source, excluded) {
   if (source == null) return {};
   var target = {};
@@ -4222,9 +5738,9 @@ function _objectWithoutPropertiesLoose(source, excluded) {
 }
 
 module.exports = _objectWithoutPropertiesLoose;
-},{}],24:[function(require,module,exports){
+},{}],27:[function(require,module,exports){
 module.exports = require('./lib/axios');
-},{"./lib/axios":26}],25:[function(require,module,exports){
+},{"./lib/axios":29}],28:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -4408,7 +5924,7 @@ module.exports = function xhrAdapter(config) {
 };
 
 }).call(this,require('_process'))
-},{"../core/createError":32,"./../core/settle":35,"./../helpers/btoa":39,"./../helpers/buildURL":40,"./../helpers/cookies":42,"./../helpers/isURLSameOrigin":44,"./../helpers/parseHeaders":46,"./../utils":48,"_process":54}],26:[function(require,module,exports){
+},{"../core/createError":35,"./../core/settle":38,"./../helpers/btoa":42,"./../helpers/buildURL":43,"./../helpers/cookies":45,"./../helpers/isURLSameOrigin":47,"./../helpers/parseHeaders":49,"./../utils":51,"_process":57}],29:[function(require,module,exports){
 'use strict';
 
 var utils = require('./utils');
@@ -4462,7 +5978,7 @@ module.exports = axios;
 // Allow use of default import syntax in TypeScript
 module.exports.default = axios;
 
-},{"./cancel/Cancel":27,"./cancel/CancelToken":28,"./cancel/isCancel":29,"./core/Axios":30,"./defaults":37,"./helpers/bind":38,"./helpers/spread":47,"./utils":48}],27:[function(require,module,exports){
+},{"./cancel/Cancel":30,"./cancel/CancelToken":31,"./cancel/isCancel":32,"./core/Axios":33,"./defaults":40,"./helpers/bind":41,"./helpers/spread":50,"./utils":51}],30:[function(require,module,exports){
 'use strict';
 
 /**
@@ -4483,7 +5999,7 @@ Cancel.prototype.__CANCEL__ = true;
 
 module.exports = Cancel;
 
-},{}],28:[function(require,module,exports){
+},{}],31:[function(require,module,exports){
 'use strict';
 
 var Cancel = require('./Cancel');
@@ -4542,14 +6058,14 @@ CancelToken.source = function source() {
 
 module.exports = CancelToken;
 
-},{"./Cancel":27}],29:[function(require,module,exports){
+},{"./Cancel":30}],32:[function(require,module,exports){
 'use strict';
 
 module.exports = function isCancel(value) {
   return !!(value && value.__CANCEL__);
 };
 
-},{}],30:[function(require,module,exports){
+},{}],33:[function(require,module,exports){
 'use strict';
 
 var defaults = require('./../defaults');
@@ -4630,7 +6146,7 @@ utils.forEach(['post', 'put', 'patch'], function forEachMethodWithData(method) {
 
 module.exports = Axios;
 
-},{"./../defaults":37,"./../utils":48,"./InterceptorManager":31,"./dispatchRequest":33}],31:[function(require,module,exports){
+},{"./../defaults":40,"./../utils":51,"./InterceptorManager":34,"./dispatchRequest":36}],34:[function(require,module,exports){
 'use strict';
 
 var utils = require('./../utils');
@@ -4684,7 +6200,7 @@ InterceptorManager.prototype.forEach = function forEach(fn) {
 
 module.exports = InterceptorManager;
 
-},{"./../utils":48}],32:[function(require,module,exports){
+},{"./../utils":51}],35:[function(require,module,exports){
 'use strict';
 
 var enhanceError = require('./enhanceError');
@@ -4704,7 +6220,7 @@ module.exports = function createError(message, config, code, request, response) 
   return enhanceError(error, config, code, request, response);
 };
 
-},{"./enhanceError":34}],33:[function(require,module,exports){
+},{"./enhanceError":37}],36:[function(require,module,exports){
 'use strict';
 
 var utils = require('./../utils');
@@ -4792,7 +6308,7 @@ module.exports = function dispatchRequest(config) {
   });
 };
 
-},{"../cancel/isCancel":29,"../defaults":37,"./../helpers/combineURLs":41,"./../helpers/isAbsoluteURL":43,"./../utils":48,"./transformData":36}],34:[function(require,module,exports){
+},{"../cancel/isCancel":32,"../defaults":40,"./../helpers/combineURLs":44,"./../helpers/isAbsoluteURL":46,"./../utils":51,"./transformData":39}],37:[function(require,module,exports){
 'use strict';
 
 /**
@@ -4815,7 +6331,7 @@ module.exports = function enhanceError(error, config, code, request, response) {
   return error;
 };
 
-},{}],35:[function(require,module,exports){
+},{}],38:[function(require,module,exports){
 'use strict';
 
 var createError = require('./createError');
@@ -4843,7 +6359,7 @@ module.exports = function settle(resolve, reject, response) {
   }
 };
 
-},{"./createError":32}],36:[function(require,module,exports){
+},{"./createError":35}],39:[function(require,module,exports){
 'use strict';
 
 var utils = require('./../utils');
@@ -4865,7 +6381,7 @@ module.exports = function transformData(data, headers, fns) {
   return data;
 };
 
-},{"./../utils":48}],37:[function(require,module,exports){
+},{"./../utils":51}],40:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -4965,7 +6481,7 @@ utils.forEach(['post', 'put', 'patch'], function forEachMethodWithData(method) {
 module.exports = defaults;
 
 }).call(this,require('_process'))
-},{"./adapters/http":25,"./adapters/xhr":25,"./helpers/normalizeHeaderName":45,"./utils":48,"_process":54}],38:[function(require,module,exports){
+},{"./adapters/http":28,"./adapters/xhr":28,"./helpers/normalizeHeaderName":48,"./utils":51,"_process":57}],41:[function(require,module,exports){
 'use strict';
 
 module.exports = function bind(fn, thisArg) {
@@ -4978,7 +6494,7 @@ module.exports = function bind(fn, thisArg) {
   };
 };
 
-},{}],39:[function(require,module,exports){
+},{}],42:[function(require,module,exports){
 'use strict';
 
 // btoa polyfill for IE<10 courtesy https://github.com/davidchambers/Base64.js
@@ -5016,7 +6532,7 @@ function btoa(input) {
 
 module.exports = btoa;
 
-},{}],40:[function(require,module,exports){
+},{}],43:[function(require,module,exports){
 'use strict';
 
 var utils = require('./../utils');
@@ -5084,7 +6600,7 @@ module.exports = function buildURL(url, params, paramsSerializer) {
   return url;
 };
 
-},{"./../utils":48}],41:[function(require,module,exports){
+},{"./../utils":51}],44:[function(require,module,exports){
 'use strict';
 
 /**
@@ -5100,7 +6616,7 @@ module.exports = function combineURLs(baseURL, relativeURL) {
     : baseURL;
 };
 
-},{}],42:[function(require,module,exports){
+},{}],45:[function(require,module,exports){
 'use strict';
 
 var utils = require('./../utils');
@@ -5155,7 +6671,7 @@ module.exports = (
   })()
 );
 
-},{"./../utils":48}],43:[function(require,module,exports){
+},{"./../utils":51}],46:[function(require,module,exports){
 'use strict';
 
 /**
@@ -5171,7 +6687,7 @@ module.exports = function isAbsoluteURL(url) {
   return /^([a-z][a-z\d\+\-\.]*:)?\/\//i.test(url);
 };
 
-},{}],44:[function(require,module,exports){
+},{}],47:[function(require,module,exports){
 'use strict';
 
 var utils = require('./../utils');
@@ -5241,7 +6757,7 @@ module.exports = (
   })()
 );
 
-},{"./../utils":48}],45:[function(require,module,exports){
+},{"./../utils":51}],48:[function(require,module,exports){
 'use strict';
 
 var utils = require('../utils');
@@ -5255,7 +6771,7 @@ module.exports = function normalizeHeaderName(headers, normalizedName) {
   });
 };
 
-},{"../utils":48}],46:[function(require,module,exports){
+},{"../utils":51}],49:[function(require,module,exports){
 'use strict';
 
 var utils = require('./../utils');
@@ -5310,7 +6826,7 @@ module.exports = function parseHeaders(headers) {
   return parsed;
 };
 
-},{"./../utils":48}],47:[function(require,module,exports){
+},{"./../utils":51}],50:[function(require,module,exports){
 'use strict';
 
 /**
@@ -5339,7 +6855,7 @@ module.exports = function spread(callback) {
   };
 };
 
-},{}],48:[function(require,module,exports){
+},{}],51:[function(require,module,exports){
 'use strict';
 
 var bind = require('./helpers/bind');
@@ -5644,7 +7160,7 @@ module.exports = {
   trim: trim
 };
 
-},{"./helpers/bind":38,"is-buffer":52}],49:[function(require,module,exports){
+},{"./helpers/bind":41,"is-buffer":55}],52:[function(require,module,exports){
 'use strict';
 
 /**
@@ -5730,7 +7246,7 @@ function hoistNonReactStatics(targetComponent, sourceComponent, blacklist) {
 
 module.exports = hoistNonReactStatics;
 
-},{"react":84,"react-is":65}],50:[function(require,module,exports){
+},{"react":87,"react-is":68}],53:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -6485,7 +8001,7 @@ exports.original = original;
 
 
 }).call(this,require('_process'))
-},{"_process":54}],51:[function(require,module,exports){
+},{"_process":57}],54:[function(require,module,exports){
 (function (process){
 /**
  * Copyright (c) 2013-present, Facebook, Inc.
@@ -6538,7 +8054,7 @@ var invariant = function(condition, format, a, b, c, d, e, f) {
 module.exports = invariant;
 
 }).call(this,require('_process'))
-},{"_process":54}],52:[function(require,module,exports){
+},{"_process":57}],55:[function(require,module,exports){
 /*!
  * Determine if an object is a Buffer
  *
@@ -6561,7 +8077,7 @@ function isSlowBuffer (obj) {
   return typeof obj.readFloatLE === 'function' && typeof obj.slice === 'function' && isBuffer(obj.slice(0, 0))
 }
 
-},{}],53:[function(require,module,exports){
+},{}],56:[function(require,module,exports){
 /*
 object-assign
 (c) Sindre Sorhus
@@ -6653,7 +8169,7 @@ module.exports = shouldUseNative() ? Object.assign : function (target, source) {
 	return to;
 };
 
-},{}],54:[function(require,module,exports){
+},{}],57:[function(require,module,exports){
 // shim for using process in browser
 var process = module.exports = {};
 
@@ -6839,7 +8355,7 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}],55:[function(require,module,exports){
+},{}],58:[function(require,module,exports){
 (function (process){
 /**
  * Copyright (c) 2013-present, Facebook, Inc.
@@ -6934,7 +8450,7 @@ function checkPropTypes(typeSpecs, values, location, componentName, getStack) {
 module.exports = checkPropTypes;
 
 }).call(this,require('_process'))
-},{"./lib/ReactPropTypesSecret":59,"_process":54}],56:[function(require,module,exports){
+},{"./lib/ReactPropTypesSecret":62,"_process":57}],59:[function(require,module,exports){
 /**
  * Copyright (c) 2013-present, Facebook, Inc.
  *
@@ -6995,7 +8511,7 @@ module.exports = function() {
   return ReactPropTypes;
 };
 
-},{"./lib/ReactPropTypesSecret":59}],57:[function(require,module,exports){
+},{"./lib/ReactPropTypesSecret":62}],60:[function(require,module,exports){
 (function (process){
 /**
  * Copyright (c) 2013-present, Facebook, Inc.
@@ -7554,7 +9070,7 @@ module.exports = function(isValidElement, throwOnDirectAccess) {
 };
 
 }).call(this,require('_process'))
-},{"./checkPropTypes":55,"./lib/ReactPropTypesSecret":59,"_process":54,"object-assign":53}],58:[function(require,module,exports){
+},{"./checkPropTypes":58,"./lib/ReactPropTypesSecret":62,"_process":57,"object-assign":56}],61:[function(require,module,exports){
 (function (process){
 /**
  * Copyright (c) 2013-present, Facebook, Inc.
@@ -7586,7 +9102,7 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 }).call(this,require('_process'))
-},{"./factoryWithThrowingShims":56,"./factoryWithTypeCheckers":57,"_process":54}],59:[function(require,module,exports){
+},{"./factoryWithThrowingShims":59,"./factoryWithTypeCheckers":60,"_process":57}],62:[function(require,module,exports){
 /**
  * Copyright (c) 2013-present, Facebook, Inc.
  *
@@ -7600,7 +9116,7 @@ var ReactPropTypesSecret = 'SECRET_DO_NOT_PASS_THIS_OR_YOU_WILL_BE_FIRED';
 
 module.exports = ReactPropTypesSecret;
 
-},{}],60:[function(require,module,exports){
+},{}],63:[function(require,module,exports){
 (function (process){
 /** @license React v16.6.1
  * react-dom.development.js
@@ -27317,7 +28833,7 @@ module.exports = reactDom;
 }
 
 }).call(this,require('_process'))
-},{"_process":54,"object-assign":53,"prop-types/checkPropTypes":55,"react":84,"scheduler":92,"scheduler/tracing":93}],61:[function(require,module,exports){
+},{"_process":57,"object-assign":56,"prop-types/checkPropTypes":58,"react":87,"scheduler":95,"scheduler/tracing":96}],64:[function(require,module,exports){
 /** @license React v16.6.1
  * react-dom.production.min.js
  *
@@ -27568,7 +29084,7 @@ void 0:t("40");return a._reactRootContainer?(Ph(function(){ai(null,null,a,!1,fun
 Ka,La,Ca.injectEventPluginsByName,qa,Ra,function(a){za(a,Qa)},Ib,Jb,Jd,Ea]},unstable_createRoot:function(a,b){Zh(a)?void 0:t("299","unstable_createRoot");return new Yh(a,!0,null!=b&&!0===b.hydrate)}};(function(a){var b=a.findFiberByHostInstance;return Ve(n({},a,{findHostInstanceByFiber:function(a){a=nd(a);return null===a?null:a.stateNode},findFiberByHostInstance:function(a){return b?b(a):null}}))})({findFiberByHostInstance:Ia,bundleType:0,version:"16.6.1",rendererPackageName:"react-dom"});
 var fi={default:ci},gi=fi&&ci||fi;module.exports=gi.default||gi;
 
-},{"object-assign":53,"react":84,"scheduler":92}],62:[function(require,module,exports){
+},{"object-assign":56,"react":87,"scheduler":95}],65:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -27610,7 +29126,7 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 }).call(this,require('_process'))
-},{"./cjs/react-dom.development.js":60,"./cjs/react-dom.production.min.js":61,"_process":54}],63:[function(require,module,exports){
+},{"./cjs/react-dom.development.js":63,"./cjs/react-dom.production.min.js":64,"_process":57}],66:[function(require,module,exports){
 (function (process){
 /** @license React v16.6.1
  * react-is.development.js
@@ -27821,7 +29337,7 @@ exports.isStrictMode = isStrictMode;
 }
 
 }).call(this,require('_process'))
-},{"_process":54}],64:[function(require,module,exports){
+},{"_process":57}],67:[function(require,module,exports){
 /** @license React v16.6.1
  * react-is.production.min.js
  *
@@ -27837,7 +29353,7 @@ var b="function"===typeof Symbol&&Symbol.for,c=b?Symbol.for("react.element"):601
 exports.Profiler=g;exports.Portal=d;exports.StrictMode=f;exports.isValidElementType=function(a){return"string"===typeof a||"function"===typeof a||a===e||a===m||a===g||a===f||a===p||"object"===typeof a&&null!==a&&(a.$$typeof===t||a.$$typeof===r||a.$$typeof===h||a.$$typeof===k||a.$$typeof===n)};exports.isAsyncMode=function(a){return v(a)||u(a)===l};exports.isConcurrentMode=v;exports.isContextConsumer=function(a){return u(a)===k};exports.isContextProvider=function(a){return u(a)===h};
 exports.isElement=function(a){return"object"===typeof a&&null!==a&&a.$$typeof===c};exports.isForwardRef=function(a){return u(a)===n};exports.isFragment=function(a){return u(a)===e};exports.isProfiler=function(a){return u(a)===g};exports.isPortal=function(a){return u(a)===d};exports.isStrictMode=function(a){return u(a)===f};
 
-},{}],65:[function(require,module,exports){
+},{}],68:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -27848,7 +29364,7 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 }).call(this,require('_process'))
-},{"./cjs/react-is.development.js":63,"./cjs/react-is.production.min.js":64,"_process":54}],66:[function(require,module,exports){
+},{"./cjs/react-is.development.js":66,"./cjs/react-is.production.min.js":67,"_process":57}],69:[function(require,module,exports){
 (function (process){
 "use strict";
 
@@ -27935,7 +29451,7 @@ var _default = createProvider();
 
 exports.default = _default;
 }).call(this,require('_process'))
-},{"../utils/PropTypes":76,"../utils/warning":81,"@babel/runtime/helpers/inheritsLoose":20,"@babel/runtime/helpers/interopRequireDefault":21,"_process":54,"prop-types":58,"react":84}],67:[function(require,module,exports){
+},{"../utils/PropTypes":79,"../utils/warning":84,"@babel/runtime/helpers/inheritsLoose":23,"@babel/runtime/helpers/interopRequireDefault":24,"_process":57,"prop-types":61,"react":87}],70:[function(require,module,exports){
 (function (process){
 "use strict";
 
@@ -28245,7 +29761,7 @@ _ref) {
   };
 }
 }).call(this,require('_process'))
-},{"../utils/PropTypes":76,"../utils/Subscription":77,"@babel/runtime/helpers/assertThisInitialized":18,"@babel/runtime/helpers/extends":19,"@babel/runtime/helpers/inheritsLoose":20,"@babel/runtime/helpers/interopRequireDefault":21,"@babel/runtime/helpers/objectWithoutPropertiesLoose":23,"_process":54,"hoist-non-react-statics":49,"invariant":51,"react":84,"react-is":65}],68:[function(require,module,exports){
+},{"../utils/PropTypes":79,"../utils/Subscription":80,"@babel/runtime/helpers/assertThisInitialized":21,"@babel/runtime/helpers/extends":22,"@babel/runtime/helpers/inheritsLoose":23,"@babel/runtime/helpers/interopRequireDefault":24,"@babel/runtime/helpers/objectWithoutPropertiesLoose":26,"_process":57,"hoist-non-react-statics":52,"invariant":54,"react":87,"react-is":68}],71:[function(require,module,exports){
 "use strict";
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
@@ -28361,7 +29877,7 @@ function createConnect(_temp) {
 var _default = createConnect();
 
 exports.default = _default;
-},{"../components/connectAdvanced":67,"../utils/shallowEqual":79,"./mapDispatchToProps":69,"./mapStateToProps":70,"./mergeProps":71,"./selectorFactory":72,"@babel/runtime/helpers/extends":19,"@babel/runtime/helpers/interopRequireDefault":21,"@babel/runtime/helpers/objectWithoutPropertiesLoose":23}],69:[function(require,module,exports){
+},{"../components/connectAdvanced":70,"../utils/shallowEqual":82,"./mapDispatchToProps":72,"./mapStateToProps":73,"./mergeProps":74,"./selectorFactory":75,"@babel/runtime/helpers/extends":22,"@babel/runtime/helpers/interopRequireDefault":24,"@babel/runtime/helpers/objectWithoutPropertiesLoose":26}],72:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -28394,7 +29910,7 @@ function whenMapDispatchToPropsIsObject(mapDispatchToProps) {
 
 var _default = [whenMapDispatchToPropsIsFunction, whenMapDispatchToPropsIsMissing, whenMapDispatchToPropsIsObject];
 exports.default = _default;
-},{"./wrapMapToProps":74,"redux":86}],70:[function(require,module,exports){
+},{"./wrapMapToProps":77,"redux":89}],73:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -28416,7 +29932,7 @@ function whenMapStateToPropsIsMissing(mapStateToProps) {
 
 var _default = [whenMapStateToPropsIsFunction, whenMapStateToPropsIsMissing];
 exports.default = _default;
-},{"./wrapMapToProps":74}],71:[function(require,module,exports){
+},{"./wrapMapToProps":77}],74:[function(require,module,exports){
 (function (process){
 "use strict";
 
@@ -28473,7 +29989,7 @@ function whenMergePropsIsOmitted(mergeProps) {
 var _default = [whenMergePropsIsFunction, whenMergePropsIsOmitted];
 exports.default = _default;
 }).call(this,require('_process'))
-},{"../utils/verifyPlainObject":80,"@babel/runtime/helpers/extends":19,"@babel/runtime/helpers/interopRequireDefault":21,"_process":54}],72:[function(require,module,exports){
+},{"../utils/verifyPlainObject":83,"@babel/runtime/helpers/extends":22,"@babel/runtime/helpers/interopRequireDefault":24,"_process":57}],75:[function(require,module,exports){
 (function (process){
 "use strict";
 
@@ -28575,7 +30091,7 @@ function finalPropsSelectorFactory(dispatch, _ref2) {
   return selectorFactory(mapStateToProps, mapDispatchToProps, mergeProps, dispatch, options);
 }
 }).call(this,require('_process'))
-},{"./verifySubselectors":73,"@babel/runtime/helpers/interopRequireDefault":21,"@babel/runtime/helpers/objectWithoutPropertiesLoose":23,"_process":54}],73:[function(require,module,exports){
+},{"./verifySubselectors":76,"@babel/runtime/helpers/interopRequireDefault":24,"@babel/runtime/helpers/objectWithoutPropertiesLoose":26,"_process":57}],76:[function(require,module,exports){
 "use strict";
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
@@ -28600,7 +30116,7 @@ function verifySubselectors(mapStateToProps, mapDispatchToProps, mergeProps, dis
   verify(mapDispatchToProps, 'mapDispatchToProps', displayName);
   verify(mergeProps, 'mergeProps', displayName);
 }
-},{"../utils/warning":81,"@babel/runtime/helpers/interopRequireDefault":21}],74:[function(require,module,exports){
+},{"../utils/warning":84,"@babel/runtime/helpers/interopRequireDefault":24}],77:[function(require,module,exports){
 (function (process){
 "use strict";
 
@@ -28679,7 +30195,7 @@ function wrapMapToPropsFunc(mapToProps, methodName) {
   };
 }
 }).call(this,require('_process'))
-},{"../utils/verifyPlainObject":80,"@babel/runtime/helpers/interopRequireDefault":21,"_process":54}],75:[function(require,module,exports){
+},{"../utils/verifyPlainObject":83,"@babel/runtime/helpers/interopRequireDefault":24,"_process":57}],78:[function(require,module,exports){
 "use strict";
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
@@ -28700,7 +30216,7 @@ exports.connectAdvanced = _connectAdvanced.default;
 var _connect = _interopRequireDefault(require("./connect/connect"));
 
 exports.connect = _connect.default;
-},{"./components/Provider":66,"./components/connectAdvanced":67,"./connect/connect":68,"@babel/runtime/helpers/interopRequireDefault":21,"@babel/runtime/helpers/interopRequireWildcard":22}],76:[function(require,module,exports){
+},{"./components/Provider":69,"./components/connectAdvanced":70,"./connect/connect":71,"@babel/runtime/helpers/interopRequireDefault":24,"@babel/runtime/helpers/interopRequireWildcard":25}],79:[function(require,module,exports){
 "use strict";
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
@@ -28726,7 +30242,7 @@ var storeShape = _propTypes.default.shape({
 });
 
 exports.storeShape = storeShape;
-},{"@babel/runtime/helpers/interopRequireDefault":21,"prop-types":58}],77:[function(require,module,exports){
+},{"@babel/runtime/helpers/interopRequireDefault":24,"prop-types":61}],80:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -28819,7 +30335,7 @@ function () {
 }();
 
 exports.default = Subscription;
-},{}],78:[function(require,module,exports){
+},{}],81:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -28839,7 +30355,7 @@ function isPlainObject(obj) {
 
   return Object.getPrototypeOf(obj) === proto;
 }
-},{}],79:[function(require,module,exports){
+},{}],82:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -28873,7 +30389,7 @@ function shallowEqual(objA, objB) {
 
   return true;
 }
-},{}],80:[function(require,module,exports){
+},{}],83:[function(require,module,exports){
 "use strict";
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
@@ -28890,7 +30406,7 @@ function verifyPlainObject(value, displayName, methodName) {
     (0, _warning.default)(methodName + "() in " + displayName + " must return a plain object. Instead received " + value + ".");
   }
 }
-},{"./isPlainObject":78,"./warning":81,"@babel/runtime/helpers/interopRequireDefault":21}],81:[function(require,module,exports){
+},{"./isPlainObject":81,"./warning":84,"@babel/runtime/helpers/interopRequireDefault":24}],84:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -28920,7 +30436,7 @@ function warning(message) {
   /* eslint-enable no-empty */
 
 }
-},{}],82:[function(require,module,exports){
+},{}],85:[function(require,module,exports){
 (function (process){
 /** @license React v16.6.1
  * react.development.js
@@ -30753,7 +32269,7 @@ module.exports = react;
 }
 
 }).call(this,require('_process'))
-},{"_process":54,"object-assign":53,"prop-types/checkPropTypes":55}],83:[function(require,module,exports){
+},{"_process":57,"object-assign":56,"prop-types/checkPropTypes":58}],86:[function(require,module,exports){
 /** @license React v16.6.1
  * react.production.min.js
  *
@@ -30779,7 +32295,7 @@ _currentValue:a,_currentValue2:a,Provider:null,Consumer:null};a.Provider={$$type
 b.ref&&(h=b.ref,f=K.current);void 0!==b.key&&(g=""+b.key);var l=void 0;a.type&&a.type.defaultProps&&(l=a.type.defaultProps);for(c in b)L.call(b,c)&&!M.hasOwnProperty(c)&&(d[c]=void 0===b[c]&&void 0!==l?l[c]:b[c])}c=arguments.length-2;if(1===c)d.children=e;else if(1<c){l=Array(c);for(var m=0;m<c;m++)l[m]=arguments[m+2];d.children=l}return{$$typeof:p,type:a.type,key:g,ref:h,props:d,_owner:f}},createFactory:function(a){var b=N.bind(null,a);b.type=a;return b},isValidElement:O,version:"16.6.1",__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED:{ReactCurrentOwner:K,
 assign:k}};X.unstable_ConcurrentMode=x;X.unstable_Profiler=u;var Y={default:X},Z=Y&&X||Y;module.exports=Z.default||Z;
 
-},{"object-assign":53}],84:[function(require,module,exports){
+},{"object-assign":56}],87:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -30790,7 +32306,7 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 }).call(this,require('_process'))
-},{"./cjs/react.development.js":82,"./cjs/react.production.min.js":83,"_process":54}],85:[function(require,module,exports){
+},{"./cjs/react.development.js":85,"./cjs/react.production.min.js":86,"_process":57}],88:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -30814,7 +32330,7 @@ var thunk = createThunkMiddleware();
 thunk.withExtraArgument = createThunkMiddleware;
 
 exports['default'] = thunk;
-},{}],86:[function(require,module,exports){
+},{}],89:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -31465,7 +32981,7 @@ exports.compose = compose;
 exports.__DO_NOT_USE__ActionTypes = ActionTypes;
 
 }).call(this,require('_process'))
-},{"_process":54,"symbol-observable":94}],87:[function(require,module,exports){
+},{"_process":57,"symbol-observable":97}],90:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -31592,7 +33108,7 @@ function createStructuredSelector(selectors) {
     }, {});
   });
 }
-},{}],88:[function(require,module,exports){
+},{}],91:[function(require,module,exports){
 (function (process){
 /** @license React v16.6.1
  * scheduler-tracing.development.js
@@ -32016,7 +33532,7 @@ exports.unstable_unsubscribe = unstable_unsubscribe;
 }
 
 }).call(this,require('_process'))
-},{"_process":54}],89:[function(require,module,exports){
+},{"_process":57}],92:[function(require,module,exports){
 /** @license React v16.6.1
  * scheduler-tracing.production.min.js
  *
@@ -32028,7 +33544,7 @@ exports.unstable_unsubscribe = unstable_unsubscribe;
 
 'use strict';Object.defineProperty(exports,"__esModule",{value:!0});var b=0;exports.__interactionsRef=null;exports.__subscriberRef=null;exports.unstable_clear=function(a){return a()};exports.unstable_getCurrent=function(){return null};exports.unstable_getThreadID=function(){return++b};exports.unstable_trace=function(a,d,c){return c()};exports.unstable_wrap=function(a){return a};exports.unstable_subscribe=function(){};exports.unstable_unsubscribe=function(){};
 
-},{}],90:[function(require,module,exports){
+},{}],93:[function(require,module,exports){
 (function (process){
 /** @license React v16.6.1
  * scheduler.development.js
@@ -32664,7 +34180,7 @@ exports.unstable_shouldYield = unstable_shouldYield;
 }
 
 }).call(this,require('_process'))
-},{"_process":54}],91:[function(require,module,exports){
+},{"_process":57}],94:[function(require,module,exports){
 /** @license React v16.6.1
  * scheduler.production.min.js
  *
@@ -32687,7 +34203,7 @@ exports.unstable_scheduleCallback=function(a,b){var c=-1!==k?k:exports.unstable_
 a;a.next=c;a.previous=b}return a};exports.unstable_cancelCallback=function(a){var b=a.next;if(null!==b){if(b===a)d=null;else{a===d&&(d=b);var c=a.previous;c.next=b;b.previous=c}a.next=a.previous=null}};exports.unstable_wrapCallback=function(a){var b=h;return function(){var c=h,e=k;h=b;k=exports.unstable_now();try{return a.apply(this,arguments)}finally{h=c,k=e,v()}}};exports.unstable_getCurrentPriorityLevel=function(){return h};
 exports.unstable_shouldYield=function(){return!f&&(null!==d&&d.expirationTime<l||w())};
 
-},{}],92:[function(require,module,exports){
+},{}],95:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -32698,7 +34214,7 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 }).call(this,require('_process'))
-},{"./cjs/scheduler.development.js":90,"./cjs/scheduler.production.min.js":91,"_process":54}],93:[function(require,module,exports){
+},{"./cjs/scheduler.development.js":93,"./cjs/scheduler.production.min.js":94,"_process":57}],96:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -32709,7 +34225,7 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 }).call(this,require('_process'))
-},{"./cjs/scheduler-tracing.development.js":88,"./cjs/scheduler-tracing.production.min.js":89,"_process":54}],94:[function(require,module,exports){
+},{"./cjs/scheduler-tracing.development.js":91,"./cjs/scheduler-tracing.production.min.js":92,"_process":57}],97:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -32741,7 +34257,7 @@ if (typeof self !== 'undefined') {
 var result = (0, _ponyfill2['default'])(root);
 exports['default'] = result;
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./ponyfill.js":95}],95:[function(require,module,exports){
+},{"./ponyfill.js":98}],98:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -32765,7 +34281,7 @@ function symbolObservablePonyfill(root) {
 
 	return result;
 };
-},{}],96:[function(require,module,exports){
+},{}],99:[function(require,module,exports){
 (function (setImmediate,clearImmediate){
 var nextTick = require('process/browser.js').nextTick;
 var apply = Function.prototype.apply;
@@ -32844,4 +34360,4 @@ exports.clearImmediate = typeof clearImmediate === "function" ? clearImmediate :
   delete immediateIds[id];
 };
 }).call(this,require("timers").setImmediate,require("timers").clearImmediate)
-},{"process/browser.js":54,"timers":96}]},{},[8]);
+},{"process/browser.js":57,"timers":99}]},{},[9]);

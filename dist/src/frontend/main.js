@@ -18,6 +18,7 @@ var combinedState_1 = require("./components/combinedState");
 var todo = require("./models/TodoList");
 var WaspModel_1 = require("./models/reducers/WaspModel");
 var WaspComponent_1 = require("./components/WaspComponent");
+var TetrisComponent_1 = require("./components/TetrisComponent");
 var WaspContextComponent_1 = require("./components/WaspContextComponent");
 var UIHelperModel_1 = require("./models/reducers/UIHelperModel");
 var store = redux_1.createStore(reducers_1.reducers, redux_1.compose(redux_1.applyMiddleware(redux_thunk_1.default), window['devToolsExtension'] ? window['devToolsExtension']() : function (f) { return f; }));
@@ -32,6 +33,7 @@ var UserInfo = function (props) { return React.createElement(UserState_1.UserSta
 }); };
 ReactDOM.render(React.createElement(react_redux_1.Provider, { store: store },
     React.createElement(Ctx.Provider, { value: listValue },
+        React.createElement(TetrisComponent_1.TetrisComponent, null),
         React.createElement(UserState_1.UserStateProvider, null,
             React.createElement(UIHelperModel_1.UIHelperModelProvider, null,
                 React.createElement(UIHelperModel_1.UIHelperModelConsumer, null, function (state) { return React.createElement("div", null,

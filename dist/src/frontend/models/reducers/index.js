@@ -10,6 +10,7 @@ var redux = require("redux");
 var IncModel_1 = require("./IncModel");
 var SimpleModel_1 = require("./SimpleModel");
 var TestModel_1 = require("./TestModel");
+var TetrisModel_1 = require("./TetrisModel");
 var TodoList_1 = require("./TodoList");
 var UIHelperModel_1 = require("./UIHelperModel");
 var UserState_1 = require("./UserState");
@@ -18,6 +19,7 @@ exports.reducers = redux.combineReducers({
     IncModel: IncModel_1.IncModelReducer,
     SimpleModel: SimpleModel_1.SimpleModelReducer,
     TestModel: TestModel_1.TestModelReducer,
+    TetrisModel: TetrisModel_1.TetrisModelReducer,
     TodoList: TodoList_1.TodoListReducer,
     UIHelperModel: UIHelperModel_1.UIHelperModelReducer,
     UserState: UserState_1.UserStateReducer,

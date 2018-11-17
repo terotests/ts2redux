@@ -8,6 +8,7 @@ import * as redux from "redux";
 import { IIncModel, IncModelReducer } from "./IncModel";
 import { ISimpleModel, SimpleModelReducer } from "./SimpleModel";
 import { ITestModel, TestModelReducer } from "./TestModel";
+import { ITetrisModel, TetrisModelReducer } from "./TetrisModel";
 import { ITodoList, TodoListReducer } from "./TodoList";
 import { IUIHelperModel, UIHelperModelReducer } from "./UIHelperModel";
 import { IUserState, UserStateReducer } from "./UserState";
@@ -16,6 +17,7 @@ export interface IState {
   IncModel: IIncModel;
   SimpleModel: ISimpleModel;
   TestModel: ITestModel;
+  TetrisModel: ITetrisModel;
   TodoList: ITodoList;
   UIHelperModel: IUIHelperModel;
   UserState: IUserState;
@@ -25,6 +27,7 @@ export const reducers = redux.combineReducers<IState>({
   IncModel: IncModelReducer,
   SimpleModel: SimpleModelReducer,
   TestModel: TestModelReducer,
+  TetrisModel: TetrisModelReducer,
   TodoList: TodoListReducer,
   UIHelperModel: UIHelperModelReducer,
   UserState: UserStateReducer,

@@ -423,9 +423,11 @@ export interface IContainerPropsState extends ITodoList {
             const pName = m.getParameters().filter( (a,i) => i<1).map( mod => mod.getName() ).join('')
 
             const rvNode = m.getReturnTypeNode()
+            let rvMethod = false
             if(rvNode) {
-              throw `Error at ${sourceFile.getFilePath()} in class ${c.getName()} method ${m.getName()} can not return values, use getter instead!`
-              return
+              // throw `Error at ${sourceFile.getFilePath()} in class ${c.getName()} method ${m.getName()} can not return values, use getter instead!`
+              // return
+              rvMethod = true
             }    
 
             if(m.isAsync()) {
@@ -447,46 +449,56 @@ export interface IContainerPropsState extends ITodoList {
               if(m.getReturnTypeNode()) body.out( ': ' + m.getReturnTypeNode().print() ) 
               body.out( '{', true)
                 body.indent(1)
-                body.out('if(this._state) {', true)
+                if(rvMethod) {
+                  m.getBody().forEachChild( ch => {
+                    body.out(ch.print(), true)
+                  })
+                } else {
+                  body.out('if(this._state) {', true)
                   body.indent(1)
                   m.getBody().forEachChild( ch => {
                     body.out(ch.print(), true)
                   })
                   body.indent(-1)
-                body.out('} else {', true)
+                  body.out('} else {', true)
                   const firstParam = m.getParameters().filter( (a,i) => i<1).map( mod => mod.getName() ).join('')
                   const fpCode = firstParam.length > 0 ? `,payload: ${firstParam} ` : '';
                   body.indent(1)
                   body.out(`if(this._dispatch) { this._dispatch({type:${c.getName()}Enums.${r_name}${fpCode}}) }`, true)    
                   body.indent(-1)
                   body.out('}', true)
+                }
+
                 body.indent(-1)
               body.out('}', true)  
             } 
             // generate the static version
-            body.out('', true)             
-            body.out('public static ')
-            body.out( m.getModifiers().filter(mod => ( mod.getText() != 'async' && mod.getText() != 'public')).map( mod => mod.print() +' ' ).join('') )
-            body.out( m.getName() + '(' +  m.getParameters().map( mod => mod.print() ).join(', ') + ')')
 
-            propsMethods.out( m.getName() + ' : (' +  m.getParameters().map( mod => mod.print() ).join(', ') + ') => any', true)
-            dispatchMethods.out( m.getName() + ' : (' +  m.getParameters().map( mod => mod.print() ).join(', ') + ') => {', true)
-              dispatchMethods.indent(1)
-              dispatchMethods.out(`return dispatch(R${c.getName()}.${m.getName()}(${pName}))`, true)
-              dispatchMethods.indent(-1)
-            dispatchMethods.out('},', true)
+            if(!rvMethod) {
+              body.out('', true)             
+              body.out('public static ')
+              body.out( m.getModifiers().filter(mod => ( mod.getText() != 'async' && mod.getText() != 'public')).map( mod => mod.print() +' ' ).join('') )
+              body.out( m.getName() + '(' +  m.getParameters().map( mod => mod.print() ).join(', ') + ')')
 
-            if(m.getReturnTypeNode()) body.out( ': ' + m.getReturnTypeNode().print() )
-            body.out( '{', true)
-              body.indent(1)
-              body.out(`return (dispatcher:any, getState:any) => {`, true)
+              propsMethods.out( m.getName() + ' : (' +  m.getParameters().map( mod => mod.print() ).join(', ') + ') => any', true)
+              dispatchMethods.out( m.getName() + ' : (' +  m.getParameters().map( mod => mod.print() ).join(', ') + ') => {', true)
+                dispatchMethods.indent(1)
+                dispatchMethods.out(`return dispatch(R${c.getName()}.${m.getName()}(${pName}))`, true)
+                dispatchMethods.indent(-1)
+              dispatchMethods.out('},', true)
+
+              if(m.getReturnTypeNode()) body.out( ': ' + m.getReturnTypeNode().print() )
+              body.out( '{', true)
                 body.indent(1)
-                
-                body.out(`(new R${c.getName()}(undefined, dispatcher, getState)).${m.getName()}(${pName})`, true);
+                body.out(`return (dispatcher:any, getState:any) => {`, true)
+                  body.indent(1)
+                  
+                  body.out(`(new R${c.getName()}(undefined, dispatcher, getState)).${m.getName()}(${pName})`, true);
+                  body.indent(-1)
+                body.out('}', true)
                 body.indent(-1)
-              body.out('}', true)
-              body.indent(-1)
-            body.out('}', true)       
+              body.out('}', true)       
+            }
           })         
 
           // https://hackernoon.com/how-to-use-the-new-react-context-api-fce011e7d87

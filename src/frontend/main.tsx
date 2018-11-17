@@ -18,6 +18,7 @@ import { CombinedStates } from './components/combinedState';
 import * as todo from './models/TodoList'
 import { WaspModelProvider, WaspModelConsumer } from './models/reducers/WaspModel';
 import { WaspComponent } from './components/WaspComponent';
+import { TetrisComponent } from './components/TetrisComponent';
 import { WaspContextComponent } from './components/WaspContextComponent'
 import { UIHelperModelProvider, UIHelperModelConsumer } from './models/reducers/UIHelperModel';
 
@@ -44,6 +45,8 @@ const UserInfo = (props) => <UserStateContext.Consumer>{
 ReactDOM.render(
   <Provider store={store}>
     <Ctx.Provider value={listValue}>
+
+      <TetrisComponent/>
       <UserStateProvider>
       <UIHelperModelProvider>
         <UIHelperModelConsumer>

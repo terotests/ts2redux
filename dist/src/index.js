@@ -367,9 +367,11 @@ function createProject(settings) {
                                     }
                                     var pName = m.getParameters().filter(function (a, i) { return i < 1; }).map(function (mod) { return mod.getName(); }).join('');
                                     var rvNode = m.getReturnTypeNode();
+                                    var rvMethod = false;
                                     if (rvNode) {
-                                        throw "Error at " + sourceFile.getFilePath() + " in class " + c.getName() + " method " + m.getName() + " can not return values, use getter instead!";
-                                        return;
+                                        // throw `Error at ${sourceFile.getFilePath()} in class ${c.getName()} method ${m.getName()} can not return values, use getter instead!`
+                                        // return
+                                        rvMethod = true;
                                     }
                                     if (m.isAsync()) {
                                         body_1.out('// is task', true);
@@ -391,44 +393,53 @@ function createProject(settings) {
                                             body_1.out(': ' + m.getReturnTypeNode().print());
                                         body_1.out('{', true);
                                         body_1.indent(1);
-                                        body_1.out('if(this._state) {', true);
-                                        body_1.indent(1);
-                                        m.getBody().forEachChild(function (ch) {
-                                            body_1.out(ch.print(), true);
-                                        });
+                                        if (rvMethod) {
+                                            m.getBody().forEachChild(function (ch) {
+                                                body_1.out(ch.print(), true);
+                                            });
+                                        }
+                                        else {
+                                            body_1.out('if(this._state) {', true);
+                                            body_1.indent(1);
+                                            m.getBody().forEachChild(function (ch) {
+                                                body_1.out(ch.print(), true);
+                                            });
+                                            body_1.indent(-1);
+                                            body_1.out('} else {', true);
+                                            var firstParam = m.getParameters().filter(function (a, i) { return i < 1; }).map(function (mod) { return mod.getName(); }).join('');
+                                            var fpCode = firstParam.length > 0 ? ",payload: " + firstParam + " " : '';
+                                            body_1.indent(1);
+                                            body_1.out("if(this._dispatch) { this._dispatch({type:" + c.getName() + "Enums." + r_name + fpCode + "}) }", true);
+                                            body_1.indent(-1);
+                                            body_1.out('}', true);
+                                        }
                                         body_1.indent(-1);
-                                        body_1.out('} else {', true);
-                                        var firstParam = m.getParameters().filter(function (a, i) { return i < 1; }).map(function (mod) { return mod.getName(); }).join('');
-                                        var fpCode = firstParam.length > 0 ? ",payload: " + firstParam + " " : '';
+                                        body_1.out('}', true);
+                                    }
+                                    // generate the static version
+                                    if (!rvMethod) {
+                                        body_1.out('', true);
+                                        body_1.out('public static ');
+                                        body_1.out(m.getModifiers().filter(function (mod) { return (mod.getText() != 'async' && mod.getText() != 'public'); }).map(function (mod) { return mod.print() + ' '; }).join(''));
+                                        body_1.out(m.getName() + '(' + m.getParameters().map(function (mod) { return mod.print(); }).join(', ') + ')');
+                                        propsMethods_1.out(m.getName() + ' : (' + m.getParameters().map(function (mod) { return mod.print(); }).join(', ') + ') => any', true);
+                                        dispatchMethods_1.out(m.getName() + ' : (' + m.getParameters().map(function (mod) { return mod.print(); }).join(', ') + ') => {', true);
+                                        dispatchMethods_1.indent(1);
+                                        dispatchMethods_1.out("return dispatch(R" + c.getName() + "." + m.getName() + "(" + pName + "))", true);
+                                        dispatchMethods_1.indent(-1);
+                                        dispatchMethods_1.out('},', true);
+                                        if (m.getReturnTypeNode())
+                                            body_1.out(': ' + m.getReturnTypeNode().print());
+                                        body_1.out('{', true);
                                         body_1.indent(1);
-                                        body_1.out("if(this._dispatch) { this._dispatch({type:" + c.getName() + "Enums." + r_name + fpCode + "}) }", true);
+                                        body_1.out("return (dispatcher:any, getState:any) => {", true);
+                                        body_1.indent(1);
+                                        body_1.out("(new R" + c.getName() + "(undefined, dispatcher, getState))." + m.getName() + "(" + pName + ")", true);
                                         body_1.indent(-1);
                                         body_1.out('}', true);
                                         body_1.indent(-1);
                                         body_1.out('}', true);
                                     }
-                                    // generate the static version
-                                    body_1.out('', true);
-                                    body_1.out('public static ');
-                                    body_1.out(m.getModifiers().filter(function (mod) { return (mod.getText() != 'async' && mod.getText() != 'public'); }).map(function (mod) { return mod.print() + ' '; }).join(''));
-                                    body_1.out(m.getName() + '(' + m.getParameters().map(function (mod) { return mod.print(); }).join(', ') + ')');
-                                    propsMethods_1.out(m.getName() + ' : (' + m.getParameters().map(function (mod) { return mod.print(); }).join(', ') + ') => any', true);
-                                    dispatchMethods_1.out(m.getName() + ' : (' + m.getParameters().map(function (mod) { return mod.print(); }).join(', ') + ') => {', true);
-                                    dispatchMethods_1.indent(1);
-                                    dispatchMethods_1.out("return dispatch(R" + c.getName() + "." + m.getName() + "(" + pName + "))", true);
-                                    dispatchMethods_1.indent(-1);
-                                    dispatchMethods_1.out('},', true);
-                                    if (m.getReturnTypeNode())
-                                        body_1.out(': ' + m.getReturnTypeNode().print());
-                                    body_1.out('{', true);
-                                    body_1.indent(1);
-                                    body_1.out("return (dispatcher:any, getState:any) => {", true);
-                                    body_1.indent(1);
-                                    body_1.out("(new R" + c.getName() + "(undefined, dispatcher, getState))." + m.getName() + "(" + pName + ")", true);
-                                    body_1.indent(-1);
-                                    body_1.out('}', true);
-                                    body_1.indent(-1);
-                                    body_1.out('}', true);
                                 });
                                 // https://hackernoon.com/how-to-use-the-new-react-context-api-fce011e7d87
                                 // https://daveceddia.com/context-api-vs-redux/

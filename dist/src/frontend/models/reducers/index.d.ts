@@ -8,6 +8,7 @@ import * as redux from "redux";
 import { IIncModel } from "./IncModel";
 import { ISimpleModel } from "./SimpleModel";
 import { ITestModel } from "./TestModel";
+import { ITetrisModel } from "./TetrisModel";
 import { ITodoList } from "./TodoList";
 import { IUIHelperModel } from "./UIHelperModel";
 import { IUserState } from "./UserState";
@@ -16,6 +17,7 @@ export interface IState {
     IncModel: IIncModel;
     SimpleModel: ISimpleModel;
     TestModel: ITestModel;
+    TetrisModel: ITetrisModel;
     TodoList: ITodoList;
     UIHelperModel: IUIHelperModel;
     UserState: IUserState;

@@ -14,8 +14,6 @@ export interface ActivePiece {
   cells: Cell[][];
 }
 
-
-
 const pieceDeclaration = (color:string, rows:string[]) : ActivePiece => {
   const cells = new Array( rows.length )
   for( let i=0; i < rows.length; i++) {
@@ -161,7 +159,21 @@ export class TetrisModel {
       this.activePiece.x++;
     }    
   }
-
+  // keyboard control for rotation, tries to rotate activePiece and if
+  // it does not collide, rotation can be done
+  rotate() {
+    const newOrientation = this.rotateCells(this.activePiece.cells);
+    if (
+      !this.doesCollide(
+        this.activePiece.x,
+        this.activePiece.y,
+        newOrientation
+      )
+    ) {
+      this.activePiece.cells = newOrientation;
+    }
+  }
+  // creates a new piece with rotated values
   rotateCells (cells: Cell[][]) : Cell[][] {
     const res: Cell[][] = new Array(cells.length);
     for (let j = 0; j < cells.length; j++) {
@@ -182,19 +194,6 @@ export class TetrisModel {
     return res;
   };  
 
-  rotate() {
-    const newOrientation = this.rotateCells(this.activePiece.cells);
-    if (
-      !this.doesCollide(
-        this.activePiece.x,
-        this.activePiece.y,
-        newOrientation
-      )
-    ) {
-      this.activePiece.cells = newOrientation;
-    }
-  }
-
   step() {
     if (this.gameOn) {
       if (
@@ -209,7 +208,7 @@ export class TetrisModel {
           this.gameEnded = true;
           this.gameOn = false;
         } else {
-          this.addPiece();
+          this.masonPiece();
           this.dropRows()
           this.activePiece = createNewPiece(this.pickNextColor());
           this.activePiece.x = Math.floor( Math.random()*5 )
@@ -226,7 +225,8 @@ export class TetrisModel {
     return this.useColors[this.lastUsedColor];
   }
 
-  addPiece() {
+  // adds the piece permanently to the structure
+  masonPiece() {
     const piece = this.activePiece;
     piece.cells.forEach((row, y) => {
       if (piece.y + y < 0) return;
@@ -238,6 +238,7 @@ export class TetrisModel {
     });
   }
 
+  // drops full rows and adds points to the user
   dropRows() {
     const nextRows = []
     let emptyCnt = 0
@@ -263,7 +264,7 @@ export class TetrisModel {
     }
   }  
 
-  resetGame() {
+  clearCells() {
     this.cells = new Array(this.rows);
     for (let row = 0; row < this.rows; row++) {
       this.cells[row] = new Array(this.cols);
@@ -271,6 +272,10 @@ export class TetrisModel {
         this.cells[row][col] = { color: Colors.EMPTY };
       }
     }
+  }
+
+  resetGame() {
+    this.clearCells()
     this.activePiece = createNewPiece(this.pickNextColor());
     this.ticksPerMove = 10
     this.tickCnt = 0

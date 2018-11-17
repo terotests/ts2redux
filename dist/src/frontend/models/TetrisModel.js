@@ -118,6 +118,15 @@ var TetrisModel = /** @class */ (function () {
             this.activePiece.x++;
         }
     };
+    // keyboard control for rotation, tries to rotate activePiece and if
+    // it does not collide, rotation can be done
+    TetrisModel.prototype.rotate = function () {
+        var newOrientation = this.rotateCells(this.activePiece.cells);
+        if (!this.doesCollide(this.activePiece.x, this.activePiece.y, newOrientation)) {
+            this.activePiece.cells = newOrientation;
+        }
+    };
+    // creates a new piece with rotated values
     TetrisModel.prototype.rotateCells = function (cells) {
         var res = new Array(cells.length);
         for (var j = 0; j < cells.length; j++) {
@@ -138,12 +147,6 @@ var TetrisModel = /** @class */ (function () {
         return res;
     };
     ;
-    TetrisModel.prototype.rotate = function () {
-        var newOrientation = this.rotateCells(this.activePiece.cells);
-        if (!this.doesCollide(this.activePiece.x, this.activePiece.y, newOrientation)) {
-            this.activePiece.cells = newOrientation;
-        }
-    };
     TetrisModel.prototype.step = function () {
         if (this.gameOn) {
             if (!this.doesCollide(this.activePiece.x, this.activePiece.y + 1)) {
@@ -155,7 +158,7 @@ var TetrisModel = /** @class */ (function () {
                     this.gameOn = false;
                 }
                 else {
-                    this.addPiece();
+                    this.masonPiece();
                     this.dropRows();
                     this.activePiece = exports.createNewPiece(this.pickNextColor());
                     this.activePiece.x = Math.floor(Math.random() * 5);
@@ -170,7 +173,8 @@ var TetrisModel = /** @class */ (function () {
         }
         return this.useColors[this.lastUsedColor];
     };
-    TetrisModel.prototype.addPiece = function () {
+    // adds the piece permanently to the structure
+    TetrisModel.prototype.masonPiece = function () {
         var _this = this;
         var piece = this.activePiece;
         piece.cells.forEach(function (row, y) {
@@ -183,6 +187,7 @@ var TetrisModel = /** @class */ (function () {
             });
         });
     };
+    // drops full rows and adds points to the user
     TetrisModel.prototype.dropRows = function () {
         var nextRows = [];
         var emptyCnt = 0;
@@ -208,7 +213,7 @@ var TetrisModel = /** @class */ (function () {
             this.ticksPerMove--;
         }
     };
-    TetrisModel.prototype.resetGame = function () {
+    TetrisModel.prototype.clearCells = function () {
         this.cells = new Array(this.rows);
         for (var row = 0; row < this.rows; row++) {
             this.cells[row] = new Array(this.cols);
@@ -216,6 +221,9 @@ var TetrisModel = /** @class */ (function () {
                 this.cells[row][col] = { color: Colors.EMPTY };
             }
         }
+    };
+    TetrisModel.prototype.resetGame = function () {
+        this.clearCells();
         this.activePiece = exports.createNewPiece(this.pickNextColor());
         this.ticksPerMove = 10;
         this.tickCnt = 0;

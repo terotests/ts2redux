@@ -36,12 +36,13 @@ export declare class TetrisModel {
     tick(): void;
     left(): void;
     right(): void;
-    rotateCells(cells: Cell[][]): Cell[][];
     rotate(): void;
+    rotateCells(cells: Cell[][]): Cell[][];
     step(): void;
     pickNextColor(): string;
-    addPiece(): void;
+    masonPiece(): void;
     dropRows(): void;
+    clearCells(): void;
     resetGame(): void;
     start(): void;
 }

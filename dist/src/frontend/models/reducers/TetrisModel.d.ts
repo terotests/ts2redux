@@ -42,12 +42,13 @@ export declare class TetrisModel {
     tick(): void;
     left(): void;
     right(): void;
-    rotateCells(cells: Cell[][]): Cell[][];
     rotate(): void;
+    rotateCells(cells: Cell[][]): Cell[][];
     step(): void;
     pickNextColor(): string;
-    addPiece(): void;
+    masonPiece(): void;
     dropRows(): void;
+    clearCells(): void;
     resetGame(): void;
     start(): void;
 }
@@ -59,8 +60,9 @@ export interface IContainerPropsMethods {
     right: () => any;
     rotate: () => any;
     step: () => any;
-    addPiece: () => any;
+    masonPiece: () => any;
     dropRows: () => any;
+    clearCells: () => any;
     resetGame: () => any;
     start: () => any;
 }
@@ -120,16 +122,18 @@ export declare class RTetrisModel {
     static left(): (dispatcher: any, getState: any) => void;
     right(): void;
     static right(): (dispatcher: any, getState: any) => void;
-    rotateCells(cells: Cell[][]): Cell[][];
     rotate(): void;
     static rotate(): (dispatcher: any, getState: any) => void;
+    rotateCells(cells: Cell[][]): Cell[][];
     step(): void;
     static step(): (dispatcher: any, getState: any) => void;
     pickNextColor(): string;
-    addPiece(): void;
-    static addPiece(): (dispatcher: any, getState: any) => void;
+    masonPiece(): void;
+    static masonPiece(): (dispatcher: any, getState: any) => void;
     dropRows(): void;
     static dropRows(): (dispatcher: any, getState: any) => void;
+    clearCells(): void;
+    static clearCells(): (dispatcher: any, getState: any) => void;
     resetGame(): void;
     static resetGame(): (dispatcher: any, getState: any) => void;
     start(): void;
@@ -151,12 +155,13 @@ export declare const TetrisModelEnums: {
     TetrisModel_tick: string;
     TetrisModel_left: string;
     TetrisModel_right: string;
-    TetrisModel_rotateCells: string;
     TetrisModel_rotate: string;
+    TetrisModel_rotateCells: string;
     TetrisModel_step: string;
     TetrisModel_pickNextColor: string;
-    TetrisModel_addPiece: string;
+    TetrisModel_masonPiece: string;
     TetrisModel_dropRows: string;
+    TetrisModel_clearCells: string;
     TetrisModel_resetGame: string;
     TetrisModel_start: string;
 };
@@ -178,8 +183,9 @@ export declare class TetrisModelProvider extends React.Component {
     right(): void;
     rotate(): void;
     step(): void;
-    addPiece(): void;
+    masonPiece(): void;
     dropRows(): void;
+    clearCells(): void;
     resetGame(): void;
     start(): void;
     render(): JSX.Element;

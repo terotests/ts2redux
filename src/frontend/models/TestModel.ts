@@ -21,6 +21,10 @@ export enum TaskState {
   SUCCESS,
 }
 
+export interface TestObj {
+
+}
+
 const MSG = 'STATE IS NOW'
 const MSG2 = 'AFTER DISPATCH STATE IS'
 const DELAY = 1000
@@ -50,6 +54,8 @@ class TestModel {
 
   // message to user
   userMessage:string = ''
+
+  testObj?: TestObj
 
   // TODO:
   // - ERROR / warning if there are no type initializers

@@ -76,6 +76,7 @@ export const createNewPiece = (usingColor: string): ActivePiece => {
  * @redux true
  */
 export class TetrisModel {
+  
   useColors: string[] = ["red", "blue", "green", "yellow", "brown"];
   lastUsedColor: number = 0;
 

@@ -503,17 +503,11 @@ exports.createNewPiece = function (usingColor) {
             'xxx',
             ' x ']),
         pieceDeclaration(usingColor, [' x ',
-            'xxx',
-            ' x ']),
-        pieceDeclaration(usingColor, [' x ',
             ' x ',
             'xx ']),
         pieceDeclaration(usingColor, [' x ',
             ' x ',
             ' xx']),
-        pieceDeclaration(usingColor, [' xx',
-            'xxx',
-            'xx ']),
         pieceDeclaration(usingColor, [' x  ',
             ' x  ',
             ' x  ',
@@ -1556,6 +1550,7 @@ exports.cartsSelectorFn = function (state) { return state.carts; };
 exports.userMessageSelectorFn = function (state) {
     return state.userMessage;
 };
+exports.testObjSelectorFn = function (state) { return state.testObj; };
 exports.mapStateToProps = function (state) {
     return {
         items: state.TestModel.items,
@@ -1563,7 +1558,8 @@ exports.mapStateToProps = function (state) {
         cartId: state.TestModel.cartId,
         shopState: state.TestModel.shopState,
         carts: state.TestModel.carts,
-        userMessage: state.TestModel.userMessage
+        userMessage: state.TestModel.userMessage,
+        testObj: state.TestModel.testObj
     };
 };
 exports.mapDispatchToProps = function (dispatch) {
@@ -1621,7 +1617,8 @@ var initTestModel = function () {
         cartId: o.cartId,
         shopState: o.shopState,
         carts: o.carts,
-        userMessage: o.userMessage
+        userMessage: o.userMessage,
+        testObj: o.testObj
     };
 };
 var initWithMethodsTestModel = function () {
@@ -1633,6 +1630,7 @@ var initWithMethodsTestModel = function () {
         shopState: o.shopState,
         carts: o.carts,
         userMessage: o.userMessage,
+        testObj: o.testObj,
         setUserMessage: o.setUserMessage,
         add: o.add,
         removeFirst: o.removeFirst,
@@ -1824,6 +1822,35 @@ var RTestModel = /** @class */ (function () {
                 if (this._dispatch) {
                     this._dispatch({
                         type: exports.TestModelEnums.TestModel_userMessage,
+                        payload: value
+                    });
+                }
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(RTestModel.prototype, "testObj", {
+        get: function () {
+            if (this._getState) {
+                return this._getState().TestModel.testObj;
+            }
+            else {
+                if (this._state) {
+                    return this._state.testObj;
+                }
+            }
+            return undefined;
+        },
+        set: function (value) {
+            if (this._state && typeof value !== "undefined") {
+                this._state.testObj = value;
+            }
+            else {
+                // dispatch change for item testObj
+                if (this._dispatch) {
+                    this._dispatch({
+                        type: exports.TestModelEnums.TestModel_testObj,
                         payload: value
                     });
                 }
@@ -2104,6 +2131,7 @@ exports.TestModelEnums = {
     TestModel_shopState: "TestModel_shopState",
     TestModel_carts: "TestModel_carts",
     TestModel_userMessage: "TestModel_userMessage",
+    TestModel_testObj: "TestModel_testObj",
     TestModel_setUserMessage: "TestModel_setUserMessage",
     TestModel_add: "TestModel_add",
     TestModel_removeFirst: "TestModel_removeFirst",
@@ -2136,6 +2164,9 @@ exports.TestModelReducer = function (state, action) {
                 break;
             case exports.TestModelEnums.TestModel_userMessage:
                 new RTestModel(draft).userMessage = action.payload;
+                break;
+            case exports.TestModelEnums.TestModel_testObj:
+                new RTestModel(draft).testObj = action.payload;
                 break;
             case exports.TestModelEnums.TestModel_setUserMessage:
                 new RTestModel(draft).setUserMessage(action.payload);
@@ -2448,10 +2479,8 @@ exports.createNewPiece = function (usingColor) {
     var items = [
         pieceDeclaration(usingColor, ["xx", "xx"]),
         pieceDeclaration(usingColor, ["   ", "xxx", " x "]),
-        pieceDeclaration(usingColor, [" x ", "xxx", " x "]),
         pieceDeclaration(usingColor, [" x ", " x ", "xx "]),
         pieceDeclaration(usingColor, [" x ", " x ", " xx"]),
-        pieceDeclaration(usingColor, [" xx", "xxx", "xx "]),
         pieceDeclaration(usingColor, [" x  ", " x  ", " x  ", " x  "])
     ];
     return items[Math.floor(Math.random() * items.length)];

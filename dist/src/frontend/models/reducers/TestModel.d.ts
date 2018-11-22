@@ -21,6 +21,8 @@ export declare enum TaskState {
     ERROR = 2,
     SUCCESS = 3
 }
+export interface TestObj {
+}
 import { IState } from "./index";
 import * as React from "react";
 export interface IContainerPropsMethods {
@@ -54,6 +56,7 @@ export interface ITestModel {
         [key: string]: ShopCart;
     };
     userMessage: string;
+    testObj: TestObj;
 }
 export declare const itemsSelectorFn: (state: ITestModel) => ShopCartItem[];
 export declare const maxIdSelectorFn: (state: ITestModel) => number;
@@ -63,6 +66,7 @@ export declare const cartsSelectorFn: (state: ITestModel) => {
     [key: string]: ShopCart;
 };
 export declare const userMessageSelectorFn: (state: ITestModel) => string;
+export declare const testObjSelectorFn: (state: ITestModel) => TestObj;
 export declare type IContainerPropsState = ITestModel;
 export interface IProps extends IContainerPropsState, IContainerPropsMethods {
 }
@@ -85,6 +89,7 @@ export declare class RTestModel {
         [key: string]: ShopCart;
     } | undefined;
     userMessage: string | undefined;
+    testObj: TestObj | undefined;
     setUserMessage(value: string): void;
     static setUserMessage(value: string): (dispatcher: any, getState: any) => void;
     add(item: ShopCartItem): void;
@@ -133,6 +138,7 @@ export declare const TestModelEnums: {
     TestModel_shopState: string;
     TestModel_carts: string;
     TestModel_userMessage: string;
+    TestModel_testObj: string;
     TestModel_setUserMessage: string;
     TestModel_add: string;
     TestModel_removeFirst: string;

@@ -53,10 +53,8 @@ export const createNewPiece = (usingColor: string): ActivePiece => {
   const items = [
     pieceDeclaration(usingColor, ["xx", "xx"]),
     pieceDeclaration(usingColor, ["   ", "xxx", " x "]),
-    pieceDeclaration(usingColor, [" x ", "xxx", " x "]),
     pieceDeclaration(usingColor, [" x ", " x ", "xx "]),
     pieceDeclaration(usingColor, [" x ", " x ", " xx"]),
-    pieceDeclaration(usingColor, [" xx", "xxx", "xx "]),
     pieceDeclaration(usingColor, [" x  ", " x  ", " x  ", " x  "])
   ];
   return items[Math.floor(Math.random() * items.length)];

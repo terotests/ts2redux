@@ -185,7 +185,9 @@ export async function createProject( settings:GenerationOptions) {
         ng.out('export interface I' + c.getName()+ ' {', true)
         ng.indent(1)
           c.getProperties().forEach( p => {
-            ng.out(p.getNameNode().print()+': ' +  p.getTypeNode().print(), true)
+            const qm = p.hasQuestionToken() ? '?' : ''
+            const em = p.hasExclamationToken() ? '!' : ''
+            ng.out(p.getNameNode().print()+qm+em+': ' +  p.getTypeNode().print(), true)
           })
         ng.indent(-1)
         ng.out('}', true)

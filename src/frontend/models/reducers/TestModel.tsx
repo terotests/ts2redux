@@ -28,6 +28,8 @@ export enum TaskState {
   SUCCESS
 }
 
+export interface TestObj {}
+
 const MSG = "STATE IS NOW";
 const MSG2 = "AFTER DISPATCH STATE IS";
 const DELAY = 1000;
@@ -52,6 +54,8 @@ class TestModel {
 
   // message to user
   userMessage: string = "";
+
+  testObj?: TestObj;
 
   // TODO:
   // - ERROR / warning if there are no type initializers
@@ -197,6 +201,7 @@ export interface ITestModel {
   };
   // message to user
   userMessage: string;
+  testObj?: TestObj;
 }
 export const itemsSelectorFn = (state: ITestModel): ShopCartItem[] =>
   state.items;
@@ -211,6 +216,7 @@ export const cartsSelectorFn = (
 } => state.carts;
 export const userMessageSelectorFn = (state: ITestModel): string =>
   state.userMessage;
+export const testObjSelectorFn = (state: ITestModel): TestObj => state.testObj;
 
 export type IContainerPropsState = ITestModel;
 export interface IProps extends IContainerPropsState, IContainerPropsMethods {}
@@ -221,7 +227,8 @@ export const mapStateToProps = (state: IState): IContainerPropsState => {
     cartId: state.TestModel.cartId,
     shopState: state.TestModel.shopState,
     carts: state.TestModel.carts,
-    userMessage: state.TestModel.userMessage
+    userMessage: state.TestModel.userMessage,
+    testObj: state.TestModel.testObj
   };
 };
 export const mapDispatchToProps = (dispatch: any): IContainerPropsMethods => {
@@ -283,7 +290,8 @@ const initTestModel = () => {
     cartId: o.cartId,
     shopState: o.shopState,
     carts: o.carts,
-    userMessage: o.userMessage
+    userMessage: o.userMessage,
+    testObj: o.testObj
   };
 };
 const initWithMethodsTestModel = () => {
@@ -295,6 +303,7 @@ const initWithMethodsTestModel = () => {
     shopState: o.shopState,
     carts: o.carts,
     userMessage: o.userMessage,
+    testObj: o.testObj,
     setUserMessage: o.setUserMessage,
     add: o.add,
     removeFirst: o.removeFirst,
@@ -471,6 +480,29 @@ export class RTestModel {
       if (this._dispatch) {
         this._dispatch({
           type: TestModelEnums.TestModel_userMessage,
+          payload: value
+        });
+      }
+    }
+  }
+  get testObj(): TestObj | undefined {
+    if (this._getState) {
+      return this._getState().TestModel.testObj;
+    } else {
+      if (this._state) {
+        return this._state.testObj;
+      }
+    }
+    return undefined;
+  }
+  set testObj(value: TestObj | undefined) {
+    if (this._state && typeof value !== "undefined") {
+      this._state.testObj = value;
+    } else {
+      // dispatch change for item testObj
+      if (this._dispatch) {
+        this._dispatch({
+          type: TestModelEnums.TestModel_testObj,
           payload: value
         });
       }
@@ -731,6 +763,7 @@ export const TestModelEnums = {
   TestModel_shopState: "TestModel_shopState",
   TestModel_carts: "TestModel_carts",
   TestModel_userMessage: "TestModel_userMessage",
+  TestModel_testObj: "TestModel_testObj",
   TestModel_setUserMessage: "TestModel_setUserMessage",
   TestModel_add: "TestModel_add",
   TestModel_removeFirst: "TestModel_removeFirst",
@@ -766,6 +799,9 @@ export const TestModelReducer = (
         break;
       case TestModelEnums.TestModel_userMessage:
         new RTestModel(draft).userMessage = action.payload;
+        break;
+      case TestModelEnums.TestModel_testObj:
+        new RTestModel(draft).testObj = action.payload;
         break;
       case TestModelEnums.TestModel_setUserMessage:
         new RTestModel(draft).setUserMessage(action.payload);

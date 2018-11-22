@@ -158,7 +158,9 @@ function createProject(settings) {
                                 ng_1.out('export interface I' + c.getName() + ' {', true);
                                 ng_1.indent(1);
                                 c.getProperties().forEach(function (p) {
-                                    ng_1.out(p.getNameNode().print() + ': ' + p.getTypeNode().print(), true);
+                                    var qm = p.hasQuestionToken() ? '?' : '';
+                                    var em = p.hasExclamationToken() ? '!' : '';
+                                    ng_1.out(p.getNameNode().print() + qm + em + ': ' + p.getTypeNode().print(), true);
                                 });
                                 ng_1.indent(-1);
                                 ng_1.out('}', true);

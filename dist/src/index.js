@@ -299,7 +299,7 @@ function createProject(settings) {
                                 body_1.indent(-1);
                                 body_1.out('}', true);
                                 c.getProperties().forEach(function (p) {
-                                    selFns_1.out("export const " + p.getName() + "SelectorFn = (state:I" + c.getName() + ") : " + getPropTypeString(p) + " => state." + p.getName(), true);
+                                    selFns_1.out("export const " + p.getName() + "SelectorFn = (state:I" + c.getName() + ") : " + (getPropTypeString(p) + (p.hasQuestionToken() ? ' | undefined' : '')) + " => state." + p.getName(), true);
                                     var r_name = c.getName() + "_" + p.getName();
                                     body_1.out('get ' + p.getName() + '() : ' + getPropTypeString(p) + ' | undefined {', true);
                                     body_1.indent(1);

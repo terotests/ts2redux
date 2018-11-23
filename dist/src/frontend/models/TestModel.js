@@ -83,8 +83,8 @@ var TestModel = /** @class */ (function () {
         this.bool_init_test = false;
         this.obj_init_test = getTestObj();
         this.rand_init_test = Math.floor(Math.random() * 5);
-        // Does not work yet :/
         this.arr_init_test = [1, 2, 3];
+        this.arr_init_test2 = [1, 2, 3, 'foo'];
         this.obj_literal_test = { cnt: 200 };
         this.cartId = 1;
         this.shopState = TaskState.UNDEFINED;
@@ -93,11 +93,6 @@ var TestModel = /** @class */ (function () {
         // message to user
         this.userMessage = '';
     }
-    // TODO:
-    // - ERROR / warning if there are no type initializers
-    // - ERROR if there are more than 2 parameters to a reducer
-    //   => or you could generate the protocol to be used for dispatching those values
-    // - setting value of simple property could be generated
     TestModel.prototype.setUserMessage = function (value) {
         this.userMessage = value;
     };

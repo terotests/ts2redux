@@ -343,7 +343,7 @@ export async function createProject( settings:GenerationOptions) {
 
           c.getProperties().forEach( p => {
 
-            selFns.out(`export const ${p.getName()}SelectorFn = (state:I${c.getName()}) : ${getPropTypeString(p)} => state.${p.getName()}`, true)
+            selFns.out(`export const ${p.getName()}SelectorFn = (state:I${c.getName()}) : ${getPropTypeString(p) + (p.hasQuestionToken() ? ' | undefined' : '' )} => state.${p.getName()}`, true)
 
             const r_name = `${c.getName()}_${p.getName()}`
             body.out('get ' + p.getName()+'() : ' + getPropTypeString(p) + ' | undefined {', true)

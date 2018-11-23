@@ -248,7 +248,8 @@ export const cartsSelectorFn = (
 } => state.carts;
 export const userMessageSelectorFn = (state: ITestModel): string =>
   state.userMessage;
-export const testObjSelectorFn = (state: ITestModel): TestObj => state.testObj;
+export const testObjSelectorFn = (state: ITestModel): TestObj | undefined =>
+  state.testObj;
 
 export type IContainerPropsState = ITestModel;
 export interface IProps extends IContainerPropsState, IContainerPropsMethods {}

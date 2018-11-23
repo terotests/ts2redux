@@ -4,7 +4,7 @@
  */
 
 export class IncModel {
-  cnt:number = 0
+  cnt = 0
   increment() {
     this.cnt++
   }

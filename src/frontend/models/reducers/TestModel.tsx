@@ -28,6 +28,14 @@ export enum TaskState {
   SUCCESS
 }
 
+export interface TestObj {
+  name: string;
+}
+
+function getTestObj(): TestObj {
+  return { name: "OK" };
+}
+
 const MSG = "STATE IS NOW";
 const MSG2 = "AFTER DISPATCH STATE IS";
 const DELAY = 1000;
@@ -43,7 +51,18 @@ const FRIEND_LIST = ["Arthur", "John", "Martin", "Peter"];
 class TestModel {
   // model with initializer
   items: ShopCartItem[] = [];
-  maxId: number = 1;
+  maxId = 1;
+
+  // Default initializers work :)
+  str_init_test = "OK?";
+  bool_init_test = false;
+  obj_init_test = getTestObj();
+  rand_init_test = Math.floor(Math.random() * 5);
+
+  arr_init_test = [1, 2, 3];
+  arr_init_test2 = [1, 2, 3, "foo"];
+  obj_literal_test = { cnt: 200 };
+
   cartId: number = 1;
   shopState: TaskState = TaskState.UNDEFINED;
 
@@ -52,12 +71,7 @@ class TestModel {
 
   // message to user
   userMessage: string = "";
-
-  // TODO:
-  // - ERROR / warning if there are no type initializers
-  // - ERROR if there are more than 2 parameters to a reducer
-  //   => or you could generate the protocol to be used for dispatching those values
-  // - setting value of simple property could be generated
+  testObj?: TestObj;
 
   setUserMessage(value: string) {
     this.userMessage = value;
@@ -189,6 +203,14 @@ export interface ITestModel {
   // model with initializer
   items: ShopCartItem[];
   maxId: number;
+  // Default initializers work :)
+  str_init_test: String;
+  bool_init_test: Boolean;
+  obj_init_test: TestObj;
+  rand_init_test: number;
+  arr_init_test: Array<number>;
+  arr_init_test2: Array<any>;
+  obj_literal_test: any;
   cartId: number;
   shopState: TaskState;
   // my shopping carts
@@ -197,10 +219,25 @@ export interface ITestModel {
   };
   // message to user
   userMessage: string;
+  testObj?: TestObj;
 }
 export const itemsSelectorFn = (state: ITestModel): ShopCartItem[] =>
   state.items;
 export const maxIdSelectorFn = (state: ITestModel): number => state.maxId;
+export const str_init_testSelectorFn = (state: ITestModel): String =>
+  state.str_init_test;
+export const bool_init_testSelectorFn = (state: ITestModel): Boolean =>
+  state.bool_init_test;
+export const obj_init_testSelectorFn = (state: ITestModel): TestObj =>
+  state.obj_init_test;
+export const rand_init_testSelectorFn = (state: ITestModel): number =>
+  state.rand_init_test;
+export const arr_init_testSelectorFn = (state: ITestModel): Array<number> =>
+  state.arr_init_test;
+export const arr_init_test2SelectorFn = (state: ITestModel): Array<any> =>
+  state.arr_init_test2;
+export const obj_literal_testSelectorFn = (state: ITestModel): any =>
+  state.obj_literal_test;
 export const cartIdSelectorFn = (state: ITestModel): number => state.cartId;
 export const shopStateSelectorFn = (state: ITestModel): TaskState =>
   state.shopState;
@@ -211,6 +248,7 @@ export const cartsSelectorFn = (
 } => state.carts;
 export const userMessageSelectorFn = (state: ITestModel): string =>
   state.userMessage;
+export const testObjSelectorFn = (state: ITestModel): TestObj => state.testObj;
 
 export type IContainerPropsState = ITestModel;
 export interface IProps extends IContainerPropsState, IContainerPropsMethods {}
@@ -218,10 +256,18 @@ export const mapStateToProps = (state: IState): IContainerPropsState => {
   return {
     items: state.TestModel.items,
     maxId: state.TestModel.maxId,
+    str_init_test: state.TestModel.str_init_test,
+    bool_init_test: state.TestModel.bool_init_test,
+    obj_init_test: state.TestModel.obj_init_test,
+    rand_init_test: state.TestModel.rand_init_test,
+    arr_init_test: state.TestModel.arr_init_test,
+    arr_init_test2: state.TestModel.arr_init_test2,
+    obj_literal_test: state.TestModel.obj_literal_test,
     cartId: state.TestModel.cartId,
     shopState: state.TestModel.shopState,
     carts: state.TestModel.carts,
-    userMessage: state.TestModel.userMessage
+    userMessage: state.TestModel.userMessage,
+    testObj: state.TestModel.testObj
   };
 };
 export const mapDispatchToProps = (dispatch: any): IContainerPropsMethods => {
@@ -280,10 +326,18 @@ const initTestModel = () => {
   return {
     items: o.items,
     maxId: o.maxId,
+    str_init_test: o.str_init_test,
+    bool_init_test: o.bool_init_test,
+    obj_init_test: o.obj_init_test,
+    rand_init_test: o.rand_init_test,
+    arr_init_test: o.arr_init_test,
+    arr_init_test2: o.arr_init_test2,
+    obj_literal_test: o.obj_literal_test,
     cartId: o.cartId,
     shopState: o.shopState,
     carts: o.carts,
-    userMessage: o.userMessage
+    userMessage: o.userMessage,
+    testObj: o.testObj
   };
 };
 const initWithMethodsTestModel = () => {
@@ -291,10 +345,18 @@ const initWithMethodsTestModel = () => {
   return {
     items: o.items,
     maxId: o.maxId,
+    str_init_test: o.str_init_test,
+    bool_init_test: o.bool_init_test,
+    obj_init_test: o.obj_init_test,
+    rand_init_test: o.rand_init_test,
+    arr_init_test: o.arr_init_test,
+    arr_init_test2: o.arr_init_test2,
+    obj_literal_test: o.obj_literal_test,
     cartId: o.cartId,
     shopState: o.shopState,
     carts: o.carts,
     userMessage: o.userMessage,
+    testObj: o.testObj,
     setUserMessage: o.setUserMessage,
     add: o.add,
     removeFirst: o.removeFirst,
@@ -369,6 +431,167 @@ export class RTestModel {
       if (this._dispatch) {
         this._dispatch({
           type: TestModelEnums.TestModel_maxId,
+          payload: value
+        });
+      }
+    }
+  }
+  get str_init_test(): String | undefined {
+    if (this._getState) {
+      return this._getState().TestModel.str_init_test;
+    } else {
+      if (this._state) {
+        return this._state.str_init_test;
+      }
+    }
+    return undefined;
+  }
+  set str_init_test(value: String | undefined) {
+    if (this._state && typeof value !== "undefined") {
+      this._state.str_init_test = value;
+    } else {
+      // dispatch change for item str_init_test
+      if (this._dispatch) {
+        this._dispatch({
+          type: TestModelEnums.TestModel_str_init_test,
+          payload: value
+        });
+      }
+    }
+  }
+  get bool_init_test(): Boolean | undefined {
+    if (this._getState) {
+      return this._getState().TestModel.bool_init_test;
+    } else {
+      if (this._state) {
+        return this._state.bool_init_test;
+      }
+    }
+    return undefined;
+  }
+  set bool_init_test(value: Boolean | undefined) {
+    if (this._state && typeof value !== "undefined") {
+      this._state.bool_init_test = value;
+    } else {
+      // dispatch change for item bool_init_test
+      if (this._dispatch) {
+        this._dispatch({
+          type: TestModelEnums.TestModel_bool_init_test,
+          payload: value
+        });
+      }
+    }
+  }
+  get obj_init_test(): TestObj | undefined {
+    if (this._getState) {
+      return this._getState().TestModel.obj_init_test;
+    } else {
+      if (this._state) {
+        return this._state.obj_init_test;
+      }
+    }
+    return undefined;
+  }
+  set obj_init_test(value: TestObj | undefined) {
+    if (this._state && typeof value !== "undefined") {
+      this._state.obj_init_test = value;
+    } else {
+      // dispatch change for item obj_init_test
+      if (this._dispatch) {
+        this._dispatch({
+          type: TestModelEnums.TestModel_obj_init_test,
+          payload: value
+        });
+      }
+    }
+  }
+  get rand_init_test(): number | undefined {
+    if (this._getState) {
+      return this._getState().TestModel.rand_init_test;
+    } else {
+      if (this._state) {
+        return this._state.rand_init_test;
+      }
+    }
+    return undefined;
+  }
+  set rand_init_test(value: number | undefined) {
+    if (this._state && typeof value !== "undefined") {
+      this._state.rand_init_test = value;
+    } else {
+      // dispatch change for item rand_init_test
+      if (this._dispatch) {
+        this._dispatch({
+          type: TestModelEnums.TestModel_rand_init_test,
+          payload: value
+        });
+      }
+    }
+  }
+  get arr_init_test(): Array<number> | undefined {
+    if (this._getState) {
+      return this._getState().TestModel.arr_init_test;
+    } else {
+      if (this._state) {
+        return this._state.arr_init_test;
+      }
+    }
+    return undefined;
+  }
+  set arr_init_test(value: Array<number> | undefined) {
+    if (this._state && typeof value !== "undefined") {
+      this._state.arr_init_test = value;
+    } else {
+      // dispatch change for item arr_init_test
+      if (this._dispatch) {
+        this._dispatch({
+          type: TestModelEnums.TestModel_arr_init_test,
+          payload: value
+        });
+      }
+    }
+  }
+  get arr_init_test2(): Array<any> | undefined {
+    if (this._getState) {
+      return this._getState().TestModel.arr_init_test2;
+    } else {
+      if (this._state) {
+        return this._state.arr_init_test2;
+      }
+    }
+    return undefined;
+  }
+  set arr_init_test2(value: Array<any> | undefined) {
+    if (this._state && typeof value !== "undefined") {
+      this._state.arr_init_test2 = value;
+    } else {
+      // dispatch change for item arr_init_test2
+      if (this._dispatch) {
+        this._dispatch({
+          type: TestModelEnums.TestModel_arr_init_test2,
+          payload: value
+        });
+      }
+    }
+  }
+  get obj_literal_test(): any | undefined {
+    if (this._getState) {
+      return this._getState().TestModel.obj_literal_test;
+    } else {
+      if (this._state) {
+        return this._state.obj_literal_test;
+      }
+    }
+    return undefined;
+  }
+  set obj_literal_test(value: any | undefined) {
+    if (this._state && typeof value !== "undefined") {
+      this._state.obj_literal_test = value;
+    } else {
+      // dispatch change for item obj_literal_test
+      if (this._dispatch) {
+        this._dispatch({
+          type: TestModelEnums.TestModel_obj_literal_test,
           payload: value
         });
       }
@@ -471,6 +694,29 @@ export class RTestModel {
       if (this._dispatch) {
         this._dispatch({
           type: TestModelEnums.TestModel_userMessage,
+          payload: value
+        });
+      }
+    }
+  }
+  get testObj(): TestObj | undefined {
+    if (this._getState) {
+      return this._getState().TestModel.testObj;
+    } else {
+      if (this._state) {
+        return this._state.testObj;
+      }
+    }
+    return undefined;
+  }
+  set testObj(value: TestObj | undefined) {
+    if (this._state && typeof value !== "undefined") {
+      this._state.testObj = value;
+    } else {
+      // dispatch change for item testObj
+      if (this._dispatch) {
+        this._dispatch({
+          type: TestModelEnums.TestModel_testObj,
           payload: value
         });
       }
@@ -727,10 +973,18 @@ export class RTestModel {
 export const TestModelEnums = {
   TestModel_items: "TestModel_items",
   TestModel_maxId: "TestModel_maxId",
+  TestModel_str_init_test: "TestModel_str_init_test",
+  TestModel_bool_init_test: "TestModel_bool_init_test",
+  TestModel_obj_init_test: "TestModel_obj_init_test",
+  TestModel_rand_init_test: "TestModel_rand_init_test",
+  TestModel_arr_init_test: "TestModel_arr_init_test",
+  TestModel_arr_init_test2: "TestModel_arr_init_test2",
+  TestModel_obj_literal_test: "TestModel_obj_literal_test",
   TestModel_cartId: "TestModel_cartId",
   TestModel_shopState: "TestModel_shopState",
   TestModel_carts: "TestModel_carts",
   TestModel_userMessage: "TestModel_userMessage",
+  TestModel_testObj: "TestModel_testObj",
   TestModel_setUserMessage: "TestModel_setUserMessage",
   TestModel_add: "TestModel_add",
   TestModel_removeFirst: "TestModel_removeFirst",
@@ -755,6 +1009,27 @@ export const TestModelReducer = (
       case TestModelEnums.TestModel_maxId:
         new RTestModel(draft).maxId = action.payload;
         break;
+      case TestModelEnums.TestModel_str_init_test:
+        new RTestModel(draft).str_init_test = action.payload;
+        break;
+      case TestModelEnums.TestModel_bool_init_test:
+        new RTestModel(draft).bool_init_test = action.payload;
+        break;
+      case TestModelEnums.TestModel_obj_init_test:
+        new RTestModel(draft).obj_init_test = action.payload;
+        break;
+      case TestModelEnums.TestModel_rand_init_test:
+        new RTestModel(draft).rand_init_test = action.payload;
+        break;
+      case TestModelEnums.TestModel_arr_init_test:
+        new RTestModel(draft).arr_init_test = action.payload;
+        break;
+      case TestModelEnums.TestModel_arr_init_test2:
+        new RTestModel(draft).arr_init_test2 = action.payload;
+        break;
+      case TestModelEnums.TestModel_obj_literal_test:
+        new RTestModel(draft).obj_literal_test = action.payload;
+        break;
       case TestModelEnums.TestModel_cartId:
         new RTestModel(draft).cartId = action.payload;
         break;
@@ -766,6 +1041,9 @@ export const TestModelReducer = (
         break;
       case TestModelEnums.TestModel_userMessage:
         new RTestModel(draft).userMessage = action.payload;
+        break;
+      case TestModelEnums.TestModel_testObj:
+        new RTestModel(draft).testObj = action.payload;
         break;
       case TestModelEnums.TestModel_setUserMessage:
         new RTestModel(draft).setUserMessage(action.payload);

@@ -1,6 +1,6 @@
 
   
-import Project, { InterfaceDeclaration, PropertyDeclaration, SourceFile, FunctionDeclaration, ClassDeclaration, ImportDeclaration, ImportDeclarationStructure, SyntaxKind, MethodDeclaration, Node} from "ts-simple-ast";
+import Project, { printNode, InterfaceDeclaration, PropertyDeclaration, SourceFile, FunctionDeclaration, ClassDeclaration, ImportDeclaration, ImportDeclarationStructure, SyntaxKind, MethodDeclaration, Node} from "ts-simple-ast";
 import * as R from 'robowr'
 import {getFunctionDoc, getPropertyTypeName, getTypeName, getTypePath} from './utils'
 import * as path from 'path'
@@ -104,6 +104,32 @@ export async function createProject( settings:GenerationOptions) {
     })
   })
 
+  const getOptionalityOf = (p:PropertyDeclaration) => {
+    return (p.hasQuestionToken() ? '?' : '') + (p.hasExclamationToken() ? '!' : '')   
+  }
+
+  const getPropTypeString = (p:PropertyDeclaration) : string => {
+    if(!p.getTypeNode()) {
+      const initVal = p.getInitializer()
+      if( initVal && initVal.getType() && initVal.getType().getApparentType()) {
+        const apparentType = initVal.getType().getApparentType();     
+        // console.log('APP', p.getName(), apparentType)
+        const str = apparentType.getSymbol().getEscapedName()
+        if( str === 'Number' ) return 'number'
+        if( str === '__object') return 'any'
+
+        if(apparentType.getTypeArguments()) {
+          return getTypeName( apparentType )
+        }
+        return str             
+      } else {
+        throw "Type must be specified!!!" 
+      }
+    } else {
+      return p.getTypeNode().print()
+    }   
+  }
+
   // mapeservice classes to the properties
   project.getSourceFiles().forEach( sourceFile => {
 
@@ -185,21 +211,13 @@ export async function createProject( settings:GenerationOptions) {
         ng.out('export interface I' + c.getName()+ ' {', true)
         ng.indent(1)
           c.getProperties().forEach( p => {
-            ng.out(p.getNameNode().print()+': ' +  p.getTypeNode().print(), true)
+            ng.out(p.getNameNode().print()+getOptionalityOf(p)+': ' +  getPropTypeString(p), true)
           })
         ng.indent(-1)
         ng.out('}', true)
 
         const selFns = ng.fork()
-
         ng.out('', true)
-/*
-export interface IContainerPropsState extends ITodoList {
-  getSortedList: TodoListItem[]
-}
-*/        
-// AND
-// getSortedList: getSortedListSelector(state.TodoList)
         if( selectorMethods.length > 0 ) {
           ng.out(`export interface IContainerPropsState extends I${c.getName()} {`, true)
             ng.indent(1)
@@ -325,10 +343,10 @@ export interface IContainerPropsState extends ITodoList {
 
           c.getProperties().forEach( p => {
 
-            selFns.out(`export const ${p.getName()}SelectorFn = (state:I${c.getName()}) : ${p.getTypeNode().print()} => state.${p.getName()}`, true)
+            selFns.out(`export const ${p.getName()}SelectorFn = (state:I${c.getName()}) : ${getPropTypeString(p)} => state.${p.getName()}`, true)
 
             const r_name = `${c.getName()}_${p.getName()}`
-            body.out('get ' + p.getName()+'() : ' + p.getTypeNode().print() + ' | undefined {', true)
+            body.out('get ' + p.getName()+'() : ' + getPropTypeString(p) + ' | undefined {', true)
             body.indent(1)
             body.out('if(this._getState) {', true)
               body.indent(1)
@@ -343,7 +361,7 @@ export interface IContainerPropsState extends ITodoList {
             body.out('return undefined') 
             body.indent(-1)
             body.out('}', true)
-            body.out('set ' + p.getName()+'(value:' + p.getTypeNode().print() + ' | undefined) {', true)
+            body.out('set ' + p.getName()+'(value:' + getPropTypeString(p) + ' | undefined) {', true)
             body.indent(1)
             body.out(`if(this._state && (typeof(value) !== 'undefined')) {`, true)
               body.indent(1)
@@ -420,16 +438,19 @@ export interface IContainerPropsState extends ITodoList {
 
             const rvNode = m.getReturnTypeNode()
             let rvMethod = false
+            if(m.compilerNode.modifiers) {
+              m.compilerNode.modifiers.forEach( mm => {
+                if( mm.getText() === 'private' ) rvMethod = true
+              })  
+            }
             if(rvNode) {
               rvMethod = true
             }               
+          
             if(!rvMethod && m.getParameters().length > 1) {
               throw `Error at ${sourceFile.getFilePath()} in class ${c.getName()} method ${m.getName()} can not have more than 2 parameters at the moment`
             }
-            const pName = m.getParameters().filter( (a,i) => i<1).map( mod => mod.getName() ).join('')
-
-            
- 
+            const pName = m.getParameters().filter( (a,i) => i<1).map( mod => mod.getName() ).join('') 
 
             if(m.isAsync()) {
               body.out('// is task', true)

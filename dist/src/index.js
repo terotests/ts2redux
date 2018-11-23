@@ -37,6 +37,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var ts_simple_ast_1 = require("ts-simple-ast");
 var R = require("robowr");
+var utils_1 = require("./utils");
 var path = require("path");
 var prettier = require("prettier");
 var createComment = function (wr, txt) {
@@ -59,7 +60,7 @@ var createComment = function (wr, txt) {
 };
 function createProject(settings) {
     return __awaiter(this, void 0, void 0, function () {
-        var project, reducerPath, RFs, targetFiles, modelsList, generatedFiles, dirReducers, JSTags, prettierConfig;
+        var project, reducerPath, RFs, targetFiles, modelsList, generatedFiles, dirReducers, JSTags, getOptionalityOf, getPropTypeString, prettierConfig;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -97,6 +98,33 @@ function createProject(settings) {
                             });
                         });
                     });
+                    getOptionalityOf = function (p) {
+                        return (p.hasQuestionToken() ? '?' : '') + (p.hasExclamationToken() ? '!' : '');
+                    };
+                    getPropTypeString = function (p) {
+                        if (!p.getTypeNode()) {
+                            var initVal = p.getInitializer();
+                            if (initVal && initVal.getType() && initVal.getType().getApparentType()) {
+                                var apparentType = initVal.getType().getApparentType();
+                                // console.log('APP', p.getName(), apparentType)
+                                var str = apparentType.getSymbol().getEscapedName();
+                                if (str === 'Number')
+                                    return 'number';
+                                if (str === '__object')
+                                    return 'any';
+                                if (apparentType.getTypeArguments()) {
+                                    return utils_1.getTypeName(apparentType);
+                                }
+                                return str;
+                            }
+                            else {
+                                throw "Type must be specified!!!";
+                            }
+                        }
+                        else {
+                            return p.getTypeNode().print();
+                        }
+                    };
                     // mapeservice classes to the properties
                     project.getSourceFiles().forEach(function (sourceFile) {
                         // do not process target files
@@ -158,19 +186,12 @@ function createProject(settings) {
                                 ng_1.out('export interface I' + c.getName() + ' {', true);
                                 ng_1.indent(1);
                                 c.getProperties().forEach(function (p) {
-                                    ng_1.out(p.getNameNode().print() + ': ' + p.getTypeNode().print(), true);
+                                    ng_1.out(p.getNameNode().print() + getOptionalityOf(p) + ': ' + getPropTypeString(p), true);
                                 });
                                 ng_1.indent(-1);
                                 ng_1.out('}', true);
                                 var selFns_1 = ng_1.fork();
                                 ng_1.out('', true);
-                                /*
-                                export interface IContainerPropsState extends ITodoList {
-                                  getSortedList: TodoListItem[]
-                                }
-                                */
-                                // AND
-                                // getSortedList: getSortedListSelector(state.TodoList)
                                 if (selectorMethods_1.length > 0) {
                                     ng_1.out("export interface IContainerPropsState extends I" + c.getName() + " {", true);
                                     ng_1.indent(1);
@@ -278,9 +299,9 @@ function createProject(settings) {
                                 body_1.indent(-1);
                                 body_1.out('}', true);
                                 c.getProperties().forEach(function (p) {
-                                    selFns_1.out("export const " + p.getName() + "SelectorFn = (state:I" + c.getName() + ") : " + p.getTypeNode().print() + " => state." + p.getName(), true);
+                                    selFns_1.out("export const " + p.getName() + "SelectorFn = (state:I" + c.getName() + ") : " + getPropTypeString(p) + " => state." + p.getName(), true);
                                     var r_name = c.getName() + "_" + p.getName();
-                                    body_1.out('get ' + p.getName() + '() : ' + p.getTypeNode().print() + ' | undefined {', true);
+                                    body_1.out('get ' + p.getName() + '() : ' + getPropTypeString(p) + ' | undefined {', true);
                                     body_1.indent(1);
                                     body_1.out('if(this._getState) {', true);
                                     body_1.indent(1);
@@ -295,7 +316,7 @@ function createProject(settings) {
                                     body_1.out('return undefined');
                                     body_1.indent(-1);
                                     body_1.out('}', true);
-                                    body_1.out('set ' + p.getName() + '(value:' + p.getTypeNode().print() + ' | undefined) {', true);
+                                    body_1.out('set ' + p.getName() + '(value:' + getPropTypeString(p) + ' | undefined) {', true);
                                     body_1.indent(1);
                                     body_1.out("if(this._state && (typeof(value) !== 'undefined')) {", true);
                                     body_1.indent(1);
@@ -364,6 +385,12 @@ function createProject(settings) {
                                 c.getMethods().forEach(function (m) {
                                     var rvNode = m.getReturnTypeNode();
                                     var rvMethod = false;
+                                    if (m.compilerNode.modifiers) {
+                                        m.compilerNode.modifiers.forEach(function (mm) {
+                                            if (mm.getText() === 'private')
+                                                rvMethod = true;
+                                        });
+                                    }
                                     if (rvNode) {
                                         rvMethod = true;
                                     }

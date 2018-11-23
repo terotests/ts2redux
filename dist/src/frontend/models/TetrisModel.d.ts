@@ -32,14 +32,14 @@ export declare class TetrisModel {
     gameEnded: boolean;
     ticksPerMove: number;
     tickCnt: number;
-    doesCollide(pieceX: number, pieceY: number, pieceCells?: Cell[][]): boolean;
+    private doesCollide;
     tick(): void;
     left(): void;
     right(): void;
     rotate(): void;
-    rotateCells(cells: Cell[][]): Cell[][];
+    private rotateCells;
     step(): void;
-    pickNextColor(): string;
+    private pickNextColor;
     masonPiece(): void;
     dropRows(): void;
     clearCells(): void;

@@ -90,29 +90,35 @@ Then we can compile the model
 And the directory will have `reducers/` directory where `IncModel` and `SimpleModel` are defined [IncModel.tsx](https://github.com/terotests/ts2redux/blob/master/src/frontend/models/reducers/IncModel.tsx) and  
 [SimpleModel.tsx](https://github.com/terotests/ts2redux/blob/master/src/frontend/models/reducers/IncModel.tsx) together with all Redux ceremony and more.
 
-## Limitations
+## Private functions
 
-### Type of class properties must be specified
+Private functions and functions which return value are not compiled as reducers
 
 ```typescript
-class Foo {
-  // OK
-  name:string
-  // OK
-  name2:string = 'Someone'
-  // ERROR
-  name3 = 'Someone'
+/**
+ * @redux true
+ */
+export class MyModel {
+  // will not be compiled as reducer
+  private someCalculation(value) {
+
+  }
+  // will not be compiled as reducer
+  someCalculation(value) : number {
+    return 100
+  }  
 }
 ```
-Reason for this is that at least for now, the type is not inferred from the assigned value.
+
+
+## Limitations
 
 ### Async Functions can not mutate state deeply (synchronous can)
 
-There is important limitation for `async` functions for the class: `async` function can read state but can only assign (`=`) to class properties, not mutate them deeply like syncronous functions, which are compiled to reducers.
+If you want to mutate state deeply from `async` function you must call first syncronous function.
 
-This is because `async` functions can only mutate the state by dispatching new Redux actions from the assigments. 
+`async` function can read state but can only assign (`=`) to class properties, which generates a dispatch. Do not mutate state deeply in asyncronous functions, that will not work and will generate error
 
-For example
 ```typescript
  // this is OK
  this.items = []            
@@ -134,17 +140,8 @@ class Foo {
   }
 }
 ```
-The reason for this is just simplicity: the first parameter is compiled directly to the actions payload. In the
-future the compiler might compile functions with variable number of parameters directly to the payload, but
-this is not supported at the moment.
+The reason for this is just simplicity: the first parameter is compiled directly to the actions payload. In the future the compiler might compile functions with variable number of parameters directly to the payload, but this is not supported at the moment.
 
-### Relative imports from state modules are not compiled correctly
-
-Because the Model code is brutally copied to the beginning of the genrated reducer file, relative imports like
-```typescript
-import * as foo from '../barzone'
-```
-Will be broken. If you need to import files in the model files it is recommened to [Configure TypeScript not to user relative paths](https://decembersoft.com/posts/say-goodbye-to-relative-paths-in-typescript-imports/)
 
 ### React Context API -components are not removed from Redux Devtools after unmount
 

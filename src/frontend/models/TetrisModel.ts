@@ -76,8 +76,9 @@ export const createNewPiece = (usingColor: string): ActivePiece => {
  * @redux true
  */
 export class TetrisModel {
+
   useColors: string[] = ["red", "blue", "green", "yellow", "brown"];
-  lastUsedColor: number = 0;
+  lastUsedColor = Math.floor( Math.random() * this.useColors.length);
 
   points: number = 0
 
@@ -92,7 +93,7 @@ export class TetrisModel {
   ticksPerMove:number = 10
   tickCnt:number = 0
 
-  doesCollide(
+  private doesCollide(
     pieceX: number,
     pieceY: number,
     pieceCells?: Cell[][],
@@ -139,6 +140,7 @@ export class TetrisModel {
       this.activePiece.x--;
     }
   }
+
   right() {
     if (
       !this.doesCollide(
@@ -164,7 +166,7 @@ export class TetrisModel {
     }
   }
   // creates a new piece with rotated values
-  rotateCells (cells: Cell[][]) : Cell[][] {
+  private rotateCells (cells: Cell[][]) : Cell[][] {
     const res: Cell[][] = new Array(cells.length);
     for (let j = 0; j < cells.length; j++) {
       res[j] = new Array(cells[j].length);
@@ -207,7 +209,7 @@ export class TetrisModel {
     }
   }
 
-  pickNextColor() : string {
+  private pickNextColor() : string {
     this.lastUsedColor++;
     if (this.lastUsedColor >= this.useColors.length) {
       this.lastUsedColor = 0;

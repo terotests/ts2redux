@@ -54,6 +54,9 @@ var TaskState;
     TaskState[TaskState["ERROR"] = 2] = "ERROR";
     TaskState[TaskState["SUCCESS"] = 3] = "SUCCESS";
 })(TaskState = exports.TaskState || (exports.TaskState = {}));
+function getTestObj() {
+    return { name: 'OK' };
+}
 var MSG = 'STATE IS NOW';
 var MSG2 = 'AFTER DISPATCH STATE IS';
 var DELAY = 1000;
@@ -75,6 +78,14 @@ var TestModel = /** @class */ (function () {
         // model with initializer
         this.items = [];
         this.maxId = 1;
+        // Default initializers work :)
+        this.str_init_test = 'OK?';
+        this.bool_init_test = false;
+        this.obj_init_test = getTestObj();
+        this.rand_init_test = Math.floor(Math.random() * 5);
+        // Does not work yet :/
+        this.arr_init_test = [1, 2, 3];
+        this.obj_literal_test = { cnt: 200 };
         this.cartId = 1;
         this.shopState = TaskState.UNDEFINED;
         // my shopping carts

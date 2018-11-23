@@ -65,7 +65,7 @@ export const createNewPiece = (usingColor: string): ActivePiece => {
  */
 export class TetrisModel {
   useColors: string[] = ["red", "blue", "green", "yellow", "brown"];
-  lastUsedColor: number = 0;
+  lastUsedColor: number = Math.floor(Math.random() * this.useColors.length);
 
   points: number = 0;
 
@@ -80,7 +80,11 @@ export class TetrisModel {
   ticksPerMove: number = 10;
   tickCnt: number = 0;
 
-  doesCollide(pieceX: number, pieceY: number, pieceCells?: Cell[][]): boolean {
+  private doesCollide(
+    pieceX: number,
+    pieceY: number,
+    pieceCells?: Cell[][]
+  ): boolean {
     let collides = false;
     const compareAgainst = pieceCells || this.activePiece.cells;
     compareAgainst.forEach((row, y) => {
@@ -118,6 +122,7 @@ export class TetrisModel {
       this.activePiece.x--;
     }
   }
+
   right() {
     if (!this.doesCollide(this.activePiece.x + 1, this.activePiece.y)) {
       this.activePiece.x++;
@@ -134,7 +139,7 @@ export class TetrisModel {
     }
   }
   // creates a new piece with rotated values
-  rotateCells(cells: Cell[][]): Cell[][] {
+  private rotateCells(cells: Cell[][]): Cell[][] {
     const res: Cell[][] = new Array(cells.length);
     for (let j = 0; j < cells.length; j++) {
       res[j] = new Array(cells[j].length);
@@ -172,7 +177,7 @@ export class TetrisModel {
     }
   }
 
-  pickNextColor(): string {
+  private pickNextColor(): string {
     this.lastUsedColor++;
     if (this.lastUsedColor >= this.useColors.length) {
       this.lastUsedColor = 0;
@@ -661,7 +666,11 @@ export class RTetrisModel {
   }
 
   // is a reducer
-  doesCollide(pieceX: number, pieceY: number, pieceCells?: Cell[][]): boolean {
+  private doesCollide(
+    pieceX: number,
+    pieceY: number,
+    pieceCells?: Cell[][]
+  ): boolean {
     let collides = false;
     const compareAgainst = pieceCells || this.activePiece.cells;
     compareAgainst.forEach((row, y) => {
@@ -767,7 +776,8 @@ export class RTetrisModel {
     };
   }
   // is a reducer
-  rotateCells(cells: Cell[][]): Cell[][] {
+  // creates a new piece with rotated values
+  private rotateCells(cells: Cell[][]): Cell[][] {
     const res: Cell[][] = new Array(cells.length);
     for (let j = 0; j < cells.length; j++) {
       res[j] = new Array(cells[j].length);
@@ -817,7 +827,7 @@ export class RTetrisModel {
     };
   }
   // is a reducer
-  pickNextColor(): string {
+  private pickNextColor(): string {
     this.lastUsedColor++;
     if (this.lastUsedColor >= this.useColors.length) {
       this.lastUsedColor = 0;

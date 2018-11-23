@@ -57,7 +57,7 @@ exports.createNewPiece = function (usingColor) {
 var TetrisModel = /** @class */ (function () {
     function TetrisModel() {
         this.useColors = ["red", "blue", "green", "yellow", "brown"];
-        this.lastUsedColor = 0;
+        this.lastUsedColor = Math.floor(Math.random() * this.useColors.length);
         this.points = 0;
         this.rows = 20;
         this.cols = 10;

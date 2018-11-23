@@ -77,7 +77,7 @@ exports.createNewPiece = function (usingColor) {
 var TetrisModel = /** @class */ (function () {
     function TetrisModel() {
         this.useColors = ["red", "blue", "green", "yellow", "brown"];
-        this.lastUsedColor = 0;
+        this.lastUsedColor = Math.floor(Math.random() * this.useColors.length);
         this.points = 0;
         this.rows = 20;
         this.cols = 10;
@@ -797,6 +797,7 @@ var RTetrisModel = /** @class */ (function () {
         };
     };
     // is a reducer
+    // creates a new piece with rotated values
     RTetrisModel.prototype.rotateCells = function (cells) {
         var res = new Array(cells.length);
         for (var j = 0; j < cells.length; j++) {

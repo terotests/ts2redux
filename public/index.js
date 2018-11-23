@@ -521,7 +521,7 @@ exports.createNewPiece = function (usingColor) {
 var TetrisModel = /** @class */ (function () {
     function TetrisModel() {
         this.useColors = ["red", "blue", "green", "yellow", "brown"];
-        this.lastUsedColor = 0;
+        this.lastUsedColor = Math.floor(Math.random() * this.useColors.length);
         this.points = 0;
         this.rows = 20;
         this.cols = 10;
@@ -1405,6 +1405,9 @@ var TaskState;
     TaskState[TaskState["ERROR"] = 2] = "ERROR";
     TaskState[TaskState["SUCCESS"] = 3] = "SUCCESS";
 })(TaskState = exports.TaskState || (exports.TaskState = {}));
+function getTestObj() {
+    return { name: "OK" };
+}
 var MSG = "STATE IS NOW";
 var MSG2 = "AFTER DISPATCH STATE IS";
 var DELAY = 1000;
@@ -1421,6 +1424,11 @@ var TestModel = /** @class */ (function () {
         // model with initializer
         this.items = [];
         this.maxId = 1;
+        // Default initializers work :)
+        this.str_init_test = "OK?";
+        this.bool_init_test = false;
+        this.obj_init_test = getTestObj();
+        this.rand_init_test = Math.floor(Math.random() * 5);
         this.cartId = 1;
         this.shopState = TaskState.UNDEFINED;
         // my shopping carts
@@ -1542,6 +1550,18 @@ exports.itemsSelectorFn = function (state) {
     return state.items;
 };
 exports.maxIdSelectorFn = function (state) { return state.maxId; };
+exports.str_init_testSelectorFn = function (state) {
+    return state.str_init_test;
+};
+exports.bool_init_testSelectorFn = function (state) {
+    return state.bool_init_test;
+};
+exports.obj_init_testSelectorFn = function (state) {
+    return state.obj_init_test;
+};
+exports.rand_init_testSelectorFn = function (state) {
+    return state.rand_init_test;
+};
 exports.cartIdSelectorFn = function (state) { return state.cartId; };
 exports.shopStateSelectorFn = function (state) {
     return state.shopState;
@@ -1555,6 +1575,10 @@ exports.mapStateToProps = function (state) {
     return {
         items: state.TestModel.items,
         maxId: state.TestModel.maxId,
+        str_init_test: state.TestModel.str_init_test,
+        bool_init_test: state.TestModel.bool_init_test,
+        obj_init_test: state.TestModel.obj_init_test,
+        rand_init_test: state.TestModel.rand_init_test,
         cartId: state.TestModel.cartId,
         shopState: state.TestModel.shopState,
         carts: state.TestModel.carts,
@@ -1614,6 +1638,10 @@ var initTestModel = function () {
     return {
         items: o.items,
         maxId: o.maxId,
+        str_init_test: o.str_init_test,
+        bool_init_test: o.bool_init_test,
+        obj_init_test: o.obj_init_test,
+        rand_init_test: o.rand_init_test,
         cartId: o.cartId,
         shopState: o.shopState,
         carts: o.carts,
@@ -1626,6 +1654,10 @@ var initWithMethodsTestModel = function () {
     return {
         items: o.items,
         maxId: o.maxId,
+        str_init_test: o.str_init_test,
+        bool_init_test: o.bool_init_test,
+        obj_init_test: o.obj_init_test,
+        rand_init_test: o.rand_init_test,
         cartId: o.cartId,
         shopState: o.shopState,
         carts: o.carts,
@@ -1706,6 +1738,122 @@ var RTestModel = /** @class */ (function () {
                 if (this._dispatch) {
                     this._dispatch({
                         type: exports.TestModelEnums.TestModel_maxId,
+                        payload: value
+                    });
+                }
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(RTestModel.prototype, "str_init_test", {
+        get: function () {
+            if (this._getState) {
+                return this._getState().TestModel.str_init_test;
+            }
+            else {
+                if (this._state) {
+                    return this._state.str_init_test;
+                }
+            }
+            return undefined;
+        },
+        set: function (value) {
+            if (this._state && typeof value !== "undefined") {
+                this._state.str_init_test = value;
+            }
+            else {
+                // dispatch change for item str_init_test
+                if (this._dispatch) {
+                    this._dispatch({
+                        type: exports.TestModelEnums.TestModel_str_init_test,
+                        payload: value
+                    });
+                }
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(RTestModel.prototype, "bool_init_test", {
+        get: function () {
+            if (this._getState) {
+                return this._getState().TestModel.bool_init_test;
+            }
+            else {
+                if (this._state) {
+                    return this._state.bool_init_test;
+                }
+            }
+            return undefined;
+        },
+        set: function (value) {
+            if (this._state && typeof value !== "undefined") {
+                this._state.bool_init_test = value;
+            }
+            else {
+                // dispatch change for item bool_init_test
+                if (this._dispatch) {
+                    this._dispatch({
+                        type: exports.TestModelEnums.TestModel_bool_init_test,
+                        payload: value
+                    });
+                }
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(RTestModel.prototype, "obj_init_test", {
+        get: function () {
+            if (this._getState) {
+                return this._getState().TestModel.obj_init_test;
+            }
+            else {
+                if (this._state) {
+                    return this._state.obj_init_test;
+                }
+            }
+            return undefined;
+        },
+        set: function (value) {
+            if (this._state && typeof value !== "undefined") {
+                this._state.obj_init_test = value;
+            }
+            else {
+                // dispatch change for item obj_init_test
+                if (this._dispatch) {
+                    this._dispatch({
+                        type: exports.TestModelEnums.TestModel_obj_init_test,
+                        payload: value
+                    });
+                }
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(RTestModel.prototype, "rand_init_test", {
+        get: function () {
+            if (this._getState) {
+                return this._getState().TestModel.rand_init_test;
+            }
+            else {
+                if (this._state) {
+                    return this._state.rand_init_test;
+                }
+            }
+            return undefined;
+        },
+        set: function (value) {
+            if (this._state && typeof value !== "undefined") {
+                this._state.rand_init_test = value;
+            }
+            else {
+                // dispatch change for item rand_init_test
+                if (this._dispatch) {
+                    this._dispatch({
+                        type: exports.TestModelEnums.TestModel_rand_init_test,
                         payload: value
                     });
                 }
@@ -2127,6 +2275,10 @@ exports.RTestModel = RTestModel;
 exports.TestModelEnums = {
     TestModel_items: "TestModel_items",
     TestModel_maxId: "TestModel_maxId",
+    TestModel_str_init_test: "TestModel_str_init_test",
+    TestModel_bool_init_test: "TestModel_bool_init_test",
+    TestModel_obj_init_test: "TestModel_obj_init_test",
+    TestModel_rand_init_test: "TestModel_rand_init_test",
     TestModel_cartId: "TestModel_cartId",
     TestModel_shopState: "TestModel_shopState",
     TestModel_carts: "TestModel_carts",
@@ -2152,6 +2304,18 @@ exports.TestModelReducer = function (state, action) {
                 break;
             case exports.TestModelEnums.TestModel_maxId:
                 new RTestModel(draft).maxId = action.payload;
+                break;
+            case exports.TestModelEnums.TestModel_str_init_test:
+                new RTestModel(draft).str_init_test = action.payload;
+                break;
+            case exports.TestModelEnums.TestModel_bool_init_test:
+                new RTestModel(draft).bool_init_test = action.payload;
+                break;
+            case exports.TestModelEnums.TestModel_obj_init_test:
+                new RTestModel(draft).obj_init_test = action.payload;
+                break;
+            case exports.TestModelEnums.TestModel_rand_init_test:
+                new RTestModel(draft).rand_init_test = action.payload;
                 break;
             case exports.TestModelEnums.TestModel_cartId:
                 new RTestModel(draft).cartId = action.payload;
@@ -2491,7 +2655,7 @@ exports.createNewPiece = function (usingColor) {
 var TetrisModel = /** @class */ (function () {
     function TetrisModel() {
         this.useColors = ["red", "blue", "green", "yellow", "brown"];
-        this.lastUsedColor = 0;
+        this.lastUsedColor = Math.floor(Math.random() * this.useColors.length);
         this.points = 0;
         this.rows = 20;
         this.cols = 10;
@@ -3211,6 +3375,7 @@ var RTetrisModel = /** @class */ (function () {
         };
     };
     // is a reducer
+    // creates a new piece with rotated values
     RTetrisModel.prototype.rotateCells = function (cells) {
         var res = new Array(cells.length);
         for (var j = 0; j < cells.length; j++) {

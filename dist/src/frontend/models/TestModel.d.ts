@@ -16,4 +16,5 @@ export declare enum TaskState {
     SUCCESS = 3
 }
 export interface TestObj {
+    name: string;
 }

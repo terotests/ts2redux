@@ -22,7 +22,11 @@ export enum TaskState {
 }
 
 export interface TestObj {
+  name:string
+}
 
+function getTestObj():TestObj {
+  return {name:'OK'}
 }
 
 const MSG = 'STATE IS NOW'
@@ -45,7 +49,15 @@ const FRIEND_LIST = [
 class TestModel {
   // model with initializer
   items:ShopCartItem[] = []
-  maxId:number = 1
+  maxId = 1
+
+  // Default initializers work :)
+  str_init_test = 'OK?'
+  bool_init_test = false
+  obj_init_test = getTestObj()
+
+  rand_init_test = Math.floor( Math.random() * 5)
+
   cartId:number = 1
   shopState:TaskState = TaskState.UNDEFINED
 

@@ -1429,8 +1429,8 @@ var TestModel = /** @class */ (function () {
         this.bool_init_test = false;
         this.obj_init_test = getTestObj();
         this.rand_init_test = Math.floor(Math.random() * 5);
-        // Does not work yet :/
         this.arr_init_test = [1, 2, 3];
+        this.arr_init_test2 = [1, 2, 3, "foo"];
         this.obj_literal_test = { cnt: 200 };
         this.cartId = 1;
         this.shopState = TaskState.UNDEFINED;
@@ -1439,11 +1439,6 @@ var TestModel = /** @class */ (function () {
         // message to user
         this.userMessage = "";
     }
-    // TODO:
-    // - ERROR / warning if there are no type initializers
-    // - ERROR if there are more than 2 parameters to a reducer
-    //   => or you could generate the protocol to be used for dispatching those values
-    // - setting value of simple property could be generated
     TestModel.prototype.setUserMessage = function (value) {
         this.userMessage = value;
     };
@@ -1568,6 +1563,9 @@ exports.rand_init_testSelectorFn = function (state) {
 exports.arr_init_testSelectorFn = function (state) {
     return state.arr_init_test;
 };
+exports.arr_init_test2SelectorFn = function (state) {
+    return state.arr_init_test2;
+};
 exports.obj_literal_testSelectorFn = function (state) {
     return state.obj_literal_test;
 };
@@ -1589,6 +1587,7 @@ exports.mapStateToProps = function (state) {
         obj_init_test: state.TestModel.obj_init_test,
         rand_init_test: state.TestModel.rand_init_test,
         arr_init_test: state.TestModel.arr_init_test,
+        arr_init_test2: state.TestModel.arr_init_test2,
         obj_literal_test: state.TestModel.obj_literal_test,
         cartId: state.TestModel.cartId,
         shopState: state.TestModel.shopState,
@@ -1654,6 +1653,7 @@ var initTestModel = function () {
         obj_init_test: o.obj_init_test,
         rand_init_test: o.rand_init_test,
         arr_init_test: o.arr_init_test,
+        arr_init_test2: o.arr_init_test2,
         obj_literal_test: o.obj_literal_test,
         cartId: o.cartId,
         shopState: o.shopState,
@@ -1672,6 +1672,7 @@ var initWithMethodsTestModel = function () {
         obj_init_test: o.obj_init_test,
         rand_init_test: o.rand_init_test,
         arr_init_test: o.arr_init_test,
+        arr_init_test2: o.arr_init_test2,
         obj_literal_test: o.obj_literal_test,
         cartId: o.cartId,
         shopState: o.shopState,
@@ -1898,6 +1899,35 @@ var RTestModel = /** @class */ (function () {
                 if (this._dispatch) {
                     this._dispatch({
                         type: exports.TestModelEnums.TestModel_arr_init_test,
+                        payload: value
+                    });
+                }
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(RTestModel.prototype, "arr_init_test2", {
+        get: function () {
+            if (this._getState) {
+                return this._getState().TestModel.arr_init_test2;
+            }
+            else {
+                if (this._state) {
+                    return this._state.arr_init_test2;
+                }
+            }
+            return undefined;
+        },
+        set: function (value) {
+            if (this._state && typeof value !== "undefined") {
+                this._state.arr_init_test2 = value;
+            }
+            else {
+                // dispatch change for item arr_init_test2
+                if (this._dispatch) {
+                    this._dispatch({
+                        type: exports.TestModelEnums.TestModel_arr_init_test2,
                         payload: value
                     });
                 }
@@ -2353,6 +2383,7 @@ exports.TestModelEnums = {
     TestModel_obj_init_test: "TestModel_obj_init_test",
     TestModel_rand_init_test: "TestModel_rand_init_test",
     TestModel_arr_init_test: "TestModel_arr_init_test",
+    TestModel_arr_init_test2: "TestModel_arr_init_test2",
     TestModel_obj_literal_test: "TestModel_obj_literal_test",
     TestModel_cartId: "TestModel_cartId",
     TestModel_shopState: "TestModel_shopState",
@@ -2394,6 +2425,9 @@ exports.TestModelReducer = function (state, action) {
                 break;
             case exports.TestModelEnums.TestModel_arr_init_test:
                 new RTestModel(draft).arr_init_test = action.payload;
+                break;
+            case exports.TestModelEnums.TestModel_arr_init_test2:
+                new RTestModel(draft).arr_init_test2 = action.payload;
                 break;
             case exports.TestModelEnums.TestModel_obj_literal_test:
                 new RTestModel(draft).obj_literal_test = action.payload;

@@ -56,6 +56,7 @@ export interface ITestModel {
     obj_init_test: TestObj;
     rand_init_test: number;
     arr_init_test: Array<number>;
+    arr_init_test2: Array<any>;
     obj_literal_test: any;
     cartId: number;
     shopState: TaskState;
@@ -72,6 +73,7 @@ export declare const bool_init_testSelectorFn: (state: ITestModel) => Boolean;
 export declare const obj_init_testSelectorFn: (state: ITestModel) => TestObj;
 export declare const rand_init_testSelectorFn: (state: ITestModel) => number;
 export declare const arr_init_testSelectorFn: (state: ITestModel) => number[];
+export declare const arr_init_test2SelectorFn: (state: ITestModel) => any[];
 export declare const obj_literal_testSelectorFn: (state: ITestModel) => any;
 export declare const cartIdSelectorFn: (state: ITestModel) => number;
 export declare const shopStateSelectorFn: (state: ITestModel) => TaskState;
@@ -101,6 +103,7 @@ export declare class RTestModel {
     obj_init_test: TestObj | undefined;
     rand_init_test: number | undefined;
     arr_init_test: Array<number> | undefined;
+    arr_init_test2: Array<any> | undefined;
     obj_literal_test: any | undefined;
     cartId: number | undefined;
     shopState: TaskState | undefined;
@@ -158,6 +161,7 @@ export declare const TestModelEnums: {
     TestModel_obj_init_test: string;
     TestModel_rand_init_test: string;
     TestModel_arr_init_test: string;
+    TestModel_arr_init_test2: string;
     TestModel_obj_literal_test: string;
     TestModel_cartId: string;
     TestModel_shopState: string;

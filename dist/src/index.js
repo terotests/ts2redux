@@ -37,6 +37,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var ts_simple_ast_1 = require("ts-simple-ast");
 var R = require("robowr");
+var utils_1 = require("./utils");
 var path = require("path");
 var prettier = require("prettier");
 var createComment = function (wr, txt) {
@@ -105,9 +106,15 @@ function createProject(settings) {
                             var initVal = p.getInitializer();
                             if (initVal && initVal.getType() && initVal.getType().getApparentType()) {
                                 var apparentType = initVal.getType().getApparentType();
+                                // console.log('APP', p.getName(), apparentType)
                                 var str = apparentType.getSymbol().getEscapedName();
                                 if (str === 'Number')
                                     return 'number';
+                                if (str === '__object')
+                                    return 'any';
+                                if (apparentType.getTypeArguments()) {
+                                    return utils_1.getTypeName(apparentType);
+                                }
                                 return str;
                             }
                             else {

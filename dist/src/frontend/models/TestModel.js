@@ -83,6 +83,9 @@ var TestModel = /** @class */ (function () {
         this.bool_init_test = false;
         this.obj_init_test = getTestObj();
         this.rand_init_test = Math.floor(Math.random() * 5);
+        // Does not work yet :/
+        this.arr_init_test = [1, 2, 3];
+        this.obj_literal_test = { cnt: 200 };
         this.cartId = 1;
         this.shopState = TaskState.UNDEFINED;
         // my shopping carts

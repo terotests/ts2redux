@@ -78,7 +78,7 @@ export const createNewPiece = (usingColor: string): ActivePiece => {
 export class TetrisModel {
 
   useColors: string[] = ["red", "blue", "green", "yellow", "brown"];
-  lastUsedColor: number = Math.floor( Math.random() * this.useColors.length);
+  lastUsedColor = Math.floor( Math.random() * this.useColors.length);
 
   points: number = 0
 

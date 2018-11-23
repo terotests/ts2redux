@@ -55,8 +55,11 @@ class TestModel {
   str_init_test = 'OK?'
   bool_init_test = false
   obj_init_test = getTestObj()
-
   rand_init_test = Math.floor( Math.random() * 5)
+  
+  arr_init_test = [1,2,3]
+  arr_init_test2 = [1,2,3,'foo']
+  obj_literal_test = { cnt : 200}
 
   cartId:number = 1
   shopState:TaskState = TaskState.UNDEFINED
@@ -66,14 +69,7 @@ class TestModel {
 
   // message to user
   userMessage:string = ''
-
   testObj?: TestObj
-
-  // TODO:
-  // - ERROR / warning if there are no type initializers
-  // - ERROR if there are more than 2 parameters to a reducer
-  //   => or you could generate the protocol to be used for dispatching those values
-  // - setting value of simple property could be generated
 
   setUserMessage( value:string ) {
     this.userMessage = value

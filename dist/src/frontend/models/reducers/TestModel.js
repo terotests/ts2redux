@@ -97,6 +97,9 @@ var TestModel = /** @class */ (function () {
         this.bool_init_test = false;
         this.obj_init_test = getTestObj();
         this.rand_init_test = Math.floor(Math.random() * 5);
+        // Does not work yet :/
+        this.arr_init_test = [1, 2, 3];
+        this.obj_literal_test = { cnt: 200 };
         this.cartId = 1;
         this.shopState = TaskState.UNDEFINED;
         // my shopping carts
@@ -230,6 +233,12 @@ exports.obj_init_testSelectorFn = function (state) {
 exports.rand_init_testSelectorFn = function (state) {
     return state.rand_init_test;
 };
+exports.arr_init_testSelectorFn = function (state) {
+    return state.arr_init_test;
+};
+exports.obj_literal_testSelectorFn = function (state) {
+    return state.obj_literal_test;
+};
 exports.cartIdSelectorFn = function (state) { return state.cartId; };
 exports.shopStateSelectorFn = function (state) {
     return state.shopState;
@@ -247,6 +256,8 @@ exports.mapStateToProps = function (state) {
         bool_init_test: state.TestModel.bool_init_test,
         obj_init_test: state.TestModel.obj_init_test,
         rand_init_test: state.TestModel.rand_init_test,
+        arr_init_test: state.TestModel.arr_init_test,
+        obj_literal_test: state.TestModel.obj_literal_test,
         cartId: state.TestModel.cartId,
         shopState: state.TestModel.shopState,
         carts: state.TestModel.carts,
@@ -310,6 +321,8 @@ var initTestModel = function () {
         bool_init_test: o.bool_init_test,
         obj_init_test: o.obj_init_test,
         rand_init_test: o.rand_init_test,
+        arr_init_test: o.arr_init_test,
+        obj_literal_test: o.obj_literal_test,
         cartId: o.cartId,
         shopState: o.shopState,
         carts: o.carts,
@@ -326,6 +339,8 @@ var initWithMethodsTestModel = function () {
         bool_init_test: o.bool_init_test,
         obj_init_test: o.obj_init_test,
         rand_init_test: o.rand_init_test,
+        arr_init_test: o.arr_init_test,
+        obj_literal_test: o.obj_literal_test,
         cartId: o.cartId,
         shopState: o.shopState,
         carts: o.carts,
@@ -522,6 +537,64 @@ var RTestModel = /** @class */ (function () {
                 if (this._dispatch) {
                     this._dispatch({
                         type: exports.TestModelEnums.TestModel_rand_init_test,
+                        payload: value
+                    });
+                }
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(RTestModel.prototype, "arr_init_test", {
+        get: function () {
+            if (this._getState) {
+                return this._getState().TestModel.arr_init_test;
+            }
+            else {
+                if (this._state) {
+                    return this._state.arr_init_test;
+                }
+            }
+            return undefined;
+        },
+        set: function (value) {
+            if (this._state && typeof value !== "undefined") {
+                this._state.arr_init_test = value;
+            }
+            else {
+                // dispatch change for item arr_init_test
+                if (this._dispatch) {
+                    this._dispatch({
+                        type: exports.TestModelEnums.TestModel_arr_init_test,
+                        payload: value
+                    });
+                }
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(RTestModel.prototype, "obj_literal_test", {
+        get: function () {
+            if (this._getState) {
+                return this._getState().TestModel.obj_literal_test;
+            }
+            else {
+                if (this._state) {
+                    return this._state.obj_literal_test;
+                }
+            }
+            return undefined;
+        },
+        set: function (value) {
+            if (this._state && typeof value !== "undefined") {
+                this._state.obj_literal_test = value;
+            }
+            else {
+                // dispatch change for item obj_literal_test
+                if (this._dispatch) {
+                    this._dispatch({
+                        type: exports.TestModelEnums.TestModel_obj_literal_test,
                         payload: value
                     });
                 }
@@ -947,6 +1020,8 @@ exports.TestModelEnums = {
     TestModel_bool_init_test: "TestModel_bool_init_test",
     TestModel_obj_init_test: "TestModel_obj_init_test",
     TestModel_rand_init_test: "TestModel_rand_init_test",
+    TestModel_arr_init_test: "TestModel_arr_init_test",
+    TestModel_obj_literal_test: "TestModel_obj_literal_test",
     TestModel_cartId: "TestModel_cartId",
     TestModel_shopState: "TestModel_shopState",
     TestModel_carts: "TestModel_carts",
@@ -984,6 +1059,12 @@ exports.TestModelReducer = function (state, action) {
                 break;
             case exports.TestModelEnums.TestModel_rand_init_test:
                 new RTestModel(draft).rand_init_test = action.payload;
+                break;
+            case exports.TestModelEnums.TestModel_arr_init_test:
+                new RTestModel(draft).arr_init_test = action.payload;
+                break;
+            case exports.TestModelEnums.TestModel_obj_literal_test:
+                new RTestModel(draft).obj_literal_test = action.payload;
                 break;
             case exports.TestModelEnums.TestModel_cartId:
                 new RTestModel(draft).cartId = action.payload;

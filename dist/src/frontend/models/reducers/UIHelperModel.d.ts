@@ -10,9 +10,9 @@ export interface IContainerPropsMethods {
     toggle: () => any;
 }
 export interface IUIHelperModel {
-    showWasps: boolean;
+    showWasps: Boolean;
 }
-export declare const showWaspsSelectorFn: (state: IUIHelperModel) => boolean;
+export declare const showWaspsSelectorFn: (state: IUIHelperModel) => Boolean;
 export declare type IContainerPropsState = IUIHelperModel;
 export interface IProps extends IContainerPropsState, IContainerPropsMethods {
 }
@@ -27,7 +27,7 @@ export declare class RUIHelperModel {
     private _dispatch?;
     private _getState?;
     constructor(state?: IUIHelperModel, dispatch?: (action: any) => void, getState?: () => any);
-    showWasps: boolean | undefined;
+    showWasps: Boolean | undefined;
     toggle(): void;
     static toggle(): (dispatcher: any, getState: any) => void;
 }

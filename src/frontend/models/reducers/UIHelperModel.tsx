@@ -6,7 +6,7 @@
  *************************************************************************************/
 
 class UIHelperModel {
-  showWasps: boolean = false;
+  showWasps = false;
   toggle() {
     this.showWasps = !this.showWasps;
   }
@@ -21,9 +21,9 @@ export interface IContainerPropsMethods {
   toggle: () => any;
 }
 export interface IUIHelperModel {
-  showWasps: boolean;
+  showWasps: Boolean;
 }
-export const showWaspsSelectorFn = (state: IUIHelperModel): boolean =>
+export const showWaspsSelectorFn = (state: IUIHelperModel): Boolean =>
   state.showWasps;
 
 export type IContainerPropsState = IUIHelperModel;
@@ -75,7 +75,7 @@ export class RUIHelperModel {
     this._dispatch = dispatch;
     this._getState = getState;
   }
-  get showWasps(): boolean | undefined {
+  get showWasps(): Boolean | undefined {
     if (this._getState) {
       return this._getState().UIHelperModel.showWasps;
     } else {
@@ -85,7 +85,7 @@ export class RUIHelperModel {
     }
     return undefined;
   }
-  set showWasps(value: boolean | undefined) {
+  set showWasps(value: Boolean | undefined) {
     if (this._state && typeof value !== "undefined") {
       this._state.showWasps = value;
     } else {

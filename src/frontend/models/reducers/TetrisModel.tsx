@@ -64,13 +64,13 @@ export const createNewPiece = (usingColor: string): ActivePiece => {
  * @redux true
  */
 export class TetrisModel {
-  useColors: string[] = ["red", "blue", "green", "yellow", "brown"];
+  useColors: string[] = ["red", "blue", "green", "yellow", "brown", "orange"];
   lastUsedColor = Math.floor(Math.random() * this.useColors.length);
 
   points: number = 0;
 
   rows: number = 20;
-  cols: number = 10;
+  cols: number = 15;
   cells: Cell[][] = [];
 
   activePiece: ActivePiece;

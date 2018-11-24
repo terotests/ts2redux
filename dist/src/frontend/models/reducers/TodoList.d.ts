@@ -57,7 +57,7 @@ export interface ITodoList {
     sortOrder: SortOrder;
     listStart: number;
     listPageLength: number;
-    listTitle: string;
+    listTitle: String;
 }
 export declare const itemsSelectorFn: (state: ITodoList) => TodoListItem[];
 export declare const stateSelectorFn: (state: ITodoList) => TaskState;
@@ -65,7 +65,7 @@ export declare const stateErrorSelectorFn: (state: ITodoList) => any;
 export declare const sortOrderSelectorFn: (state: ITodoList) => SortOrder;
 export declare const listStartSelectorFn: (state: ITodoList) => number;
 export declare const listPageLengthSelectorFn: (state: ITodoList) => number;
-export declare const listTitleSelectorFn: (state: ITodoList) => string;
+export declare const listTitleSelectorFn: (state: ITodoList) => String;
 export declare const listToDisplaySelectorFnCreator: () => import("reselect").OutputSelector<ITodoList, TodoListItem[], (res1: TodoListItem[], res2: SortOrder, res3: number, res4: number) => TodoListItem[]>;
 export declare const listToDisplaySelector: import("reselect").OutputSelector<ITodoList, TodoListItem[], (res1: TodoListItem[], res2: SortOrder, res3: number, res4: number) => TodoListItem[]>;
 export interface IContainerPropsState extends ITodoList {
@@ -90,7 +90,7 @@ export declare class RTodoList {
     sortOrder: SortOrder | undefined;
     listStart: number | undefined;
     listPageLength: number | undefined;
-    listTitle: string | undefined;
+    listTitle: String | undefined;
     nextPage(): void;
     static nextPage(): (dispatcher: any, getState: any) => void;
     prevPage(): void;

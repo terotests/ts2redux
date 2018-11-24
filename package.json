@@ -10,9 +10,8 @@
     "build:frontend": "browserify ./dist/src/frontend/main.js -o ./public/index.js",
     "rmandcompile": "find ./dist/ -name \"*.d.ts\" -delete && tsc",
     "compile": "tsc",
-    "build:redux": "echo 'Building modules' && ts2redux src",
     "build:ts": "echo 'Building ts' && tsc && npm run build:frontend ",
-    "watch:redux": "nodemon -e js,ts --watch src/frontend/models/ --ignore src/frontend/models/reducers --exec npm run build:redux",
+    "watch:redux": "ts2redux src/frontend/models -w",
     "watch:ts": "nodemon -e js,ts,tsx --watch src --ignore src/frontend/models/ --exec npm run build:ts",
     "test": "npm run watch:ts & npm run watch:redux & node dist/src/tssimplec src/testinput.ts && npm run compile && npm run build:frontend && node dist/src/backend/index"
   },
@@ -24,6 +23,8 @@
   "author": "Tero Tolonen",
   "license": "MIT",
   "dependencies": {
+    "@types/chokidar": "^1.7.5",
+    "chokidar": "^2.0.4",
     "prettier": "^1.15.1",
     "robowr": "^1.0.10",
     "ts-simple-ast": "^17.1.1",

@@ -56,7 +56,7 @@ var TodoList = /** @class */ (function () {
         this.sortOrder = SortOrder.ASC;
         this.listStart = 0;
         this.listPageLength = 10;
-        this.listTitle = 'Title of List';
+        this.listTitle = 'Title of TODO -list';
     }
     Object.defineProperty(TodoList.prototype, "listToDisplay", {
         // Example of memoized list using reselect

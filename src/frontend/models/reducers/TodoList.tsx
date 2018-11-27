@@ -27,9 +27,9 @@ export class TodoList {
   state: TaskState = "UNDEFINED";
   stateError: any;
   sortOrder: SortOrder = SortOrder.ASC;
-  listStart: number = 0;
-  listPageLength: number = 10;
-  listTitle: string = "Title of List";
+  listStart = 0;
+  listPageLength = 10;
+  listTitle = "Title of TODO -list";
   // Example of memoized list using reselect
   get listToDisplay(): TodoListItem[] {
     return this.items
@@ -110,7 +110,7 @@ export interface ITodoList {
   sortOrder: SortOrder;
   listStart: number;
   listPageLength: number;
-  listTitle: string;
+  listTitle: String;
 }
 export const itemsSelectorFn = (state: ITodoList): TodoListItem[] =>
   state.items;
@@ -122,7 +122,7 @@ export const listStartSelectorFn = (state: ITodoList): number =>
   state.listStart;
 export const listPageLengthSelectorFn = (state: ITodoList): number =>
   state.listPageLength;
-export const listTitleSelectorFn = (state: ITodoList): string =>
+export const listTitleSelectorFn = (state: ITodoList): String =>
   state.listTitle;
 export const listToDisplaySelectorFnCreator = () =>
   createSelector(
@@ -382,7 +382,7 @@ export class RTodoList {
       }
     }
   }
-  get listTitle(): string | undefined {
+  get listTitle(): String | undefined {
     if (this._getState) {
       return this._getState().TodoList.listTitle;
     } else {
@@ -392,7 +392,7 @@ export class RTodoList {
     }
     return undefined;
   }
-  set listTitle(value: string | undefined) {
+  set listTitle(value: String | undefined) {
     if (this._state && typeof value !== "undefined") {
       this._state.listTitle = value;
     } else {

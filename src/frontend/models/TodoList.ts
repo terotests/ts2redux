@@ -20,9 +20,9 @@ export class TodoList {
   state: TaskState = 'UNDEFINED'
   stateError: any
   sortOrder:SortOrder = SortOrder.ASC 
-  listStart:number = 0
-  listPageLength:number = 10
-  listTitle: string = 'Title of List' 
+  listStart = 0
+  listPageLength = 10
+  listTitle = 'Title of TODO -list' 
   // Example of memoized list using reselect
   get listToDisplay() : TodoListItem[] {
     return this.items

@@ -520,11 +520,11 @@ exports.createNewPiece = function (usingColor) {
  */
 var TetrisModel = /** @class */ (function () {
     function TetrisModel() {
-        this.useColors = ["red", "blue", "green", "yellow", "brown"];
+        this.useColors = ["red", "blue", "green", "yellow", "brown", "orange"];
         this.lastUsedColor = Math.floor(Math.random() * this.useColors.length);
         this.points = 0;
         this.rows = 20;
-        this.cols = 10;
+        this.cols = 15;
         this.cells = [];
         this.gameOn = false;
         this.gameEnded = false;
@@ -755,7 +755,7 @@ var TodoList = /** @class */ (function () {
         this.sortOrder = SortOrder.ASC;
         this.listStart = 0;
         this.listPageLength = 10;
-        this.listTitle = 'Title of List';
+        this.listTitle = 'Title of TODO -list';
     }
     Object.defineProperty(TodoList.prototype, "listToDisplay", {
         // Example of memoized list using reselect
@@ -1577,7 +1577,9 @@ exports.cartsSelectorFn = function (state) { return state.carts; };
 exports.userMessageSelectorFn = function (state) {
     return state.userMessage;
 };
-exports.testObjSelectorFn = function (state) { return state.testObj; };
+exports.testObjSelectorFn = function (state) {
+    return state.testObj;
+};
 exports.mapStateToProps = function (state) {
     return {
         items: state.TestModel.items,
@@ -2769,11 +2771,11 @@ exports.createNewPiece = function (usingColor) {
  */
 var TetrisModel = /** @class */ (function () {
     function TetrisModel() {
-        this.useColors = ["red", "blue", "green", "yellow", "brown"];
+        this.useColors = ["red", "blue", "green", "yellow", "brown", "orange"];
         this.lastUsedColor = Math.floor(Math.random() * this.useColors.length);
         this.points = 0;
         this.rows = 20;
-        this.cols = 10;
+        this.cols = 15;
         this.cells = [];
         this.gameOn = false;
         this.gameEnded = false;
@@ -4007,7 +4009,7 @@ var TodoList = /** @class */ (function () {
         this.sortOrder = SortOrder.ASC;
         this.listStart = 0;
         this.listPageLength = 10;
-        this.listTitle = "Title of List";
+        this.listTitle = "Title of TODO -list";
     }
     Object.defineProperty(TodoList.prototype, "listToDisplay", {
         // Example of memoized list using reselect

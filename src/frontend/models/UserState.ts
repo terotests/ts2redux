@@ -5,7 +5,7 @@
  */
 class UserState {
 
-  logged:boolean = false
+  logged = false
   username: string = 'anonymous'
   firstName: string
   lastName: string

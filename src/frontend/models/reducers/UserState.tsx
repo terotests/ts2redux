@@ -6,7 +6,7 @@
  *********************************************************************************/
 
 class UserState {
-  logged: boolean = false;
+  logged = false;
   username: string = "anonymous";
   firstName: string;
   lastName: string;
@@ -37,13 +37,13 @@ export interface IContainerPropsMethods {
   fakeLogin: () => any;
 }
 export interface IUserState {
-  logged: boolean;
+  logged: Boolean;
   username: string;
   firstName: string;
   lastName: string;
   lastLogin: number;
 }
-export const loggedSelectorFn = (state: IUserState): boolean => state.logged;
+export const loggedSelectorFn = (state: IUserState): Boolean => state.logged;
 export const usernameSelectorFn = (state: IUserState): string => state.username;
 export const firstNameSelectorFn = (state: IUserState): string =>
   state.firstName;
@@ -120,7 +120,7 @@ export class RUserState {
     this._dispatch = dispatch;
     this._getState = getState;
   }
-  get logged(): boolean | undefined {
+  get logged(): Boolean | undefined {
     if (this._getState) {
       return this._getState().UserState.logged;
     } else {
@@ -130,7 +130,7 @@ export class RUserState {
     }
     return undefined;
   }
-  set logged(value: boolean | undefined) {
+  set logged(value: Boolean | undefined) {
     if (this._state && typeof value !== "undefined") {
       this._state.logged = value;
     } else {

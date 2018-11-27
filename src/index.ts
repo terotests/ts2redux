@@ -61,11 +61,11 @@ const createComment = (wr:R.CodeWriter, txt:string) => {
 }
 
 export async function createProject( settings:GenerationOptions) {
+
   const project = new Project();
   const reducerPath =  '/'+settings.reducerPath+'/'
   project.addExistingSourceFiles([`${settings.path}/**/*.ts`,`${settings.path}/**/*.tsx`]); // , "!**/*.d.ts"
   const RFs = new R.CodeFileSystem()
-
 
   const targetFiles:{[key:string]:TargetFile} = {};
   const modelsList:ModelDefinition[] = []

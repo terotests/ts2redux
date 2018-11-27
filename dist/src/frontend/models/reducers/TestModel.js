@@ -245,7 +245,9 @@ exports.cartsSelectorFn = function (state) { return state.carts; };
 exports.userMessageSelectorFn = function (state) {
     return state.userMessage;
 };
-exports.testObjSelectorFn = function (state) { return state.testObj; };
+exports.testObjSelectorFn = function (state) {
+    return state.testObj;
+};
 exports.mapStateToProps = function (state) {
     return {
         items: state.TestModel.items,

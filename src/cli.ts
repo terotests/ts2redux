@@ -24,6 +24,7 @@ const state = {
 }
 const compileProject = async () => {
   if(state.is_running) return
+  console.log('Compiling path ', args[0])
   state.is_running = true
   await createProject({
     path: args[0],

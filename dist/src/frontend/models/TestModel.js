@@ -81,6 +81,7 @@ var TestModel = /** @class */ (function () {
         // Default initializers work :)
         this.str_init_test = 'OK?';
         this.bool_init_test = false;
+        this.bool4 = true;
         this.obj_init_test = getTestObj();
         this.rand_init_test = Math.floor(Math.random() * 5);
         this.arr_init_test = [1, 2, 3];

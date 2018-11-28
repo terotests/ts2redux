@@ -113,9 +113,12 @@ export async function createProject( settings:GenerationOptions) {
       const initVal = p.getInitializer()
       if( initVal && initVal.getType() && initVal.getType().getApparentType()) {
         const apparentType = initVal.getType().getApparentType();     
-        // console.log('APP', p.getName(), apparentType)
+
+        // convert apparent types
         const str = apparentType.getSymbol().getEscapedName()
         if( str === 'Number' ) return 'number'
+        if( str === 'Boolean' ) return 'boolean'
+        if( str === 'String' ) return 'string'
         if( str === '__object') return 'any'
 
         if(apparentType.getTypeArguments()) {

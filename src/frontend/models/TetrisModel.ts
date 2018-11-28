@@ -77,21 +77,17 @@ export const createNewPiece = (usingColor: string): ActivePiece => {
  */
 export class TetrisModel {
 
-  useColors: string[] = ["red", "blue", "green", "yellow", "brown", "orange"];
+  useColors = ["red", "blue", "green", "yellow", "brown", "orange"];
   lastUsedColor = Math.floor( Math.random() * this.useColors.length);
-
-  points: number = 0
-
-  rows: number = 20;
-  cols: number = 15;
+  points = 0
+  rows = 20;
+  cols = 15;
   cells: Cell[][] = [];
-
-  activePiece: ActivePiece;
-  gameOn: boolean = false;
-  gameEnded: boolean = false;
-
-  ticksPerMove:number = 10
-  tickCnt:number = 0
+  activePiece?: ActivePiece;
+  gameOn  = false;
+  gameEnded = false;
+  ticksPerMove = 10
+  tickCnt = 0
 
   private doesCollide(
     pieceX: number,

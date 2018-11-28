@@ -27,7 +27,7 @@ export declare class TetrisModel {
     rows: number;
     cols: number;
     cells: Cell[][];
-    activePiece: ActivePiece;
+    activePiece?: ActivePiece;
     gameOn: boolean;
     gameEnded: boolean;
     ticksPerMove: number;

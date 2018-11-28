@@ -56,6 +56,7 @@ class TestModel {
   // Default initializers work :)
   str_init_test = "OK?";
   bool_init_test = false;
+  bool4 = true;
   obj_init_test = getTestObj();
   rand_init_test = Math.floor(Math.random() * 5);
 
@@ -206,6 +207,7 @@ export interface ITestModel {
   // Default initializers work :)
   str_init_test: String;
   bool_init_test: Boolean;
+  bool4: Boolean;
   obj_init_test: TestObj;
   rand_init_test: number;
   arr_init_test: Array<number>;
@@ -228,6 +230,7 @@ export const str_init_testSelectorFn = (state: ITestModel): String =>
   state.str_init_test;
 export const bool_init_testSelectorFn = (state: ITestModel): Boolean =>
   state.bool_init_test;
+export const bool4SelectorFn = (state: ITestModel): Boolean => state.bool4;
 export const obj_init_testSelectorFn = (state: ITestModel): TestObj =>
   state.obj_init_test;
 export const rand_init_testSelectorFn = (state: ITestModel): number =>
@@ -259,6 +262,7 @@ export const mapStateToProps = (state: IState): IContainerPropsState => {
     maxId: state.TestModel.maxId,
     str_init_test: state.TestModel.str_init_test,
     bool_init_test: state.TestModel.bool_init_test,
+    bool4: state.TestModel.bool4,
     obj_init_test: state.TestModel.obj_init_test,
     rand_init_test: state.TestModel.rand_init_test,
     arr_init_test: state.TestModel.arr_init_test,
@@ -329,6 +333,7 @@ const initTestModel = () => {
     maxId: o.maxId,
     str_init_test: o.str_init_test,
     bool_init_test: o.bool_init_test,
+    bool4: o.bool4,
     obj_init_test: o.obj_init_test,
     rand_init_test: o.rand_init_test,
     arr_init_test: o.arr_init_test,
@@ -348,6 +353,7 @@ const initWithMethodsTestModel = () => {
     maxId: o.maxId,
     str_init_test: o.str_init_test,
     bool_init_test: o.bool_init_test,
+    bool4: o.bool4,
     obj_init_test: o.obj_init_test,
     rand_init_test: o.rand_init_test,
     arr_init_test: o.arr_init_test,
@@ -478,6 +484,29 @@ export class RTestModel {
       if (this._dispatch) {
         this._dispatch({
           type: TestModelEnums.TestModel_bool_init_test,
+          payload: value
+        });
+      }
+    }
+  }
+  get bool4(): Boolean | undefined {
+    if (this._getState) {
+      return this._getState().TestModel.bool4;
+    } else {
+      if (this._state) {
+        return this._state.bool4;
+      }
+    }
+    return undefined;
+  }
+  set bool4(value: Boolean | undefined) {
+    if (this._state && typeof value !== "undefined") {
+      this._state.bool4 = value;
+    } else {
+      // dispatch change for item bool4
+      if (this._dispatch) {
+        this._dispatch({
+          type: TestModelEnums.TestModel_bool4,
           payload: value
         });
       }
@@ -976,6 +1005,7 @@ export const TestModelEnums = {
   TestModel_maxId: "TestModel_maxId",
   TestModel_str_init_test: "TestModel_str_init_test",
   TestModel_bool_init_test: "TestModel_bool_init_test",
+  TestModel_bool4: "TestModel_bool4",
   TestModel_obj_init_test: "TestModel_obj_init_test",
   TestModel_rand_init_test: "TestModel_rand_init_test",
   TestModel_arr_init_test: "TestModel_arr_init_test",
@@ -1015,6 +1045,9 @@ export const TestModelReducer = (
         break;
       case TestModelEnums.TestModel_bool_init_test:
         new RTestModel(draft).bool_init_test = action.payload;
+        break;
+      case TestModelEnums.TestModel_bool4:
+        new RTestModel(draft).bool4 = action.payload;
         break;
       case TestModelEnums.TestModel_obj_init_test:
         new RTestModel(draft).obj_init_test = action.payload;

@@ -33,7 +33,7 @@ export declare class TetrisModel {
     rows: number;
     cols: number;
     cells: Cell[][];
-    activePiece: ActivePiece;
+    activePiece?: ActivePiece;
     gameOn: boolean;
     gameEnded: boolean;
     ticksPerMove: number;
@@ -67,15 +67,15 @@ export interface IContainerPropsMethods {
     start: () => any;
 }
 export interface ITetrisModel {
-    useColors: string[];
+    useColors: Array<string>;
     lastUsedColor: number;
     points: number;
     rows: number;
     cols: number;
     cells: Cell[][];
-    activePiece: ActivePiece;
-    gameOn: boolean;
-    gameEnded: boolean;
+    activePiece?: ActivePiece;
+    gameOn: Boolean;
+    gameEnded: Boolean;
     ticksPerMove: number;
     tickCnt: number;
 }
@@ -86,8 +86,8 @@ export declare const rowsSelectorFn: (state: ITetrisModel) => number;
 export declare const colsSelectorFn: (state: ITetrisModel) => number;
 export declare const cellsSelectorFn: (state: ITetrisModel) => Cell[][];
 export declare const activePieceSelectorFn: (state: ITetrisModel) => ActivePiece;
-export declare const gameOnSelectorFn: (state: ITetrisModel) => boolean;
-export declare const gameEndedSelectorFn: (state: ITetrisModel) => boolean;
+export declare const gameOnSelectorFn: (state: ITetrisModel) => Boolean;
+export declare const gameEndedSelectorFn: (state: ITetrisModel) => Boolean;
 export declare const ticksPerMoveSelectorFn: (state: ITetrisModel) => number;
 export declare const tickCntSelectorFn: (state: ITetrisModel) => number;
 export declare type IContainerPropsState = ITetrisModel;
@@ -104,15 +104,15 @@ export declare class RTetrisModel {
     private _dispatch?;
     private _getState?;
     constructor(state?: ITetrisModel, dispatch?: (action: any) => void, getState?: () => any);
-    useColors: string[] | undefined;
+    useColors: Array<string> | undefined;
     lastUsedColor: number | undefined;
     points: number | undefined;
     rows: number | undefined;
     cols: number | undefined;
     cells: Cell[][] | undefined;
     activePiece: ActivePiece | undefined;
-    gameOn: boolean | undefined;
-    gameEnded: boolean | undefined;
+    gameOn: Boolean | undefined;
+    gameEnded: Boolean | undefined;
     ticksPerMove: number | undefined;
     tickCnt: number | undefined;
     private doesCollide;
@@ -170,7 +170,7 @@ export declare const TetrisModelReducer: (state: ITetrisModel, action: any) => I
  * React Context API test   *
  ***************************/
 export declare const TetrisModelContext: React.Context<IProps>;
-export declare const TetrisModelConsumer: React.ComponentType<React.ConsumerProps<IProps>>;
+export declare const TetrisModelConsumer: React.ExoticComponent<React.ConsumerProps<IProps>>;
 export declare class TetrisModelProvider extends React.Component {
     state: ITetrisModel;
     lastSetState: ITetrisModel;

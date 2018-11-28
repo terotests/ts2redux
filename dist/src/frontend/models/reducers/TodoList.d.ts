@@ -138,7 +138,7 @@ export declare const TodoListReducer: (state: ITodoList, action: any) => ITodoLi
  * React Context API test   *
  ***************************/
 export declare const TodoListContext: React.Context<IProps>;
-export declare const TodoListConsumer: React.ComponentType<React.ConsumerProps<IProps>>;
+export declare const TodoListConsumer: React.ExoticComponent<React.ConsumerProps<IProps>>;
 export declare class TodoListProvider extends React.Component {
     state: ITodoList;
     lastSetState: ITodoList;

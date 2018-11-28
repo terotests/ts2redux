@@ -64,21 +64,17 @@ export const createNewPiece = (usingColor: string): ActivePiece => {
  * @redux true
  */
 export class TetrisModel {
-  useColors: string[] = ["red", "blue", "green", "yellow", "brown", "orange"];
+  useColors = ["red", "blue", "green", "yellow", "brown", "orange"];
   lastUsedColor = Math.floor(Math.random() * this.useColors.length);
-
-  points: number = 0;
-
-  rows: number = 20;
-  cols: number = 15;
+  points = 0;
+  rows = 20;
+  cols = 15;
   cells: Cell[][] = [];
-
-  activePiece: ActivePiece;
-  gameOn: boolean = false;
-  gameEnded: boolean = false;
-
-  ticksPerMove: number = 10;
-  tickCnt: number = 0;
+  activePiece?: ActivePiece;
+  gameOn = false;
+  gameEnded = false;
+  ticksPerMove = 10;
+  tickCnt = 0;
 
   private doesCollide(
     pieceX: number,
@@ -267,19 +263,19 @@ export interface IContainerPropsMethods {
   start: () => any;
 }
 export interface ITetrisModel {
-  useColors: string[];
+  useColors: Array<string>;
   lastUsedColor: number;
   points: number;
   rows: number;
   cols: number;
   cells: Cell[][];
-  activePiece: ActivePiece;
-  gameOn: boolean;
-  gameEnded: boolean;
+  activePiece?: ActivePiece;
+  gameOn: Boolean;
+  gameEnded: Boolean;
   ticksPerMove: number;
   tickCnt: number;
 }
-export const useColorsSelectorFn = (state: ITetrisModel): string[] =>
+export const useColorsSelectorFn = (state: ITetrisModel): Array<string> =>
   state.useColors;
 export const lastUsedColorSelectorFn = (state: ITetrisModel): number =>
   state.lastUsedColor;
@@ -287,10 +283,11 @@ export const pointsSelectorFn = (state: ITetrisModel): number => state.points;
 export const rowsSelectorFn = (state: ITetrisModel): number => state.rows;
 export const colsSelectorFn = (state: ITetrisModel): number => state.cols;
 export const cellsSelectorFn = (state: ITetrisModel): Cell[][] => state.cells;
-export const activePieceSelectorFn = (state: ITetrisModel): ActivePiece =>
-  state.activePiece;
-export const gameOnSelectorFn = (state: ITetrisModel): boolean => state.gameOn;
-export const gameEndedSelectorFn = (state: ITetrisModel): boolean =>
+export const activePieceSelectorFn = (
+  state: ITetrisModel
+): ActivePiece | undefined => state.activePiece;
+export const gameOnSelectorFn = (state: ITetrisModel): Boolean => state.gameOn;
+export const gameEndedSelectorFn = (state: ITetrisModel): Boolean =>
   state.gameEnded;
 export const ticksPerMoveSelectorFn = (state: ITetrisModel): number =>
   state.ticksPerMove;
@@ -411,7 +408,7 @@ export class RTetrisModel {
     this._dispatch = dispatch;
     this._getState = getState;
   }
-  get useColors(): string[] | undefined {
+  get useColors(): Array<string> | undefined {
     if (this._getState) {
       return this._getState().TetrisModel.useColors;
     } else {
@@ -421,7 +418,7 @@ export class RTetrisModel {
     }
     return undefined;
   }
-  set useColors(value: string[] | undefined) {
+  set useColors(value: Array<string> | undefined) {
     if (this._state && typeof value !== "undefined") {
       this._state.useColors = value;
     } else {
@@ -572,7 +569,7 @@ export class RTetrisModel {
       }
     }
   }
-  get gameOn(): boolean | undefined {
+  get gameOn(): Boolean | undefined {
     if (this._getState) {
       return this._getState().TetrisModel.gameOn;
     } else {
@@ -582,7 +579,7 @@ export class RTetrisModel {
     }
     return undefined;
   }
-  set gameOn(value: boolean | undefined) {
+  set gameOn(value: Boolean | undefined) {
     if (this._state && typeof value !== "undefined") {
       this._state.gameOn = value;
     } else {
@@ -595,7 +592,7 @@ export class RTetrisModel {
       }
     }
   }
-  get gameEnded(): boolean | undefined {
+  get gameEnded(): Boolean | undefined {
     if (this._getState) {
       return this._getState().TetrisModel.gameEnded;
     } else {
@@ -605,7 +602,7 @@ export class RTetrisModel {
     }
     return undefined;
   }
-  set gameEnded(value: boolean | undefined) {
+  set gameEnded(value: Boolean | undefined) {
     if (this._state && typeof value !== "undefined") {
       this._state.gameEnded = value;
     } else {

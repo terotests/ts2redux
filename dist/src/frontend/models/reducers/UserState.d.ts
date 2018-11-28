@@ -15,13 +15,13 @@ export interface IContainerPropsMethods {
     fakeLogin: () => any;
 }
 export interface IUserState {
-    logged: boolean;
+    logged: Boolean;
     username: string;
     firstName: string;
     lastName: string;
     lastLogin: number;
 }
-export declare const loggedSelectorFn: (state: IUserState) => boolean;
+export declare const loggedSelectorFn: (state: IUserState) => Boolean;
 export declare const usernameSelectorFn: (state: IUserState) => string;
 export declare const firstNameSelectorFn: (state: IUserState) => string;
 export declare const lastNameSelectorFn: (state: IUserState) => string;
@@ -40,7 +40,7 @@ export declare class RUserState {
     private _dispatch?;
     private _getState?;
     constructor(state?: IUserState, dispatch?: (action: any) => void, getState?: () => any);
-    logged: boolean | undefined;
+    logged: Boolean | undefined;
     username: string | undefined;
     firstName: string | undefined;
     lastName: string | undefined;
@@ -71,7 +71,7 @@ export declare const UserStateReducer: (state: IUserState, action: any) => IUser
  * React Context API test   *
  ***************************/
 export declare const UserStateContext: React.Context<IProps>;
-export declare const UserStateConsumer: React.ComponentType<React.ConsumerProps<IProps>>;
+export declare const UserStateConsumer: React.ExoticComponent<React.ConsumerProps<IProps>>;
 export declare class UserStateProvider extends React.Component {
     state: IUserState;
     lastSetState: IUserState;

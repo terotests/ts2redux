@@ -49,7 +49,7 @@ export declare const IncModelReducer: (state: IIncModel, action: any) => IIncMod
  * React Context API test   *
  ***************************/
 export declare const IncModelContext: React.Context<IProps>;
-export declare const IncModelConsumer: React.ComponentType<React.ConsumerProps<IProps>>;
+export declare const IncModelConsumer: React.ExoticComponent<React.ConsumerProps<IProps>>;
 export declare class IncModelProvider extends React.Component {
     state: IIncModel;
     lastSetState: IIncModel;

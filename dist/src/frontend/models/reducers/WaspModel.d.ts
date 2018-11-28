@@ -93,7 +93,7 @@ export declare const WaspModelReducer: (state: IWaspModel, action: any) => IWasp
  * React Context API test   *
  ***************************/
 export declare const WaspModelContext: React.Context<IProps>;
-export declare const WaspModelConsumer: React.ComponentType<React.ConsumerProps<IProps>>;
+export declare const WaspModelConsumer: React.ExoticComponent<React.ConsumerProps<IProps>>;
 export declare class WaspModelProvider extends React.Component {
     state: IWaspModel;
     lastSetState: IWaspModel;

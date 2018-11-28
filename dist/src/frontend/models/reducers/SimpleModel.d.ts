@@ -46,7 +46,7 @@ export declare const SimpleModelReducer: (state: ISimpleModel, action: any) => I
  * React Context API test   *
  ***************************/
 export declare const SimpleModelContext: React.Context<IProps>;
-export declare const SimpleModelConsumer: React.ComponentType<React.ConsumerProps<IProps>>;
+export declare const SimpleModelConsumer: React.ExoticComponent<React.ConsumerProps<IProps>>;
 export declare class SimpleModelProvider extends React.Component {
     state: ISimpleModel;
     lastSetState: ISimpleModel;

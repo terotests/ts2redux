@@ -262,9 +262,7 @@ exports.pointsSelectorFn = function (state) { return state.points; };
 exports.rowsSelectorFn = function (state) { return state.rows; };
 exports.colsSelectorFn = function (state) { return state.cols; };
 exports.cellsSelectorFn = function (state) { return state.cells; };
-exports.activePieceSelectorFn = function (state) {
-    return state.activePiece;
-};
+exports.activePieceSelectorFn = function (state) { return state.activePiece; };
 exports.gameOnSelectorFn = function (state) { return state.gameOn; };
 exports.gameEndedSelectorFn = function (state) {
     return state.gameEnded;

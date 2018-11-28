@@ -54,6 +54,7 @@ class TestModel {
   // Default initializers work :)
   str_init_test = 'OK?'
   bool_init_test = false
+  bool4 = true
   obj_init_test = getTestObj()
   rand_init_test = Math.floor( Math.random() * 5)
   

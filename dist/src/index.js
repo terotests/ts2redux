@@ -106,10 +106,14 @@ function createProject(settings) {
                             var initVal = p.getInitializer();
                             if (initVal && initVal.getType() && initVal.getType().getApparentType()) {
                                 var apparentType = initVal.getType().getApparentType();
-                                // console.log('APP', p.getName(), apparentType)
+                                // convert apparent types
                                 var str = apparentType.getSymbol().getEscapedName();
                                 if (str === 'Number')
                                     return 'number';
+                                if (str === 'Boolean')
+                                    return 'boolean';
+                                if (str === 'String')
+                                    return 'string';
                                 if (str === '__object')
                                     return 'any';
                                 if (apparentType.getTypeArguments()) {

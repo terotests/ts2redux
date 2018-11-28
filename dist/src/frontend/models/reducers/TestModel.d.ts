@@ -53,6 +53,7 @@ export interface ITestModel {
     maxId: number;
     str_init_test: String;
     bool_init_test: Boolean;
+    bool4: Boolean;
     obj_init_test: TestObj;
     rand_init_test: number;
     arr_init_test: Array<number>;
@@ -70,6 +71,7 @@ export declare const itemsSelectorFn: (state: ITestModel) => ShopCartItem[];
 export declare const maxIdSelectorFn: (state: ITestModel) => number;
 export declare const str_init_testSelectorFn: (state: ITestModel) => String;
 export declare const bool_init_testSelectorFn: (state: ITestModel) => Boolean;
+export declare const bool4SelectorFn: (state: ITestModel) => Boolean;
 export declare const obj_init_testSelectorFn: (state: ITestModel) => TestObj;
 export declare const rand_init_testSelectorFn: (state: ITestModel) => number;
 export declare const arr_init_testSelectorFn: (state: ITestModel) => number[];
@@ -100,6 +102,7 @@ export declare class RTestModel {
     maxId: number | undefined;
     str_init_test: String | undefined;
     bool_init_test: Boolean | undefined;
+    bool4: Boolean | undefined;
     obj_init_test: TestObj | undefined;
     rand_init_test: number | undefined;
     arr_init_test: Array<number> | undefined;
@@ -158,6 +161,7 @@ export declare const TestModelEnums: {
     TestModel_maxId: string;
     TestModel_str_init_test: string;
     TestModel_bool_init_test: string;
+    TestModel_bool4: string;
     TestModel_obj_init_test: string;
     TestModel_rand_init_test: string;
     TestModel_arr_init_test: string;
@@ -184,7 +188,7 @@ export declare const TestModelReducer: (state: ITestModel, action: any) => ITest
  * React Context API test   *
  ***************************/
 export declare const TestModelContext: React.Context<IProps>;
-export declare const TestModelConsumer: React.ComponentType<React.ConsumerProps<IProps>>;
+export declare const TestModelConsumer: React.ExoticComponent<React.ConsumerProps<IProps>>;
 export declare class TestModelProvider extends React.Component {
     state: ITestModel;
     lastSetState: ITestModel;

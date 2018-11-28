@@ -40,7 +40,7 @@ export declare const UIHelperModelReducer: (state: IUIHelperModel, action: any) 
  * React Context API test   *
  ***************************/
 export declare const UIHelperModelContext: React.Context<IProps>;
-export declare const UIHelperModelConsumer: React.ComponentType<React.ConsumerProps<IProps>>;
+export declare const UIHelperModelConsumer: React.ExoticComponent<React.ConsumerProps<IProps>>;
 export declare class UIHelperModelProvider extends React.Component {
     state: IUIHelperModel;
     lastSetState: IUIHelperModel;

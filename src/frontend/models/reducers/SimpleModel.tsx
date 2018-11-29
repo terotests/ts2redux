@@ -106,7 +106,6 @@ export class RSimpleModel {
     }
   }
 
-  // is task
   async getItems() {
     this.items = (await axios.get(
       "https://jsonplaceholder.typicode.com/todos"

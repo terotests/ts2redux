@@ -57,13 +57,13 @@ if (args.length === 0) {
 var state = {
     is_running: false
 };
-var compileProject = function () { return __awaiter(_this, void 0, void 0, function () {
+var compileProject = function (eventArgs) { return __awaiter(_this, void 0, void 0, function () {
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 if (state.is_running)
                     return [2 /*return*/];
-                console.log('Compiling path ', args[0]);
+                console.log('Compiling path: ', args[0]);
                 state.is_running = true;
                 return [4 /*yield*/, index_1.createProject({
                         path: args[0],
@@ -83,11 +83,13 @@ var start = function () { return __awaiter(_this, void 0, void 0, function () {
     var watcher;
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, compileProject()];
+            case 0: return [4 /*yield*/, compileProject(null)];
             case 1:
                 _a.sent();
                 if (argv.watch) {
-                    watcher = chokidar.watch(args[0]);
+                    watcher = chokidar.watch(args[0], {
+                        ignored: '*.tsx'
+                    });
                     watcher
                         .on('add', compileProject)
                         .on('change', compileProject)

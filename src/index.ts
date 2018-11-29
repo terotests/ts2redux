@@ -449,17 +449,19 @@ export async function createProject( settings:GenerationOptions) {
             if(rvNode) {
               rvMethod = true
             }               
-          
+            const typeArgs = m.getTypeParameters().map( p => p.print()).join(',')
+            const typeArgStr = typeArgs.length > 0 ? '<' + typeArgs + '>' : ''  
+                
             if(!rvMethod && m.getParameters().length > 1) {
               throw `Error at ${sourceFile.getFilePath()} in class ${c.getName()} method ${m.getName()} can not have more than 2 parameters at the moment`
             }
             const pName = m.getParameters().filter( (a,i) => i<1).map( mod => mod.getName() ).join('') 
 
             if(m.isAsync()) {
-              body.out('// is task', true)
+              // body.out('// is task', true)
               body.raw( m.print(), true)   
             } else {
-              body.out('// is a reducer', true)
+              // body.out('// is a reducer', true)
               const r_name = `${c.getName()}_${m.getName()}`
               const param_name = m.getParameters().length > 0 ? 'action.payload' : '';
               ng_enums.out(`${r_name} : '${r_name}',`, true)       
@@ -470,9 +472,9 @@ export async function createProject( settings:GenerationOptions) {
                 ng_reducers.out('break;', true)
                 ng_reducers.indent(-1)
               }
-              
+
               body.raw( m.getModifiers().map( mod => mod.print()+' ' ).join('') )
-              body.out( m.getName() + '(' +  m.getParameters().map( mod => mod.print() ).join(', ') + ')')
+              body.out( m.getName() + typeArgStr + '(' +  m.getParameters().map( mod => mod.print() ).join(', ') + ')')
               if(m.getReturnTypeNode()) body.out( ': ' + m.getReturnTypeNode().print() ) 
               body.out( '{', true)
                 body.indent(1)
@@ -505,10 +507,10 @@ export async function createProject( settings:GenerationOptions) {
               body.out('', true)             
               body.out('public static ')
               body.out( m.getModifiers().filter(mod => ( mod.getText() != 'async' && mod.getText() != 'public')).map( mod => mod.print() +' ' ).join('') )
-              body.out( m.getName() + '(' +  m.getParameters().map( mod => mod.print() ).join(', ') + ')')
+              body.out( m.getName() + typeArgStr + '(' +  m.getParameters().map( mod => mod.print() ).join(', ') + ')')
 
-              propsMethods.out( m.getName() + ' : (' +  m.getParameters().map( mod => mod.print() ).join(', ') + ') => any', true)
-              dispatchMethods.out( m.getName() + ' : (' +  m.getParameters().map( mod => mod.print() ).join(', ') + ') => {', true)
+              propsMethods.out( m.getName() + ' : ' + typeArgStr + '(' +  m.getParameters().map( mod => mod.print() ).join(', ') + ') => any', true)
+              dispatchMethods.out( m.getName() + ' : ' + typeArgStr + '(' +  m.getParameters().map( mod => mod.print() ).join(', ') + ') => {', true)
                 dispatchMethods.indent(1)
                 dispatchMethods.out(`return dispatch(R${c.getName()}.${m.getName()}(${pName}))`, true)
                 dispatchMethods.indent(-1)
@@ -599,11 +601,14 @@ export async function createProject( settings:GenerationOptions) {
               ng.out(`}`, true)              
                 
               reducerMethods.forEach( m => {
+
+                const typeArgs = m.getTypeParameters().map( p => p.print()).join(',')
+                const typeArgStr = typeArgs.length > 0 ? '<' + typeArgs + '>' : ''                 
                 const body = ng
                 body.raw( m.getModifiers().map( mod => mod.print()+' ' ).join('') )
 
                 binder.out(`this.${m.getName()} = this.${m.getName()}.bind(this)`, true)
-                body.out( m.getName() + '(' +  m.getParameters().map( mod => mod.print() ).join(', ') + ')')
+                body.out( m.getName() + typeArgStr + '(' +  m.getParameters().map( mod => mod.print() ).join(', ') + ')')
                 // if(m.getReturnTypeNode()) body.out( ': ' + m.getReturnTypeNode().print() ) 
                 body.out( '{', true)
                   body.indent(1)

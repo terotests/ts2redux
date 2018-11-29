@@ -691,7 +691,6 @@ var RTetrisModel = /** @class */ (function () {
         enumerable: true,
         configurable: true
     });
-    // is a reducer
     RTetrisModel.prototype.doesCollide = function (pieceX, pieceY, pieceCells) {
         var _this = this;
         var collides = false;
@@ -719,7 +718,6 @@ var RTetrisModel = /** @class */ (function () {
         });
         return collides;
     };
-    // is a reducer
     RTetrisModel.prototype.tick = function () {
         if (this._state) {
             this.tickCnt++;
@@ -739,7 +737,6 @@ var RTetrisModel = /** @class */ (function () {
             new RTetrisModel(undefined, dispatcher, getState).tick();
         };
     };
-    // is a reducer
     RTetrisModel.prototype.left = function () {
         if (this._state) {
             if (!this.doesCollide(this.activePiece.x - 1, this.activePiece.y)) {
@@ -757,7 +754,6 @@ var RTetrisModel = /** @class */ (function () {
             new RTetrisModel(undefined, dispatcher, getState).left();
         };
     };
-    // is a reducer
     RTetrisModel.prototype.right = function () {
         if (this._state) {
             if (!this.doesCollide(this.activePiece.x + 1, this.activePiece.y)) {
@@ -775,7 +771,6 @@ var RTetrisModel = /** @class */ (function () {
             new RTetrisModel(undefined, dispatcher, getState).right();
         };
     };
-    // is a reducer
     RTetrisModel.prototype.rotate = function () {
         if (this._state) {
             var newOrientation = this.rotateCells(this.activePiece.cells);
@@ -794,7 +789,6 @@ var RTetrisModel = /** @class */ (function () {
             new RTetrisModel(undefined, dispatcher, getState).rotate();
         };
     };
-    // is a reducer
     // creates a new piece with rotated values
     RTetrisModel.prototype.rotateCells = function (cells) {
         var res = new Array(cells.length);
@@ -815,7 +809,6 @@ var RTetrisModel = /** @class */ (function () {
         }
         return res;
     };
-    // is a reducer
     RTetrisModel.prototype.step = function () {
         if (this._state) {
             if (this.gameOn) {
@@ -847,7 +840,6 @@ var RTetrisModel = /** @class */ (function () {
             new RTetrisModel(undefined, dispatcher, getState).step();
         };
     };
-    // is a reducer
     RTetrisModel.prototype.pickNextColor = function () {
         this.lastUsedColor++;
         if (this.lastUsedColor >= this.useColors.length) {
@@ -855,7 +847,6 @@ var RTetrisModel = /** @class */ (function () {
         }
         return this.useColors[this.lastUsedColor];
     };
-    // is a reducer
     RTetrisModel.prototype.masonPiece = function () {
         var _this = this;
         if (this._state) {
@@ -881,7 +872,6 @@ var RTetrisModel = /** @class */ (function () {
             new RTetrisModel(undefined, dispatcher, getState).masonPiece();
         };
     };
-    // is a reducer
     RTetrisModel.prototype.dropRows = function () {
         if (this._state) {
             var nextRows = [];
@@ -919,7 +909,6 @@ var RTetrisModel = /** @class */ (function () {
             new RTetrisModel(undefined, dispatcher, getState).dropRows();
         };
     };
-    // is a reducer
     RTetrisModel.prototype.clearCells = function () {
         if (this._state) {
             this.cells = new Array(this.rows);
@@ -941,7 +930,6 @@ var RTetrisModel = /** @class */ (function () {
             new RTetrisModel(undefined, dispatcher, getState).clearCells();
         };
     };
-    // is a reducer
     RTetrisModel.prototype.resetGame = function () {
         if (this._state) {
             this.clearCells();
@@ -960,7 +948,6 @@ var RTetrisModel = /** @class */ (function () {
             new RTetrisModel(undefined, dispatcher, getState).resetGame();
         };
     };
-    // is a reducer
     RTetrisModel.prototype.start = function () {
         if (this._state) {
             this.resetGame();

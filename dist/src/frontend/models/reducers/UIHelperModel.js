@@ -109,7 +109,6 @@ var RUIHelperModel = /** @class */ (function () {
         enumerable: true,
         configurable: true
     });
-    // is a reducer
     RUIHelperModel.prototype.toggle = function () {
         if (this._state) {
             this.showWasps = !this.showWasps;

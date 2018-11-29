@@ -263,7 +263,6 @@ export class RWaspModel {
     }
   }
 
-  // is a reducer
   addWasp(pos: { x: number; y: number }) {
     if (this._state) {
       const o: Wasp = { x: 0, y: 0 };
@@ -289,7 +288,6 @@ export class RWaspModel {
       new RWaspModel(undefined, dispatcher, getState).addWasp(pos);
     };
   }
-  // is a reducer
   incSpeed(value: number) {
     if (this._state) {
       this.speed = this.speed + value;
@@ -308,7 +306,6 @@ export class RWaspModel {
       new RWaspModel(undefined, dispatcher, getState).incSpeed(value);
     };
   }
-  // is a reducer
   setColor(value: { waspId: number; colorValue: string }) {
     if (this._state) {
       if (this.wasps[value.waspId])
@@ -328,7 +325,6 @@ export class RWaspModel {
       new RWaspModel(undefined, dispatcher, getState).setColor(value);
     };
   }
-  // is a reducer
   step() {
     if (this._state) {
       const list: Wasp[] = Object.keys(this.wasps).map(i => this.wasps[i]);

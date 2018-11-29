@@ -5,6 +5,7 @@
  *                                              *
  ***********************************************/
 import * as redux from "redux";
+import { GenericModelReducer, IGenericModel } from "./GenericModel";
 import { IIncModel, IncModelReducer } from "./IncModel";
 import { ISimpleModel, SimpleModelReducer } from "./SimpleModel";
 import { ITestModel, TestModelReducer } from "./TestModel";
@@ -14,6 +15,7 @@ import { IUIHelperModel, UIHelperModelReducer } from "./UIHelperModel";
 import { IUserState, UserStateReducer } from "./UserState";
 import { IWaspModel, WaspModelReducer } from "./WaspModel";
 export interface IState {
+  GenericModel: IGenericModel;
   IncModel: IIncModel;
   SimpleModel: ISimpleModel;
   TestModel: ITestModel;
@@ -24,6 +26,7 @@ export interface IState {
   WaspModel: IWaspModel;
 }
 export const reducers = redux.combineReducers<IState>({
+  GenericModel: GenericModelReducer,
   IncModel: IncModelReducer,
   SimpleModel: SimpleModelReducer,
   TestModel: TestModelReducer,

@@ -110,7 +110,7 @@ export interface ITodoList {
   sortOrder: SortOrder;
   listStart: number;
   listPageLength: number;
-  listTitle: String;
+  listTitle: string;
 }
 export const itemsSelectorFn = (state: ITodoList): TodoListItem[] =>
   state.items;
@@ -122,7 +122,7 @@ export const listStartSelectorFn = (state: ITodoList): number =>
   state.listStart;
 export const listPageLengthSelectorFn = (state: ITodoList): number =>
   state.listPageLength;
-export const listTitleSelectorFn = (state: ITodoList): String =>
+export const listTitleSelectorFn = (state: ITodoList): string =>
   state.listTitle;
 export const listToDisplaySelectorFnCreator = () =>
   createSelector(
@@ -382,7 +382,7 @@ export class RTodoList {
       }
     }
   }
-  get listTitle(): String | undefined {
+  get listTitle(): string | undefined {
     if (this._getState) {
       return this._getState().TodoList.listTitle;
     } else {
@@ -392,7 +392,7 @@ export class RTodoList {
     }
     return undefined;
   }
-  set listTitle(value: String | undefined) {
+  set listTitle(value: string | undefined) {
     if (this._state && typeof value !== "undefined") {
       this._state.listTitle = value;
     } else {
@@ -406,7 +406,6 @@ export class RTodoList {
     }
   }
 
-  // is a reducer
   nextPage() {
     if (this._state) {
       this.listStart += this.listPageLength;
@@ -422,7 +421,6 @@ export class RTodoList {
       new RTodoList(undefined, dispatcher, getState).nextPage();
     };
   }
-  // is a reducer
   prevPage() {
     if (this._state) {
       this.listStart -= this.listPageLength;
@@ -439,7 +437,6 @@ export class RTodoList {
       new RTodoList(undefined, dispatcher, getState).prevPage();
     };
   }
-  // is a reducer
   toggleSortOrder() {
     if (this._state) {
       this.sortOrder =
@@ -456,7 +453,6 @@ export class RTodoList {
       new RTodoList(undefined, dispatcher, getState).toggleSortOrder();
     };
   }
-  // is a reducer
   clearTodoList() {
     if (this._state) {
       this.items = [];
@@ -472,7 +468,6 @@ export class RTodoList {
       new RTodoList(undefined, dispatcher, getState).clearTodoList();
     };
   }
-  // is a reducer
   reverse() {
     if (this._state) {
       this.items.reverse();
@@ -488,7 +483,6 @@ export class RTodoList {
       new RTodoList(undefined, dispatcher, getState).reverse();
     };
   }
-  // is a reducer
   sortById() {
     if (this._state) {
       this.items.sort((a, b) => a.id - b.id);
@@ -504,7 +498,6 @@ export class RTodoList {
       new RTodoList(undefined, dispatcher, getState).sortById();
     };
   }
-  // is a reducer
   sortByTitle() {
     if (this._state) {
       this.items.sort((a, b) => a.title.localeCompare(b.title));
@@ -520,7 +513,6 @@ export class RTodoList {
       new RTodoList(undefined, dispatcher, getState).sortByTitle();
     };
   }
-  // is a reducer
   sortByCompletion() {
     if (this._state) {
       const toNumber = (value: boolean): number => (value ? 1 : 0);
@@ -537,7 +529,6 @@ export class RTodoList {
       new RTodoList(undefined, dispatcher, getState).sortByCompletion();
     };
   }
-  // is a reducer
   setTitle(value: string) {
     if (this._state) {
       this.listTitle = value;
@@ -556,7 +547,6 @@ export class RTodoList {
       new RTodoList(undefined, dispatcher, getState).setTitle(value);
     };
   }
-  // is task
   /**
    * Fetch items from json placeholder service
    */

@@ -753,7 +753,6 @@ export class RTestModel {
     }
   }
 
-  // is a reducer
   setUserMessage(value: string) {
     if (this._state) {
       this.userMessage = value;
@@ -772,7 +771,6 @@ export class RTestModel {
       new RTestModel(undefined, dispatcher, getState).setUserMessage(value);
     };
   }
-  // is a reducer
   add(item: ShopCartItem) {
     if (this._state) {
       console.log(this.maxId);
@@ -792,7 +790,6 @@ export class RTestModel {
       new RTestModel(undefined, dispatcher, getState).add(item);
     };
   }
-  // is a reducer
   removeFirst() {
     if (this._state) {
       this.items.splice(0, 1);
@@ -808,7 +805,6 @@ export class RTestModel {
       new RTestModel(undefined, dispatcher, getState).removeFirst();
     };
   }
-  // is a reducer
   sort() {
     if (this._state) {
       this.items.sort((a, b) => {
@@ -826,7 +822,6 @@ export class RTestModel {
       new RTestModel(undefined, dispatcher, getState).sort();
     };
   }
-  // is a reducer
   addCart() {
     if (this._state) {
       const key = "cart" + this.cartId++;
@@ -845,7 +840,6 @@ export class RTestModel {
       new RTestModel(undefined, dispatcher, getState).addCart();
     };
   }
-  // is a reducer
   addCartSync() {
     if (this._state) {
       const key = "cart" + this.cartId++;
@@ -864,7 +858,6 @@ export class RTestModel {
       new RTestModel(undefined, dispatcher, getState).addCartSync();
     };
   }
-  // is a reducer
   addToCart(adding: { cartId: string; item: ShopCartItem }) {
     if (this._state) {
       this.carts[adding.cartId].items.push({
@@ -886,7 +879,6 @@ export class RTestModel {
       new RTestModel(undefined, dispatcher, getState).addToCart(adding);
     };
   }
-  // is a reducer
   setCartNewItem(adding: { cartId: string; name: string }) {
     if (this._state) {
       this.carts[adding.cartId].newItemName = name;
@@ -905,7 +897,6 @@ export class RTestModel {
       new RTestModel(undefined, dispatcher, getState).setCartNewItem(adding);
     };
   }
-  // is a reducer
   addToCartRandom() {
     if (this._state) {
       Object.keys(this.carts).forEach(cartKey => {
@@ -926,7 +917,6 @@ export class RTestModel {
       new RTestModel(undefined, dispatcher, getState).addToCartRandom();
     };
   }
-  // is a reducer
   renameLast(newName: string) {
     if (this._state) {
       this.items[this.items.length - 1].name = newName;
@@ -945,7 +935,6 @@ export class RTestModel {
       new RTestModel(undefined, dispatcher, getState).renameLast(newName);
     };
   }
-  // is task
   // action
   async createItem(someName: string) {
     console.log(MSG, this.shopState);
@@ -966,7 +955,6 @@ export class RTestModel {
       new RTestModel(undefined, dispatcher, getState).createItem(someName);
     };
   }
-  // is task
   async addOneFriend(name) {
     this.add({ name });
   }
@@ -976,7 +964,6 @@ export class RTestModel {
       new RTestModel(undefined, dispatcher, getState).addOneFriend(name);
     };
   }
-  // is task
   async fillSomeFriends() {
     FRIEND_LIST.forEach(name => {
       this.add({ name });
@@ -988,7 +975,6 @@ export class RTestModel {
       new RTestModel(undefined, dispatcher, getState).fillSomeFriends();
     };
   }
-  // is task
   async ChangeLastItem() {
     this.renameLast(LAST_NAME);
   }

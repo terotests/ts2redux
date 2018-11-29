@@ -51,9 +51,9 @@ export interface IContainerPropsMethods {
 export interface ITestModel {
     items: ShopCartItem[];
     maxId: number;
-    str_init_test: String;
-    bool_init_test: Boolean;
-    bool4: Boolean;
+    str_init_test: string;
+    bool_init_test: boolean;
+    bool4: boolean;
     obj_init_test: TestObj;
     rand_init_test: number;
     arr_init_test: Array<number>;
@@ -69,9 +69,9 @@ export interface ITestModel {
 }
 export declare const itemsSelectorFn: (state: ITestModel) => ShopCartItem[];
 export declare const maxIdSelectorFn: (state: ITestModel) => number;
-export declare const str_init_testSelectorFn: (state: ITestModel) => String;
-export declare const bool_init_testSelectorFn: (state: ITestModel) => Boolean;
-export declare const bool4SelectorFn: (state: ITestModel) => Boolean;
+export declare const str_init_testSelectorFn: (state: ITestModel) => string;
+export declare const bool_init_testSelectorFn: (state: ITestModel) => boolean;
+export declare const bool4SelectorFn: (state: ITestModel) => boolean;
 export declare const obj_init_testSelectorFn: (state: ITestModel) => TestObj;
 export declare const rand_init_testSelectorFn: (state: ITestModel) => number;
 export declare const arr_init_testSelectorFn: (state: ITestModel) => number[];
@@ -100,9 +100,9 @@ export declare class RTestModel {
     constructor(state?: ITestModel, dispatch?: (action: any) => void, getState?: () => any);
     items: ShopCartItem[] | undefined;
     maxId: number | undefined;
-    str_init_test: String | undefined;
-    bool_init_test: Boolean | undefined;
-    bool4: Boolean | undefined;
+    str_init_test: string | undefined;
+    bool_init_test: boolean | undefined;
+    bool4: boolean | undefined;
     obj_init_test: TestObj | undefined;
     rand_init_test: number | undefined;
     arr_init_test: Array<number> | undefined;

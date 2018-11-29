@@ -1,5 +1,5 @@
 /// <reference types="react" />
-import * as container from '../models/reducers/genericModel';
+import * as container from '../models/reducers/GenericModel';
 export interface Props extends container.IProps {
 }
 export declare const AbstractGeneric: (props: Props) => JSX.Element;

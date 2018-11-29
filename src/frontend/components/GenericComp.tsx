@@ -1,5 +1,5 @@
 import * as React from 'react';
-import * as container from '../models/reducers/genericModel'
+import * as container from '../models/reducers/GenericModel'
 
 // abstract properties version of the component
 export interface Props extends container.IProps {}

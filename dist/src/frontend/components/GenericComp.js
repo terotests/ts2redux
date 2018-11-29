@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var React = require("react");
-var container = require("../models/reducers/genericModel");
+var container = require("../models/reducers/GenericModel");
 var Nro = /** @class */ (function () {
     function Nro(n) {
         this.val = 0;

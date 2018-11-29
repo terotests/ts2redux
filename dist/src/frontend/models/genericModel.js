@@ -21,6 +21,7 @@ exports.SomeList = SomeList;
 var GenericModel = /** @class */ (function () {
     function GenericModel() {
         this.sum = 0;
+        // This is not a good idea with Immer...
         this.list = new SomeList();
     }
     GenericModel.prototype.refreshSum = function () {
@@ -36,4 +37,4 @@ var GenericModel = /** @class */ (function () {
     return GenericModel;
 }());
 exports.GenericModel = GenericModel;
-//# sourceMappingURL=genericModel.js.map
+//# sourceMappingURL=GenericModel.js.map

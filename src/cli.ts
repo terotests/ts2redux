@@ -22,10 +22,9 @@ if( args.length === 0 ) {
 const state = {
   is_running : false
 }
-const compileProject = async (eventArgs) => {
+const compileProject = async (eventArgs:any) => {
   if(state.is_running) return
   console.log('Compiling path: ', args[0])
-  console.log(eventArgs)
   state.is_running = true
   await createProject({
     path: args[0],

@@ -64,7 +64,6 @@ var compileProject = function (eventArgs) { return __awaiter(_this, void 0, void
                 if (state.is_running)
                     return [2 /*return*/];
                 console.log('Compiling path: ', args[0]);
-                console.log(eventArgs);
                 state.is_running = true;
                 return [4 /*yield*/, index_1.createProject({
                         path: args[0],

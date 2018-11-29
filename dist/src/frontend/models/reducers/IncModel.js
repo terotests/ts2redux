@@ -112,7 +112,6 @@ var RIncModel = /** @class */ (function () {
         enumerable: true,
         configurable: true
     });
-    // is a reducer
     RIncModel.prototype.increment = function () {
         if (this._state) {
             this.cnt++;
@@ -128,7 +127,6 @@ var RIncModel = /** @class */ (function () {
             new RIncModel(undefined, dispatcher, getState).increment();
         };
     };
-    // is a reducer
     RIncModel.prototype.decrement = function () {
         if (this._state) {
             this.cnt--;

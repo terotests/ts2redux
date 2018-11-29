@@ -103,7 +103,6 @@ export class RIncModel {
     }
   }
 
-  // is a reducer
   increment() {
     if (this._state) {
       this.cnt++;
@@ -119,7 +118,6 @@ export class RIncModel {
       new RIncModel(undefined, dispatcher, getState).increment();
     };
   }
-  // is a reducer
   decrement() {
     if (this._state) {
       this.cnt--;

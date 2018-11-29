@@ -5,6 +5,7 @@
  *                                              *
  ***********************************************/
 import * as redux from "redux";
+import { IGenericModel } from "./GenericModel";
 import { IIncModel } from "./IncModel";
 import { ISimpleModel } from "./SimpleModel";
 import { ITestModel } from "./TestModel";
@@ -14,6 +15,7 @@ import { IUIHelperModel } from "./UIHelperModel";
 import { IUserState } from "./UserState";
 import { IWaspModel } from "./WaspModel";
 export interface IState {
+    GenericModel: IGenericModel;
     IncModel: IIncModel;
     SimpleModel: ISimpleModel;
     TestModel: ITestModel;

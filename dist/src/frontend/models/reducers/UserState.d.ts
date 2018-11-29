@@ -15,13 +15,13 @@ export interface IContainerPropsMethods {
     fakeLogin: () => any;
 }
 export interface IUserState {
-    logged: Boolean;
+    logged: boolean;
     username: string;
     firstName: string;
     lastName: string;
     lastLogin: number;
 }
-export declare const loggedSelectorFn: (state: IUserState) => Boolean;
+export declare const loggedSelectorFn: (state: IUserState) => boolean;
 export declare const usernameSelectorFn: (state: IUserState) => string;
 export declare const firstNameSelectorFn: (state: IUserState) => string;
 export declare const lastNameSelectorFn: (state: IUserState) => string;
@@ -40,7 +40,7 @@ export declare class RUserState {
     private _dispatch?;
     private _getState?;
     constructor(state?: IUserState, dispatch?: (action: any) => void, getState?: () => any);
-    logged: Boolean | undefined;
+    logged: boolean | undefined;
     username: string | undefined;
     firstName: string | undefined;
     lastName: string | undefined;

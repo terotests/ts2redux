@@ -7,6 +7,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
  *                                              *
  ***********************************************/
 var redux = require("redux");
+var GenericModel_1 = require("./GenericModel");
 var IncModel_1 = require("./IncModel");
 var SimpleModel_1 = require("./SimpleModel");
 var TestModel_1 = require("./TestModel");
@@ -16,6 +17,7 @@ var UIHelperModel_1 = require("./UIHelperModel");
 var UserState_1 = require("./UserState");
 var WaspModel_1 = require("./WaspModel");
 exports.reducers = redux.combineReducers({
+    GenericModel: GenericModel_1.GenericModelReducer,
     IncModel: IncModel_1.IncModelReducer,
     SimpleModel: SimpleModel_1.SimpleModelReducer,
     TestModel: TestModel_1.TestModelReducer,

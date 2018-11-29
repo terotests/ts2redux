@@ -7,10 +7,14 @@ import reduxThunk from 'redux-thunk';
 import { Provider } from 'react-redux';
 import { reducers } from './models/reducers/'
 import { TodoListContext, TodoListProvider, TodoListConsumer } from './models/reducers/TodoList'
+
+import { GenericModelConsumer, GenericModelProvider } from './models/reducers/genericModel'
+
 import { UserStateContext, UserStateProvider } from './models/reducers/UserState'
 
 import { IncModelConsumer, IncModelProvider } from './models/reducers/IncModel'
 
+import { GenericRedux } from './components/GenericComp';
 import { MemberArea } from './components/memberArea';
 import { TodoList } from './components/todoList';
 import { ReduxInc } from './components/ReduxInc';
@@ -30,6 +34,16 @@ let store = createStore(
   )  
 );
 
+class Nro {
+  val = 0
+  constructor(n:number) {
+    this.val = n
+  }
+  value() {
+    return this.val
+  }
+}
+
 const listValue = new todo.TodoList()
 const Ctx = React.createContext( listValue )
 // const history = syncHistoryWithStore(hashHistory, store);
@@ -43,9 +57,9 @@ const UserInfo = (props) => <UserStateContext.Consumer>{
 }</UserStateContext.Consumer>
 
 ReactDOM.render(
-  <Provider store={store}>
+  <Provider store={store}>    
     <Ctx.Provider value={listValue}>
-
+      <GenericRedux/>
       <TetrisComponent/>
       <UserStateProvider>
       <UIHelperModelProvider>

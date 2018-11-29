@@ -814,7 +814,6 @@ var RTestModel = /** @class */ (function () {
         enumerable: true,
         configurable: true
     });
-    // is a reducer
     RTestModel.prototype.setUserMessage = function (value) {
         if (this._state) {
             this.userMessage = value;
@@ -833,7 +832,6 @@ var RTestModel = /** @class */ (function () {
             new RTestModel(undefined, dispatcher, getState).setUserMessage(value);
         };
     };
-    // is a reducer
     RTestModel.prototype.add = function (item) {
         if (this._state) {
             console.log(this.maxId);
@@ -850,7 +848,6 @@ var RTestModel = /** @class */ (function () {
             new RTestModel(undefined, dispatcher, getState).add(item);
         };
     };
-    // is a reducer
     RTestModel.prototype.removeFirst = function () {
         if (this._state) {
             this.items.splice(0, 1);
@@ -866,7 +863,6 @@ var RTestModel = /** @class */ (function () {
             new RTestModel(undefined, dispatcher, getState).removeFirst();
         };
     };
-    // is a reducer
     RTestModel.prototype.sort = function () {
         if (this._state) {
             this.items.sort(function (a, b) {
@@ -884,7 +880,6 @@ var RTestModel = /** @class */ (function () {
             new RTestModel(undefined, dispatcher, getState).sort();
         };
     };
-    // is a reducer
     RTestModel.prototype.addCart = function () {
         if (this._state) {
             var key = "cart" + this.cartId++;
@@ -903,7 +898,6 @@ var RTestModel = /** @class */ (function () {
             new RTestModel(undefined, dispatcher, getState).addCart();
         };
     };
-    // is a reducer
     RTestModel.prototype.addCartSync = function () {
         if (this._state) {
             var key = "cart" + this.cartId++;
@@ -922,7 +916,6 @@ var RTestModel = /** @class */ (function () {
             new RTestModel(undefined, dispatcher, getState).addCartSync();
         };
     };
-    // is a reducer
     RTestModel.prototype.addToCart = function (adding) {
         if (this._state) {
             this.carts[adding.cartId].items.push(__assign({}, adding.item, { id: this.maxId++ }));
@@ -941,7 +934,6 @@ var RTestModel = /** @class */ (function () {
             new RTestModel(undefined, dispatcher, getState).addToCart(adding);
         };
     };
-    // is a reducer
     RTestModel.prototype.setCartNewItem = function (adding) {
         if (this._state) {
             this.carts[adding.cartId].newItemName = name;
@@ -960,7 +952,6 @@ var RTestModel = /** @class */ (function () {
             new RTestModel(undefined, dispatcher, getState).setCartNewItem(adding);
         };
     };
-    // is a reducer
     RTestModel.prototype.addToCartRandom = function () {
         var _this = this;
         if (this._state) {
@@ -982,7 +973,6 @@ var RTestModel = /** @class */ (function () {
             new RTestModel(undefined, dispatcher, getState).addToCartRandom();
         };
     };
-    // is a reducer
     RTestModel.prototype.renameLast = function (newName) {
         if (this._state) {
             this.items[this.items.length - 1].name = newName;
@@ -1001,7 +991,6 @@ var RTestModel = /** @class */ (function () {
             new RTestModel(undefined, dispatcher, getState).renameLast(newName);
         };
     };
-    // is task
     // action
     RTestModel.prototype.createItem = function (someName) {
         return __awaiter(this, void 0, void 0, function () {
@@ -1031,7 +1020,6 @@ var RTestModel = /** @class */ (function () {
             new RTestModel(undefined, dispatcher, getState).createItem(someName);
         };
     };
-    // is task
     RTestModel.prototype.addOneFriend = function (name) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
@@ -1045,7 +1033,6 @@ var RTestModel = /** @class */ (function () {
             new RTestModel(undefined, dispatcher, getState).addOneFriend(name);
         };
     };
-    // is task
     RTestModel.prototype.fillSomeFriends = function () {
         return __awaiter(this, void 0, void 0, function () {
             var _this = this;
@@ -1062,7 +1049,6 @@ var RTestModel = /** @class */ (function () {
             new RTestModel(undefined, dispatcher, getState).fillSomeFriends();
         };
     };
-    // is task
     RTestModel.prototype.ChangeLastItem = function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {

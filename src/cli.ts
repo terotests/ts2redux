@@ -22,9 +22,10 @@ if( args.length === 0 ) {
 const state = {
   is_running : false
 }
-const compileProject = async () => {
+const compileProject = async (eventArgs) => {
   if(state.is_running) return
-  console.log('Compiling path ', args[0])
+  console.log('Compiling path: ', args[0])
+  console.log(eventArgs)
   state.is_running = true
   await createProject({
     path: args[0],
@@ -37,9 +38,11 @@ const compileProject = async () => {
     },100)
 }
 const start = async() => {
-  await compileProject()
+  await compileProject(null)
   if( argv.watch ) {
-    const watcher = chokidar.watch( args[0] )
+    const watcher = chokidar.watch( args[0], {
+      ignored:'*.tsx'
+    })
     watcher
     .on('add', compileProject)
     .on('change', compileProject)

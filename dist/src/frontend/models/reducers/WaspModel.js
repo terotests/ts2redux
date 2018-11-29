@@ -238,7 +238,6 @@ var RWaspModel = /** @class */ (function () {
         enumerable: true,
         configurable: true
     });
-    // is a reducer
     RWaspModel.prototype.addWasp = function (pos) {
         if (this._state) {
             var o = { x: 0, y: 0 };
@@ -264,7 +263,6 @@ var RWaspModel = /** @class */ (function () {
             new RWaspModel(undefined, dispatcher, getState).addWasp(pos);
         };
     };
-    // is a reducer
     RWaspModel.prototype.incSpeed = function (value) {
         if (this._state) {
             this.speed = this.speed + value;
@@ -283,7 +281,6 @@ var RWaspModel = /** @class */ (function () {
             new RWaspModel(undefined, dispatcher, getState).incSpeed(value);
         };
     };
-    // is a reducer
     RWaspModel.prototype.setColor = function (value) {
         if (this._state) {
             if (this.wasps[value.waspId])
@@ -303,7 +300,6 @@ var RWaspModel = /** @class */ (function () {
             new RWaspModel(undefined, dispatcher, getState).setColor(value);
         };
     };
-    // is a reducer
     RWaspModel.prototype.step = function () {
         var _this = this;
         if (this._state) {

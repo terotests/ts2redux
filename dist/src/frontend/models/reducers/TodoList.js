@@ -489,7 +489,6 @@ var RTodoList = /** @class */ (function () {
         enumerable: true,
         configurable: true
     });
-    // is a reducer
     RTodoList.prototype.nextPage = function () {
         if (this._state) {
             this.listStart += this.listPageLength;
@@ -505,7 +504,6 @@ var RTodoList = /** @class */ (function () {
             new RTodoList(undefined, dispatcher, getState).nextPage();
         };
     };
-    // is a reducer
     RTodoList.prototype.prevPage = function () {
         if (this._state) {
             this.listStart -= this.listPageLength;
@@ -523,7 +521,6 @@ var RTodoList = /** @class */ (function () {
             new RTodoList(undefined, dispatcher, getState).prevPage();
         };
     };
-    // is a reducer
     RTodoList.prototype.toggleSortOrder = function () {
         if (this._state) {
             this.sortOrder =
@@ -540,7 +537,6 @@ var RTodoList = /** @class */ (function () {
             new RTodoList(undefined, dispatcher, getState).toggleSortOrder();
         };
     };
-    // is a reducer
     RTodoList.prototype.clearTodoList = function () {
         if (this._state) {
             this.items = [];
@@ -556,7 +552,6 @@ var RTodoList = /** @class */ (function () {
             new RTodoList(undefined, dispatcher, getState).clearTodoList();
         };
     };
-    // is a reducer
     RTodoList.prototype.reverse = function () {
         if (this._state) {
             this.items.reverse();
@@ -572,7 +567,6 @@ var RTodoList = /** @class */ (function () {
             new RTodoList(undefined, dispatcher, getState).reverse();
         };
     };
-    // is a reducer
     RTodoList.prototype.sortById = function () {
         if (this._state) {
             this.items.sort(function (a, b) { return a.id - b.id; });
@@ -588,7 +582,6 @@ var RTodoList = /** @class */ (function () {
             new RTodoList(undefined, dispatcher, getState).sortById();
         };
     };
-    // is a reducer
     RTodoList.prototype.sortByTitle = function () {
         if (this._state) {
             this.items.sort(function (a, b) { return a.title.localeCompare(b.title); });
@@ -604,7 +597,6 @@ var RTodoList = /** @class */ (function () {
             new RTodoList(undefined, dispatcher, getState).sortByTitle();
         };
     };
-    // is a reducer
     RTodoList.prototype.sortByCompletion = function () {
         if (this._state) {
             var toNumber_1 = function (value) { return (value ? 1 : 0); };
@@ -621,7 +613,6 @@ var RTodoList = /** @class */ (function () {
             new RTodoList(undefined, dispatcher, getState).sortByCompletion();
         };
     };
-    // is a reducer
     RTodoList.prototype.setTitle = function (value) {
         if (this._state) {
             this.listTitle = value;
@@ -640,7 +631,6 @@ var RTodoList = /** @class */ (function () {
             new RTodoList(undefined, dispatcher, getState).setTitle(value);
         };
     };
-    // is task
     /**
      * Fetch items from json placeholder service
      */

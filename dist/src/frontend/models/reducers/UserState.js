@@ -300,7 +300,6 @@ var RUserState = /** @class */ (function () {
         enumerable: true,
         configurable: true
     });
-    // is task
     RUserState.prototype.login = function (loginInfo) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
@@ -314,7 +313,6 @@ var RUserState = /** @class */ (function () {
             new RUserState(undefined, dispatcher, getState).login(loginInfo);
         };
     };
-    // is task
     RUserState.prototype.logout = function () {
         return __awaiter(this, void 0, void 0, function () { return __generator(this, function (_a) {
             return [2 /*return*/];
@@ -325,7 +323,6 @@ var RUserState = /** @class */ (function () {
             new RUserState(undefined, dispatcher, getState).logout();
         };
     };
-    // is a reducer
     RUserState.prototype.fakeLogin = function () {
         if (this._state) {
             this.username = "Fake Login";

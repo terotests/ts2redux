@@ -662,7 +662,6 @@ export class RTetrisModel {
     }
   }
 
-  // is a reducer
   private doesCollide(
     pieceX: number,
     pieceY: number,
@@ -691,7 +690,6 @@ export class RTetrisModel {
     });
     return collides;
   }
-  // is a reducer
   tick() {
     if (this._state) {
       this.tickCnt++;
@@ -711,7 +709,6 @@ export class RTetrisModel {
       new RTetrisModel(undefined, dispatcher, getState).tick();
     };
   }
-  // is a reducer
   left() {
     if (this._state) {
       if (!this.doesCollide(this.activePiece.x - 1, this.activePiece.y)) {
@@ -729,7 +726,6 @@ export class RTetrisModel {
       new RTetrisModel(undefined, dispatcher, getState).left();
     };
   }
-  // is a reducer
   right() {
     if (this._state) {
       if (!this.doesCollide(this.activePiece.x + 1, this.activePiece.y)) {
@@ -747,7 +743,6 @@ export class RTetrisModel {
       new RTetrisModel(undefined, dispatcher, getState).right();
     };
   }
-  // is a reducer
   rotate() {
     if (this._state) {
       const newOrientation = this.rotateCells(this.activePiece.cells);
@@ -772,7 +767,6 @@ export class RTetrisModel {
       new RTetrisModel(undefined, dispatcher, getState).rotate();
     };
   }
-  // is a reducer
   // creates a new piece with rotated values
   private rotateCells(cells: Cell[][]): Cell[][] {
     const res: Cell[][] = new Array(cells.length);
@@ -793,7 +787,6 @@ export class RTetrisModel {
     }
     return res;
   }
-  // is a reducer
   step() {
     if (this._state) {
       if (this.gameOn) {
@@ -823,7 +816,6 @@ export class RTetrisModel {
       new RTetrisModel(undefined, dispatcher, getState).step();
     };
   }
-  // is a reducer
   private pickNextColor(): string {
     this.lastUsedColor++;
     if (this.lastUsedColor >= this.useColors.length) {
@@ -831,7 +823,6 @@ export class RTetrisModel {
     }
     return this.useColors[this.lastUsedColor];
   }
-  // is a reducer
   masonPiece() {
     if (this._state) {
       const piece = this.activePiece;
@@ -855,7 +846,6 @@ export class RTetrisModel {
       new RTetrisModel(undefined, dispatcher, getState).masonPiece();
     };
   }
-  // is a reducer
   dropRows() {
     if (this._state) {
       const nextRows = [];
@@ -892,7 +882,6 @@ export class RTetrisModel {
       new RTetrisModel(undefined, dispatcher, getState).dropRows();
     };
   }
-  // is a reducer
   clearCells() {
     if (this._state) {
       this.cells = new Array(this.rows);
@@ -914,7 +903,6 @@ export class RTetrisModel {
       new RTetrisModel(undefined, dispatcher, getState).clearCells();
     };
   }
-  // is a reducer
   resetGame() {
     if (this._state) {
       this.clearCells();
@@ -933,7 +921,6 @@ export class RTetrisModel {
       new RTetrisModel(undefined, dispatcher, getState).resetGame();
     };
   }
-  // is a reducer
   start() {
     if (this._state) {
       this.resetGame();

@@ -398,16 +398,18 @@ function createProject(settings) {
                                     if (rvNode) {
                                         rvMethod = true;
                                     }
+                                    var typeArgs = m.getTypeParameters().map(function (p) { return p.print(); }).join(',');
+                                    var typeArgStr = typeArgs.length > 0 ? '<' + typeArgs + '>' : '';
                                     if (!rvMethod && m.getParameters().length > 1) {
                                         throw "Error at " + sourceFile.getFilePath() + " in class " + c.getName() + " method " + m.getName() + " can not have more than 2 parameters at the moment";
                                     }
                                     var pName = m.getParameters().filter(function (a, i) { return i < 1; }).map(function (mod) { return mod.getName(); }).join('');
                                     if (m.isAsync()) {
-                                        body_1.out('// is task', true);
+                                        // body.out('// is task', true)
                                         body_1.raw(m.print(), true);
                                     }
                                     else {
-                                        body_1.out('// is a reducer', true);
+                                        // body.out('// is a reducer', true)
                                         var r_name = c.getName() + "_" + m.getName();
                                         var param_name = m.getParameters().length > 0 ? 'action.payload' : '';
                                         ng_enums_1.out(r_name + " : '" + r_name + "',", true);
@@ -419,7 +421,7 @@ function createProject(settings) {
                                             ng_reducers_1.indent(-1);
                                         }
                                         body_1.raw(m.getModifiers().map(function (mod) { return mod.print() + ' '; }).join(''));
-                                        body_1.out(m.getName() + '(' + m.getParameters().map(function (mod) { return mod.print(); }).join(', ') + ')');
+                                        body_1.out(m.getName() + typeArgStr + '(' + m.getParameters().map(function (mod) { return mod.print(); }).join(', ') + ')');
                                         if (m.getReturnTypeNode())
                                             body_1.out(': ' + m.getReturnTypeNode().print());
                                         body_1.out('{', true);
@@ -452,9 +454,9 @@ function createProject(settings) {
                                         body_1.out('', true);
                                         body_1.out('public static ');
                                         body_1.out(m.getModifiers().filter(function (mod) { return (mod.getText() != 'async' && mod.getText() != 'public'); }).map(function (mod) { return mod.print() + ' '; }).join(''));
-                                        body_1.out(m.getName() + '(' + m.getParameters().map(function (mod) { return mod.print(); }).join(', ') + ')');
-                                        propsMethods_1.out(m.getName() + ' : (' + m.getParameters().map(function (mod) { return mod.print(); }).join(', ') + ') => any', true);
-                                        dispatchMethods_1.out(m.getName() + ' : (' + m.getParameters().map(function (mod) { return mod.print(); }).join(', ') + ') => {', true);
+                                        body_1.out(m.getName() + typeArgStr + '(' + m.getParameters().map(function (mod) { return mod.print(); }).join(', ') + ')');
+                                        propsMethods_1.out(m.getName() + ' : ' + typeArgStr + '(' + m.getParameters().map(function (mod) { return mod.print(); }).join(', ') + ') => any', true);
+                                        dispatchMethods_1.out(m.getName() + ' : ' + typeArgStr + '(' + m.getParameters().map(function (mod) { return mod.print(); }).join(', ') + ') => {', true);
                                         dispatchMethods_1.indent(1);
                                         dispatchMethods_1.out("return dispatch(R" + c.getName() + "." + m.getName() + "(" + pName + "))", true);
                                         dispatchMethods_1.indent(-1);
@@ -538,10 +540,12 @@ function createProject(settings) {
                                     ng.indent(-1);
                                     ng.out("}", true);
                                     reducerMethods_1.forEach(function (m) {
+                                        var typeArgs = m.getTypeParameters().map(function (p) { return p.print(); }).join(',');
+                                        var typeArgStr = typeArgs.length > 0 ? '<' + typeArgs + '>' : '';
                                         var body = ng;
                                         body.raw(m.getModifiers().map(function (mod) { return mod.print() + ' '; }).join(''));
                                         binder.out("this." + m.getName() + " = this." + m.getName() + ".bind(this)", true);
-                                        body.out(m.getName() + '(' + m.getParameters().map(function (mod) { return mod.print(); }).join(', ') + ')');
+                                        body.out(m.getName() + typeArgStr + '(' + m.getParameters().map(function (mod) { return mod.print(); }).join(', ') + ')');
                                         // if(m.getReturnTypeNode()) body.out( ': ' + m.getReturnTypeNode().print() ) 
                                         body.out('{', true);
                                         body.indent(1);

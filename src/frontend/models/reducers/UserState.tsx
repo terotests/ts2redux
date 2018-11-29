@@ -37,13 +37,13 @@ export interface IContainerPropsMethods {
   fakeLogin: () => any;
 }
 export interface IUserState {
-  logged: Boolean;
+  logged: boolean;
   username: string;
   firstName: string;
   lastName: string;
   lastLogin: number;
 }
-export const loggedSelectorFn = (state: IUserState): Boolean => state.logged;
+export const loggedSelectorFn = (state: IUserState): boolean => state.logged;
 export const usernameSelectorFn = (state: IUserState): string => state.username;
 export const firstNameSelectorFn = (state: IUserState): string =>
   state.firstName;
@@ -120,7 +120,7 @@ export class RUserState {
     this._dispatch = dispatch;
     this._getState = getState;
   }
-  get logged(): Boolean | undefined {
+  get logged(): boolean | undefined {
     if (this._getState) {
       return this._getState().UserState.logged;
     } else {
@@ -130,7 +130,7 @@ export class RUserState {
     }
     return undefined;
   }
-  set logged(value: Boolean | undefined) {
+  set logged(value: boolean | undefined) {
     if (this._state && typeof value !== "undefined") {
       this._state.logged = value;
     } else {
@@ -236,7 +236,6 @@ export class RUserState {
     }
   }
 
-  // is task
   async login(loginInfo: { username: string; password: string }) {
     console.log("Login called with ", loginInfo);
   }
@@ -246,7 +245,6 @@ export class RUserState {
       new RUserState(undefined, dispatcher, getState).login(loginInfo);
     };
   }
-  // is task
   async logout() {}
 
   public static logout() {
@@ -254,7 +252,6 @@ export class RUserState {
       new RUserState(undefined, dispatcher, getState).logout();
     };
   }
-  // is a reducer
   fakeLogin() {
     if (this._state) {
       this.username = "Fake Login";

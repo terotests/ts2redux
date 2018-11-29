@@ -205,9 +205,9 @@ export interface ITestModel {
   items: ShopCartItem[];
   maxId: number;
   // Default initializers work :)
-  str_init_test: String;
-  bool_init_test: Boolean;
-  bool4: Boolean;
+  str_init_test: string;
+  bool_init_test: boolean;
+  bool4: boolean;
   obj_init_test: TestObj;
   rand_init_test: number;
   arr_init_test: Array<number>;
@@ -226,11 +226,11 @@ export interface ITestModel {
 export const itemsSelectorFn = (state: ITestModel): ShopCartItem[] =>
   state.items;
 export const maxIdSelectorFn = (state: ITestModel): number => state.maxId;
-export const str_init_testSelectorFn = (state: ITestModel): String =>
+export const str_init_testSelectorFn = (state: ITestModel): string =>
   state.str_init_test;
-export const bool_init_testSelectorFn = (state: ITestModel): Boolean =>
+export const bool_init_testSelectorFn = (state: ITestModel): boolean =>
   state.bool_init_test;
-export const bool4SelectorFn = (state: ITestModel): Boolean => state.bool4;
+export const bool4SelectorFn = (state: ITestModel): boolean => state.bool4;
 export const obj_init_testSelectorFn = (state: ITestModel): TestObj =>
   state.obj_init_test;
 export const rand_init_testSelectorFn = (state: ITestModel): number =>
@@ -443,7 +443,7 @@ export class RTestModel {
       }
     }
   }
-  get str_init_test(): String | undefined {
+  get str_init_test(): string | undefined {
     if (this._getState) {
       return this._getState().TestModel.str_init_test;
     } else {
@@ -453,7 +453,7 @@ export class RTestModel {
     }
     return undefined;
   }
-  set str_init_test(value: String | undefined) {
+  set str_init_test(value: string | undefined) {
     if (this._state && typeof value !== "undefined") {
       this._state.str_init_test = value;
     } else {
@@ -466,7 +466,7 @@ export class RTestModel {
       }
     }
   }
-  get bool_init_test(): Boolean | undefined {
+  get bool_init_test(): boolean | undefined {
     if (this._getState) {
       return this._getState().TestModel.bool_init_test;
     } else {
@@ -476,7 +476,7 @@ export class RTestModel {
     }
     return undefined;
   }
-  set bool_init_test(value: Boolean | undefined) {
+  set bool_init_test(value: boolean | undefined) {
     if (this._state && typeof value !== "undefined") {
       this._state.bool_init_test = value;
     } else {
@@ -489,7 +489,7 @@ export class RTestModel {
       }
     }
   }
-  get bool4(): Boolean | undefined {
+  get bool4(): boolean | undefined {
     if (this._getState) {
       return this._getState().TestModel.bool4;
     } else {
@@ -499,7 +499,7 @@ export class RTestModel {
     }
     return undefined;
   }
-  set bool4(value: Boolean | undefined) {
+  set bool4(value: boolean | undefined) {
     if (this._state && typeof value !== "undefined") {
       this._state.bool4 = value;
     } else {

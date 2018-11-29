@@ -74,8 +74,8 @@ export interface ITetrisModel {
     cols: number;
     cells: Cell[][];
     activePiece?: ActivePiece;
-    gameOn: Boolean;
-    gameEnded: Boolean;
+    gameOn: boolean;
+    gameEnded: boolean;
     ticksPerMove: number;
     tickCnt: number;
 }
@@ -86,8 +86,8 @@ export declare const rowsSelectorFn: (state: ITetrisModel) => number;
 export declare const colsSelectorFn: (state: ITetrisModel) => number;
 export declare const cellsSelectorFn: (state: ITetrisModel) => Cell[][];
 export declare const activePieceSelectorFn: (state: ITetrisModel) => ActivePiece;
-export declare const gameOnSelectorFn: (state: ITetrisModel) => Boolean;
-export declare const gameEndedSelectorFn: (state: ITetrisModel) => Boolean;
+export declare const gameOnSelectorFn: (state: ITetrisModel) => boolean;
+export declare const gameEndedSelectorFn: (state: ITetrisModel) => boolean;
 export declare const ticksPerMoveSelectorFn: (state: ITetrisModel) => number;
 export declare const tickCntSelectorFn: (state: ITetrisModel) => number;
 export declare type IContainerPropsState = ITetrisModel;
@@ -111,8 +111,8 @@ export declare class RTetrisModel {
     cols: number | undefined;
     cells: Cell[][] | undefined;
     activePiece: ActivePiece | undefined;
-    gameOn: Boolean | undefined;
-    gameEnded: Boolean | undefined;
+    gameOn: boolean | undefined;
+    gameEnded: boolean | undefined;
     ticksPerMove: number | undefined;
     tickCnt: number | undefined;
     private doesCollide;

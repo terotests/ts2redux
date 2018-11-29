@@ -270,8 +270,8 @@ export interface ITetrisModel {
   cols: number;
   cells: Cell[][];
   activePiece?: ActivePiece;
-  gameOn: Boolean;
-  gameEnded: Boolean;
+  gameOn: boolean;
+  gameEnded: boolean;
   ticksPerMove: number;
   tickCnt: number;
 }
@@ -286,8 +286,8 @@ export const cellsSelectorFn = (state: ITetrisModel): Cell[][] => state.cells;
 export const activePieceSelectorFn = (
   state: ITetrisModel
 ): ActivePiece | undefined => state.activePiece;
-export const gameOnSelectorFn = (state: ITetrisModel): Boolean => state.gameOn;
-export const gameEndedSelectorFn = (state: ITetrisModel): Boolean =>
+export const gameOnSelectorFn = (state: ITetrisModel): boolean => state.gameOn;
+export const gameEndedSelectorFn = (state: ITetrisModel): boolean =>
   state.gameEnded;
 export const ticksPerMoveSelectorFn = (state: ITetrisModel): number =>
   state.ticksPerMove;
@@ -569,7 +569,7 @@ export class RTetrisModel {
       }
     }
   }
-  get gameOn(): Boolean | undefined {
+  get gameOn(): boolean | undefined {
     if (this._getState) {
       return this._getState().TetrisModel.gameOn;
     } else {
@@ -579,7 +579,7 @@ export class RTetrisModel {
     }
     return undefined;
   }
-  set gameOn(value: Boolean | undefined) {
+  set gameOn(value: boolean | undefined) {
     if (this._state && typeof value !== "undefined") {
       this._state.gameOn = value;
     } else {
@@ -592,7 +592,7 @@ export class RTetrisModel {
       }
     }
   }
-  get gameEnded(): Boolean | undefined {
+  get gameEnded(): boolean | undefined {
     if (this._getState) {
       return this._getState().TetrisModel.gameEnded;
     } else {
@@ -602,7 +602,7 @@ export class RTetrisModel {
     }
     return undefined;
   }
-  set gameEnded(value: Boolean | undefined) {
+  set gameEnded(value: boolean | undefined) {
     if (this._state && typeof value !== "undefined") {
       this._state.gameEnded = value;
     } else {

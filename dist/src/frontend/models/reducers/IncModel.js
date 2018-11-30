@@ -46,7 +46,6 @@ exports.IncModel = IncModel;
 var immer = require("immer");
 var react_redux_1 = require("react-redux");
 var React = require("react");
-exports.cntSelectorFn = function (state) { return state.cnt; };
 exports.mapStateToProps = function (state) {
     return {
         cnt: state.IncModel.cnt
@@ -96,7 +95,7 @@ var RIncModel = /** @class */ (function () {
                     return this._state.cnt;
                 }
             }
-            return undefined;
+            throw "Invalid State in IncModel_cnt";
         },
         set: function (value) {
             if (this._state && typeof value !== "undefined") {

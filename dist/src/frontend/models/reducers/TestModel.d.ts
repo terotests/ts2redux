@@ -51,6 +51,7 @@ export interface IContainerPropsMethods {
 export interface ITestModel {
     items: ShopCartItem[];
     maxId: number;
+    maybeString?: string;
     str_init_test: string;
     bool_init_test: boolean;
     bool4: boolean;
@@ -67,23 +68,6 @@ export interface ITestModel {
     userMessage: string;
     testObj?: TestObj;
 }
-export declare const itemsSelectorFn: (state: ITestModel) => ShopCartItem[];
-export declare const maxIdSelectorFn: (state: ITestModel) => number;
-export declare const str_init_testSelectorFn: (state: ITestModel) => string;
-export declare const bool_init_testSelectorFn: (state: ITestModel) => boolean;
-export declare const bool4SelectorFn: (state: ITestModel) => boolean;
-export declare const obj_init_testSelectorFn: (state: ITestModel) => TestObj;
-export declare const rand_init_testSelectorFn: (state: ITestModel) => number;
-export declare const arr_init_testSelectorFn: (state: ITestModel) => number[];
-export declare const arr_init_test2SelectorFn: (state: ITestModel) => any[];
-export declare const obj_literal_testSelectorFn: (state: ITestModel) => any;
-export declare const cartIdSelectorFn: (state: ITestModel) => number;
-export declare const shopStateSelectorFn: (state: ITestModel) => TaskState;
-export declare const cartsSelectorFn: (state: ITestModel) => {
-    [key: string]: ShopCart;
-};
-export declare const userMessageSelectorFn: (state: ITestModel) => string;
-export declare const testObjSelectorFn: (state: ITestModel) => TestObj;
 export declare type IContainerPropsState = ITestModel;
 export interface IProps extends IContainerPropsState, IContainerPropsMethods {
 }
@@ -98,22 +82,23 @@ export declare class RTestModel {
     private _dispatch?;
     private _getState?;
     constructor(state?: ITestModel, dispatch?: (action: any) => void, getState?: () => any);
-    items: ShopCartItem[] | undefined;
-    maxId: number | undefined;
-    str_init_test: string | undefined;
-    bool_init_test: boolean | undefined;
-    bool4: boolean | undefined;
-    obj_init_test: TestObj | undefined;
-    rand_init_test: number | undefined;
-    arr_init_test: Array<number> | undefined;
-    arr_init_test2: Array<any> | undefined;
-    obj_literal_test: any | undefined;
-    cartId: number | undefined;
-    shopState: TaskState | undefined;
+    items: ShopCartItem[];
+    maxId: number;
+    maybeString: string | undefined;
+    str_init_test: string;
+    bool_init_test: boolean;
+    bool4: boolean;
+    obj_init_test: TestObj;
+    rand_init_test: number;
+    arr_init_test: Array<number>;
+    arr_init_test2: Array<any>;
+    obj_literal_test: any;
+    cartId: number;
+    shopState: TaskState;
     carts: {
         [key: string]: ShopCart;
-    } | undefined;
-    userMessage: string | undefined;
+    };
+    userMessage: string;
     testObj: TestObj | undefined;
     setUserMessage(value: string): void;
     static setUserMessage(value: string): (dispatcher: any, getState: any) => void;
@@ -159,6 +144,7 @@ export declare class RTestModel {
 export declare const TestModelEnums: {
     TestModel_items: string;
     TestModel_maxId: string;
+    TestModel_maybeString: string;
     TestModel_str_init_test: string;
     TestModel_bool_init_test: string;
     TestModel_bool4: string;

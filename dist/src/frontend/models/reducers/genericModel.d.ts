@@ -33,8 +33,6 @@ export interface IGenericModel {
     sum: number;
     list: SomeList<Summable>;
 }
-export declare const sumSelectorFn: (state: IGenericModel) => number;
-export declare const listSelectorFn: (state: IGenericModel) => SomeList<Summable>;
 export declare type IContainerPropsState = IGenericModel;
 export interface IProps extends IContainerPropsState, IContainerPropsMethods {
 }
@@ -49,8 +47,8 @@ export declare class RGenericModel {
     private _dispatch?;
     private _getState?;
     constructor(state?: IGenericModel, dispatch?: (action: any) => void, getState?: () => any);
-    sum: number | undefined;
-    list: SomeList<Summable> | undefined;
+    sum: number;
+    list: SomeList<Summable>;
     refreshSum(): void;
     static refreshSum(): (dispatcher: any, getState: any) => void;
     addItems<T extends Summable>(items: T[]): void;

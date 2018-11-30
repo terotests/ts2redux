@@ -19,7 +19,6 @@ export interface IContainerPropsMethods {
 export interface ISimpleModel {
     items: any[];
 }
-export declare const itemsSelectorFn: (state: ISimpleModel) => any[];
 export declare type IContainerPropsState = ISimpleModel;
 export interface IProps extends IContainerPropsState, IContainerPropsMethods {
 }
@@ -34,7 +33,7 @@ export declare class RSimpleModel {
     private _dispatch?;
     private _getState?;
     constructor(state?: ISimpleModel, dispatch?: (action: any) => void, getState?: () => any);
-    items: any[] | undefined;
+    items: any[];
     getItems(): Promise<void>;
     static getItems(): (dispatcher: any, getState: any) => void;
 }

@@ -41,7 +41,6 @@ export class GenericModel {
   }
 }
 import * as immer from "immer";
-import { createSelector } from "reselect";
 import { connect } from "react-redux";
 import { IState } from "./index";
 import * as React from "react";
@@ -56,9 +55,6 @@ export interface IGenericModel {
   // This is not a good idea with Immer...
   list: SomeList<Summable>;
 }
-export const sumSelectorFn = (state: IGenericModel): number => state.sum;
-export const listSelectorFn = (state: IGenericModel): SomeList<Summable> =>
-  state.list;
 
 export type IContainerPropsState = IGenericModel;
 export interface IProps extends IContainerPropsState, IContainerPropsMethods {}
@@ -120,7 +116,7 @@ export class RGenericModel {
     this._dispatch = dispatch;
     this._getState = getState;
   }
-  get sum(): number | undefined {
+  get sum(): number {
     if (this._getState) {
       return this._getState().GenericModel.sum;
     } else {
@@ -128,9 +124,9 @@ export class RGenericModel {
         return this._state.sum;
       }
     }
-    return undefined;
+    throw "Invalid State in GenericModel_sum";
   }
-  set sum(value: number | undefined) {
+  set sum(value: number) {
     if (this._state && typeof value !== "undefined") {
       this._state.sum = value;
     } else {
@@ -143,7 +139,7 @@ export class RGenericModel {
       }
     }
   }
-  get list(): SomeList<Summable> | undefined {
+  get list(): SomeList<Summable> {
     if (this._getState) {
       return this._getState().GenericModel.list;
     } else {
@@ -151,9 +147,9 @@ export class RGenericModel {
         return this._state.list;
       }
     }
-    return undefined;
+    throw "Invalid State in GenericModel_list";
   }
-  set list(value: SomeList<Summable> | undefined) {
+  set list(value: SomeList<Summable>) {
     if (this._state && typeof value !== "undefined") {
       this._state.list = value;
     } else {

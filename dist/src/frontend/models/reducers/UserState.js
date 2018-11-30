@@ -91,15 +91,6 @@ var UserState = /** @class */ (function () {
 var immer = require("immer");
 var react_redux_1 = require("react-redux");
 var React = require("react");
-exports.loggedSelectorFn = function (state) { return state.logged; };
-exports.usernameSelectorFn = function (state) { return state.username; };
-exports.firstNameSelectorFn = function (state) {
-    return state.firstName;
-};
-exports.lastNameSelectorFn = function (state) { return state.lastName; };
-exports.lastLoginSelectorFn = function (state) {
-    return state.lastLogin;
-};
 exports.mapStateToProps = function (state) {
     return {
         logged: state.UserState.logged,
@@ -165,7 +156,7 @@ var RUserState = /** @class */ (function () {
                     return this._state.logged;
                 }
             }
-            return undefined;
+            throw "Invalid State in UserState_logged";
         },
         set: function (value) {
             if (this._state && typeof value !== "undefined") {
@@ -194,7 +185,7 @@ var RUserState = /** @class */ (function () {
                     return this._state.username;
                 }
             }
-            return undefined;
+            throw "Invalid State in UserState_username";
         },
         set: function (value) {
             if (this._state && typeof value !== "undefined") {
@@ -223,7 +214,7 @@ var RUserState = /** @class */ (function () {
                     return this._state.firstName;
                 }
             }
-            return undefined;
+            throw "Invalid State in UserState_firstName";
         },
         set: function (value) {
             if (this._state && typeof value !== "undefined") {
@@ -252,7 +243,7 @@ var RUserState = /** @class */ (function () {
                     return this._state.lastName;
                 }
             }
-            return undefined;
+            throw "Invalid State in UserState_lastName";
         },
         set: function (value) {
             if (this._state && typeof value !== "undefined") {
@@ -281,7 +272,7 @@ var RUserState = /** @class */ (function () {
                     return this._state.lastLogin;
                 }
             }
-            return undefined;
+            throw "Invalid State in UserState_lastLogin";
         },
         set: function (value) {
             if (this._state && typeof value !== "undefined") {

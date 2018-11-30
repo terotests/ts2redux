@@ -42,9 +42,6 @@ var UIHelperModel = /** @class */ (function () {
 var immer = require("immer");
 var react_redux_1 = require("react-redux");
 var React = require("react");
-exports.showWaspsSelectorFn = function (state) {
-    return state.showWasps;
-};
 exports.mapStateToProps = function (state) {
     return {
         showWasps: state.UIHelperModel.showWasps
@@ -90,7 +87,7 @@ var RUIHelperModel = /** @class */ (function () {
                     return this._state.showWasps;
                 }
             }
-            return undefined;
+            throw "Invalid State in UIHelperModel_showWasps";
         },
         set: function (value) {
             if (this._state && typeof value !== "undefined") {

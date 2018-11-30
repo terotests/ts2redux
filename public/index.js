@@ -956,10 +956,6 @@ exports.GenericModel = GenericModel;
 var immer = require("immer");
 var react_redux_1 = require("react-redux");
 var React = require("react");
-exports.sumSelectorFn = function (state) { return state.sum; };
-exports.listSelectorFn = function (state) {
-    return state.list;
-};
 exports.mapStateToProps = function (state) {
     return {
         sum: state.GenericModel.sum,
@@ -1016,7 +1012,7 @@ var RGenericModel = /** @class */ (function () {
                     return this._state.sum;
                 }
             }
-            return undefined;
+            throw "Invalid State in GenericModel_sum";
         },
         set: function (value) {
             if (this._state && typeof value !== "undefined") {
@@ -1045,7 +1041,7 @@ var RGenericModel = /** @class */ (function () {
                     return this._state.list;
                 }
             }
-            return undefined;
+            throw "Invalid State in GenericModel_list";
         },
         set: function (value) {
             if (this._state && typeof value !== "undefined") {
@@ -1269,7 +1265,6 @@ exports.IncModel = IncModel;
 var immer = require("immer");
 var react_redux_1 = require("react-redux");
 var React = require("react");
-exports.cntSelectorFn = function (state) { return state.cnt; };
 exports.mapStateToProps = function (state) {
     return {
         cnt: state.IncModel.cnt
@@ -1319,7 +1314,7 @@ var RIncModel = /** @class */ (function () {
                     return this._state.cnt;
                 }
             }
-            return undefined;
+            throw "Invalid State in IncModel_cnt";
         },
         set: function (value) {
             if (this._state && typeof value !== "undefined") {
@@ -1551,7 +1546,6 @@ exports.SimpleModel = SimpleModel;
 var immer = require("immer");
 var react_redux_1 = require("react-redux");
 var React = require("react");
-exports.itemsSelectorFn = function (state) { return state.items; };
 exports.mapStateToProps = function (state) {
     return {
         items: state.SimpleModel.items
@@ -1597,7 +1591,7 @@ var RSimpleModel = /** @class */ (function () {
                     return this._state.items;
                 }
             }
-            return undefined;
+            throw "Invalid State in SimpleModel_items";
         },
         set: function (value) {
             if (this._state && typeof value !== "undefined") {
@@ -1929,47 +1923,11 @@ var TestModel = /** @class */ (function () {
 var immer = require("immer");
 var react_redux_1 = require("react-redux");
 var React = require("react");
-exports.itemsSelectorFn = function (state) {
-    return state.items;
-};
-exports.maxIdSelectorFn = function (state) { return state.maxId; };
-exports.str_init_testSelectorFn = function (state) {
-    return state.str_init_test;
-};
-exports.bool_init_testSelectorFn = function (state) {
-    return state.bool_init_test;
-};
-exports.bool4SelectorFn = function (state) { return state.bool4; };
-exports.obj_init_testSelectorFn = function (state) {
-    return state.obj_init_test;
-};
-exports.rand_init_testSelectorFn = function (state) {
-    return state.rand_init_test;
-};
-exports.arr_init_testSelectorFn = function (state) {
-    return state.arr_init_test;
-};
-exports.arr_init_test2SelectorFn = function (state) {
-    return state.arr_init_test2;
-};
-exports.obj_literal_testSelectorFn = function (state) {
-    return state.obj_literal_test;
-};
-exports.cartIdSelectorFn = function (state) { return state.cartId; };
-exports.shopStateSelectorFn = function (state) {
-    return state.shopState;
-};
-exports.cartsSelectorFn = function (state) { return state.carts; };
-exports.userMessageSelectorFn = function (state) {
-    return state.userMessage;
-};
-exports.testObjSelectorFn = function (state) {
-    return state.testObj;
-};
 exports.mapStateToProps = function (state) {
     return {
         items: state.TestModel.items,
         maxId: state.TestModel.maxId,
+        maybeString: state.TestModel.maybeString,
         str_init_test: state.TestModel.str_init_test,
         bool_init_test: state.TestModel.bool_init_test,
         bool4: state.TestModel.bool4,
@@ -2037,6 +1995,7 @@ var initTestModel = function () {
     return {
         items: o.items,
         maxId: o.maxId,
+        maybeString: o.maybeString,
         str_init_test: o.str_init_test,
         bool_init_test: o.bool_init_test,
         bool4: o.bool4,
@@ -2057,6 +2016,7 @@ var initWithMethodsTestModel = function () {
     return {
         items: o.items,
         maxId: o.maxId,
+        maybeString: o.maybeString,
         str_init_test: o.str_init_test,
         bool_init_test: o.bool_init_test,
         bool4: o.bool4,
@@ -2105,7 +2065,7 @@ var RTestModel = /** @class */ (function () {
                     return this._state.items;
                 }
             }
-            return undefined;
+            throw "Invalid State in TestModel_items";
         },
         set: function (value) {
             if (this._state && typeof value !== "undefined") {
@@ -2134,7 +2094,7 @@ var RTestModel = /** @class */ (function () {
                     return this._state.maxId;
                 }
             }
-            return undefined;
+            throw "Invalid State in TestModel_maxId";
         },
         set: function (value) {
             if (this._state && typeof value !== "undefined") {
@@ -2153,6 +2113,35 @@ var RTestModel = /** @class */ (function () {
         enumerable: true,
         configurable: true
     });
+    Object.defineProperty(RTestModel.prototype, "maybeString", {
+        get: function () {
+            if (this._getState) {
+                return this._getState().TestModel.maybeString;
+            }
+            else {
+                if (this._state) {
+                    return this._state.maybeString;
+                }
+            }
+            return undefined;
+        },
+        set: function (value) {
+            if (this._state && typeof value !== "undefined") {
+                this._state.maybeString = value;
+            }
+            else {
+                // dispatch change for item maybeString
+                if (this._dispatch) {
+                    this._dispatch({
+                        type: exports.TestModelEnums.TestModel_maybeString,
+                        payload: value
+                    });
+                }
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
     Object.defineProperty(RTestModel.prototype, "str_init_test", {
         get: function () {
             if (this._getState) {
@@ -2163,7 +2152,7 @@ var RTestModel = /** @class */ (function () {
                     return this._state.str_init_test;
                 }
             }
-            return undefined;
+            throw "Invalid State in TestModel_str_init_test";
         },
         set: function (value) {
             if (this._state && typeof value !== "undefined") {
@@ -2192,7 +2181,7 @@ var RTestModel = /** @class */ (function () {
                     return this._state.bool_init_test;
                 }
             }
-            return undefined;
+            throw "Invalid State in TestModel_bool_init_test";
         },
         set: function (value) {
             if (this._state && typeof value !== "undefined") {
@@ -2221,7 +2210,7 @@ var RTestModel = /** @class */ (function () {
                     return this._state.bool4;
                 }
             }
-            return undefined;
+            throw "Invalid State in TestModel_bool4";
         },
         set: function (value) {
             if (this._state && typeof value !== "undefined") {
@@ -2250,7 +2239,7 @@ var RTestModel = /** @class */ (function () {
                     return this._state.obj_init_test;
                 }
             }
-            return undefined;
+            throw "Invalid State in TestModel_obj_init_test";
         },
         set: function (value) {
             if (this._state && typeof value !== "undefined") {
@@ -2279,7 +2268,7 @@ var RTestModel = /** @class */ (function () {
                     return this._state.rand_init_test;
                 }
             }
-            return undefined;
+            throw "Invalid State in TestModel_rand_init_test";
         },
         set: function (value) {
             if (this._state && typeof value !== "undefined") {
@@ -2308,7 +2297,7 @@ var RTestModel = /** @class */ (function () {
                     return this._state.arr_init_test;
                 }
             }
-            return undefined;
+            throw "Invalid State in TestModel_arr_init_test";
         },
         set: function (value) {
             if (this._state && typeof value !== "undefined") {
@@ -2337,7 +2326,7 @@ var RTestModel = /** @class */ (function () {
                     return this._state.arr_init_test2;
                 }
             }
-            return undefined;
+            throw "Invalid State in TestModel_arr_init_test2";
         },
         set: function (value) {
             if (this._state && typeof value !== "undefined") {
@@ -2366,7 +2355,7 @@ var RTestModel = /** @class */ (function () {
                     return this._state.obj_literal_test;
                 }
             }
-            return undefined;
+            throw "Invalid State in TestModel_obj_literal_test";
         },
         set: function (value) {
             if (this._state && typeof value !== "undefined") {
@@ -2395,7 +2384,7 @@ var RTestModel = /** @class */ (function () {
                     return this._state.cartId;
                 }
             }
-            return undefined;
+            throw "Invalid State in TestModel_cartId";
         },
         set: function (value) {
             if (this._state && typeof value !== "undefined") {
@@ -2424,7 +2413,7 @@ var RTestModel = /** @class */ (function () {
                     return this._state.shopState;
                 }
             }
-            return undefined;
+            throw "Invalid State in TestModel_shopState";
         },
         set: function (value) {
             if (this._state && typeof value !== "undefined") {
@@ -2453,7 +2442,7 @@ var RTestModel = /** @class */ (function () {
                     return this._state.carts;
                 }
             }
-            return undefined;
+            throw "Invalid State in TestModel_carts";
         },
         set: function (value) {
             if (this._state && typeof value !== "undefined") {
@@ -2482,7 +2471,7 @@ var RTestModel = /** @class */ (function () {
                     return this._state.userMessage;
                 }
             }
-            return undefined;
+            throw "Invalid State in TestModel_userMessage";
         },
         set: function (value) {
             if (this._state && typeof value !== "undefined") {
@@ -2784,6 +2773,7 @@ exports.RTestModel = RTestModel;
 exports.TestModelEnums = {
     TestModel_items: "TestModel_items",
     TestModel_maxId: "TestModel_maxId",
+    TestModel_maybeString: "TestModel_maybeString",
     TestModel_str_init_test: "TestModel_str_init_test",
     TestModel_bool_init_test: "TestModel_bool_init_test",
     TestModel_bool4: "TestModel_bool4",
@@ -2817,6 +2807,9 @@ exports.TestModelReducer = function (state, action) {
                 break;
             case exports.TestModelEnums.TestModel_maxId:
                 new RTestModel(draft).maxId = action.payload;
+                break;
+            case exports.TestModelEnums.TestModel_maybeString:
+                new RTestModel(draft).maybeString = action.payload;
                 break;
             case exports.TestModelEnums.TestModel_str_init_test:
                 new RTestModel(draft).str_init_test = action.payload;
@@ -3355,25 +3348,6 @@ exports.TetrisModel = TetrisModel;
 var immer = require("immer");
 var react_redux_1 = require("react-redux");
 var React = require("react");
-exports.useColorsSelectorFn = function (state) {
-    return state.useColors;
-};
-exports.lastUsedColorSelectorFn = function (state) {
-    return state.lastUsedColor;
-};
-exports.pointsSelectorFn = function (state) { return state.points; };
-exports.rowsSelectorFn = function (state) { return state.rows; };
-exports.colsSelectorFn = function (state) { return state.cols; };
-exports.cellsSelectorFn = function (state) { return state.cells; };
-exports.activePieceSelectorFn = function (state) { return state.activePiece; };
-exports.gameOnSelectorFn = function (state) { return state.gameOn; };
-exports.gameEndedSelectorFn = function (state) {
-    return state.gameEnded;
-};
-exports.ticksPerMoveSelectorFn = function (state) {
-    return state.ticksPerMove;
-};
-exports.tickCntSelectorFn = function (state) { return state.tickCnt; };
 exports.mapStateToProps = function (state) {
     return {
         useColors: state.TetrisModel.useColors,
@@ -3485,7 +3459,7 @@ var RTetrisModel = /** @class */ (function () {
                     return this._state.useColors;
                 }
             }
-            return undefined;
+            throw "Invalid State in TetrisModel_useColors";
         },
         set: function (value) {
             if (this._state && typeof value !== "undefined") {
@@ -3514,7 +3488,7 @@ var RTetrisModel = /** @class */ (function () {
                     return this._state.lastUsedColor;
                 }
             }
-            return undefined;
+            throw "Invalid State in TetrisModel_lastUsedColor";
         },
         set: function (value) {
             if (this._state && typeof value !== "undefined") {
@@ -3543,7 +3517,7 @@ var RTetrisModel = /** @class */ (function () {
                     return this._state.points;
                 }
             }
-            return undefined;
+            throw "Invalid State in TetrisModel_points";
         },
         set: function (value) {
             if (this._state && typeof value !== "undefined") {
@@ -3572,7 +3546,7 @@ var RTetrisModel = /** @class */ (function () {
                     return this._state.rows;
                 }
             }
-            return undefined;
+            throw "Invalid State in TetrisModel_rows";
         },
         set: function (value) {
             if (this._state && typeof value !== "undefined") {
@@ -3601,7 +3575,7 @@ var RTetrisModel = /** @class */ (function () {
                     return this._state.cols;
                 }
             }
-            return undefined;
+            throw "Invalid State in TetrisModel_cols";
         },
         set: function (value) {
             if (this._state && typeof value !== "undefined") {
@@ -3630,7 +3604,7 @@ var RTetrisModel = /** @class */ (function () {
                     return this._state.cells;
                 }
             }
-            return undefined;
+            throw "Invalid State in TetrisModel_cells";
         },
         set: function (value) {
             if (this._state && typeof value !== "undefined") {
@@ -3688,7 +3662,7 @@ var RTetrisModel = /** @class */ (function () {
                     return this._state.gameOn;
                 }
             }
-            return undefined;
+            throw "Invalid State in TetrisModel_gameOn";
         },
         set: function (value) {
             if (this._state && typeof value !== "undefined") {
@@ -3717,7 +3691,7 @@ var RTetrisModel = /** @class */ (function () {
                     return this._state.gameEnded;
                 }
             }
-            return undefined;
+            throw "Invalid State in TetrisModel_gameEnded";
         },
         set: function (value) {
             if (this._state && typeof value !== "undefined") {
@@ -3746,7 +3720,7 @@ var RTetrisModel = /** @class */ (function () {
                     return this._state.ticksPerMove;
                 }
             }
-            return undefined;
+            throw "Invalid State in TetrisModel_ticksPerMove";
         },
         set: function (value) {
             if (this._state && typeof value !== "undefined") {
@@ -3775,7 +3749,7 @@ var RTetrisModel = /** @class */ (function () {
                     return this._state.tickCnt;
                 }
             }
-            return undefined;
+            throw "Invalid State in TetrisModel_tickCnt";
         },
         set: function (value) {
             if (this._state && typeof value !== "undefined") {
@@ -4618,7 +4592,7 @@ var RTodoList = /** @class */ (function () {
                     return this._state.items;
                 }
             }
-            return undefined;
+            throw "Invalid State in TodoList_items";
         },
         set: function (value) {
             if (this._state && typeof value !== "undefined") {
@@ -4644,7 +4618,7 @@ var RTodoList = /** @class */ (function () {
                     return this._state.state;
                 }
             }
-            return undefined;
+            throw "Invalid State in TodoList_state";
         },
         set: function (value) {
             if (this._state && typeof value !== "undefined") {
@@ -4670,7 +4644,7 @@ var RTodoList = /** @class */ (function () {
                     return this._state.stateError;
                 }
             }
-            return undefined;
+            throw "Invalid State in TodoList_stateError";
         },
         set: function (value) {
             if (this._state && typeof value !== "undefined") {
@@ -4699,7 +4673,7 @@ var RTodoList = /** @class */ (function () {
                     return this._state.sortOrder;
                 }
             }
-            return undefined;
+            throw "Invalid State in TodoList_sortOrder";
         },
         set: function (value) {
             if (this._state && typeof value !== "undefined") {
@@ -4728,7 +4702,7 @@ var RTodoList = /** @class */ (function () {
                     return this._state.listStart;
                 }
             }
-            return undefined;
+            throw "Invalid State in TodoList_listStart";
         },
         set: function (value) {
             if (this._state && typeof value !== "undefined") {
@@ -4757,7 +4731,7 @@ var RTodoList = /** @class */ (function () {
                     return this._state.listPageLength;
                 }
             }
-            return undefined;
+            throw "Invalid State in TodoList_listPageLength";
         },
         set: function (value) {
             if (this._state && typeof value !== "undefined") {
@@ -4786,7 +4760,7 @@ var RTodoList = /** @class */ (function () {
                     return this._state.listTitle;
                 }
             }
-            return undefined;
+            throw "Invalid State in TodoList_listTitle";
         },
         set: function (value) {
             if (this._state && typeof value !== "undefined") {
@@ -5260,9 +5234,6 @@ var UIHelperModel = /** @class */ (function () {
 var immer = require("immer");
 var react_redux_1 = require("react-redux");
 var React = require("react");
-exports.showWaspsSelectorFn = function (state) {
-    return state.showWasps;
-};
 exports.mapStateToProps = function (state) {
     return {
         showWasps: state.UIHelperModel.showWasps
@@ -5308,7 +5279,7 @@ var RUIHelperModel = /** @class */ (function () {
                     return this._state.showWasps;
                 }
             }
-            return undefined;
+            throw "Invalid State in UIHelperModel_showWasps";
         },
         set: function (value) {
             if (this._state && typeof value !== "undefined") {
@@ -5511,15 +5482,6 @@ var UserState = /** @class */ (function () {
 var immer = require("immer");
 var react_redux_1 = require("react-redux");
 var React = require("react");
-exports.loggedSelectorFn = function (state) { return state.logged; };
-exports.usernameSelectorFn = function (state) { return state.username; };
-exports.firstNameSelectorFn = function (state) {
-    return state.firstName;
-};
-exports.lastNameSelectorFn = function (state) { return state.lastName; };
-exports.lastLoginSelectorFn = function (state) {
-    return state.lastLogin;
-};
 exports.mapStateToProps = function (state) {
     return {
         logged: state.UserState.logged,
@@ -5585,7 +5547,7 @@ var RUserState = /** @class */ (function () {
                     return this._state.logged;
                 }
             }
-            return undefined;
+            throw "Invalid State in UserState_logged";
         },
         set: function (value) {
             if (this._state && typeof value !== "undefined") {
@@ -5614,7 +5576,7 @@ var RUserState = /** @class */ (function () {
                     return this._state.username;
                 }
             }
-            return undefined;
+            throw "Invalid State in UserState_username";
         },
         set: function (value) {
             if (this._state && typeof value !== "undefined") {
@@ -5643,7 +5605,7 @@ var RUserState = /** @class */ (function () {
                     return this._state.firstName;
                 }
             }
-            return undefined;
+            throw "Invalid State in UserState_firstName";
         },
         set: function (value) {
             if (this._state && typeof value !== "undefined") {
@@ -5672,7 +5634,7 @@ var RUserState = /** @class */ (function () {
                     return this._state.lastName;
                 }
             }
-            return undefined;
+            throw "Invalid State in UserState_lastName";
         },
         set: function (value) {
             if (this._state && typeof value !== "undefined") {
@@ -5701,7 +5663,7 @@ var RUserState = /** @class */ (function () {
                     return this._state.lastLogin;
                 }
             }
-            return undefined;
+            throw "Invalid State in UserState_lastLogin";
         },
         set: function (value) {
             if (this._state && typeof value !== "undefined") {
@@ -5979,9 +5941,6 @@ var WaspModel = /** @class */ (function () {
 var immer = require("immer");
 var react_redux_1 = require("react-redux");
 var React = require("react");
-exports.speedSelectorFn = function (state) { return state.speed; };
-exports.lastIdSelectorFn = function (state) { return state.lastId; };
-exports.waspsSelectorFn = function (state) { return state.wasps; };
 exports.mapStateToProps = function (state) {
     return {
         speed: state.WaspModel.speed,
@@ -6045,7 +6004,7 @@ var RWaspModel = /** @class */ (function () {
                     return this._state.speed;
                 }
             }
-            return undefined;
+            throw "Invalid State in WaspModel_speed";
         },
         set: function (value) {
             if (this._state && typeof value !== "undefined") {
@@ -6074,7 +6033,7 @@ var RWaspModel = /** @class */ (function () {
                     return this._state.lastId;
                 }
             }
-            return undefined;
+            throw "Invalid State in WaspModel_lastId";
         },
         set: function (value) {
             if (this._state && typeof value !== "undefined") {
@@ -6103,7 +6062,7 @@ var RWaspModel = /** @class */ (function () {
                     return this._state.wasps;
                 }
             }
-            return undefined;
+            throw "Invalid State in WaspModel_wasps";
         },
         set: function (value) {
             if (this._state && typeof value !== "undefined") {

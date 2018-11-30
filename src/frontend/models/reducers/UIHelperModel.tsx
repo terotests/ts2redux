@@ -12,7 +12,6 @@ class UIHelperModel {
   }
 }
 import * as immer from "immer";
-import { createSelector } from "reselect";
 import { connect } from "react-redux";
 import { IState } from "./index";
 import * as React from "react";
@@ -23,8 +22,6 @@ export interface IContainerPropsMethods {
 export interface IUIHelperModel {
   showWasps: boolean;
 }
-export const showWaspsSelectorFn = (state: IUIHelperModel): boolean =>
-  state.showWasps;
 
 export type IContainerPropsState = IUIHelperModel;
 export interface IProps extends IContainerPropsState, IContainerPropsMethods {}
@@ -75,7 +72,7 @@ export class RUIHelperModel {
     this._dispatch = dispatch;
     this._getState = getState;
   }
-  get showWasps(): boolean | undefined {
+  get showWasps(): boolean {
     if (this._getState) {
       return this._getState().UIHelperModel.showWasps;
     } else {
@@ -83,9 +80,9 @@ export class RUIHelperModel {
         return this._state.showWasps;
       }
     }
-    return undefined;
+    throw "Invalid State in UIHelperModel_showWasps";
   }
-  set showWasps(value: boolean | undefined) {
+  set showWasps(value: boolean) {
     if (this._state && typeof value !== "undefined") {
       this._state.showWasps = value;
     } else {

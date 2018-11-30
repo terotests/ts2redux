@@ -176,7 +176,9 @@ function createProject(settings) {
                                 ng_1.raw(myFile.getText(), true);
                                 myFile.delete();
                                 ng_1.out("import * as immer from 'immer'", true);
-                                ng_1.out("import { createSelector } from 'reselect'", true);
+                                if (selectorMethods_1.length > 0) {
+                                    ng_1.out("import { createSelector } from 'reselect'", true);
+                                }
                                 ng_1.out("import { connect } from 'react-redux'", true);
                                 ng_1.out("import { IState } from './index'", true);
                                 ng_1.out("import * as React from 'react'", true);
@@ -303,9 +305,12 @@ function createProject(settings) {
                                 body_1.indent(-1);
                                 body_1.out('}', true);
                                 c.getProperties().forEach(function (p) {
-                                    selFns_1.out("export const " + p.getName() + "SelectorFn = (state:I" + c.getName() + ") : " + (getPropTypeString(p) + (p.hasQuestionToken() ? ' | undefined' : '')) + " => state." + p.getName(), true);
+                                    if (selectorMethods_1.length > 0) {
+                                        selFns_1.out("export const " + p.getName() + "SelectorFn = (state:I" + c.getName() + ") : " + (getPropTypeString(p) + (p.hasQuestionToken() ? ' | undefined' : '')) + " => state." + p.getName(), true);
+                                    }
+                                    var optionality = p.hasQuestionToken() ? '| undefined' : '';
                                     var r_name = c.getName() + "_" + p.getName();
-                                    body_1.out('get ' + p.getName() + '() : ' + getPropTypeString(p) + ' | undefined {', true);
+                                    body_1.out('get ' + p.getName() + '() : ' + getPropTypeString(p) + optionality + ' {', true);
                                     body_1.indent(1);
                                     body_1.out('if(this._getState) {', true);
                                     body_1.indent(1);
@@ -317,10 +322,15 @@ function createProject(settings) {
                                     body_1.out('if(this._state) { return this._state.' + p.getName() + ' }', true);
                                     body_1.indent(-1);
                                     body_1.out('}', true);
-                                    body_1.out('return undefined');
+                                    if (p.hasQuestionToken()) {
+                                        body_1.out("return undefined", true);
+                                    }
+                                    else {
+                                        body_1.out("throw 'Invalid State in " + r_name + "'", true);
+                                    }
                                     body_1.indent(-1);
                                     body_1.out('}', true);
-                                    body_1.out('set ' + p.getName() + '(value:' + getPropTypeString(p) + ' | undefined) {', true);
+                                    body_1.out('set ' + p.getName() + '(value:' + getPropTypeString(p) + optionality + ') {', true);
                                     body_1.indent(1);
                                     body_1.out("if(this._state && (typeof(value) !== 'undefined')) {", true);
                                     body_1.indent(1);

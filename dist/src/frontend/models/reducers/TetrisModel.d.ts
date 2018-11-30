@@ -79,17 +79,6 @@ export interface ITetrisModel {
     ticksPerMove: number;
     tickCnt: number;
 }
-export declare const useColorsSelectorFn: (state: ITetrisModel) => string[];
-export declare const lastUsedColorSelectorFn: (state: ITetrisModel) => number;
-export declare const pointsSelectorFn: (state: ITetrisModel) => number;
-export declare const rowsSelectorFn: (state: ITetrisModel) => number;
-export declare const colsSelectorFn: (state: ITetrisModel) => number;
-export declare const cellsSelectorFn: (state: ITetrisModel) => Cell[][];
-export declare const activePieceSelectorFn: (state: ITetrisModel) => ActivePiece;
-export declare const gameOnSelectorFn: (state: ITetrisModel) => boolean;
-export declare const gameEndedSelectorFn: (state: ITetrisModel) => boolean;
-export declare const ticksPerMoveSelectorFn: (state: ITetrisModel) => number;
-export declare const tickCntSelectorFn: (state: ITetrisModel) => number;
 export declare type IContainerPropsState = ITetrisModel;
 export interface IProps extends IContainerPropsState, IContainerPropsMethods {
 }
@@ -104,17 +93,17 @@ export declare class RTetrisModel {
     private _dispatch?;
     private _getState?;
     constructor(state?: ITetrisModel, dispatch?: (action: any) => void, getState?: () => any);
-    useColors: Array<string> | undefined;
-    lastUsedColor: number | undefined;
-    points: number | undefined;
-    rows: number | undefined;
-    cols: number | undefined;
-    cells: Cell[][] | undefined;
+    useColors: Array<string>;
+    lastUsedColor: number;
+    points: number;
+    rows: number;
+    cols: number;
+    cells: Cell[][];
     activePiece: ActivePiece | undefined;
-    gameOn: boolean | undefined;
-    gameEnded: boolean | undefined;
-    ticksPerMove: number | undefined;
-    tickCnt: number | undefined;
+    gameOn: boolean;
+    gameEnded: boolean;
+    ticksPerMove: number;
+    tickCnt: number;
     private doesCollide;
     tick(): void;
     static tick(): (dispatcher: any, getState: any) => void;

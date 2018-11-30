@@ -245,7 +245,6 @@ export class TetrisModel {
   }
 }
 import * as immer from "immer";
-import { createSelector } from "reselect";
 import { connect } from "react-redux";
 import { IState } from "./index";
 import * as React from "react";
@@ -275,23 +274,6 @@ export interface ITetrisModel {
   ticksPerMove: number;
   tickCnt: number;
 }
-export const useColorsSelectorFn = (state: ITetrisModel): Array<string> =>
-  state.useColors;
-export const lastUsedColorSelectorFn = (state: ITetrisModel): number =>
-  state.lastUsedColor;
-export const pointsSelectorFn = (state: ITetrisModel): number => state.points;
-export const rowsSelectorFn = (state: ITetrisModel): number => state.rows;
-export const colsSelectorFn = (state: ITetrisModel): number => state.cols;
-export const cellsSelectorFn = (state: ITetrisModel): Cell[][] => state.cells;
-export const activePieceSelectorFn = (
-  state: ITetrisModel
-): ActivePiece | undefined => state.activePiece;
-export const gameOnSelectorFn = (state: ITetrisModel): boolean => state.gameOn;
-export const gameEndedSelectorFn = (state: ITetrisModel): boolean =>
-  state.gameEnded;
-export const ticksPerMoveSelectorFn = (state: ITetrisModel): number =>
-  state.ticksPerMove;
-export const tickCntSelectorFn = (state: ITetrisModel): number => state.tickCnt;
 
 export type IContainerPropsState = ITetrisModel;
 export interface IProps extends IContainerPropsState, IContainerPropsMethods {}
@@ -408,7 +390,7 @@ export class RTetrisModel {
     this._dispatch = dispatch;
     this._getState = getState;
   }
-  get useColors(): Array<string> | undefined {
+  get useColors(): Array<string> {
     if (this._getState) {
       return this._getState().TetrisModel.useColors;
     } else {
@@ -416,9 +398,9 @@ export class RTetrisModel {
         return this._state.useColors;
       }
     }
-    return undefined;
+    throw "Invalid State in TetrisModel_useColors";
   }
-  set useColors(value: Array<string> | undefined) {
+  set useColors(value: Array<string>) {
     if (this._state && typeof value !== "undefined") {
       this._state.useColors = value;
     } else {
@@ -431,7 +413,7 @@ export class RTetrisModel {
       }
     }
   }
-  get lastUsedColor(): number | undefined {
+  get lastUsedColor(): number {
     if (this._getState) {
       return this._getState().TetrisModel.lastUsedColor;
     } else {
@@ -439,9 +421,9 @@ export class RTetrisModel {
         return this._state.lastUsedColor;
       }
     }
-    return undefined;
+    throw "Invalid State in TetrisModel_lastUsedColor";
   }
-  set lastUsedColor(value: number | undefined) {
+  set lastUsedColor(value: number) {
     if (this._state && typeof value !== "undefined") {
       this._state.lastUsedColor = value;
     } else {
@@ -454,7 +436,7 @@ export class RTetrisModel {
       }
     }
   }
-  get points(): number | undefined {
+  get points(): number {
     if (this._getState) {
       return this._getState().TetrisModel.points;
     } else {
@@ -462,9 +444,9 @@ export class RTetrisModel {
         return this._state.points;
       }
     }
-    return undefined;
+    throw "Invalid State in TetrisModel_points";
   }
-  set points(value: number | undefined) {
+  set points(value: number) {
     if (this._state && typeof value !== "undefined") {
       this._state.points = value;
     } else {
@@ -477,7 +459,7 @@ export class RTetrisModel {
       }
     }
   }
-  get rows(): number | undefined {
+  get rows(): number {
     if (this._getState) {
       return this._getState().TetrisModel.rows;
     } else {
@@ -485,9 +467,9 @@ export class RTetrisModel {
         return this._state.rows;
       }
     }
-    return undefined;
+    throw "Invalid State in TetrisModel_rows";
   }
-  set rows(value: number | undefined) {
+  set rows(value: number) {
     if (this._state && typeof value !== "undefined") {
       this._state.rows = value;
     } else {
@@ -500,7 +482,7 @@ export class RTetrisModel {
       }
     }
   }
-  get cols(): number | undefined {
+  get cols(): number {
     if (this._getState) {
       return this._getState().TetrisModel.cols;
     } else {
@@ -508,9 +490,9 @@ export class RTetrisModel {
         return this._state.cols;
       }
     }
-    return undefined;
+    throw "Invalid State in TetrisModel_cols";
   }
-  set cols(value: number | undefined) {
+  set cols(value: number) {
     if (this._state && typeof value !== "undefined") {
       this._state.cols = value;
     } else {
@@ -523,7 +505,7 @@ export class RTetrisModel {
       }
     }
   }
-  get cells(): Cell[][] | undefined {
+  get cells(): Cell[][] {
     if (this._getState) {
       return this._getState().TetrisModel.cells;
     } else {
@@ -531,9 +513,9 @@ export class RTetrisModel {
         return this._state.cells;
       }
     }
-    return undefined;
+    throw "Invalid State in TetrisModel_cells";
   }
-  set cells(value: Cell[][] | undefined) {
+  set cells(value: Cell[][]) {
     if (this._state && typeof value !== "undefined") {
       this._state.cells = value;
     } else {
@@ -569,7 +551,7 @@ export class RTetrisModel {
       }
     }
   }
-  get gameOn(): boolean | undefined {
+  get gameOn(): boolean {
     if (this._getState) {
       return this._getState().TetrisModel.gameOn;
     } else {
@@ -577,9 +559,9 @@ export class RTetrisModel {
         return this._state.gameOn;
       }
     }
-    return undefined;
+    throw "Invalid State in TetrisModel_gameOn";
   }
-  set gameOn(value: boolean | undefined) {
+  set gameOn(value: boolean) {
     if (this._state && typeof value !== "undefined") {
       this._state.gameOn = value;
     } else {
@@ -592,7 +574,7 @@ export class RTetrisModel {
       }
     }
   }
-  get gameEnded(): boolean | undefined {
+  get gameEnded(): boolean {
     if (this._getState) {
       return this._getState().TetrisModel.gameEnded;
     } else {
@@ -600,9 +582,9 @@ export class RTetrisModel {
         return this._state.gameEnded;
       }
     }
-    return undefined;
+    throw "Invalid State in TetrisModel_gameEnded";
   }
-  set gameEnded(value: boolean | undefined) {
+  set gameEnded(value: boolean) {
     if (this._state && typeof value !== "undefined") {
       this._state.gameEnded = value;
     } else {
@@ -615,7 +597,7 @@ export class RTetrisModel {
       }
     }
   }
-  get ticksPerMove(): number | undefined {
+  get ticksPerMove(): number {
     if (this._getState) {
       return this._getState().TetrisModel.ticksPerMove;
     } else {
@@ -623,9 +605,9 @@ export class RTetrisModel {
         return this._state.ticksPerMove;
       }
     }
-    return undefined;
+    throw "Invalid State in TetrisModel_ticksPerMove";
   }
-  set ticksPerMove(value: number | undefined) {
+  set ticksPerMove(value: number) {
     if (this._state && typeof value !== "undefined") {
       this._state.ticksPerMove = value;
     } else {
@@ -638,7 +620,7 @@ export class RTetrisModel {
       }
     }
   }
-  get tickCnt(): number | undefined {
+  get tickCnt(): number {
     if (this._getState) {
       return this._getState().TetrisModel.tickCnt;
     } else {
@@ -646,9 +628,9 @@ export class RTetrisModel {
         return this._state.tickCnt;
       }
     }
-    return undefined;
+    throw "Invalid State in TetrisModel_tickCnt";
   }
-  set tickCnt(value: number | undefined) {
+  set tickCnt(value: number) {
     if (this._state && typeof value !== "undefined") {
       this._state.tickCnt = value;
     } else {

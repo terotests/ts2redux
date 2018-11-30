@@ -94,7 +94,6 @@ exports.SimpleModel = SimpleModel;
 var immer = require("immer");
 var react_redux_1 = require("react-redux");
 var React = require("react");
-exports.itemsSelectorFn = function (state) { return state.items; };
 exports.mapStateToProps = function (state) {
     return {
         items: state.SimpleModel.items
@@ -140,7 +139,7 @@ var RSimpleModel = /** @class */ (function () {
                     return this._state.items;
                 }
             }
-            return undefined;
+            throw "Invalid State in SimpleModel_items";
         },
         set: function (value) {
             if (this._state && typeof value !== "undefined") {

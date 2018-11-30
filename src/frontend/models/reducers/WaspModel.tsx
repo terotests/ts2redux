@@ -80,7 +80,6 @@ class WaspModel {
   }
 }
 import * as immer from "immer";
-import { createSelector } from "reselect";
 import { connect } from "react-redux";
 import { IState } from "./index";
 import * as React from "react";
@@ -108,13 +107,6 @@ export interface IWaspModel {
     [id: number]: Wasp;
   };
 }
-export const speedSelectorFn = (state: IWaspModel): number => state.speed;
-export const lastIdSelectorFn = (state: IWaspModel): number => state.lastId;
-export const waspsSelectorFn = (
-  state: IWaspModel
-): {
-  [id: number]: Wasp;
-} => state.wasps;
 
 export type IContainerPropsState = IWaspModel;
 export interface IProps extends IContainerPropsState, IContainerPropsMethods {}
@@ -183,7 +175,7 @@ export class RWaspModel {
     this._dispatch = dispatch;
     this._getState = getState;
   }
-  get speed(): number | undefined {
+  get speed(): number {
     if (this._getState) {
       return this._getState().WaspModel.speed;
     } else {
@@ -191,9 +183,9 @@ export class RWaspModel {
         return this._state.speed;
       }
     }
-    return undefined;
+    throw "Invalid State in WaspModel_speed";
   }
-  set speed(value: number | undefined) {
+  set speed(value: number) {
     if (this._state && typeof value !== "undefined") {
       this._state.speed = value;
     } else {
@@ -206,7 +198,7 @@ export class RWaspModel {
       }
     }
   }
-  get lastId(): number | undefined {
+  get lastId(): number {
     if (this._getState) {
       return this._getState().WaspModel.lastId;
     } else {
@@ -214,9 +206,9 @@ export class RWaspModel {
         return this._state.lastId;
       }
     }
-    return undefined;
+    throw "Invalid State in WaspModel_lastId";
   }
-  set lastId(value: number | undefined) {
+  set lastId(value: number) {
     if (this._state && typeof value !== "undefined") {
       this._state.lastId = value;
     } else {
@@ -229,11 +221,9 @@ export class RWaspModel {
       }
     }
   }
-  get wasps():
-    | {
-        [id: number]: Wasp;
-      }
-    | undefined {
+  get wasps(): {
+    [id: number]: Wasp;
+  } {
     if (this._getState) {
       return this._getState().WaspModel.wasps;
     } else {
@@ -241,15 +231,9 @@ export class RWaspModel {
         return this._state.wasps;
       }
     }
-    return undefined;
+    throw "Invalid State in WaspModel_wasps";
   }
-  set wasps(
-    value:
-      | {
-          [id: number]: Wasp;
-        }
-      | undefined
-  ) {
+  set wasps(value: { [id: number]: Wasp }) {
     if (this._state && typeof value !== "undefined") {
       this._state.wasps = value;
     } else {

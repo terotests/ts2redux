@@ -70,10 +70,6 @@ exports.GenericModel = GenericModel;
 var immer = require("immer");
 var react_redux_1 = require("react-redux");
 var React = require("react");
-exports.sumSelectorFn = function (state) { return state.sum; };
-exports.listSelectorFn = function (state) {
-    return state.list;
-};
 exports.mapStateToProps = function (state) {
     return {
         sum: state.GenericModel.sum,
@@ -130,7 +126,7 @@ var RGenericModel = /** @class */ (function () {
                     return this._state.sum;
                 }
             }
-            return undefined;
+            throw "Invalid State in GenericModel_sum";
         },
         set: function (value) {
             if (this._state && typeof value !== "undefined") {
@@ -159,7 +155,7 @@ var RGenericModel = /** @class */ (function () {
                     return this._state.list;
                 }
             }
-            return undefined;
+            throw "Invalid State in GenericModel_list";
         },
         set: function (value) {
             if (this._state && typeof value !== "undefined") {

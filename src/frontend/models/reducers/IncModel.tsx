@@ -15,7 +15,6 @@ export class IncModel {
   }
 }
 import * as immer from "immer";
-import { createSelector } from "reselect";
 import { connect } from "react-redux";
 import { IState } from "./index";
 import * as React from "react";
@@ -27,7 +26,6 @@ export interface IContainerPropsMethods {
 export interface IIncModel {
   cnt: number;
 }
-export const cntSelectorFn = (state: IIncModel): number => state.cnt;
 
 export type IContainerPropsState = IIncModel;
 export interface IProps extends IContainerPropsState, IContainerPropsMethods {}
@@ -82,7 +80,7 @@ export class RIncModel {
     this._dispatch = dispatch;
     this._getState = getState;
   }
-  get cnt(): number | undefined {
+  get cnt(): number {
     if (this._getState) {
       return this._getState().IncModel.cnt;
     } else {
@@ -90,9 +88,9 @@ export class RIncModel {
         return this._state.cnt;
       }
     }
-    return undefined;
+    throw "Invalid State in IncModel_cnt";
   }
-  set cnt(value: number | undefined) {
+  set cnt(value: number) {
     if (this._state && typeof value !== "undefined") {
       this._state.cnt = value;
     } else {

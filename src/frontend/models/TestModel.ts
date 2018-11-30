@@ -51,6 +51,8 @@ class TestModel {
   items:ShopCartItem[] = []
   maxId = 1
 
+  maybeString?:string
+
   // Default initializers work :)
   str_init_test = 'OK?'
   bool_init_test = false

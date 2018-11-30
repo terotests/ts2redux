@@ -252,25 +252,6 @@ exports.TetrisModel = TetrisModel;
 var immer = require("immer");
 var react_redux_1 = require("react-redux");
 var React = require("react");
-exports.useColorsSelectorFn = function (state) {
-    return state.useColors;
-};
-exports.lastUsedColorSelectorFn = function (state) {
-    return state.lastUsedColor;
-};
-exports.pointsSelectorFn = function (state) { return state.points; };
-exports.rowsSelectorFn = function (state) { return state.rows; };
-exports.colsSelectorFn = function (state) { return state.cols; };
-exports.cellsSelectorFn = function (state) { return state.cells; };
-exports.activePieceSelectorFn = function (state) { return state.activePiece; };
-exports.gameOnSelectorFn = function (state) { return state.gameOn; };
-exports.gameEndedSelectorFn = function (state) {
-    return state.gameEnded;
-};
-exports.ticksPerMoveSelectorFn = function (state) {
-    return state.ticksPerMove;
-};
-exports.tickCntSelectorFn = function (state) { return state.tickCnt; };
 exports.mapStateToProps = function (state) {
     return {
         useColors: state.TetrisModel.useColors,
@@ -382,7 +363,7 @@ var RTetrisModel = /** @class */ (function () {
                     return this._state.useColors;
                 }
             }
-            return undefined;
+            throw "Invalid State in TetrisModel_useColors";
         },
         set: function (value) {
             if (this._state && typeof value !== "undefined") {
@@ -411,7 +392,7 @@ var RTetrisModel = /** @class */ (function () {
                     return this._state.lastUsedColor;
                 }
             }
-            return undefined;
+            throw "Invalid State in TetrisModel_lastUsedColor";
         },
         set: function (value) {
             if (this._state && typeof value !== "undefined") {
@@ -440,7 +421,7 @@ var RTetrisModel = /** @class */ (function () {
                     return this._state.points;
                 }
             }
-            return undefined;
+            throw "Invalid State in TetrisModel_points";
         },
         set: function (value) {
             if (this._state && typeof value !== "undefined") {
@@ -469,7 +450,7 @@ var RTetrisModel = /** @class */ (function () {
                     return this._state.rows;
                 }
             }
-            return undefined;
+            throw "Invalid State in TetrisModel_rows";
         },
         set: function (value) {
             if (this._state && typeof value !== "undefined") {
@@ -498,7 +479,7 @@ var RTetrisModel = /** @class */ (function () {
                     return this._state.cols;
                 }
             }
-            return undefined;
+            throw "Invalid State in TetrisModel_cols";
         },
         set: function (value) {
             if (this._state && typeof value !== "undefined") {
@@ -527,7 +508,7 @@ var RTetrisModel = /** @class */ (function () {
                     return this._state.cells;
                 }
             }
-            return undefined;
+            throw "Invalid State in TetrisModel_cells";
         },
         set: function (value) {
             if (this._state && typeof value !== "undefined") {
@@ -585,7 +566,7 @@ var RTetrisModel = /** @class */ (function () {
                     return this._state.gameOn;
                 }
             }
-            return undefined;
+            throw "Invalid State in TetrisModel_gameOn";
         },
         set: function (value) {
             if (this._state && typeof value !== "undefined") {
@@ -614,7 +595,7 @@ var RTetrisModel = /** @class */ (function () {
                     return this._state.gameEnded;
                 }
             }
-            return undefined;
+            throw "Invalid State in TetrisModel_gameEnded";
         },
         set: function (value) {
             if (this._state && typeof value !== "undefined") {
@@ -643,7 +624,7 @@ var RTetrisModel = /** @class */ (function () {
                     return this._state.ticksPerMove;
                 }
             }
-            return undefined;
+            throw "Invalid State in TetrisModel_ticksPerMove";
         },
         set: function (value) {
             if (this._state && typeof value !== "undefined") {
@@ -672,7 +653,7 @@ var RTetrisModel = /** @class */ (function () {
                     return this._state.tickCnt;
                 }
             }
-            return undefined;
+            throw "Invalid State in TetrisModel_tickCnt";
         },
         set: function (value) {
             if (this._state && typeof value !== "undefined") {

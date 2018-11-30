@@ -20,7 +20,6 @@ export class SimpleModel {
 }
 
 import * as immer from "immer";
-import { createSelector } from "reselect";
 import { connect } from "react-redux";
 import { IState } from "./index";
 import * as React from "react";
@@ -31,7 +30,6 @@ export interface IContainerPropsMethods {
 export interface ISimpleModel {
   items: any[];
 }
-export const itemsSelectorFn = (state: ISimpleModel): any[] => state.items;
 
 export type IContainerPropsState = ISimpleModel;
 export interface IProps extends IContainerPropsState, IContainerPropsMethods {}
@@ -82,7 +80,7 @@ export class RSimpleModel {
     this._dispatch = dispatch;
     this._getState = getState;
   }
-  get items(): any[] | undefined {
+  get items(): any[] {
     if (this._getState) {
       return this._getState().SimpleModel.items;
     } else {
@@ -90,9 +88,9 @@ export class RSimpleModel {
         return this._state.items;
       }
     }
-    return undefined;
+    throw "Invalid State in SimpleModel_items";
   }
-  set items(value: any[] | undefined) {
+  set items(value: any[]) {
     if (this._state && typeof value !== "undefined") {
       this._state.items = value;
     } else {

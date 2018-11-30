@@ -198,7 +198,9 @@ export async function createProject( settings:GenerationOptions) {
         myFile.delete()
 
         ng.out(`import * as immer from 'immer'`, true)
-        ng.out(`import { createSelector } from 'reselect'`, true)
+        if(selectorMethods.length > 0) {
+          ng.out(`import { createSelector } from 'reselect'`, true)
+        }
         ng.out(`import { connect } from 'react-redux'`, true)
         ng.out(`import { IState } from './index'`, true)
         ng.out(`import * as React from 'react'`, true)
@@ -345,11 +347,15 @@ export async function createProject( settings:GenerationOptions) {
           body.out('}', true)
 
           c.getProperties().forEach( p => {
+            
+            if(selectorMethods.length > 0) {
+              selFns.out(`export const ${p.getName()}SelectorFn = (state:I${c.getName()}) : ${getPropTypeString(p) + (p.hasQuestionToken() ? ' | undefined' : '' )} => state.${p.getName()}`, true)
+            }
 
-            selFns.out(`export const ${p.getName()}SelectorFn = (state:I${c.getName()}) : ${getPropTypeString(p) + (p.hasQuestionToken() ? ' | undefined' : '' )} => state.${p.getName()}`, true)
+            const optionality = p.hasQuestionToken() ? '| undefined' : ''
 
             const r_name = `${c.getName()}_${p.getName()}`
-            body.out('get ' + p.getName()+'() : ' + getPropTypeString(p) + ' | undefined {', true)
+            body.out('get ' + p.getName()+'() : ' + getPropTypeString(p) + optionality + ' {', true)
             body.indent(1)
             body.out('if(this._getState) {', true)
               body.indent(1)
@@ -361,10 +367,14 @@ export async function createProject( settings:GenerationOptions) {
               body.out('if(this._state) { return this._state.'+p.getName() + ' }', true)
               body.indent(-1)
             body.out('}', true)             
-            body.out('return undefined') 
+            if( p.hasQuestionToken() ) {
+              body.out(`return undefined`, true) 
+            } else {
+              body.out(`throw 'Invalid State in ${r_name}'`, true) 
+            }
             body.indent(-1)
             body.out('}', true)
-            body.out('set ' + p.getName()+'(value:' + getPropTypeString(p) + ' | undefined) {', true)
+            body.out('set ' + p.getName()+'(value:' + getPropTypeString(p) + optionality + ') {', true)
             body.indent(1)
             body.out(`if(this._state && (typeof(value) !== 'undefined')) {`, true)
               body.indent(1)

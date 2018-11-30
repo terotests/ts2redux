@@ -302,7 +302,7 @@ var RTodoList = /** @class */ (function () {
                     return this._state.items;
                 }
             }
-            return undefined;
+            throw "Invalid State in TodoList_items";
         },
         set: function (value) {
             if (this._state && typeof value !== "undefined") {
@@ -328,7 +328,7 @@ var RTodoList = /** @class */ (function () {
                     return this._state.state;
                 }
             }
-            return undefined;
+            throw "Invalid State in TodoList_state";
         },
         set: function (value) {
             if (this._state && typeof value !== "undefined") {
@@ -354,7 +354,7 @@ var RTodoList = /** @class */ (function () {
                     return this._state.stateError;
                 }
             }
-            return undefined;
+            throw "Invalid State in TodoList_stateError";
         },
         set: function (value) {
             if (this._state && typeof value !== "undefined") {
@@ -383,7 +383,7 @@ var RTodoList = /** @class */ (function () {
                     return this._state.sortOrder;
                 }
             }
-            return undefined;
+            throw "Invalid State in TodoList_sortOrder";
         },
         set: function (value) {
             if (this._state && typeof value !== "undefined") {
@@ -412,7 +412,7 @@ var RTodoList = /** @class */ (function () {
                     return this._state.listStart;
                 }
             }
-            return undefined;
+            throw "Invalid State in TodoList_listStart";
         },
         set: function (value) {
             if (this._state && typeof value !== "undefined") {
@@ -441,7 +441,7 @@ var RTodoList = /** @class */ (function () {
                     return this._state.listPageLength;
                 }
             }
-            return undefined;
+            throw "Invalid State in TodoList_listPageLength";
         },
         set: function (value) {
             if (this._state && typeof value !== "undefined") {
@@ -470,7 +470,7 @@ var RTodoList = /** @class */ (function () {
                     return this._state.listTitle;
                 }
             }
-            return undefined;
+            throw "Invalid State in TodoList_listTitle";
         },
         set: function (value) {
             if (this._state && typeof value !== "undefined") {

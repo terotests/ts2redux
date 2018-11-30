@@ -34,11 +34,6 @@ export interface IWaspModel {
         [id: number]: Wasp;
     };
 }
-export declare const speedSelectorFn: (state: IWaspModel) => number;
-export declare const lastIdSelectorFn: (state: IWaspModel) => number;
-export declare const waspsSelectorFn: (state: IWaspModel) => {
-    [id: number]: Wasp;
-};
 export declare type IContainerPropsState = IWaspModel;
 export interface IProps extends IContainerPropsState, IContainerPropsMethods {
 }
@@ -53,11 +48,11 @@ export declare class RWaspModel {
     private _dispatch?;
     private _getState?;
     constructor(state?: IWaspModel, dispatch?: (action: any) => void, getState?: () => any);
-    speed: number | undefined;
-    lastId: number | undefined;
+    speed: number;
+    lastId: number;
     wasps: {
         [id: number]: Wasp;
-    } | undefined;
+    };
     addWasp(pos: {
         x: number;
         y: number;

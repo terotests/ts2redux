@@ -95,9 +95,6 @@ var WaspModel = /** @class */ (function () {
 var immer = require("immer");
 var react_redux_1 = require("react-redux");
 var React = require("react");
-exports.speedSelectorFn = function (state) { return state.speed; };
-exports.lastIdSelectorFn = function (state) { return state.lastId; };
-exports.waspsSelectorFn = function (state) { return state.wasps; };
 exports.mapStateToProps = function (state) {
     return {
         speed: state.WaspModel.speed,
@@ -161,7 +158,7 @@ var RWaspModel = /** @class */ (function () {
                     return this._state.speed;
                 }
             }
-            return undefined;
+            throw "Invalid State in WaspModel_speed";
         },
         set: function (value) {
             if (this._state && typeof value !== "undefined") {
@@ -190,7 +187,7 @@ var RWaspModel = /** @class */ (function () {
                     return this._state.lastId;
                 }
             }
-            return undefined;
+            throw "Invalid State in WaspModel_lastId";
         },
         set: function (value) {
             if (this._state && typeof value !== "undefined") {
@@ -219,7 +216,7 @@ var RWaspModel = /** @class */ (function () {
                     return this._state.wasps;
                 }
             }
-            return undefined;
+            throw "Invalid State in WaspModel_wasps";
         },
         set: function (value) {
             if (this._state && typeof value !== "undefined") {

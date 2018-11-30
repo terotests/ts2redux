@@ -18,7 +18,6 @@ export interface IContainerPropsMethods {
 export interface IIncModel {
     cnt: number;
 }
-export declare const cntSelectorFn: (state: IIncModel) => number;
 export declare type IContainerPropsState = IIncModel;
 export interface IProps extends IContainerPropsState, IContainerPropsMethods {
 }
@@ -33,7 +32,7 @@ export declare class RIncModel {
     private _dispatch?;
     private _getState?;
     constructor(state?: IIncModel, dispatch?: (action: any) => void, getState?: () => any);
-    cnt: number | undefined;
+    cnt: number;
     increment(): void;
     static increment(): (dispatcher: any, getState: any) => void;
     decrement(): void;

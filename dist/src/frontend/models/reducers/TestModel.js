@@ -213,47 +213,11 @@ var TestModel = /** @class */ (function () {
 var immer = require("immer");
 var react_redux_1 = require("react-redux");
 var React = require("react");
-exports.itemsSelectorFn = function (state) {
-    return state.items;
-};
-exports.maxIdSelectorFn = function (state) { return state.maxId; };
-exports.str_init_testSelectorFn = function (state) {
-    return state.str_init_test;
-};
-exports.bool_init_testSelectorFn = function (state) {
-    return state.bool_init_test;
-};
-exports.bool4SelectorFn = function (state) { return state.bool4; };
-exports.obj_init_testSelectorFn = function (state) {
-    return state.obj_init_test;
-};
-exports.rand_init_testSelectorFn = function (state) {
-    return state.rand_init_test;
-};
-exports.arr_init_testSelectorFn = function (state) {
-    return state.arr_init_test;
-};
-exports.arr_init_test2SelectorFn = function (state) {
-    return state.arr_init_test2;
-};
-exports.obj_literal_testSelectorFn = function (state) {
-    return state.obj_literal_test;
-};
-exports.cartIdSelectorFn = function (state) { return state.cartId; };
-exports.shopStateSelectorFn = function (state) {
-    return state.shopState;
-};
-exports.cartsSelectorFn = function (state) { return state.carts; };
-exports.userMessageSelectorFn = function (state) {
-    return state.userMessage;
-};
-exports.testObjSelectorFn = function (state) {
-    return state.testObj;
-};
 exports.mapStateToProps = function (state) {
     return {
         items: state.TestModel.items,
         maxId: state.TestModel.maxId,
+        maybeString: state.TestModel.maybeString,
         str_init_test: state.TestModel.str_init_test,
         bool_init_test: state.TestModel.bool_init_test,
         bool4: state.TestModel.bool4,
@@ -321,6 +285,7 @@ var initTestModel = function () {
     return {
         items: o.items,
         maxId: o.maxId,
+        maybeString: o.maybeString,
         str_init_test: o.str_init_test,
         bool_init_test: o.bool_init_test,
         bool4: o.bool4,
@@ -341,6 +306,7 @@ var initWithMethodsTestModel = function () {
     return {
         items: o.items,
         maxId: o.maxId,
+        maybeString: o.maybeString,
         str_init_test: o.str_init_test,
         bool_init_test: o.bool_init_test,
         bool4: o.bool4,
@@ -389,7 +355,7 @@ var RTestModel = /** @class */ (function () {
                     return this._state.items;
                 }
             }
-            return undefined;
+            throw "Invalid State in TestModel_items";
         },
         set: function (value) {
             if (this._state && typeof value !== "undefined") {
@@ -418,7 +384,7 @@ var RTestModel = /** @class */ (function () {
                     return this._state.maxId;
                 }
             }
-            return undefined;
+            throw "Invalid State in TestModel_maxId";
         },
         set: function (value) {
             if (this._state && typeof value !== "undefined") {
@@ -437,6 +403,35 @@ var RTestModel = /** @class */ (function () {
         enumerable: true,
         configurable: true
     });
+    Object.defineProperty(RTestModel.prototype, "maybeString", {
+        get: function () {
+            if (this._getState) {
+                return this._getState().TestModel.maybeString;
+            }
+            else {
+                if (this._state) {
+                    return this._state.maybeString;
+                }
+            }
+            return undefined;
+        },
+        set: function (value) {
+            if (this._state && typeof value !== "undefined") {
+                this._state.maybeString = value;
+            }
+            else {
+                // dispatch change for item maybeString
+                if (this._dispatch) {
+                    this._dispatch({
+                        type: exports.TestModelEnums.TestModel_maybeString,
+                        payload: value
+                    });
+                }
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
     Object.defineProperty(RTestModel.prototype, "str_init_test", {
         get: function () {
             if (this._getState) {
@@ -447,7 +442,7 @@ var RTestModel = /** @class */ (function () {
                     return this._state.str_init_test;
                 }
             }
-            return undefined;
+            throw "Invalid State in TestModel_str_init_test";
         },
         set: function (value) {
             if (this._state && typeof value !== "undefined") {
@@ -476,7 +471,7 @@ var RTestModel = /** @class */ (function () {
                     return this._state.bool_init_test;
                 }
             }
-            return undefined;
+            throw "Invalid State in TestModel_bool_init_test";
         },
         set: function (value) {
             if (this._state && typeof value !== "undefined") {
@@ -505,7 +500,7 @@ var RTestModel = /** @class */ (function () {
                     return this._state.bool4;
                 }
             }
-            return undefined;
+            throw "Invalid State in TestModel_bool4";
         },
         set: function (value) {
             if (this._state && typeof value !== "undefined") {
@@ -534,7 +529,7 @@ var RTestModel = /** @class */ (function () {
                     return this._state.obj_init_test;
                 }
             }
-            return undefined;
+            throw "Invalid State in TestModel_obj_init_test";
         },
         set: function (value) {
             if (this._state && typeof value !== "undefined") {
@@ -563,7 +558,7 @@ var RTestModel = /** @class */ (function () {
                     return this._state.rand_init_test;
                 }
             }
-            return undefined;
+            throw "Invalid State in TestModel_rand_init_test";
         },
         set: function (value) {
             if (this._state && typeof value !== "undefined") {
@@ -592,7 +587,7 @@ var RTestModel = /** @class */ (function () {
                     return this._state.arr_init_test;
                 }
             }
-            return undefined;
+            throw "Invalid State in TestModel_arr_init_test";
         },
         set: function (value) {
             if (this._state && typeof value !== "undefined") {
@@ -621,7 +616,7 @@ var RTestModel = /** @class */ (function () {
                     return this._state.arr_init_test2;
                 }
             }
-            return undefined;
+            throw "Invalid State in TestModel_arr_init_test2";
         },
         set: function (value) {
             if (this._state && typeof value !== "undefined") {
@@ -650,7 +645,7 @@ var RTestModel = /** @class */ (function () {
                     return this._state.obj_literal_test;
                 }
             }
-            return undefined;
+            throw "Invalid State in TestModel_obj_literal_test";
         },
         set: function (value) {
             if (this._state && typeof value !== "undefined") {
@@ -679,7 +674,7 @@ var RTestModel = /** @class */ (function () {
                     return this._state.cartId;
                 }
             }
-            return undefined;
+            throw "Invalid State in TestModel_cartId";
         },
         set: function (value) {
             if (this._state && typeof value !== "undefined") {
@@ -708,7 +703,7 @@ var RTestModel = /** @class */ (function () {
                     return this._state.shopState;
                 }
             }
-            return undefined;
+            throw "Invalid State in TestModel_shopState";
         },
         set: function (value) {
             if (this._state && typeof value !== "undefined") {
@@ -737,7 +732,7 @@ var RTestModel = /** @class */ (function () {
                     return this._state.carts;
                 }
             }
-            return undefined;
+            throw "Invalid State in TestModel_carts";
         },
         set: function (value) {
             if (this._state && typeof value !== "undefined") {
@@ -766,7 +761,7 @@ var RTestModel = /** @class */ (function () {
                     return this._state.userMessage;
                 }
             }
-            return undefined;
+            throw "Invalid State in TestModel_userMessage";
         },
         set: function (value) {
             if (this._state && typeof value !== "undefined") {
@@ -1068,6 +1063,7 @@ exports.RTestModel = RTestModel;
 exports.TestModelEnums = {
     TestModel_items: "TestModel_items",
     TestModel_maxId: "TestModel_maxId",
+    TestModel_maybeString: "TestModel_maybeString",
     TestModel_str_init_test: "TestModel_str_init_test",
     TestModel_bool_init_test: "TestModel_bool_init_test",
     TestModel_bool4: "TestModel_bool4",
@@ -1101,6 +1097,9 @@ exports.TestModelReducer = function (state, action) {
                 break;
             case exports.TestModelEnums.TestModel_maxId:
                 new RTestModel(draft).maxId = action.payload;
+                break;
+            case exports.TestModelEnums.TestModel_maybeString:
+                new RTestModel(draft).maybeString = action.payload;
                 break;
             case exports.TestModelEnums.TestModel_str_init_test:
                 new RTestModel(draft).str_init_test = action.payload;

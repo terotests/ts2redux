@@ -53,6 +53,8 @@ class TestModel {
   items: ShopCartItem[] = [];
   maxId = 1;
 
+  maybeString?: string;
+
   // Default initializers work :)
   str_init_test = "OK?";
   bool_init_test = false;
@@ -169,7 +171,6 @@ class TestModel {
 }
 
 import * as immer from "immer";
-import { createSelector } from "reselect";
 import { connect } from "react-redux";
 import { IState } from "./index";
 import * as React from "react";
@@ -204,6 +205,7 @@ export interface ITestModel {
   // model with initializer
   items: ShopCartItem[];
   maxId: number;
+  maybeString?: string;
   // Default initializers work :)
   str_init_test: string;
   bool_init_test: boolean;
@@ -223,36 +225,6 @@ export interface ITestModel {
   userMessage: string;
   testObj?: TestObj;
 }
-export const itemsSelectorFn = (state: ITestModel): ShopCartItem[] =>
-  state.items;
-export const maxIdSelectorFn = (state: ITestModel): number => state.maxId;
-export const str_init_testSelectorFn = (state: ITestModel): string =>
-  state.str_init_test;
-export const bool_init_testSelectorFn = (state: ITestModel): boolean =>
-  state.bool_init_test;
-export const bool4SelectorFn = (state: ITestModel): boolean => state.bool4;
-export const obj_init_testSelectorFn = (state: ITestModel): TestObj =>
-  state.obj_init_test;
-export const rand_init_testSelectorFn = (state: ITestModel): number =>
-  state.rand_init_test;
-export const arr_init_testSelectorFn = (state: ITestModel): Array<number> =>
-  state.arr_init_test;
-export const arr_init_test2SelectorFn = (state: ITestModel): Array<any> =>
-  state.arr_init_test2;
-export const obj_literal_testSelectorFn = (state: ITestModel): any =>
-  state.obj_literal_test;
-export const cartIdSelectorFn = (state: ITestModel): number => state.cartId;
-export const shopStateSelectorFn = (state: ITestModel): TaskState =>
-  state.shopState;
-export const cartsSelectorFn = (
-  state: ITestModel
-): {
-  [key: string]: ShopCart;
-} => state.carts;
-export const userMessageSelectorFn = (state: ITestModel): string =>
-  state.userMessage;
-export const testObjSelectorFn = (state: ITestModel): TestObj | undefined =>
-  state.testObj;
 
 export type IContainerPropsState = ITestModel;
 export interface IProps extends IContainerPropsState, IContainerPropsMethods {}
@@ -260,6 +232,7 @@ export const mapStateToProps = (state: IState): IContainerPropsState => {
   return {
     items: state.TestModel.items,
     maxId: state.TestModel.maxId,
+    maybeString: state.TestModel.maybeString,
     str_init_test: state.TestModel.str_init_test,
     bool_init_test: state.TestModel.bool_init_test,
     bool4: state.TestModel.bool4,
@@ -331,6 +304,7 @@ const initTestModel = () => {
   return {
     items: o.items,
     maxId: o.maxId,
+    maybeString: o.maybeString,
     str_init_test: o.str_init_test,
     bool_init_test: o.bool_init_test,
     bool4: o.bool4,
@@ -351,6 +325,7 @@ const initWithMethodsTestModel = () => {
   return {
     items: o.items,
     maxId: o.maxId,
+    maybeString: o.maybeString,
     str_init_test: o.str_init_test,
     bool_init_test: o.bool_init_test,
     bool4: o.bool4,
@@ -397,7 +372,7 @@ export class RTestModel {
     this._dispatch = dispatch;
     this._getState = getState;
   }
-  get items(): ShopCartItem[] | undefined {
+  get items(): ShopCartItem[] {
     if (this._getState) {
       return this._getState().TestModel.items;
     } else {
@@ -405,9 +380,9 @@ export class RTestModel {
         return this._state.items;
       }
     }
-    return undefined;
+    throw "Invalid State in TestModel_items";
   }
-  set items(value: ShopCartItem[] | undefined) {
+  set items(value: ShopCartItem[]) {
     if (this._state && typeof value !== "undefined") {
       this._state.items = value;
     } else {
@@ -420,7 +395,7 @@ export class RTestModel {
       }
     }
   }
-  get maxId(): number | undefined {
+  get maxId(): number {
     if (this._getState) {
       return this._getState().TestModel.maxId;
     } else {
@@ -428,9 +403,9 @@ export class RTestModel {
         return this._state.maxId;
       }
     }
-    return undefined;
+    throw "Invalid State in TestModel_maxId";
   }
-  set maxId(value: number | undefined) {
+  set maxId(value: number) {
     if (this._state && typeof value !== "undefined") {
       this._state.maxId = value;
     } else {
@@ -443,7 +418,30 @@ export class RTestModel {
       }
     }
   }
-  get str_init_test(): string | undefined {
+  get maybeString(): string | undefined {
+    if (this._getState) {
+      return this._getState().TestModel.maybeString;
+    } else {
+      if (this._state) {
+        return this._state.maybeString;
+      }
+    }
+    return undefined;
+  }
+  set maybeString(value: string | undefined) {
+    if (this._state && typeof value !== "undefined") {
+      this._state.maybeString = value;
+    } else {
+      // dispatch change for item maybeString
+      if (this._dispatch) {
+        this._dispatch({
+          type: TestModelEnums.TestModel_maybeString,
+          payload: value
+        });
+      }
+    }
+  }
+  get str_init_test(): string {
     if (this._getState) {
       return this._getState().TestModel.str_init_test;
     } else {
@@ -451,9 +449,9 @@ export class RTestModel {
         return this._state.str_init_test;
       }
     }
-    return undefined;
+    throw "Invalid State in TestModel_str_init_test";
   }
-  set str_init_test(value: string | undefined) {
+  set str_init_test(value: string) {
     if (this._state && typeof value !== "undefined") {
       this._state.str_init_test = value;
     } else {
@@ -466,7 +464,7 @@ export class RTestModel {
       }
     }
   }
-  get bool_init_test(): boolean | undefined {
+  get bool_init_test(): boolean {
     if (this._getState) {
       return this._getState().TestModel.bool_init_test;
     } else {
@@ -474,9 +472,9 @@ export class RTestModel {
         return this._state.bool_init_test;
       }
     }
-    return undefined;
+    throw "Invalid State in TestModel_bool_init_test";
   }
-  set bool_init_test(value: boolean | undefined) {
+  set bool_init_test(value: boolean) {
     if (this._state && typeof value !== "undefined") {
       this._state.bool_init_test = value;
     } else {
@@ -489,7 +487,7 @@ export class RTestModel {
       }
     }
   }
-  get bool4(): boolean | undefined {
+  get bool4(): boolean {
     if (this._getState) {
       return this._getState().TestModel.bool4;
     } else {
@@ -497,9 +495,9 @@ export class RTestModel {
         return this._state.bool4;
       }
     }
-    return undefined;
+    throw "Invalid State in TestModel_bool4";
   }
-  set bool4(value: boolean | undefined) {
+  set bool4(value: boolean) {
     if (this._state && typeof value !== "undefined") {
       this._state.bool4 = value;
     } else {
@@ -512,7 +510,7 @@ export class RTestModel {
       }
     }
   }
-  get obj_init_test(): TestObj | undefined {
+  get obj_init_test(): TestObj {
     if (this._getState) {
       return this._getState().TestModel.obj_init_test;
     } else {
@@ -520,9 +518,9 @@ export class RTestModel {
         return this._state.obj_init_test;
       }
     }
-    return undefined;
+    throw "Invalid State in TestModel_obj_init_test";
   }
-  set obj_init_test(value: TestObj | undefined) {
+  set obj_init_test(value: TestObj) {
     if (this._state && typeof value !== "undefined") {
       this._state.obj_init_test = value;
     } else {
@@ -535,7 +533,7 @@ export class RTestModel {
       }
     }
   }
-  get rand_init_test(): number | undefined {
+  get rand_init_test(): number {
     if (this._getState) {
       return this._getState().TestModel.rand_init_test;
     } else {
@@ -543,9 +541,9 @@ export class RTestModel {
         return this._state.rand_init_test;
       }
     }
-    return undefined;
+    throw "Invalid State in TestModel_rand_init_test";
   }
-  set rand_init_test(value: number | undefined) {
+  set rand_init_test(value: number) {
     if (this._state && typeof value !== "undefined") {
       this._state.rand_init_test = value;
     } else {
@@ -558,7 +556,7 @@ export class RTestModel {
       }
     }
   }
-  get arr_init_test(): Array<number> | undefined {
+  get arr_init_test(): Array<number> {
     if (this._getState) {
       return this._getState().TestModel.arr_init_test;
     } else {
@@ -566,9 +564,9 @@ export class RTestModel {
         return this._state.arr_init_test;
       }
     }
-    return undefined;
+    throw "Invalid State in TestModel_arr_init_test";
   }
-  set arr_init_test(value: Array<number> | undefined) {
+  set arr_init_test(value: Array<number>) {
     if (this._state && typeof value !== "undefined") {
       this._state.arr_init_test = value;
     } else {
@@ -581,7 +579,7 @@ export class RTestModel {
       }
     }
   }
-  get arr_init_test2(): Array<any> | undefined {
+  get arr_init_test2(): Array<any> {
     if (this._getState) {
       return this._getState().TestModel.arr_init_test2;
     } else {
@@ -589,9 +587,9 @@ export class RTestModel {
         return this._state.arr_init_test2;
       }
     }
-    return undefined;
+    throw "Invalid State in TestModel_arr_init_test2";
   }
-  set arr_init_test2(value: Array<any> | undefined) {
+  set arr_init_test2(value: Array<any>) {
     if (this._state && typeof value !== "undefined") {
       this._state.arr_init_test2 = value;
     } else {
@@ -604,7 +602,7 @@ export class RTestModel {
       }
     }
   }
-  get obj_literal_test(): any | undefined {
+  get obj_literal_test(): any {
     if (this._getState) {
       return this._getState().TestModel.obj_literal_test;
     } else {
@@ -612,9 +610,9 @@ export class RTestModel {
         return this._state.obj_literal_test;
       }
     }
-    return undefined;
+    throw "Invalid State in TestModel_obj_literal_test";
   }
-  set obj_literal_test(value: any | undefined) {
+  set obj_literal_test(value: any) {
     if (this._state && typeof value !== "undefined") {
       this._state.obj_literal_test = value;
     } else {
@@ -627,7 +625,7 @@ export class RTestModel {
       }
     }
   }
-  get cartId(): number | undefined {
+  get cartId(): number {
     if (this._getState) {
       return this._getState().TestModel.cartId;
     } else {
@@ -635,9 +633,9 @@ export class RTestModel {
         return this._state.cartId;
       }
     }
-    return undefined;
+    throw "Invalid State in TestModel_cartId";
   }
-  set cartId(value: number | undefined) {
+  set cartId(value: number) {
     if (this._state && typeof value !== "undefined") {
       this._state.cartId = value;
     } else {
@@ -650,7 +648,7 @@ export class RTestModel {
       }
     }
   }
-  get shopState(): TaskState | undefined {
+  get shopState(): TaskState {
     if (this._getState) {
       return this._getState().TestModel.shopState;
     } else {
@@ -658,9 +656,9 @@ export class RTestModel {
         return this._state.shopState;
       }
     }
-    return undefined;
+    throw "Invalid State in TestModel_shopState";
   }
-  set shopState(value: TaskState | undefined) {
+  set shopState(value: TaskState) {
     if (this._state && typeof value !== "undefined") {
       this._state.shopState = value;
     } else {
@@ -673,11 +671,9 @@ export class RTestModel {
       }
     }
   }
-  get carts():
-    | {
-        [key: string]: ShopCart;
-      }
-    | undefined {
+  get carts(): {
+    [key: string]: ShopCart;
+  } {
     if (this._getState) {
       return this._getState().TestModel.carts;
     } else {
@@ -685,15 +681,9 @@ export class RTestModel {
         return this._state.carts;
       }
     }
-    return undefined;
+    throw "Invalid State in TestModel_carts";
   }
-  set carts(
-    value:
-      | {
-          [key: string]: ShopCart;
-        }
-      | undefined
-  ) {
+  set carts(value: { [key: string]: ShopCart }) {
     if (this._state && typeof value !== "undefined") {
       this._state.carts = value;
     } else {
@@ -706,7 +696,7 @@ export class RTestModel {
       }
     }
   }
-  get userMessage(): string | undefined {
+  get userMessage(): string {
     if (this._getState) {
       return this._getState().TestModel.userMessage;
     } else {
@@ -714,9 +704,9 @@ export class RTestModel {
         return this._state.userMessage;
       }
     }
-    return undefined;
+    throw "Invalid State in TestModel_userMessage";
   }
-  set userMessage(value: string | undefined) {
+  set userMessage(value: string) {
     if (this._state && typeof value !== "undefined") {
       this._state.userMessage = value;
     } else {
@@ -989,6 +979,7 @@ export class RTestModel {
 export const TestModelEnums = {
   TestModel_items: "TestModel_items",
   TestModel_maxId: "TestModel_maxId",
+  TestModel_maybeString: "TestModel_maybeString",
   TestModel_str_init_test: "TestModel_str_init_test",
   TestModel_bool_init_test: "TestModel_bool_init_test",
   TestModel_bool4: "TestModel_bool4",
@@ -1025,6 +1016,9 @@ export const TestModelReducer = (
         break;
       case TestModelEnums.TestModel_maxId:
         new RTestModel(draft).maxId = action.payload;
+        break;
+      case TestModelEnums.TestModel_maybeString:
+        new RTestModel(draft).maybeString = action.payload;
         break;
       case TestModelEnums.TestModel_str_init_test:
         new RTestModel(draft).str_init_test = action.payload;

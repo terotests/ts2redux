@@ -250,7 +250,7 @@ export class RTodoList {
     this._dispatch = dispatch;
     this._getState = getState;
   }
-  get items(): TodoListItem[] | undefined {
+  get items(): TodoListItem[] {
     if (this._getState) {
       return this._getState().TodoList.items;
     } else {
@@ -258,9 +258,9 @@ export class RTodoList {
         return this._state.items;
       }
     }
-    return undefined;
+    throw "Invalid State in TodoList_items";
   }
-  set items(value: TodoListItem[] | undefined) {
+  set items(value: TodoListItem[]) {
     if (this._state && typeof value !== "undefined") {
       this._state.items = value;
     } else {
@@ -270,7 +270,7 @@ export class RTodoList {
       }
     }
   }
-  get state(): TaskState | undefined {
+  get state(): TaskState {
     if (this._getState) {
       return this._getState().TodoList.state;
     } else {
@@ -278,9 +278,9 @@ export class RTodoList {
         return this._state.state;
       }
     }
-    return undefined;
+    throw "Invalid State in TodoList_state";
   }
-  set state(value: TaskState | undefined) {
+  set state(value: TaskState) {
     if (this._state && typeof value !== "undefined") {
       this._state.state = value;
     } else {
@@ -290,7 +290,7 @@ export class RTodoList {
       }
     }
   }
-  get stateError(): any | undefined {
+  get stateError(): any {
     if (this._getState) {
       return this._getState().TodoList.stateError;
     } else {
@@ -298,9 +298,9 @@ export class RTodoList {
         return this._state.stateError;
       }
     }
-    return undefined;
+    throw "Invalid State in TodoList_stateError";
   }
-  set stateError(value: any | undefined) {
+  set stateError(value: any) {
     if (this._state && typeof value !== "undefined") {
       this._state.stateError = value;
     } else {
@@ -313,7 +313,7 @@ export class RTodoList {
       }
     }
   }
-  get sortOrder(): SortOrder | undefined {
+  get sortOrder(): SortOrder {
     if (this._getState) {
       return this._getState().TodoList.sortOrder;
     } else {
@@ -321,9 +321,9 @@ export class RTodoList {
         return this._state.sortOrder;
       }
     }
-    return undefined;
+    throw "Invalid State in TodoList_sortOrder";
   }
-  set sortOrder(value: SortOrder | undefined) {
+  set sortOrder(value: SortOrder) {
     if (this._state && typeof value !== "undefined") {
       this._state.sortOrder = value;
     } else {
@@ -336,7 +336,7 @@ export class RTodoList {
       }
     }
   }
-  get listStart(): number | undefined {
+  get listStart(): number {
     if (this._getState) {
       return this._getState().TodoList.listStart;
     } else {
@@ -344,9 +344,9 @@ export class RTodoList {
         return this._state.listStart;
       }
     }
-    return undefined;
+    throw "Invalid State in TodoList_listStart";
   }
-  set listStart(value: number | undefined) {
+  set listStart(value: number) {
     if (this._state && typeof value !== "undefined") {
       this._state.listStart = value;
     } else {
@@ -359,7 +359,7 @@ export class RTodoList {
       }
     }
   }
-  get listPageLength(): number | undefined {
+  get listPageLength(): number {
     if (this._getState) {
       return this._getState().TodoList.listPageLength;
     } else {
@@ -367,9 +367,9 @@ export class RTodoList {
         return this._state.listPageLength;
       }
     }
-    return undefined;
+    throw "Invalid State in TodoList_listPageLength";
   }
-  set listPageLength(value: number | undefined) {
+  set listPageLength(value: number) {
     if (this._state && typeof value !== "undefined") {
       this._state.listPageLength = value;
     } else {
@@ -382,7 +382,7 @@ export class RTodoList {
       }
     }
   }
-  get listTitle(): string | undefined {
+  get listTitle(): string {
     if (this._getState) {
       return this._getState().TodoList.listTitle;
     } else {
@@ -390,9 +390,9 @@ export class RTodoList {
         return this._state.listTitle;
       }
     }
-    return undefined;
+    throw "Invalid State in TodoList_listTitle";
   }
-  set listTitle(value: string | undefined) {
+  set listTitle(value: string) {
     if (this._state && typeof value !== "undefined") {
       this._state.listTitle = value;
     } else {

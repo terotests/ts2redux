@@ -1,6 +1,6 @@
 {
   "name": "ts2redux",
-  "version": "1.0.22",
+  "version": "1.0.23",
   "description": "Convert TypeScript classes into Reducers",
   "main": "dist/src/index.js",
   "bin": {

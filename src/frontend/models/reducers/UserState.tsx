@@ -21,7 +21,6 @@ class UserState {
 }
 
 import * as immer from "immer";
-import { createSelector } from "reselect";
 import { connect } from "react-redux";
 import { IState } from "./index";
 import * as React from "react";
@@ -43,13 +42,6 @@ export interface IUserState {
   lastName: string;
   lastLogin: number;
 }
-export const loggedSelectorFn = (state: IUserState): boolean => state.logged;
-export const usernameSelectorFn = (state: IUserState): string => state.username;
-export const firstNameSelectorFn = (state: IUserState): string =>
-  state.firstName;
-export const lastNameSelectorFn = (state: IUserState): string => state.lastName;
-export const lastLoginSelectorFn = (state: IUserState): number =>
-  state.lastLogin;
 
 export type IContainerPropsState = IUserState;
 export interface IProps extends IContainerPropsState, IContainerPropsMethods {}
@@ -120,7 +112,7 @@ export class RUserState {
     this._dispatch = dispatch;
     this._getState = getState;
   }
-  get logged(): boolean | undefined {
+  get logged(): boolean {
     if (this._getState) {
       return this._getState().UserState.logged;
     } else {
@@ -128,9 +120,9 @@ export class RUserState {
         return this._state.logged;
       }
     }
-    return undefined;
+    throw "Invalid State in UserState_logged";
   }
-  set logged(value: boolean | undefined) {
+  set logged(value: boolean) {
     if (this._state && typeof value !== "undefined") {
       this._state.logged = value;
     } else {
@@ -143,7 +135,7 @@ export class RUserState {
       }
     }
   }
-  get username(): string | undefined {
+  get username(): string {
     if (this._getState) {
       return this._getState().UserState.username;
     } else {
@@ -151,9 +143,9 @@ export class RUserState {
         return this._state.username;
       }
     }
-    return undefined;
+    throw "Invalid State in UserState_username";
   }
-  set username(value: string | undefined) {
+  set username(value: string) {
     if (this._state && typeof value !== "undefined") {
       this._state.username = value;
     } else {
@@ -166,7 +158,7 @@ export class RUserState {
       }
     }
   }
-  get firstName(): string | undefined {
+  get firstName(): string {
     if (this._getState) {
       return this._getState().UserState.firstName;
     } else {
@@ -174,9 +166,9 @@ export class RUserState {
         return this._state.firstName;
       }
     }
-    return undefined;
+    throw "Invalid State in UserState_firstName";
   }
-  set firstName(value: string | undefined) {
+  set firstName(value: string) {
     if (this._state && typeof value !== "undefined") {
       this._state.firstName = value;
     } else {
@@ -189,7 +181,7 @@ export class RUserState {
       }
     }
   }
-  get lastName(): string | undefined {
+  get lastName(): string {
     if (this._getState) {
       return this._getState().UserState.lastName;
     } else {
@@ -197,9 +189,9 @@ export class RUserState {
         return this._state.lastName;
       }
     }
-    return undefined;
+    throw "Invalid State in UserState_lastName";
   }
-  set lastName(value: string | undefined) {
+  set lastName(value: string) {
     if (this._state && typeof value !== "undefined") {
       this._state.lastName = value;
     } else {
@@ -212,7 +204,7 @@ export class RUserState {
       }
     }
   }
-  get lastLogin(): number | undefined {
+  get lastLogin(): number {
     if (this._getState) {
       return this._getState().UserState.lastLogin;
     } else {
@@ -220,9 +212,9 @@ export class RUserState {
         return this._state.lastLogin;
       }
     }
-    return undefined;
+    throw "Invalid State in UserState_lastLogin";
   }
-  set lastLogin(value: number | undefined) {
+  set lastLogin(value: number) {
     if (this._state && typeof value !== "undefined") {
       this._state.lastLogin = value;
     } else {

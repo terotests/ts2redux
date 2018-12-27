@@ -48,13 +48,13 @@ export class TetrisC extends React.PureComponent<Props> {
           : ''}
         <div>Points:{this.props.points} {this.props.gameEnded ? 'Game Over' : ''}</div>
       
-        <div style={{width: this.props.cols*20, height: this.props.rows * 20, position:'relative', backgroundColor:'#222222'}}>
+        <div style={{overflow:'hidden', width: this.props.cols*20, height: this.props.rows * 20, position:'relative', backgroundColor:'#222222'}}>
           {
             this.props.cells.map( (row,y) => <div 
               style={{width: this.props.cols*20, height: 21}}
               key={'row_'+y} >{
                 row.map( (cell,x) => {
-                  let hasActive = false
+                  /*
                   const active = this.props.activePiece
                   let color = cell.color
                   active.cells.forEach( (arow, ay)=>{
@@ -64,12 +64,28 @@ export class TetrisC extends React.PureComponent<Props> {
                       }
                     })
                   })
+                  */
+                  const color = cell.color
                   return <div key={'cell'+y+'_'+x} 
                   style={{backgroundColor:color, 
                     boxShadow: color !== Colors.EMPTY ? 'inset 0 0 3px rgba(0,0,0,0.6)' : '',
                     position:'absolute', left:x*20, top:20*y, width:20, height:20}}></div>
                 })}</div>)
-          }              
+          }         
+            {this.props.activePiece ? this.props.activePiece.cells.map( (arow, y) => {
+            return arow.map( (cell, x) => {
+              const active = this.props.activePiece
+              const color = cell.color
+              const ax = active.x + x
+              const ay = active.y + y - ( 1 - this.props.tickCnt / this.props.ticksPerMove) 
+              return (<div key={'cell'+y+'_'+x} 
+                style={{backgroundColor:color, 
+                boxShadow: color !== Colors.EMPTY ? 'inset 0 0 3px rgba(0,0,0,0.6)' : '',
+                position:'absolute', left:ax*20, top:20*ay, width:20, height:20}}></div>)
+              })
+            }) : ''
+            } )
+          })}     
         </div>             
       </div>
     );

@@ -39,6 +39,7 @@ var _this = this;
 Object.defineProperty(exports, "__esModule", { value: true });
 var index_1 = require("./index");
 var chokidar = require("chokidar");
+var path = require('path');
 var argv = require('yargs')
     .demandCommand(1)
     .describe('reducers', 'Directory for reducers')
@@ -63,12 +64,13 @@ var compileProject = function (eventArgs) { return __awaiter(_this, void 0, void
             case 0:
                 if (state.is_running)
                     return [2 /*return*/];
-                console.log('Compiling path: ', args[0]);
+                console.log('ts2redux: compiling path: ', args[0]);
                 state.is_running = true;
                 return [4 /*yield*/, index_1.createProject({
                         path: args[0],
                         reducerPath: argv.reducers || 'reducers',
                         disableDevtoolsFromContext: argv.n,
+                        onlyFile: eventArgs ? path.basename(eventArgs) : undefined
                     })];
             case 1:
                 _a.sent();

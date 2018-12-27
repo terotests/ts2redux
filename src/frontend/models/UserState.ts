@@ -1,22 +1,17 @@
-
-
 /**
  * @redux true
  */
 class UserState {
-
-  logged = false
-  username: string = 'anonymous'
-  firstName: string
-  lastName: string
-  lastLogin: number 
-  async login(loginInfo:{username:string, password:string}) {
-    console.log('Login called with ', loginInfo)
+  logged = false;
+  username: string = "anonymous";
+  firstName: string;
+  lastName: string;
+  lastLogin: number;
+  async login(loginInfo: { username: string; password: string }) {
+    console.log("Login called with ", loginInfo);
   }
-  async logout() {
-
-  }
+  async logout() {}
   fakeLogin() {
-    this.username = 'Fake Login'
+    this.username = "Fake Login";
   }
 }

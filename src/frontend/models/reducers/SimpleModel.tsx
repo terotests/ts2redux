@@ -17,9 +17,13 @@ export class SimpleModel {
       "https://jsonplaceholder.typicode.com/todos"
     )).data;
   }
+  get myItems(): any[] {
+    return this.items;
+  }
 }
 
 import * as immer from "immer";
+import { createSelector } from "reselect";
 import { connect } from "react-redux";
 import { IState } from "./index";
 import * as React from "react";
@@ -30,12 +34,26 @@ export interface IContainerPropsMethods {
 export interface ISimpleModel {
   items: any[];
 }
+export const itemsSelectorFn = (state: ISimpleModel): any[] => state.items;
+export const myItemsSelectorFnCreator = () =>
+  createSelector(
+    [itemsSelectorFn],
+    items => {
+      const o = new SimpleModel();
+      o.items = items;
+      return o.myItems;
+    }
+  );
+export const myItemsSelector = myItemsSelectorFnCreator();
 
-export type IContainerPropsState = ISimpleModel;
+export interface IContainerPropsState extends ISimpleModel {
+  myItems: any[];
+}
 export interface IProps extends IContainerPropsState, IContainerPropsMethods {}
 export const mapStateToProps = (state: IState): IContainerPropsState => {
   return {
-    items: state.SimpleModel.items
+    items: state.SimpleModel.items,
+    myItems: myItemsSelector(state.SimpleModel)
   };
 };
 export const mapDispatchToProps = (dispatch: any): IContainerPropsMethods => {
@@ -60,7 +78,8 @@ const initWithMethodsSimpleModel = () => {
   const o = new SimpleModel();
   return {
     items: o.items,
-    getItems: o.getItems
+    getItems: o.getItems,
+    myItems: o.myItems
   };
 };
 
@@ -133,9 +152,9 @@ export const SimpleModelReducer = (
     }
   });
 };
-/***************************
- * React Context API test   *
- ***************************/
+/********************************
+ * React Context API component   *
+ ********************************/
 export const SimpleModelContext = React.createContext<IProps>(
   initWithMethodsSimpleModel()
 );
@@ -145,10 +164,12 @@ export class SimpleModelProvider extends React.Component {
   public state: ISimpleModel = initSimpleModel();
   public lastSetState: ISimpleModel;
   private __devTools: any = null;
+  private __selectormyItems: any = null;
   constructor(props: any) {
     super(props);
     this.lastSetState = this.state;
     this.getItems = this.getItems.bind(this);
+    this.__selectormyItems = myItemsSelectorFnCreator();
     const devs = window["devToolsExtension"]
       ? window["devToolsExtension"]
       : null;
@@ -187,7 +208,11 @@ export class SimpleModelProvider extends React.Component {
   public render() {
     return (
       <SimpleModelContext.Provider
-        value={{ ...this.state, getItems: this.getItems }}
+        value={{
+          ...this.state,
+          getItems: this.getItems,
+          myItems: this.__selectormyItems(this.state)
+        }}
       >
         {" "}
         {this.props.children}

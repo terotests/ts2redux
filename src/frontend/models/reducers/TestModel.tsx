@@ -1092,9 +1092,9 @@ export const TestModelReducer = (
     }
   });
 };
-/***************************
- * React Context API test   *
- ***************************/
+/********************************
+ * React Context API component   *
+ ********************************/
 export const TestModelContext = React.createContext<IProps>(
   initWithMethodsTestModel()
 );

@@ -13,8 +13,8 @@ export interface ActivePiece {
 }
 /**
  * [' O '],
-*  ['OOO'],
-*  [' O ']
+ *  ['OOO'],
+ *  [' O ']
  */
 export declare const createNewPiece: (usingColor: string) => ActivePiece;
 /**
@@ -32,6 +32,8 @@ export declare class TetrisModel {
     gameEnded: boolean;
     ticksPerMove: number;
     tickCnt: number;
+    dx: number;
+    dy: number;
     private doesCollide;
     tick(): void;
     left(): void;

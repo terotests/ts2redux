@@ -10,6 +10,7 @@
 export declare class SimpleModel {
     items: any[];
     getItems(): Promise<void>;
+    readonly myItems: any[];
 }
 import { IState } from "./index";
 import * as React from "react";
@@ -19,10 +20,15 @@ export interface IContainerPropsMethods {
 export interface ISimpleModel {
     items: any[];
 }
-export declare type IContainerPropsState = ISimpleModel;
+export declare const itemsSelectorFn: (state: ISimpleModel) => any[];
+export declare const myItemsSelectorFnCreator: () => import("reselect").OutputSelector<ISimpleModel, any[], (res: any[]) => any[]>;
+export declare const myItemsSelector: import("reselect").OutputSelector<ISimpleModel, any[], (res: any[]) => any[]>;
+export interface IContainerPropsState extends ISimpleModel {
+    myItems: any[];
+}
 export interface IProps extends IContainerPropsState, IContainerPropsMethods {
 }
-export declare const mapStateToProps: (state: IState) => ISimpleModel;
+export declare const mapStateToProps: (state: IState) => IContainerPropsState;
 export declare const mapDispatchToProps: (dispatch: any) => IContainerPropsMethods;
 export declare const StateConnector: any;
 /**
@@ -41,15 +47,16 @@ export declare const SimpleModelEnums: {
     SimpleModel_items: string;
 };
 export declare const SimpleModelReducer: (state: ISimpleModel, action: any) => ISimpleModel;
-/***************************
- * React Context API test   *
- ***************************/
+/********************************
+ * React Context API component   *
+ ********************************/
 export declare const SimpleModelContext: React.Context<IProps>;
-export declare const SimpleModelConsumer: React.ExoticComponent<React.ConsumerProps<IProps>>;
+export declare const SimpleModelConsumer: React.ComponentType<React.ConsumerProps<IProps>>;
 export declare class SimpleModelProvider extends React.Component {
     state: ISimpleModel;
     lastSetState: ISimpleModel;
     private __devTools;
+    private __selectormyItems;
     constructor(props: any);
     componentWillUnmount(): void;
     setStateSync(state: ISimpleModel): void;

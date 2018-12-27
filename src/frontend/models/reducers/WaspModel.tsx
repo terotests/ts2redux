@@ -79,6 +79,7 @@ class WaspModel {
     }
   }
 }
+
 import * as immer from "immer";
 import { connect } from "react-redux";
 import { IState } from "./index";
@@ -396,9 +397,9 @@ export const WaspModelReducer = (
     }
   });
 };
-/***************************
- * React Context API test   *
- ***************************/
+/********************************
+ * React Context API component   *
+ ********************************/
 export const WaspModelContext = React.createContext<IProps>(
   initWithMethodsWaspModel()
 );

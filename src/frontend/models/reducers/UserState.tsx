@@ -297,9 +297,9 @@ export const UserStateReducer = (
     }
   });
 };
-/***************************
- * React Context API test   *
- ***************************/
+/********************************
+ * React Context API component   *
+ ********************************/
 export const UserStateContext = React.createContext<IProps>(
   initWithMethodsUserState()
 );

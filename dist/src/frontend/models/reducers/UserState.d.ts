@@ -62,11 +62,11 @@ export declare const UserStateEnums: {
     UserState_fakeLogin: string;
 };
 export declare const UserStateReducer: (state: IUserState, action: any) => IUserState;
-/***************************
- * React Context API test   *
- ***************************/
+/********************************
+ * React Context API component   *
+ ********************************/
 export declare const UserStateContext: React.Context<IProps>;
-export declare const UserStateConsumer: React.ExoticComponent<React.ConsumerProps<IProps>>;
+export declare const UserStateConsumer: React.ComponentType<React.ConsumerProps<IProps>>;
 export declare class UserStateProvider extends React.Component {
     state: IUserState;
     lastSetState: IUserState;

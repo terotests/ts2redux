@@ -1,5 +1,5 @@
-import { TodoListItem } from './interfaces';
-export declare type TaskState = 'UNDEFINED' | 'RUNNING' | 'LOADED' | 'ERROR';
+import { TodoListItem } from "./interfaces";
+export declare type TaskState = "UNDEFINED" | "RUNNING" | "LOADED" | "ERROR";
 export declare enum SortOrder {
     ASC = "asc",
     DESC = "desc"
@@ -16,6 +16,7 @@ export declare class TodoList {
     listPageLength: number;
     listTitle: string;
     readonly listToDisplay: TodoListItem[];
+    private findMaxId;
     nextPage(): void;
     prevPage(): void;
     toggleSortOrder(): void;
@@ -25,6 +26,7 @@ export declare class TodoList {
     sortByTitle(): void;
     sortByCompletion(): void;
     setTitle(value: string): void;
+    addLotOfItems(cnt: number): void;
     /**
      * Fetch items from json placeholder service
      */

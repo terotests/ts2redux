@@ -44,7 +44,7 @@ var __extends = (this && this.__extends) || (function () {
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
             function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
         return extendStatics(d, b);
-    }
+    };
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -94,7 +94,7 @@ var __extends = (this && this.__extends) || (function () {
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
             function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
         return extendStatics(d, b);
-    }
+    };
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -155,22 +155,36 @@ var TetrisC = /** @class */ (function (_super) {
                 this.props.points,
                 " ",
                 this.props.gameEnded ? 'Game Over' : ''),
-            React.createElement("div", { style: { width: this.props.cols * 20, height: this.props.rows * 20, position: 'relative', backgroundColor: '#222222' } }, this.props.cells.map(function (row, y) { return React.createElement("div", { style: { width: _this.props.cols * 20, height: 21 }, key: 'row_' + y }, row.map(function (cell, x) {
-                var hasActive = false;
-                var active = _this.props.activePiece;
-                var color = cell.color;
-                active.cells.forEach(function (arow, ay) {
-                    arow.forEach(function (acell, ax) {
-                        if (((active.x + ax) == x) && ((active.y + ay) == y)) {
-                            if (acell.color !== TetrisModel_1.Colors.EMPTY)
-                                color = acell.color;
+            React.createElement("div", { style: { overflow: 'hidden', width: this.props.cols * 20, height: this.props.rows * 20, position: 'relative', backgroundColor: '#222222' } },
+                this.props.cells.map(function (row, y) { return React.createElement("div", { style: { width: _this.props.cols * 20, height: 21 }, key: 'row_' + y }, row.map(function (cell, x) {
+                    /*
+                    const active = this.props.activePiece
+                    let color = cell.color
+                    active.cells.forEach( (arow, ay)=>{
+                      arow.forEach( (acell, ax) => {
+                        if( ((active.x + ax) == x) && ((active.y + ay) == y)) {
+                          if(acell.color !== Colors.EMPTY) color = acell.color
                         }
+                      })
+                    })
+                    */
+                    var color = cell.color;
+                    return React.createElement("div", { key: 'cell' + y + '_' + x, style: { backgroundColor: color,
+                            boxShadow: color !== TetrisModel_1.Colors.EMPTY ? 'inset 0 0 3px rgba(0,0,0,0.6)' : '',
+                            position: 'absolute', left: x * 20, top: 20 * y, width: 20, height: 20 } });
+                })); }),
+                this.props.activePiece ? this.props.activePiece.cells.map(function (arow, y) {
+                    return arow.map(function (cell, x) {
+                        var active = _this.props.activePiece;
+                        var color = cell.color;
+                        var ax = active.x + x;
+                        var ay = active.y + y - (1 - _this.props.tickCnt / _this.props.ticksPerMove);
+                        return (React.createElement("div", { key: 'cell' + y + '_' + x, style: { backgroundColor: color,
+                                boxShadow: color !== TetrisModel_1.Colors.EMPTY ? 'inset 0 0 3px rgba(0,0,0,0.6)' : '',
+                                position: 'absolute', left: ax * 20, top: 20 * ay, width: 20, height: 20 } }));
                     });
-                });
-                return React.createElement("div", { key: 'cell' + y + '_' + x, style: { backgroundColor: color,
-                        boxShadow: color !== TetrisModel_1.Colors.EMPTY ? 'inset 0 0 3px rgba(0,0,0,0.6)' : '',
-                        position: 'absolute', left: x * 20, top: 20 * y, width: 20, height: 20 } });
-            })); }))));
+                }) : '',
+                " ) })}")));
     };
     return TetrisC;
 }(React.PureComponent));
@@ -186,7 +200,7 @@ var __extends = (this && this.__extends) || (function () {
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
             function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
         return extendStatics(d, b);
-    }
+    };
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -238,7 +252,7 @@ var __extends = (this && this.__extends) || (function () {
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
             function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
         return extendStatics(d, b);
-    }
+    };
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -386,10 +400,11 @@ exports.AbstractTodoList = function (props) {
         React.createElement("button", { onClick: function () { return props.toggleSortOrder(); } }, "Toggle Order"),
         React.createElement("button", { onClick: function () { return props.prevPage(); } }, "Prev"),
         React.createElement("button", { onClick: function () { return props.nextPage(); } }, "Next"),
-        React.createElement("button", { onClick: function () { return props.setTitle('Jee' + (Date.now())); } }, "Set Title of List"),
+        React.createElement("button", { onClick: function () { return props.addLotOfItems(10000); } }, "Add 10000 items"),
+        React.createElement("button", { onClick: function () { return props.setTitle("Jee" + Date.now()); } }, "Set Title of List"),
         React.createElement("div", null,
             React.createElement("div", null, props.state),
-            React.createElement("div", null, props.state === 'ERROR' ? (new String(props.stateError)) : ''),
+            React.createElement("div", null, props.state === "ERROR" ? new String(props.stateError) : ""),
             React.createElement(PureList_1.PureList, { items: props.listToDisplay }))));
 };
 // This is the specialized version of the component
@@ -420,7 +435,7 @@ var WaspComponent_1 = require("./components/WaspComponent");
 var TetrisComponent_1 = require("./components/TetrisComponent");
 var WaspContextComponent_1 = require("./components/WaspContextComponent");
 var UIHelperModel_1 = require("./models/reducers/UIHelperModel");
-var store = redux_1.createStore(reducers_1.reducers, redux_1.compose(redux_1.applyMiddleware(redux_thunk_1.default), window['devToolsExtension'] ? window['devToolsExtension']() : function (f) { return f; }));
+var store = redux_1.createStore(reducers_1.reducers, redux_1.compose(redux_1.applyMiddleware(redux_thunk_1.default), window["devToolsExtension"] ? window["devToolsExtension"]() : function (f) { return f; }));
 var Nro = /** @class */ (function () {
     function Nro(n) {
         this.val = 0;
@@ -434,31 +449,29 @@ var Nro = /** @class */ (function () {
 var listValue = new todo.TodoList();
 var Ctx = React.createContext(listValue);
 // const history = syncHistoryWithStore(hashHistory, store);
-var UserInfo = function (props) { return React.createElement(UserState_1.UserStateContext.Consumer, null, function (state) {
-    return React.createElement("div", null,
+var UserInfo = function (props) { return (React.createElement(UserState_1.UserStateContext.Consumer, null, function (state) {
+    return (React.createElement("div", null,
         "USER: ",
         state.username,
-        React.createElement("button", { onClick: state.fakeLogin }, "Fake Login"));
-}); };
+        React.createElement("button", { onClick: state.fakeLogin }, "Fake Login")));
+})); };
 ReactDOM.render(React.createElement(react_redux_1.Provider, { store: store },
     React.createElement(Ctx.Provider, { value: listValue },
         React.createElement(GenericComp_1.GenericRedux, null),
         React.createElement(TetrisComponent_1.TetrisComponent, null),
         React.createElement(UserState_1.UserStateProvider, null,
             React.createElement(UIHelperModel_1.UIHelperModelProvider, null,
-                React.createElement(UIHelperModel_1.UIHelperModelConsumer, null, function (state) { return React.createElement("div", null,
+                React.createElement(UIHelperModel_1.UIHelperModelConsumer, null, function (state) { return (React.createElement("div", null,
                     React.createElement("button", { onClick: state.toggle }, "Show / Hide Wasps"),
-                    state.showWasps ?
-                        React.createElement("div", null,
-                            React.createElement(WaspComponent_1.WaspComponent, null),
-                            React.createElement(WaspModel_1.WaspModelProvider, null,
-                                React.createElement(WaspContextComponent_1.WaspContextComponent, null)))
-                        : ''); })),
+                    state.showWasps ? (React.createElement("div", null,
+                        React.createElement(WaspComponent_1.WaspComponent, null),
+                        React.createElement(WaspModel_1.WaspModelProvider, null,
+                            React.createElement(WaspContextComponent_1.WaspContextComponent, null)))) : (""))); })),
             React.createElement(IncModel_1.IncModelProvider, null,
-                React.createElement(IncModel_1.IncModelConsumer, null, function (state) { return React.createElement("div", null,
+                React.createElement(IncModel_1.IncModelConsumer, null, function (state) { return (React.createElement("div", null,
                     React.createElement("div", null, state.cnt),
                     React.createElement("button", { onClick: state.increment }, "+"),
-                    React.createElement("button", { onClick: state.decrement }, "-")); })),
+                    React.createElement("button", { onClick: state.decrement }, "-"))); })),
             React.createElement(ReduxInc_1.ReduxInc, null),
             React.createElement("div", null,
                 React.createElement(memberArea_1.MemberArea, null),
@@ -467,24 +480,24 @@ ReactDOM.render(React.createElement(react_redux_1.Provider, { store: store },
             React.createElement("div", null,
                 React.createElement("h4", null, "Context API test"),
                 React.createElement(UserState_1.UserStateContext.Consumer, null, function (state) {
-                    return React.createElement("div", null,
+                    return (React.createElement("div", null,
                         "USER: ",
                         state.username,
-                        React.createElement("button", { onClick: state.fakeLogin }, "Fake Login"));
+                        React.createElement("button", { onClick: state.fakeLogin }, "Fake Login")));
                 }),
                 React.createElement(TodoList_1.TodoListProvider, null,
                     React.createElement(TodoList_1.TodoListContext.Consumer, null, function (todolist) {
-                        return React.createElement("div", null,
+                        return (React.createElement("div", null,
                             React.createElement("div", null,
                                 "Items loaded ",
                                 todolist.items.length),
                             React.createElement("button", { onClick: function () { return todolist.getItems(); } }, "Load"),
                             React.createElement("button", { onClick: function () { return todolist.reverse(); } }, "Revert"),
-                            React.createElement("ul", null, todolist.items.map(function (item) { return React.createElement("li", { key: item.id }, item.title); })));
+                            React.createElement("ul", null, todolist.items.map(function (item) { return (React.createElement("li", { key: item.id }, item.title)); }))));
                     })),
                 React.createElement(TodoList_1.TodoListProvider, null,
                     React.createElement(TodoList_1.TodoListConsumer, null, function (todolist) {
-                        return React.createElement("div", null,
+                        return (React.createElement("div", null,
                             React.createElement("div", null, todolist.state),
                             React.createElement("button", { onClick: function () { return todolist.getItems(); } }, "Load"),
                             React.createElement("button", { onClick: todolist.reverse }, "Revert List"),
@@ -492,14 +505,14 @@ ReactDOM.render(React.createElement(react_redux_1.Provider, { store: store },
                             React.createElement("button", { onClick: function () { return todolist.toggleSortOrder(); } }, "Toggle"),
                             React.createElement("button", { onClick: function () { return todolist.nextPage(); } }, "Next"),
                             React.createElement("button", { onClick: function () { return todolist.prevPage(); } }, "Prev"),
-                            React.createElement("ul", null, todolist.items.map(function (item) { return React.createElement("li", { key: item.id },
+                            React.createElement("ul", null, todolist.items.map(function (item) { return (React.createElement("li", { key: item.id },
                                 item.id,
                                 " ",
                                 item.title,
                                 " ",
                                 React.createElement(UserState_1.UserStateProvider, null,
-                                    React.createElement(UserInfo, null))); })));
-                    })))))), document.getElementById('root'));
+                                    React.createElement(UserInfo, null)))); }))));
+                    })))))), document.getElementById("root"));
 /*
       <Router history={history}>
         <Route path="/" component={App}>
@@ -509,7 +522,7 @@ ReactDOM.render(React.createElement(react_redux_1.Provider, { store: store },
           <Route path="student-detail" component={StudentDetailContainer}/>
         </Route>
       </Router>
-*/ 
+*/
 
 },{"./components/GenericComp":1,"./components/ReduxInc":3,"./components/TetrisComponent":4,"./components/WaspComponent":5,"./components/WaspContextComponent":6,"./components/combinedState":7,"./components/memberArea":8,"./components/todoList":9,"./models/TodoList":12,"./models/reducers/":22,"./models/reducers/IncModel":14,"./models/reducers/TodoList":18,"./models/reducers/UIHelperModel":19,"./models/reducers/UserState":20,"./models/reducers/WaspModel":21,"react":89,"react-dom":67,"react-redux":80,"redux":91,"redux-thunk":90}],11:[function(require,module,exports){
 "use strict";
@@ -524,7 +537,7 @@ var pieceDeclaration = function (color, rows) {
         var row = rows[i];
         cells[i] = new Array(row.length);
         for (var c = 0; c < row.length; c++) {
-            if (row.charAt(c) == ' ') {
+            if (row.charAt(c) == " ") {
                 cells[i][c] = { color: Colors.EMPTY };
             }
             else {
@@ -542,26 +555,16 @@ var pieceDeclaration = function (color, rows) {
 };
 /**
  * [' O '],
-*  ['OOO'],
-*  [' O ']
+ *  ['OOO'],
+ *  [' O ']
  */
 exports.createNewPiece = function (usingColor) {
     var items = [
-        pieceDeclaration(usingColor, ['xx',
-            'xx']),
-        pieceDeclaration(usingColor, ['   ',
-            'xxx',
-            ' x ']),
-        pieceDeclaration(usingColor, [' x ',
-            ' x ',
-            'xx ']),
-        pieceDeclaration(usingColor, [' x ',
-            ' x ',
-            ' xx']),
-        pieceDeclaration(usingColor, [' x  ',
-            ' x  ',
-            ' x  ',
-            ' x  ']),
+        pieceDeclaration(usingColor, ["xx", "xx"]),
+        pieceDeclaration(usingColor, ["   ", "xxx", " x "]),
+        pieceDeclaration(usingColor, [" x ", " x ", "xx "]),
+        pieceDeclaration(usingColor, [" x ", " x ", " xx"]),
+        pieceDeclaration(usingColor, [" x  ", " x  ", " x  ", " x  "])
     ];
     return items[Math.floor(Math.random() * items.length)];
 };
@@ -580,6 +583,8 @@ var TetrisModel = /** @class */ (function () {
         this.gameEnded = false;
         this.ticksPerMove = 10;
         this.tickCnt = 0;
+        this.dx = 0;
+        this.dy = 1;
     }
     TetrisModel.prototype.doesCollide = function (pieceX, pieceY, pieceCells) {
         var _this = this;
@@ -593,7 +598,7 @@ var TetrisModel = /** @class */ (function () {
                     collides = true;
                     return;
                 }
-                if (((pieceX + x) < 0) || ((pieceX + x) >= _this.cols)) {
+                if (pieceX + x < 0 || pieceX + x >= _this.cols) {
                     collides = true;
                     return;
                 }
@@ -608,7 +613,6 @@ var TetrisModel = /** @class */ (function () {
         });
         return collides;
     };
-    ;
     TetrisModel.prototype.tick = function () {
         this.tickCnt++;
         if (this.tickCnt >= this.ticksPerMove) {
@@ -654,7 +658,6 @@ var TetrisModel = /** @class */ (function () {
         }
         return res;
     };
-    ;
     TetrisModel.prototype.step = function () {
         if (this.gameOn) {
             if (!this.doesCollide(this.activePiece.x, this.activePiece.y + 1)) {
@@ -801,11 +804,11 @@ var sortFn = function (order) { return function (a, b) {
 var TodoList = /** @class */ (function () {
     function TodoList() {
         this.items = [];
-        this.state = 'UNDEFINED';
+        this.state = "UNDEFINED";
         this.sortOrder = SortOrder.ASC;
         this.listStart = 0;
         this.listPageLength = 10;
-        this.listTitle = 'Title of TODO -list';
+        this.listTitle = "Title of TODO -list";
     }
     Object.defineProperty(TodoList.prototype, "listToDisplay", {
         // Example of memoized list using reselect
@@ -818,6 +821,14 @@ var TodoList = /** @class */ (function () {
         enumerable: true,
         configurable: true
     });
+    TodoList.prototype.findMaxId = function () {
+        var max = 0;
+        this.items.forEach(function (item) {
+            if (item.id > max)
+                max = item.id;
+        });
+        return max;
+    };
     TodoList.prototype.nextPage = function () {
         this.listStart += this.listPageLength;
     };
@@ -827,7 +838,8 @@ var TodoList = /** @class */ (function () {
             this.listStart = 0;
     };
     TodoList.prototype.toggleSortOrder = function () {
-        this.sortOrder = this.sortOrder == SortOrder.ASC ? SortOrder.DESC : SortOrder.ASC;
+        this.sortOrder =
+            this.sortOrder == SortOrder.ASC ? SortOrder.DESC : SortOrder.ASC;
     };
     TodoList.prototype.clearTodoList = function () {
         this.items = [];
@@ -842,11 +854,22 @@ var TodoList = /** @class */ (function () {
         this.items.sort(function (a, b) { return a.title.localeCompare(b.title); });
     };
     TodoList.prototype.sortByCompletion = function () {
-        var toNumber = function (value) { return value ? 1 : 0; };
+        var toNumber = function (value) { return (value ? 1 : 0); };
         this.items.sort(function (a, b) { return toNumber(a.completed) - toNumber(b.completed); });
     };
     TodoList.prototype.setTitle = function (value) {
         this.listTitle = value;
+    };
+    TodoList.prototype.addLotOfItems = function (cnt) {
+        var maxId = this.findMaxId();
+        for (var i = 0; i < cnt; i++) {
+            this.items.push({
+                id: i + maxId,
+                userId: 123 + i,
+                completed: Math.random() > 0.5 ? true : false,
+                title: "New Task " + i
+            });
+        }
     };
     /**
      * Fetch items from json placeholder service
@@ -857,21 +880,21 @@ var TodoList = /** @class */ (function () {
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
-                        if (this.state === 'RUNNING')
+                        if (this.state === "RUNNING")
                             return [2 /*return*/];
                         _b.label = 1;
                     case 1:
                         _b.trys.push([1, 3, , 4]);
-                        this.state = 'RUNNING';
+                        this.state = "RUNNING";
                         _a = this;
-                        return [4 /*yield*/, axios_1.default.get('https://jsonplaceholder.typicode.com/todos')];
+                        return [4 /*yield*/, axios_1.default.get("https://jsonplaceholder.typicode.com/todos")];
                     case 2:
                         _a.items = (_b.sent()).data;
-                        this.state = 'LOADED';
+                        this.state = "LOADED";
                         return [3 /*break*/, 4];
                     case 3:
                         e_1 = _b.sent();
-                        this.state = 'ERROR';
+                        this.state = "ERROR";
                         this.stateError = e_1;
                         return [3 /*break*/, 4];
                     case 4: return [2 /*return*/];
@@ -897,7 +920,7 @@ var __extends = (this && this.__extends) || (function () {
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
             function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
         return extendStatics(d, b);
-    }
+    };
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -914,6 +937,41 @@ var __assign = (this && this.__assign) || function () {
         return t;
     };
     return __assign.apply(this, arguments);
+};
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __generator = (this && this.__generator) || function (thisArg, body) {
+    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
+    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
+    function verb(n) { return function (v) { return step([n, v]); }; }
+    function step(op) {
+        if (f) throw new TypeError("Generator is already executing.");
+        while (_) try {
+            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
+            if (y = 0, t) op = [op[0] & 2, t.value];
+            switch (op[0]) {
+                case 0: case 1: t = op; break;
+                case 4: _.label++; return { value: op[1], done: false };
+                case 5: _.label++; y = op[1]; op = [0]; continue;
+                case 7: op = _.ops.pop(); _.trys.pop(); continue;
+                default:
+                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
+                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
+                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
+                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
+                    if (t[2]) _.ops.pop();
+                    _.trys.pop(); continue;
+            }
+            op = body.call(thisArg, _);
+        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
+        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
+    }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var SomeList = /** @class */ (function () {
@@ -937,6 +995,7 @@ exports.SomeList = SomeList;
 var GenericModel = /** @class */ (function () {
     function GenericModel() {
         this.sum = 0;
+        this.isLoading = {};
         // This is not a good idea with Immer...
         this.list = new SomeList();
     }
@@ -944,11 +1003,17 @@ var GenericModel = /** @class */ (function () {
         this.sum = this.list.items.reduce(function (prev, curr) { return prev + curr.value(); }, 0);
     };
     GenericModel.prototype.addItems = function (items) {
+        console.log(this);
         this.list.addItems(items);
         this.refreshSum();
     };
     GenericModel.prototype.inc = function () {
         this.sum++;
+    };
+    GenericModel.prototype.testLoading = function () {
+        return __awaiter(this, void 0, void 0, function () { return __generator(this, function (_a) {
+            return [2 /*return*/];
+        }); });
     };
     return GenericModel;
 }());
@@ -959,6 +1024,7 @@ var React = require("react");
 exports.mapStateToProps = function (state) {
     return {
         sum: state.GenericModel.sum,
+        isLoading: state.GenericModel.isLoading,
         list: state.GenericModel.list
     };
 };
@@ -972,6 +1038,9 @@ exports.mapDispatchToProps = function (dispatch) {
         },
         inc: function () {
             return dispatch(RGenericModel.inc());
+        },
+        testLoading: function () {
+            return dispatch(RGenericModel.testLoading());
         }
     };
 };
@@ -980,6 +1049,7 @@ var initGenericModel = function () {
     var o = new GenericModel();
     return {
         sum: o.sum,
+        isLoading: o.isLoading,
         list: o.list
     };
 };
@@ -987,10 +1057,12 @@ var initWithMethodsGenericModel = function () {
     var o = new GenericModel();
     return {
         sum: o.sum,
+        isLoading: o.isLoading,
         list: o.list,
         refreshSum: o.refreshSum,
         addItems: o.addItems,
-        inc: o.inc
+        inc: o.inc,
+        testLoading: o.testLoading
     };
 };
 /**
@@ -1023,6 +1095,35 @@ var RGenericModel = /** @class */ (function () {
                 if (this._dispatch) {
                     this._dispatch({
                         type: exports.GenericModelEnums.GenericModel_sum,
+                        payload: value
+                    });
+                }
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(RGenericModel.prototype, "isLoading", {
+        get: function () {
+            if (this._getState) {
+                return this._getState().GenericModel.isLoading;
+            }
+            else {
+                if (this._state) {
+                    return this._state.isLoading;
+                }
+            }
+            throw "Invalid State in GenericModel_isLoading";
+        },
+        set: function (value) {
+            if (this._state && typeof value !== "undefined") {
+                this._state.isLoading = value;
+            }
+            else {
+                // dispatch change for item isLoading
+                if (this._dispatch) {
+                    this._dispatch({
+                        type: exports.GenericModelEnums.GenericModel_isLoading,
                         payload: value
                     });
                 }
@@ -1077,6 +1178,7 @@ var RGenericModel = /** @class */ (function () {
     };
     RGenericModel.prototype.addItems = function (items) {
         if (this._state) {
+            console.log(this);
             this.list.addItems(items);
             this.refreshSum();
         }
@@ -1109,11 +1211,22 @@ var RGenericModel = /** @class */ (function () {
             new RGenericModel(undefined, dispatcher, getState).inc();
         };
     };
+    RGenericModel.prototype.testLoading = function () {
+        return __awaiter(this, void 0, void 0, function () { return __generator(this, function (_a) {
+            return [2 /*return*/];
+        }); });
+    };
+    RGenericModel.testLoading = function () {
+        return function (dispatcher, getState) {
+            new RGenericModel(undefined, dispatcher, getState).testLoading();
+        };
+    };
     return RGenericModel;
 }());
 exports.RGenericModel = RGenericModel;
 exports.GenericModelEnums = {
     GenericModel_sum: "GenericModel_sum",
+    GenericModel_isLoading: "GenericModel_isLoading",
     GenericModel_list: "GenericModel_list",
     GenericModel_refreshSum: "GenericModel_refreshSum",
     GenericModel_addItems: "GenericModel_addItems",
@@ -1125,6 +1238,9 @@ exports.GenericModelReducer = function (state, action) {
         switch (action.type) {
             case exports.GenericModelEnums.GenericModel_sum:
                 new RGenericModel(draft).sum = action.payload;
+                break;
+            case exports.GenericModelEnums.GenericModel_isLoading:
+                new RGenericModel(draft).isLoading = action.payload;
                 break;
             case exports.GenericModelEnums.GenericModel_list:
                 new RGenericModel(draft).list = action.payload;
@@ -1141,9 +1257,9 @@ exports.GenericModelReducer = function (state, action) {
         }
     });
 };
-/***************************
- * React Context API test   *
- ***************************/
+/********************************
+ * React Context API component   *
+ ********************************/
 exports.GenericModelContext = React.createContext(initWithMethodsGenericModel());
 exports.GenericModelConsumer = exports.GenericModelContext.Consumer;
 var instanceCnt = 1;
@@ -1157,6 +1273,7 @@ var GenericModelProvider = /** @class */ (function (_super) {
         _this.refreshSum = _this.refreshSum.bind(_this);
         _this.addItems = _this.addItems.bind(_this);
         _this.inc = _this.inc.bind(_this);
+        _this.testLoading = _this.testLoading.bind(_this);
         var devs = window["devToolsExtension"]
             ? window["devToolsExtension"]
             : null;
@@ -1207,8 +1324,23 @@ var GenericModelProvider = /** @class */ (function (_super) {
         }
         this.setStateSync(nextState);
     };
+    GenericModelProvider.prototype.testLoading = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var _this = this;
+            return __generator(this, function (_a) {
+                new RGenericModel(undefined, function (action) {
+                    var nextState = exports.GenericModelReducer(_this.lastSetState, action);
+                    if (_this.__devTools) {
+                        _this.__devTools.send(action.type, nextState);
+                    }
+                    _this.setStateSync(nextState);
+                }, function () { return ({ GenericModel: _this.lastSetState }); }).testLoading();
+                return [2 /*return*/];
+            });
+        });
+    };
     GenericModelProvider.prototype.render = function () {
-        return (React.createElement(exports.GenericModelContext.Provider, { value: __assign({}, this.state, { refreshSum: this.refreshSum, addItems: this.addItems, inc: this.inc }) },
+        return (React.createElement(exports.GenericModelContext.Provider, { value: __assign({}, this.state, { refreshSum: this.refreshSum, addItems: this.addItems, inc: this.inc, testLoading: this.testLoading }) },
             " ",
             this.props.children));
     };
@@ -1230,7 +1362,7 @@ var __extends = (this && this.__extends) || (function () {
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
             function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
         return extendStatics(d, b);
-    }
+    };
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -1384,9 +1516,9 @@ exports.IncModelReducer = function (state, action) {
         }
     });
 };
-/***************************
- * React Context API test   *
- ***************************/
+/********************************
+ * React Context API component   *
+ ********************************/
 exports.IncModelContext = React.createContext(initWithMethodsIncModel());
 exports.IncModelConsumer = exports.IncModelContext.Consumer;
 var instanceCnt = 1;
@@ -1463,7 +1595,7 @@ var __extends = (this && this.__extends) || (function () {
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
             function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
         return extendStatics(d, b);
-    }
+    };
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -1540,15 +1672,33 @@ var SimpleModel = /** @class */ (function () {
             });
         });
     };
+    Object.defineProperty(SimpleModel.prototype, "myItems", {
+        get: function () {
+            return this.items;
+        },
+        enumerable: true,
+        configurable: true
+    });
     return SimpleModel;
 }());
 exports.SimpleModel = SimpleModel;
 var immer = require("immer");
+var reselect_1 = require("reselect");
 var react_redux_1 = require("react-redux");
 var React = require("react");
+exports.itemsSelectorFn = function (state) { return state.items; };
+exports.myItemsSelectorFnCreator = function () {
+    return reselect_1.createSelector([exports.itemsSelectorFn], function (items) {
+        var o = new SimpleModel();
+        o.items = items;
+        return o.myItems;
+    });
+};
+exports.myItemsSelector = exports.myItemsSelectorFnCreator();
 exports.mapStateToProps = function (state) {
     return {
-        items: state.SimpleModel.items
+        items: state.SimpleModel.items,
+        myItems: exports.myItemsSelector(state.SimpleModel)
     };
 };
 exports.mapDispatchToProps = function (dispatch) {
@@ -1569,7 +1719,8 @@ var initWithMethodsSimpleModel = function () {
     var o = new SimpleModel();
     return {
         items: o.items,
-        getItems: o.getItems
+        getItems: o.getItems,
+        myItems: o.myItems
     };
 };
 /**
@@ -1646,9 +1797,9 @@ exports.SimpleModelReducer = function (state, action) {
         }
     });
 };
-/***************************
- * React Context API test   *
- ***************************/
+/********************************
+ * React Context API component   *
+ ********************************/
 exports.SimpleModelContext = React.createContext(initWithMethodsSimpleModel());
 exports.SimpleModelConsumer = exports.SimpleModelContext.Consumer;
 var instanceCnt = 1;
@@ -1658,8 +1809,10 @@ var SimpleModelProvider = /** @class */ (function (_super) {
         var _this = _super.call(this, props) || this;
         _this.state = initSimpleModel();
         _this.__devTools = null;
+        _this.__selectormyItems = null;
         _this.lastSetState = _this.state;
         _this.getItems = _this.getItems.bind(_this);
+        _this.__selectormyItems = exports.myItemsSelectorFnCreator();
         var devs = window["devToolsExtension"]
             ? window["devToolsExtension"]
             : null;
@@ -1699,7 +1852,7 @@ var SimpleModelProvider = /** @class */ (function (_super) {
         });
     };
     SimpleModelProvider.prototype.render = function () {
-        return (React.createElement(exports.SimpleModelContext.Provider, { value: __assign({}, this.state, { getItems: this.getItems }) },
+        return (React.createElement(exports.SimpleModelContext.Provider, { value: __assign({}, this.state, { getItems: this.getItems, myItems: this.__selectormyItems(this.state) }) },
             " ",
             this.props.children));
     };
@@ -1707,7 +1860,7 @@ var SimpleModelProvider = /** @class */ (function (_super) {
 }(React.Component));
 exports.SimpleModelProvider = SimpleModelProvider;
 
-},{"axios":29,"immer":55,"react":89,"react-redux":80}],16:[function(require,module,exports){
+},{"axios":29,"immer":55,"react":89,"react-redux":80,"reselect":92}],16:[function(require,module,exports){
 "use strict";
 /*********************************************************************************
  *                                                                                *
@@ -1721,7 +1874,7 @@ var __extends = (this && this.__extends) || (function () {
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
             function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
         return extendStatics(d, b);
-    }
+    };
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -2883,9 +3036,9 @@ exports.TestModelReducer = function (state, action) {
         }
     });
 };
-/***************************
- * React Context API test   *
- ***************************/
+/********************************
+ * React Context API component   *
+ ********************************/
 exports.TestModelContext = React.createContext(initWithMethodsTestModel());
 exports.TestModelConsumer = exports.TestModelContext.Consumer;
 var instanceCnt = 1;
@@ -3107,7 +3260,7 @@ var __extends = (this && this.__extends) || (function () {
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
             function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
         return extendStatics(d, b);
-    }
+    };
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -3182,6 +3335,8 @@ var TetrisModel = /** @class */ (function () {
         this.gameEnded = false;
         this.ticksPerMove = 10;
         this.tickCnt = 0;
+        this.dx = 0;
+        this.dy = 1;
     }
     TetrisModel.prototype.doesCollide = function (pieceX, pieceY, pieceCells) {
         var _this = this;
@@ -3360,7 +3515,9 @@ exports.mapStateToProps = function (state) {
         gameOn: state.TetrisModel.gameOn,
         gameEnded: state.TetrisModel.gameEnded,
         ticksPerMove: state.TetrisModel.ticksPerMove,
-        tickCnt: state.TetrisModel.tickCnt
+        tickCnt: state.TetrisModel.tickCnt,
+        dx: state.TetrisModel.dx,
+        dy: state.TetrisModel.dy
     };
 };
 exports.mapDispatchToProps = function (dispatch) {
@@ -3411,7 +3568,9 @@ var initTetrisModel = function () {
         gameOn: o.gameOn,
         gameEnded: o.gameEnded,
         ticksPerMove: o.ticksPerMove,
-        tickCnt: o.tickCnt
+        tickCnt: o.tickCnt,
+        dx: o.dx,
+        dy: o.dy
     };
 };
 var initWithMethodsTetrisModel = function () {
@@ -3428,6 +3587,8 @@ var initWithMethodsTetrisModel = function () {
         gameEnded: o.gameEnded,
         ticksPerMove: o.ticksPerMove,
         tickCnt: o.tickCnt,
+        dx: o.dx,
+        dy: o.dy,
         tick: o.tick,
         left: o.left,
         right: o.right,
@@ -3768,6 +3929,64 @@ var RTetrisModel = /** @class */ (function () {
         enumerable: true,
         configurable: true
     });
+    Object.defineProperty(RTetrisModel.prototype, "dx", {
+        get: function () {
+            if (this._getState) {
+                return this._getState().TetrisModel.dx;
+            }
+            else {
+                if (this._state) {
+                    return this._state.dx;
+                }
+            }
+            throw "Invalid State in TetrisModel_dx";
+        },
+        set: function (value) {
+            if (this._state && typeof value !== "undefined") {
+                this._state.dx = value;
+            }
+            else {
+                // dispatch change for item dx
+                if (this._dispatch) {
+                    this._dispatch({
+                        type: exports.TetrisModelEnums.TetrisModel_dx,
+                        payload: value
+                    });
+                }
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(RTetrisModel.prototype, "dy", {
+        get: function () {
+            if (this._getState) {
+                return this._getState().TetrisModel.dy;
+            }
+            else {
+                if (this._state) {
+                    return this._state.dy;
+                }
+            }
+            throw "Invalid State in TetrisModel_dy";
+        },
+        set: function (value) {
+            if (this._state && typeof value !== "undefined") {
+                this._state.dy = value;
+            }
+            else {
+                // dispatch change for item dy
+                if (this._dispatch) {
+                    this._dispatch({
+                        type: exports.TetrisModelEnums.TetrisModel_dy,
+                        payload: value
+                    });
+                }
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
     RTetrisModel.prototype.doesCollide = function (pieceX, pieceY, pieceCells) {
         var _this = this;
         var collides = false;
@@ -4058,6 +4277,8 @@ exports.TetrisModelEnums = {
     TetrisModel_gameEnded: "TetrisModel_gameEnded",
     TetrisModel_ticksPerMove: "TetrisModel_ticksPerMove",
     TetrisModel_tickCnt: "TetrisModel_tickCnt",
+    TetrisModel_dx: "TetrisModel_dx",
+    TetrisModel_dy: "TetrisModel_dy",
     TetrisModel_doesCollide: "TetrisModel_doesCollide",
     TetrisModel_tick: "TetrisModel_tick",
     TetrisModel_left: "TetrisModel_left",
@@ -4109,6 +4330,12 @@ exports.TetrisModelReducer = function (state, action) {
             case exports.TetrisModelEnums.TetrisModel_tickCnt:
                 new RTetrisModel(draft).tickCnt = action.payload;
                 break;
+            case exports.TetrisModelEnums.TetrisModel_dx:
+                new RTetrisModel(draft).dx = action.payload;
+                break;
+            case exports.TetrisModelEnums.TetrisModel_dy:
+                new RTetrisModel(draft).dy = action.payload;
+                break;
             case exports.TetrisModelEnums.TetrisModel_tick:
                 new RTetrisModel(draft).tick();
                 break;
@@ -4142,9 +4369,9 @@ exports.TetrisModelReducer = function (state, action) {
         }
     });
 };
-/***************************
- * React Context API test   *
- ***************************/
+/********************************
+ * React Context API component   *
+ ********************************/
 exports.TetrisModelContext = React.createContext(initWithMethodsTetrisModel());
 exports.TetrisModelConsumer = exports.TetrisModelContext.Consumer;
 var instanceCnt = 1;
@@ -4301,7 +4528,7 @@ var __extends = (this && this.__extends) || (function () {
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
             function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
         return extendStatics(d, b);
-    }
+    };
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -4389,6 +4616,14 @@ var TodoList = /** @class */ (function () {
         enumerable: true,
         configurable: true
     });
+    TodoList.prototype.findMaxId = function () {
+        var max = 0;
+        this.items.forEach(function (item) {
+            if (item.id > max)
+                max = item.id;
+        });
+        return max;
+    };
     TodoList.prototype.nextPage = function () {
         this.listStart += this.listPageLength;
     };
@@ -4419,6 +4654,17 @@ var TodoList = /** @class */ (function () {
     };
     TodoList.prototype.setTitle = function (value) {
         this.listTitle = value;
+    };
+    TodoList.prototype.addLotOfItems = function (cnt) {
+        var maxId = this.findMaxId();
+        for (var i = 0; i < cnt; i++) {
+            this.items.push({
+                id: i + maxId,
+                userId: 123 + i,
+                completed: Math.random() > 0.5 ? true : false,
+                title: "New Task " + i
+            });
+        }
     };
     /**
      * Fetch items from json placeholder service
@@ -4532,6 +4778,9 @@ exports.mapDispatchToProps = function (dispatch) {
         setTitle: function (value) {
             return dispatch(RTodoList.setTitle(value));
         },
+        addLotOfItems: function (cnt) {
+            return dispatch(RTodoList.addLotOfItems(cnt));
+        },
         getItems: function () {
             return dispatch(RTodoList.getItems());
         }
@@ -4569,6 +4818,7 @@ var initWithMethodsTodoList = function () {
         sortByTitle: o.sortByTitle,
         sortByCompletion: o.sortByCompletion,
         setTitle: o.setTitle,
+        addLotOfItems: o.addLotOfItems,
         getItems: o.getItems,
         listToDisplay: o.listToDisplay
     };
@@ -4779,6 +5029,14 @@ var RTodoList = /** @class */ (function () {
         enumerable: true,
         configurable: true
     });
+    RTodoList.prototype.findMaxId = function () {
+        var max = 0;
+        this.items.forEach(function (item) {
+            if (item.id > max)
+                max = item.id;
+        });
+        return max;
+    };
     RTodoList.prototype.nextPage = function () {
         if (this._state) {
             this.listStart += this.listPageLength;
@@ -4921,6 +5179,32 @@ var RTodoList = /** @class */ (function () {
             new RTodoList(undefined, dispatcher, getState).setTitle(value);
         };
     };
+    RTodoList.prototype.addLotOfItems = function (cnt) {
+        if (this._state) {
+            var maxId = this.findMaxId();
+            for (var i = 0; i < cnt; i++) {
+                this.items.push({
+                    id: i + maxId,
+                    userId: 123 + i,
+                    completed: Math.random() > 0.5 ? true : false,
+                    title: "New Task " + i
+                });
+            }
+        }
+        else {
+            if (this._dispatch) {
+                this._dispatch({
+                    type: exports.TodoListEnums.TodoList_addLotOfItems,
+                    payload: cnt
+                });
+            }
+        }
+    };
+    RTodoList.addLotOfItems = function (cnt) {
+        return function (dispatcher, getState) {
+            new RTodoList(undefined, dispatcher, getState).addLotOfItems(cnt);
+        };
+    };
     /**
      * Fetch items from json placeholder service
      */
@@ -4968,6 +5252,7 @@ exports.TodoListEnums = {
     TodoList_listStart: "TodoList_listStart",
     TodoList_listPageLength: "TodoList_listPageLength",
     TodoList_listTitle: "TodoList_listTitle",
+    TodoList_findMaxId: "TodoList_findMaxId",
     TodoList_nextPage: "TodoList_nextPage",
     TodoList_prevPage: "TodoList_prevPage",
     TodoList_toggleSortOrder: "TodoList_toggleSortOrder",
@@ -4976,7 +5261,8 @@ exports.TodoListEnums = {
     TodoList_sortById: "TodoList_sortById",
     TodoList_sortByTitle: "TodoList_sortByTitle",
     TodoList_sortByCompletion: "TodoList_sortByCompletion",
-    TodoList_setTitle: "TodoList_setTitle"
+    TodoList_setTitle: "TodoList_setTitle",
+    TodoList_addLotOfItems: "TodoList_addLotOfItems"
 };
 exports.TodoListReducer = function (state, action) {
     if (state === void 0) { state = initTodoList(); }
@@ -5030,12 +5316,15 @@ exports.TodoListReducer = function (state, action) {
             case exports.TodoListEnums.TodoList_setTitle:
                 new RTodoList(draft).setTitle(action.payload);
                 break;
+            case exports.TodoListEnums.TodoList_addLotOfItems:
+                new RTodoList(draft).addLotOfItems(action.payload);
+                break;
         }
     });
 };
-/***************************
- * React Context API test   *
- ***************************/
+/********************************
+ * React Context API component   *
+ ********************************/
 exports.TodoListContext = React.createContext(initWithMethodsTodoList());
 exports.TodoListConsumer = exports.TodoListContext.Consumer;
 var instanceCnt = 1;
@@ -5056,6 +5345,7 @@ var TodoListProvider = /** @class */ (function (_super) {
         _this.sortByTitle = _this.sortByTitle.bind(_this);
         _this.sortByCompletion = _this.sortByCompletion.bind(_this);
         _this.setTitle = _this.setTitle.bind(_this);
+        _this.addLotOfItems = _this.addLotOfItems.bind(_this);
         _this.getItems = _this.getItems.bind(_this);
         _this.__selectorlistToDisplay = exports.listToDisplaySelectorFnCreator();
         var devs = window["devToolsExtension"]
@@ -5162,6 +5452,15 @@ var TodoListProvider = /** @class */ (function (_super) {
         }
         this.setStateSync(nextState);
     };
+    TodoListProvider.prototype.addLotOfItems = function (cnt) {
+        var nextState = immer.produce(this.state, function (draft) {
+            return new RTodoList(draft).addLotOfItems(cnt);
+        });
+        if (this.__devTools) {
+            this.__devTools.send("addLotOfItems", nextState);
+        }
+        this.setStateSync(nextState);
+    };
     /**
      * Fetch items from json placeholder service
      */
@@ -5181,7 +5480,7 @@ var TodoListProvider = /** @class */ (function (_super) {
         });
     };
     TodoListProvider.prototype.render = function () {
-        return (React.createElement(exports.TodoListContext.Provider, { value: __assign({}, this.state, { nextPage: this.nextPage, prevPage: this.prevPage, toggleSortOrder: this.toggleSortOrder, clearTodoList: this.clearTodoList, reverse: this.reverse, sortById: this.sortById, sortByTitle: this.sortByTitle, sortByCompletion: this.sortByCompletion, setTitle: this.setTitle, getItems: this.getItems, listToDisplay: this.__selectorlistToDisplay(this.state) }) },
+        return (React.createElement(exports.TodoListContext.Provider, { value: __assign({}, this.state, { nextPage: this.nextPage, prevPage: this.prevPage, toggleSortOrder: this.toggleSortOrder, clearTodoList: this.clearTodoList, reverse: this.reverse, sortById: this.sortById, sortByTitle: this.sortByTitle, sortByCompletion: this.sortByCompletion, setTitle: this.setTitle, addLotOfItems: this.addLotOfItems, getItems: this.getItems, listToDisplay: this.__selectorlistToDisplay(this.state) }) },
             " ",
             this.props.children));
     };
@@ -5203,7 +5502,7 @@ var __extends = (this && this.__extends) || (function () {
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
             function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
         return extendStatics(d, b);
-    }
+    };
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -5333,9 +5632,9 @@ exports.UIHelperModelReducer = function (state, action) {
         }
     });
 };
-/***************************
- * React Context API test   *
- ***************************/
+/********************************
+ * React Context API component   *
+ ********************************/
 exports.UIHelperModelContext = React.createContext(initWithMethodsUIHelperModel());
 exports.UIHelperModelConsumer = exports.UIHelperModelContext.Consumer;
 var instanceCnt = 1;
@@ -5402,7 +5701,7 @@ var __extends = (this && this.__extends) || (function () {
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
             function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
         return extendStatics(d, b);
-    }
+    };
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -5756,9 +6055,9 @@ exports.UserStateReducer = function (state, action) {
         }
     });
 };
-/***************************
- * React Context API test   *
- ***************************/
+/********************************
+ * React Context API component   *
+ ********************************/
 exports.UserStateContext = React.createContext(initWithMethodsUserState());
 exports.UserStateConsumer = exports.UserStateContext.Consumer;
 var instanceCnt = 1;
@@ -5857,7 +6156,7 @@ var __extends = (this && this.__extends) || (function () {
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
             function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
         return extendStatics(d, b);
-    }
+    };
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -6229,9 +6528,9 @@ exports.WaspModelReducer = function (state, action) {
         }
     });
 };
-/***************************
- * React Context API test   *
- ***************************/
+/********************************
+ * React Context API component   *
+ ********************************/
 exports.WaspModelContext = React.createContext(initWithMethodsWaspModel());
 exports.WaspModelConsumer = exports.WaspModelContext.Consumer;
 var instanceCnt = 1;

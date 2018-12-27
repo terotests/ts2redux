@@ -39,25 +39,23 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 var UserState = /** @class */ (function () {
     function UserState() {
         this.logged = false;
-        this.username = 'anonymous';
+        this.username = "anonymous";
     }
     UserState.prototype.login = function (loginInfo) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
-                console.log('Login called with ', loginInfo);
+                console.log("Login called with ", loginInfo);
                 return [2 /*return*/];
             });
         });
     };
     UserState.prototype.logout = function () {
-        return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                return [2 /*return*/];
-            });
-        });
+        return __awaiter(this, void 0, void 0, function () { return __generator(this, function (_a) {
+            return [2 /*return*/];
+        }); });
     };
     UserState.prototype.fakeLogin = function () {
-        this.username = 'Fake Login';
+        this.username = "Fake Login";
     };
     return UserState;
 }());

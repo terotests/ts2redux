@@ -50,7 +50,7 @@ var SimpleModel = /** @class */ (function () {
                 switch (_b.label) {
                     case 0:
                         _a = this;
-                        return [4 /*yield*/, axios_1.default.get('https://jsonplaceholder.typicode.com/todos')];
+                        return [4 /*yield*/, axios_1.default.get("https://jsonplaceholder.typicode.com/todos")];
                     case 1:
                         _a.items = (_b.sent()).data;
                         return [2 /*return*/];
@@ -58,6 +58,13 @@ var SimpleModel = /** @class */ (function () {
             });
         });
     };
+    Object.defineProperty(SimpleModel.prototype, "myItems", {
+        get: function () {
+            return this.items;
+        },
+        enumerable: true,
+        configurable: true
+    });
     return SimpleModel;
 }());
 exports.SimpleModel = SimpleModel;

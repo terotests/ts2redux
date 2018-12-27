@@ -170,11 +170,11 @@ export declare const TestModelEnums: {
     TestModel_renameLast: string;
 };
 export declare const TestModelReducer: (state: ITestModel, action: any) => ITestModel;
-/***************************
- * React Context API test   *
- ***************************/
+/********************************
+ * React Context API component   *
+ ********************************/
 export declare const TestModelContext: React.Context<IProps>;
-export declare const TestModelConsumer: React.ExoticComponent<React.ConsumerProps<IProps>>;
+export declare const TestModelConsumer: React.ComponentType<React.ConsumerProps<IProps>>;
 export declare class TestModelProvider extends React.Component {
     state: ITestModel;
     lastSetState: ITestModel;

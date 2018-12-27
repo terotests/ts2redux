@@ -22,6 +22,7 @@ export declare class TodoList {
     listPageLength: number;
     listTitle: string;
     readonly listToDisplay: TodoListItem[];
+    private findMaxId;
     nextPage(): void;
     prevPage(): void;
     toggleSortOrder(): void;
@@ -31,6 +32,7 @@ export declare class TodoList {
     sortByTitle(): void;
     sortByCompletion(): void;
     setTitle(value: string): void;
+    addLotOfItems(cnt: number): void;
     /**
      * Fetch items from json placeholder service
      */
@@ -48,6 +50,7 @@ export interface IContainerPropsMethods {
     sortByTitle: () => any;
     sortByCompletion: () => any;
     setTitle: (value: string) => any;
+    addLotOfItems: (cnt: number) => any;
     getItems: () => any;
 }
 export interface ITodoList {
@@ -91,6 +94,7 @@ export declare class RTodoList {
     listStart: number;
     listPageLength: number;
     listTitle: string;
+    private findMaxId;
     nextPage(): void;
     static nextPage(): (dispatcher: any, getState: any) => void;
     prevPage(): void;
@@ -109,6 +113,8 @@ export declare class RTodoList {
     static sortByCompletion(): (dispatcher: any, getState: any) => void;
     setTitle(value: string): void;
     static setTitle(value: string): (dispatcher: any, getState: any) => void;
+    addLotOfItems(cnt: number): void;
+    static addLotOfItems(cnt: number): (dispatcher: any, getState: any) => void;
     /**
      * Fetch items from json placeholder service
      */
@@ -123,6 +129,7 @@ export declare const TodoListEnums: {
     TodoList_listStart: string;
     TodoList_listPageLength: string;
     TodoList_listTitle: string;
+    TodoList_findMaxId: string;
     TodoList_nextPage: string;
     TodoList_prevPage: string;
     TodoList_toggleSortOrder: string;
@@ -132,13 +139,14 @@ export declare const TodoListEnums: {
     TodoList_sortByTitle: string;
     TodoList_sortByCompletion: string;
     TodoList_setTitle: string;
+    TodoList_addLotOfItems: string;
 };
 export declare const TodoListReducer: (state: ITodoList, action: any) => ITodoList;
-/***************************
- * React Context API test   *
- ***************************/
+/********************************
+ * React Context API component   *
+ ********************************/
 export declare const TodoListContext: React.Context<IProps>;
-export declare const TodoListConsumer: React.ExoticComponent<React.ConsumerProps<IProps>>;
+export declare const TodoListConsumer: React.ComponentType<React.ConsumerProps<IProps>>;
 export declare class TodoListProvider extends React.Component {
     state: ITodoList;
     lastSetState: ITodoList;
@@ -156,6 +164,7 @@ export declare class TodoListProvider extends React.Component {
     sortByTitle(): void;
     sortByCompletion(): void;
     setTitle(value: string): void;
+    addLotOfItems(cnt: number): void;
     /**
      * Fetch items from json placeholder service
      */

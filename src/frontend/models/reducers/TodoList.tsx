@@ -30,12 +30,21 @@ export class TodoList {
   listStart = 0;
   listPageLength = 10;
   listTitle = "Title of TODO -list";
+
   // Example of memoized list using reselect
   get listToDisplay(): TodoListItem[] {
     return this.items
       .filter(item => item.completed)
       .sort(sortFn(this.sortOrder))
       .slice(this.listStart, this.listStart + this.listPageLength);
+  }
+
+  private findMaxId(): number {
+    let max = 0;
+    this.items.forEach(item => {
+      if (item.id > max) max = item.id;
+    });
+    return max;
   }
   nextPage() {
     this.listStart += this.listPageLength;
@@ -66,6 +75,17 @@ export class TodoList {
   }
   setTitle(value: string) {
     this.listTitle = value;
+  }
+  addLotOfItems(cnt: number) {
+    const maxId = this.findMaxId();
+    for (let i = 0; i < cnt; i++) {
+      this.items.push({
+        id: i + maxId,
+        userId: 123 + i,
+        completed: Math.random() > 0.5 ? true : false,
+        title: "New Task " + i
+      });
+    }
   }
   /**
    * Fetch items from json placeholder service
@@ -101,6 +121,7 @@ export interface IContainerPropsMethods {
   sortByTitle: () => any;
   sortByCompletion: () => any;
   setTitle: (value: string) => any;
+  addLotOfItems: (cnt: number) => any;
   getItems: () => any;
 }
 export interface ITodoList {
@@ -188,6 +209,9 @@ export const mapDispatchToProps = (dispatch: any): IContainerPropsMethods => {
     setTitle: (value: string) => {
       return dispatch(RTodoList.setTitle(value));
     },
+    addLotOfItems: (cnt: number) => {
+      return dispatch(RTodoList.addLotOfItems(cnt));
+    },
     getItems: () => {
       return dispatch(RTodoList.getItems());
     }
@@ -229,6 +253,7 @@ const initWithMethodsTodoList = () => {
     sortByTitle: o.sortByTitle,
     sortByCompletion: o.sortByCompletion,
     setTitle: o.setTitle,
+    addLotOfItems: o.addLotOfItems,
     getItems: o.getItems,
     listToDisplay: o.listToDisplay
   };
@@ -406,6 +431,13 @@ export class RTodoList {
     }
   }
 
+  private findMaxId(): number {
+    let max = 0;
+    this.items.forEach(item => {
+      if (item.id > max) max = item.id;
+    });
+    return max;
+  }
   nextPage() {
     if (this._state) {
       this.listStart += this.listPageLength;
@@ -547,6 +579,32 @@ export class RTodoList {
       new RTodoList(undefined, dispatcher, getState).setTitle(value);
     };
   }
+  addLotOfItems(cnt: number) {
+    if (this._state) {
+      const maxId = this.findMaxId();
+      for (let i = 0; i < cnt; i++) {
+        this.items.push({
+          id: i + maxId,
+          userId: 123 + i,
+          completed: Math.random() > 0.5 ? true : false,
+          title: "New Task " + i
+        });
+      }
+    } else {
+      if (this._dispatch) {
+        this._dispatch({
+          type: TodoListEnums.TodoList_addLotOfItems,
+          payload: cnt
+        });
+      }
+    }
+  }
+
+  public static addLotOfItems(cnt: number) {
+    return (dispatcher: any, getState: any) => {
+      new RTodoList(undefined, dispatcher, getState).addLotOfItems(cnt);
+    };
+  }
   /**
    * Fetch items from json placeholder service
    */
@@ -579,6 +637,7 @@ export const TodoListEnums = {
   TodoList_listStart: "TodoList_listStart",
   TodoList_listPageLength: "TodoList_listPageLength",
   TodoList_listTitle: "TodoList_listTitle",
+  TodoList_findMaxId: "TodoList_findMaxId",
   TodoList_nextPage: "TodoList_nextPage",
   TodoList_prevPage: "TodoList_prevPage",
   TodoList_toggleSortOrder: "TodoList_toggleSortOrder",
@@ -587,7 +646,8 @@ export const TodoListEnums = {
   TodoList_sortById: "TodoList_sortById",
   TodoList_sortByTitle: "TodoList_sortByTitle",
   TodoList_sortByCompletion: "TodoList_sortByCompletion",
-  TodoList_setTitle: "TodoList_setTitle"
+  TodoList_setTitle: "TodoList_setTitle",
+  TodoList_addLotOfItems: "TodoList_addLotOfItems"
 };
 
 export const TodoListReducer = (
@@ -644,12 +704,15 @@ export const TodoListReducer = (
       case TodoListEnums.TodoList_setTitle:
         new RTodoList(draft).setTitle(action.payload);
         break;
+      case TodoListEnums.TodoList_addLotOfItems:
+        new RTodoList(draft).addLotOfItems(action.payload);
+        break;
     }
   });
 };
-/***************************
- * React Context API test   *
- ***************************/
+/********************************
+ * React Context API component   *
+ ********************************/
 export const TodoListContext = React.createContext<IProps>(
   initWithMethodsTodoList()
 );
@@ -672,6 +735,7 @@ export class TodoListProvider extends React.Component {
     this.sortByTitle = this.sortByTitle.bind(this);
     this.sortByCompletion = this.sortByCompletion.bind(this);
     this.setTitle = this.setTitle.bind(this);
+    this.addLotOfItems = this.addLotOfItems.bind(this);
     this.getItems = this.getItems.bind(this);
     this.__selectorlistToDisplay = listToDisplaySelectorFnCreator();
     const devs = window["devToolsExtension"]
@@ -777,6 +841,15 @@ export class TodoListProvider extends React.Component {
     }
     this.setStateSync(nextState);
   }
+  addLotOfItems(cnt: number) {
+    const nextState = immer.produce(this.state, draft =>
+      new RTodoList(draft).addLotOfItems(cnt)
+    );
+    if (this.__devTools) {
+      this.__devTools.send("addLotOfItems", nextState);
+    }
+    this.setStateSync(nextState);
+  }
   /**
    * Fetch items from json placeholder service
    */
@@ -807,6 +880,7 @@ export class TodoListProvider extends React.Component {
           sortByTitle: this.sortByTitle,
           sortByCompletion: this.sortByCompletion,
           setTitle: this.setTitle,
+          addLotOfItems: this.addLotOfItems,
           getItems: this.getItems,
           listToDisplay: this.__selectorlistToDisplay(this.state)
         }}

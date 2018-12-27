@@ -13,6 +13,7 @@ export interface GenerationOptions {
   path: string
   reducerPath?: string
   disableDevtoolsFromContext?: boolean
+  onlyFile?:string
 }
 
 export interface ModelDefinition {
@@ -144,8 +145,9 @@ export async function createProject( settings:GenerationOptions) {
     sourceFile.getClasses().forEach( c=>{
       if( c.getJsDocs().filter(
         doc =>doc.getTags().filter( tag => tag.getName() === 'redux' ).length > 0
-      ).length > 0 ) {      
-
+      ).length > 0 ) {  
+        
+        console.log('ts2redux: Transpiling ', sourceFile.getFilePath())
         
         const sourceDir = path.normalize( path.relative( process.cwd(), path.dirname( sourceFile.getFilePath() ) ) )
         const reducerFileName = sourceDir + reducerPath + c.getName() + '.tsx'
@@ -547,7 +549,7 @@ export async function createProject( settings:GenerationOptions) {
             // const ng = RFs.getFile(sourceDir + '/reducers/',  c.getName() + 'Ctx.tsx' ).getWriter()
             const ng = outer
             // ng.raw(outer.getCode())
-            createComment( ng, 'React Context API test');            
+            createComment( ng, 'React Context API component');            
             // create context...
             ng.out(`export const ${c.getName()}Context = React.createContext<IProps>(initWithMethods${c.getName()}())`, true)
             ng.out(`export const ${c.getName()}Consumer = ${c.getName()}Context.Consumer`, true)

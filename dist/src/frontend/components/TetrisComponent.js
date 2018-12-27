@@ -5,7 +5,7 @@ var __extends = (this && this.__extends) || (function () {
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
             function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
         return extendStatics(d, b);
-    }
+    };
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -66,22 +66,36 @@ var TetrisC = /** @class */ (function (_super) {
                 this.props.points,
                 " ",
                 this.props.gameEnded ? 'Game Over' : ''),
-            React.createElement("div", { style: { width: this.props.cols * 20, height: this.props.rows * 20, position: 'relative', backgroundColor: '#222222' } }, this.props.cells.map(function (row, y) { return React.createElement("div", { style: { width: _this.props.cols * 20, height: 21 }, key: 'row_' + y }, row.map(function (cell, x) {
-                var hasActive = false;
-                var active = _this.props.activePiece;
-                var color = cell.color;
-                active.cells.forEach(function (arow, ay) {
-                    arow.forEach(function (acell, ax) {
-                        if (((active.x + ax) == x) && ((active.y + ay) == y)) {
-                            if (acell.color !== TetrisModel_1.Colors.EMPTY)
-                                color = acell.color;
+            React.createElement("div", { style: { overflow: 'hidden', width: this.props.cols * 20, height: this.props.rows * 20, position: 'relative', backgroundColor: '#222222' } },
+                this.props.cells.map(function (row, y) { return React.createElement("div", { style: { width: _this.props.cols * 20, height: 21 }, key: 'row_' + y }, row.map(function (cell, x) {
+                    /*
+                    const active = this.props.activePiece
+                    let color = cell.color
+                    active.cells.forEach( (arow, ay)=>{
+                      arow.forEach( (acell, ax) => {
+                        if( ((active.x + ax) == x) && ((active.y + ay) == y)) {
+                          if(acell.color !== Colors.EMPTY) color = acell.color
                         }
+                      })
+                    })
+                    */
+                    var color = cell.color;
+                    return React.createElement("div", { key: 'cell' + y + '_' + x, style: { backgroundColor: color,
+                            boxShadow: color !== TetrisModel_1.Colors.EMPTY ? 'inset 0 0 3px rgba(0,0,0,0.6)' : '',
+                            position: 'absolute', left: x * 20, top: 20 * y, width: 20, height: 20 } });
+                })); }),
+                this.props.activePiece ? this.props.activePiece.cells.map(function (arow, y) {
+                    return arow.map(function (cell, x) {
+                        var active = _this.props.activePiece;
+                        var color = cell.color;
+                        var ax = active.x + x;
+                        var ay = active.y + y - (1 - _this.props.tickCnt / _this.props.ticksPerMove);
+                        return (React.createElement("div", { key: 'cell' + y + '_' + x, style: { backgroundColor: color,
+                                boxShadow: color !== TetrisModel_1.Colors.EMPTY ? 'inset 0 0 3px rgba(0,0,0,0.6)' : '',
+                                position: 'absolute', left: ax * 20, top: 20 * ay, width: 20, height: 20 } }));
                     });
-                });
-                return React.createElement("div", { key: 'cell' + y + '_' + x, style: { backgroundColor: color,
-                        boxShadow: color !== TetrisModel_1.Colors.EMPTY ? 'inset 0 0 3px rgba(0,0,0,0.6)' : '',
-                        position: 'absolute', left: x * 20, top: 20 * y, width: 20, height: 20 } });
-            })); }))));
+                }) : '',
+                " ) })}")));
     };
     return TetrisC;
 }(React.PureComponent));

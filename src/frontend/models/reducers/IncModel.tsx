@@ -14,6 +14,7 @@ export class IncModel {
     this.cnt--;
   }
 }
+
 import * as immer from "immer";
 import { connect } from "react-redux";
 import { IState } from "./index";
@@ -157,9 +158,9 @@ export const IncModelReducer = (
     }
   });
 };
-/***************************
- * React Context API test   *
- ***************************/
+/********************************
+ * React Context API component   *
+ ********************************/
 export const IncModelContext = React.createContext<IProps>(
   initWithMethodsIncModel()
 );

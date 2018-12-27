@@ -3,6 +3,8 @@
 import {createProject} from './index'
 import * as chokidar from 'chokidar'
 
+const path = require('path')
+
 const argv = require('yargs')
     .demandCommand(1)
     .describe('reducers', 'Directory for reducers')
@@ -22,14 +24,15 @@ if( args.length === 0 ) {
 const state = {
   is_running : false
 }
-const compileProject = async (eventArgs:any) => {
+const compileProject = async (eventArgs:string | null) => {
   if(state.is_running) return
-  console.log('Compiling path: ', args[0])
+  console.log('ts2redux: compiling path: ', args[0])
   state.is_running = true
   await createProject({
     path: args[0],
     reducerPath : argv.reducers || 'reducers',
     disableDevtoolsFromContext : argv.n,
+    onlyFile: eventArgs ? path.basename( eventArgs ) : undefined
   }) 
   setTimeout(
     () => {

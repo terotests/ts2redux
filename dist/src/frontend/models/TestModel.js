@@ -55,21 +55,16 @@ var TaskState;
     TaskState[TaskState["SUCCESS"] = 3] = "SUCCESS";
 })(TaskState = exports.TaskState || (exports.TaskState = {}));
 function getTestObj() {
-    return { name: 'OK' };
+    return { name: "OK" };
 }
-var MSG = 'STATE IS NOW';
-var MSG2 = 'AFTER DISPATCH STATE IS';
+var MSG = "STATE IS NOW";
+var MSG2 = "AFTER DISPATCH STATE IS";
 var DELAY = 1000;
-var LAST_NAME = 'I am the last item!!!!';
-var STR_CART = 'cart';
-var STR_ITEM = 'item';
+var LAST_NAME = "I am the last item!!!!";
+var STR_CART = "cart";
+var STR_ITEM = "item";
 var PROB_50 = 0.5;
-var FRIEND_LIST = [
-    'Arthur',
-    'John',
-    'Martin',
-    'Peter'
-];
+var FRIEND_LIST = ["Arthur", "John", "Martin", "Peter"];
 /**
  * @redux true
  */
@@ -79,20 +74,20 @@ var TestModel = /** @class */ (function () {
         this.items = [];
         this.maxId = 1;
         // Default initializers work :)
-        this.str_init_test = 'OK?';
+        this.str_init_test = "OK?";
         this.bool_init_test = false;
         this.bool4 = true;
         this.obj_init_test = getTestObj();
         this.rand_init_test = Math.floor(Math.random() * 5);
         this.arr_init_test = [1, 2, 3];
-        this.arr_init_test2 = [1, 2, 3, 'foo'];
+        this.arr_init_test2 = [1, 2, 3, "foo"];
         this.obj_literal_test = { cnt: 200 };
         this.cartId = 1;
         this.shopState = TaskState.UNDEFINED;
         // my shopping carts
         this.carts = {};
         // message to user
-        this.userMessage = '';
+        this.userMessage = "";
     }
     TestModel.prototype.setUserMessage = function (value) {
         this.userMessage = value;
@@ -114,13 +109,13 @@ var TestModel = /** @class */ (function () {
      * Creates a new shopping cart
      */
     TestModel.prototype.addCart = function () {
-        var key = 'cart' + (this.cartId++);
+        var key = "cart" + this.cartId++;
         this.carts[key] = {
             items: [{ id: this.maxId++, name: STR_ITEM }]
         };
     };
     TestModel.prototype.addCartSync = function () {
-        var key = 'cart' + (this.cartId++);
+        var key = "cart" + this.cartId++;
         this.carts[key] = {
             items: [{ id: this.maxId++, name: STR_ITEM }]
         };
@@ -134,7 +129,10 @@ var TestModel = /** @class */ (function () {
     TestModel.prototype.addToCartRandom = function () {
         var _this = this;
         Object.keys(this.carts).forEach(function (cartKey) {
-            _this.addToCart({ cartId: cartKey, item: { name: STR_ITEM + _this.maxId++ } });
+            _this.addToCart({
+                cartId: cartKey,
+                item: { name: STR_ITEM + _this.maxId++ }
+            });
         });
     };
     TestModel.prototype.renameLast = function (newName) {

@@ -1,14 +1,13 @@
-
 /**
  * @redux true
  */
 
 export class IncModel {
-  cnt = 0
+  cnt = 0;
   increment() {
-    this.cnt++
+    this.cnt++;
   }
   decrement() {
-    this.cnt--
-  }  
+    this.cnt--;
+  }
 }

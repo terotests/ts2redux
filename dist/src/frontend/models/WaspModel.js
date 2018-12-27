@@ -16,7 +16,7 @@ var WaspModel = /** @class */ (function () {
         o.y = pos.y;
         o.dx = 1 - 2 * Math.random();
         o.dy = 1 - 2 * Math.random();
-        o.color = 'red';
+        o.color = "red";
         this.wasps[o.id] = o;
     };
     WaspModel.prototype.incSpeed = function (value) {
@@ -47,8 +47,8 @@ var WaspModel = /** @class */ (function () {
             var y = center.y - wasp.y;
             var len = Math.sqrt(x * x + y * y);
             if (len > 20) {
-                wasp.dx += (x / len);
-                wasp.dy += (y / len);
+                wasp.dx += x / len;
+                wasp.dy += y / len;
             }
             wasp.steps = 0;
             wasp.x += wasp.dx;

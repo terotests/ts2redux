@@ -52,11 +52,11 @@ var sortFn = function (order) { return function (a, b) {
 var TodoList = /** @class */ (function () {
     function TodoList() {
         this.items = [];
-        this.state = 'UNDEFINED';
+        this.state = "UNDEFINED";
         this.sortOrder = SortOrder.ASC;
         this.listStart = 0;
         this.listPageLength = 10;
-        this.listTitle = 'Title of TODO -list';
+        this.listTitle = "Title of TODO -list";
     }
     Object.defineProperty(TodoList.prototype, "listToDisplay", {
         // Example of memoized list using reselect
@@ -69,6 +69,14 @@ var TodoList = /** @class */ (function () {
         enumerable: true,
         configurable: true
     });
+    TodoList.prototype.findMaxId = function () {
+        var max = 0;
+        this.items.forEach(function (item) {
+            if (item.id > max)
+                max = item.id;
+        });
+        return max;
+    };
     TodoList.prototype.nextPage = function () {
         this.listStart += this.listPageLength;
     };
@@ -78,7 +86,8 @@ var TodoList = /** @class */ (function () {
             this.listStart = 0;
     };
     TodoList.prototype.toggleSortOrder = function () {
-        this.sortOrder = this.sortOrder == SortOrder.ASC ? SortOrder.DESC : SortOrder.ASC;
+        this.sortOrder =
+            this.sortOrder == SortOrder.ASC ? SortOrder.DESC : SortOrder.ASC;
     };
     TodoList.prototype.clearTodoList = function () {
         this.items = [];
@@ -93,11 +102,22 @@ var TodoList = /** @class */ (function () {
         this.items.sort(function (a, b) { return a.title.localeCompare(b.title); });
     };
     TodoList.prototype.sortByCompletion = function () {
-        var toNumber = function (value) { return value ? 1 : 0; };
+        var toNumber = function (value) { return (value ? 1 : 0); };
         this.items.sort(function (a, b) { return toNumber(a.completed) - toNumber(b.completed); });
     };
     TodoList.prototype.setTitle = function (value) {
         this.listTitle = value;
+    };
+    TodoList.prototype.addLotOfItems = function (cnt) {
+        var maxId = this.findMaxId();
+        for (var i = 0; i < cnt; i++) {
+            this.items.push({
+                id: i + maxId,
+                userId: 123 + i,
+                completed: Math.random() > 0.5 ? true : false,
+                title: "New Task " + i
+            });
+        }
     };
     /**
      * Fetch items from json placeholder service
@@ -108,21 +128,21 @@ var TodoList = /** @class */ (function () {
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
-                        if (this.state === 'RUNNING')
+                        if (this.state === "RUNNING")
                             return [2 /*return*/];
                         _b.label = 1;
                     case 1:
                         _b.trys.push([1, 3, , 4]);
-                        this.state = 'RUNNING';
+                        this.state = "RUNNING";
                         _a = this;
-                        return [4 /*yield*/, axios_1.default.get('https://jsonplaceholder.typicode.com/todos')];
+                        return [4 /*yield*/, axios_1.default.get("https://jsonplaceholder.typicode.com/todos")];
                     case 2:
                         _a.items = (_b.sent()).data;
-                        this.state = 'LOADED';
+                        this.state = "LOADED";
                         return [3 /*break*/, 4];
                     case 3:
                         e_1 = _b.sent();
-                        this.state = 'ERROR';
+                        this.state = "ERROR";
                         this.stateError = e_1;
                         return [3 /*break*/, 4];
                     case 4: return [2 /*return*/];

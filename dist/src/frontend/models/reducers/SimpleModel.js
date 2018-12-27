@@ -11,7 +11,7 @@ var __extends = (this && this.__extends) || (function () {
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
             function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
         return extendStatics(d, b);
-    }
+    };
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -88,15 +88,33 @@ var SimpleModel = /** @class */ (function () {
             });
         });
     };
+    Object.defineProperty(SimpleModel.prototype, "myItems", {
+        get: function () {
+            return this.items;
+        },
+        enumerable: true,
+        configurable: true
+    });
     return SimpleModel;
 }());
 exports.SimpleModel = SimpleModel;
 var immer = require("immer");
+var reselect_1 = require("reselect");
 var react_redux_1 = require("react-redux");
 var React = require("react");
+exports.itemsSelectorFn = function (state) { return state.items; };
+exports.myItemsSelectorFnCreator = function () {
+    return reselect_1.createSelector([exports.itemsSelectorFn], function (items) {
+        var o = new SimpleModel();
+        o.items = items;
+        return o.myItems;
+    });
+};
+exports.myItemsSelector = exports.myItemsSelectorFnCreator();
 exports.mapStateToProps = function (state) {
     return {
-        items: state.SimpleModel.items
+        items: state.SimpleModel.items,
+        myItems: exports.myItemsSelector(state.SimpleModel)
     };
 };
 exports.mapDispatchToProps = function (dispatch) {
@@ -117,7 +135,8 @@ var initWithMethodsSimpleModel = function () {
     var o = new SimpleModel();
     return {
         items: o.items,
-        getItems: o.getItems
+        getItems: o.getItems,
+        myItems: o.myItems
     };
 };
 /**
@@ -194,9 +213,9 @@ exports.SimpleModelReducer = function (state, action) {
         }
     });
 };
-/***************************
- * React Context API test   *
- ***************************/
+/********************************
+ * React Context API component   *
+ ********************************/
 exports.SimpleModelContext = React.createContext(initWithMethodsSimpleModel());
 exports.SimpleModelConsumer = exports.SimpleModelContext.Consumer;
 var instanceCnt = 1;
@@ -206,8 +225,10 @@ var SimpleModelProvider = /** @class */ (function (_super) {
         var _this = _super.call(this, props) || this;
         _this.state = initSimpleModel();
         _this.__devTools = null;
+        _this.__selectormyItems = null;
         _this.lastSetState = _this.state;
         _this.getItems = _this.getItems.bind(_this);
+        _this.__selectormyItems = exports.myItemsSelectorFnCreator();
         var devs = window["devToolsExtension"]
             ? window["devToolsExtension"]
             : null;
@@ -247,7 +268,7 @@ var SimpleModelProvider = /** @class */ (function (_super) {
         });
     };
     SimpleModelProvider.prototype.render = function () {
-        return (React.createElement(exports.SimpleModelContext.Provider, { value: __assign({}, this.state, { getItems: this.getItems }) },
+        return (React.createElement(exports.SimpleModelContext.Provider, { value: __assign({}, this.state, { getItems: this.getItems, myItems: this.__selectormyItems(this.state) }) },
             " ",
             this.props.children));
     };

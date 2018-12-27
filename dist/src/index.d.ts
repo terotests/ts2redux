@@ -4,6 +4,7 @@ export interface GenerationOptions {
     path: string;
     reducerPath?: string;
     disableDevtoolsFromContext?: boolean;
+    onlyFile?: string;
 }
 export interface ModelDefinition {
     name: string;

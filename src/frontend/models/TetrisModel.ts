@@ -14,60 +14,41 @@ export interface ActivePiece {
   cells: Cell[][];
 }
 
-const pieceDeclaration = (color:string, rows:string[]) : ActivePiece => {
-  const cells = new Array( rows.length )
-  for( let i=0; i < rows.length; i++) {
-    const row = rows[i]
-    cells[i] = new Array( row.length )
-    for( let c=0; c < row.length; c++) {
-      if(row.charAt(c) == ' ') {
-        cells[i][c] = {color: Colors.EMPTY}
+const pieceDeclaration = (color: string, rows: string[]): ActivePiece => {
+  const cells = new Array(rows.length);
+  for (let i = 0; i < rows.length; i++) {
+    const row = rows[i];
+    cells[i] = new Array(row.length);
+    for (let c = 0; c < row.length; c++) {
+      if (row.charAt(c) == " ") {
+        cells[i][c] = { color: Colors.EMPTY };
       } else {
-        cells[i][c] = {color: color}        
+        cells[i][c] = { color: color };
       }
     }
   }
   return {
-    x : 0,
-    y : rows.length * -1,
-    width : rows.length,
-    height : rows.length,
+    x: 0,
+    y: rows.length * -1,
+    width: rows.length,
+    height: rows.length,
     cells
-  }
-}
+  };
+};
 
 /**
  * [' O '],
-*  ['OOO'],
-*  [' O ']
+ *  ['OOO'],
+ *  [' O ']
  */
 
 export const createNewPiece = (usingColor: string): ActivePiece => {
   const items = [
-    pieceDeclaration( usingColor,
-      ['xx',
-       'xx']),
-    pieceDeclaration( usingColor,
-        ['   ',
-         'xxx',
-         ' x ']
-      ),
-    pieceDeclaration( usingColor,
-      [' x ',
-       ' x ',
-       'xx ']
-      ), 
-    pieceDeclaration( usingColor,
-      [' x ',
-       ' x ',
-       ' xx']
-      ),            
-    pieceDeclaration( usingColor,
-      [' x  ',
-       ' x  ',
-       ' x  ',
-       ' x  ']
-      ),                        
+    pieceDeclaration(usingColor, ["xx", "xx"]),
+    pieceDeclaration(usingColor, ["   ", "xxx", " x "]),
+    pieceDeclaration(usingColor, [" x ", " x ", "xx "]),
+    pieceDeclaration(usingColor, [" x ", " x ", " xx"]),
+    pieceDeclaration(usingColor, [" x  ", " x  ", " x  ", " x  "])
   ];
   return items[Math.floor(Math.random() * items.length)];
 };
@@ -76,36 +57,37 @@ export const createNewPiece = (usingColor: string): ActivePiece => {
  * @redux true
  */
 export class TetrisModel {
-
   useColors = ["red", "blue", "green", "yellow", "brown", "orange"];
-  lastUsedColor = Math.floor( Math.random() * this.useColors.length);
-  points = 0
+  lastUsedColor = Math.floor(Math.random() * this.useColors.length);
+  points = 0;
   rows = 20;
   cols = 15;
   cells: Cell[][] = [];
   activePiece?: ActivePiece;
-  gameOn  = false;
+  gameOn = false;
   gameEnded = false;
-  ticksPerMove = 10
-  tickCnt = 0
+  ticksPerMove = 10;
+  tickCnt = 0;
+  dx = 0;
+  dy = 1;
 
   private doesCollide(
     pieceX: number,
     pieceY: number,
-    pieceCells?: Cell[][],
+    pieceCells?: Cell[][]
   ): boolean {
     let collides = false;
-    const compareAgainst = pieceCells || this.activePiece.cells
-    compareAgainst.forEach((row, y) => {    
+    const compareAgainst = pieceCells || this.activePiece.cells;
+    compareAgainst.forEach((row, y) => {
       row.forEach((cell, x) => {
-        if(cell.color === Colors.EMPTY) return
-        if ( pieceY + y >= this.rows ) {
-          collides = true
-          return
+        if (cell.color === Colors.EMPTY) return;
+        if (pieceY + y >= this.rows) {
+          collides = true;
+          return;
         }
-        if( ((pieceX + x) < 0) || ( (pieceX + x) >= this.cols) ) {
-          collides = true
-          return
+        if (pieceX + x < 0 || pieceX + x >= this.cols) {
+          collides = true;
+          return;
         }
         if (cell.color !== Colors.EMPTY) {
           if (pieceY + y < 0) return;
@@ -116,53 +98,39 @@ export class TetrisModel {
       });
     });
     return collides;
-  };  
+  }
 
   tick() {
-    this.tickCnt++
-    if(this.tickCnt >= this.ticksPerMove) {
-      this.tickCnt = 0
-      this.step()
+    this.tickCnt++;
+    if (this.tickCnt >= this.ticksPerMove) {
+      this.tickCnt = 0;
+      this.step();
     }
   }
 
   left() {
-    if (
-      !this.doesCollide(
-        this.activePiece.x - 1,
-        this.activePiece.y
-      )
-    ) {
+    if (!this.doesCollide(this.activePiece.x - 1, this.activePiece.y)) {
       this.activePiece.x--;
     }
   }
 
   right() {
-    if (
-      !this.doesCollide(
-        this.activePiece.x + 1,
-        this.activePiece.y
-      )
-    ) {
+    if (!this.doesCollide(this.activePiece.x + 1, this.activePiece.y)) {
       this.activePiece.x++;
-    }    
+    }
   }
   // keyboard control for rotation, tries to rotate activePiece and if
   // it does not collide, rotation can be done
   rotate() {
     const newOrientation = this.rotateCells(this.activePiece.cells);
     if (
-      !this.doesCollide(
-        this.activePiece.x,
-        this.activePiece.y,
-        newOrientation
-      )
+      !this.doesCollide(this.activePiece.x, this.activePiece.y, newOrientation)
     ) {
       this.activePiece.cells = newOrientation;
     }
   }
   // creates a new piece with rotated values
-  private rotateCells (cells: Cell[][]) : Cell[][] {
+  private rotateCells(cells: Cell[][]): Cell[][] {
     const res: Cell[][] = new Array(cells.length);
     for (let j = 0; j < cells.length; j++) {
       res[j] = new Array(cells[j].length);
@@ -180,16 +148,11 @@ export class TetrisModel {
       }
     }
     return res;
-  };  
+  }
 
   step() {
     if (this.gameOn) {
-      if (
-        !this.doesCollide(
-          this.activePiece.x,
-          this.activePiece.y + 1
-        )
-      ) {
+      if (!this.doesCollide(this.activePiece.x, this.activePiece.y + 1)) {
         this.activePiece.y++;
       } else {
         if (this.activePiece.y < 0) {
@@ -197,15 +160,15 @@ export class TetrisModel {
           this.gameOn = false;
         } else {
           this.masonPiece();
-          this.dropRows()
+          this.dropRows();
           this.activePiece = createNewPiece(this.pickNextColor());
-          this.activePiece.x = Math.floor( Math.random()*5 )
+          this.activePiece.x = Math.floor(Math.random() * 5);
         }
       }
     }
   }
 
-  private pickNextColor() : string {
+  private pickNextColor(): string {
     this.lastUsedColor++;
     if (this.lastUsedColor >= this.useColors.length) {
       this.lastUsedColor = 0;
@@ -228,29 +191,29 @@ export class TetrisModel {
 
   // drops full rows and adds points to the user
   dropRows() {
-    const nextRows = []
-    let emptyCnt = 0
-    for( let i=0; i < this.cells.length ; i++ ) {
-      const row = this.cells[i]
-      if( row.filter( cell => cell.color === Colors.EMPTY).length > 0 ) {
-        nextRows.push( row )
+    const nextRows = [];
+    let emptyCnt = 0;
+    for (let i = 0; i < this.cells.length; i++) {
+      const row = this.cells[i];
+      if (row.filter(cell => cell.color === Colors.EMPTY).length > 0) {
+        nextRows.push(row);
       } else {
-        emptyCnt++
+        emptyCnt++;
       }
     }
-    if( emptyCnt > 0 ) {
-      this.points += emptyCnt * emptyCnt * 10
-      while(emptyCnt-- > 0) {
+    if (emptyCnt > 0) {
+      this.points += emptyCnt * emptyCnt * 10;
+      while (emptyCnt-- > 0) {
         const newEmpty = new Array(this.cols);
         for (let col = 0; col < this.cols; col++) {
           newEmpty[col] = { color: Colors.EMPTY };
-        }        
-        nextRows.unshift( newEmpty )
+        }
+        nextRows.unshift(newEmpty);
       }
-      this.cells = nextRows 
-      this.ticksPerMove--     
+      this.cells = nextRows;
+      this.ticksPerMove--;
     }
-  }  
+  }
 
   clearCells() {
     this.cells = new Array(this.rows);
@@ -263,16 +226,16 @@ export class TetrisModel {
   }
 
   resetGame() {
-    this.clearCells()
+    this.clearCells();
     this.activePiece = createNewPiece(this.pickNextColor());
-    this.ticksPerMove = 10
-    this.tickCnt = 0
+    this.ticksPerMove = 10;
+    this.tickCnt = 0;
   }
 
   start() {
     this.resetGame();
     this.gameOn = true;
     this.gameEnded = false;
-    this.points = 0
+    this.points = 0;
   }
 }

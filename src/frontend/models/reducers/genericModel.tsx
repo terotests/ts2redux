@@ -20,26 +20,28 @@ export class SomeList<T extends Summable> {
     this.items = [...this.items, ...items];
   }
 }
-
 /**
  * @redux true
  */
-
 export class GenericModel {
   sum = 0;
+  isLoading: { [key: string]: boolean } = {};
   // This is not a good idea with Immer...
   list: SomeList<Summable> = new SomeList<Summable>();
   refreshSum() {
     this.sum = this.list.items.reduce((prev, curr) => prev + curr.value(), 0);
   }
   addItems<T extends Summable>(items: T[]) {
+    console.log(this);
     this.list.addItems(items);
     this.refreshSum();
   }
   inc() {
     this.sum++;
   }
+  async testLoading() {}
 }
+
 import * as immer from "immer";
 import { connect } from "react-redux";
 import { IState } from "./index";
@@ -49,9 +51,13 @@ export interface IContainerPropsMethods {
   refreshSum: () => any;
   addItems: <T extends Summable>(items: T[]) => any;
   inc: () => any;
+  testLoading: () => any;
 }
 export interface IGenericModel {
   sum: number;
+  isLoading: {
+    [key: string]: boolean;
+  };
   // This is not a good idea with Immer...
   list: SomeList<Summable>;
 }
@@ -61,6 +67,7 @@ export interface IProps extends IContainerPropsState, IContainerPropsMethods {}
 export const mapStateToProps = (state: IState): IContainerPropsState => {
   return {
     sum: state.GenericModel.sum,
+    isLoading: state.GenericModel.isLoading,
     list: state.GenericModel.list
   };
 };
@@ -74,6 +81,9 @@ export const mapDispatchToProps = (dispatch: any): IContainerPropsMethods => {
     },
     inc: () => {
       return dispatch(RGenericModel.inc());
+    },
+    testLoading: () => {
+      return dispatch(RGenericModel.testLoading());
     }
   };
 };
@@ -86,6 +96,7 @@ const initGenericModel = () => {
   const o = new GenericModel();
   return {
     sum: o.sum,
+    isLoading: o.isLoading,
     list: o.list
   };
 };
@@ -93,10 +104,12 @@ const initWithMethodsGenericModel = () => {
   const o = new GenericModel();
   return {
     sum: o.sum,
+    isLoading: o.isLoading,
     list: o.list,
     refreshSum: o.refreshSum,
     addItems: o.addItems,
-    inc: o.inc
+    inc: o.inc,
+    testLoading: o.testLoading
   };
 };
 
@@ -134,6 +147,31 @@ export class RGenericModel {
       if (this._dispatch) {
         this._dispatch({
           type: GenericModelEnums.GenericModel_sum,
+          payload: value
+        });
+      }
+    }
+  }
+  get isLoading(): {
+    [key: string]: boolean;
+  } {
+    if (this._getState) {
+      return this._getState().GenericModel.isLoading;
+    } else {
+      if (this._state) {
+        return this._state.isLoading;
+      }
+    }
+    throw "Invalid State in GenericModel_isLoading";
+  }
+  set isLoading(value: { [key: string]: boolean }) {
+    if (this._state && typeof value !== "undefined") {
+      this._state.isLoading = value;
+    } else {
+      // dispatch change for item isLoading
+      if (this._dispatch) {
+        this._dispatch({
+          type: GenericModelEnums.GenericModel_isLoading,
           payload: value
         });
       }
@@ -180,6 +218,7 @@ export class RGenericModel {
   }
   addItems<T extends Summable>(items: T[]) {
     if (this._state) {
+      console.log(this);
       this.list.addItems(items);
       this.refreshSum();
     } else {
@@ -212,10 +251,18 @@ export class RGenericModel {
       new RGenericModel(undefined, dispatcher, getState).inc();
     };
   }
+  async testLoading() {}
+
+  public static testLoading() {
+    return (dispatcher: any, getState: any) => {
+      new RGenericModel(undefined, dispatcher, getState).testLoading();
+    };
+  }
 }
 
 export const GenericModelEnums = {
   GenericModel_sum: "GenericModel_sum",
+  GenericModel_isLoading: "GenericModel_isLoading",
   GenericModel_list: "GenericModel_list",
   GenericModel_refreshSum: "GenericModel_refreshSum",
   GenericModel_addItems: "GenericModel_addItems",
@@ -230,6 +277,9 @@ export const GenericModelReducer = (
     switch (action.type) {
       case GenericModelEnums.GenericModel_sum:
         new RGenericModel(draft).sum = action.payload;
+        break;
+      case GenericModelEnums.GenericModel_isLoading:
+        new RGenericModel(draft).isLoading = action.payload;
         break;
       case GenericModelEnums.GenericModel_list:
         new RGenericModel(draft).list = action.payload;
@@ -246,9 +296,9 @@ export const GenericModelReducer = (
     }
   });
 };
-/***************************
- * React Context API test   *
- ***************************/
+/********************************
+ * React Context API component   *
+ ********************************/
 export const GenericModelContext = React.createContext<IProps>(
   initWithMethodsGenericModel()
 );
@@ -264,6 +314,7 @@ export class GenericModelProvider extends React.Component {
     this.refreshSum = this.refreshSum.bind(this);
     this.addItems = this.addItems.bind(this);
     this.inc = this.inc.bind(this);
+    this.testLoading = this.testLoading.bind(this);
     const devs = window["devToolsExtension"]
       ? window["devToolsExtension"]
       : null;
@@ -313,6 +364,19 @@ export class GenericModelProvider extends React.Component {
     }
     this.setStateSync(nextState);
   }
+  async testLoading() {
+    new RGenericModel(
+      undefined,
+      (action: any) => {
+        const nextState = GenericModelReducer(this.lastSetState, action);
+        if (this.__devTools) {
+          this.__devTools.send(action.type, nextState);
+        }
+        this.setStateSync(nextState);
+      },
+      () => ({ GenericModel: this.lastSetState })
+    ).testLoading();
+  }
   public render() {
     return (
       <GenericModelContext.Provider
@@ -320,7 +384,8 @@ export class GenericModelProvider extends React.Component {
           ...this.state,
           refreshSum: this.refreshSum,
           addItems: this.addItems,
-          inc: this.inc
+          inc: this.inc,
+          testLoading: this.testLoading
         }}
       >
         {" "}

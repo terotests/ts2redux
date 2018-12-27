@@ -10,7 +10,7 @@ var pieceDeclaration = function (color, rows) {
         var row = rows[i];
         cells[i] = new Array(row.length);
         for (var c = 0; c < row.length; c++) {
-            if (row.charAt(c) == ' ') {
+            if (row.charAt(c) == " ") {
                 cells[i][c] = { color: Colors.EMPTY };
             }
             else {
@@ -28,26 +28,16 @@ var pieceDeclaration = function (color, rows) {
 };
 /**
  * [' O '],
-*  ['OOO'],
-*  [' O ']
+ *  ['OOO'],
+ *  [' O ']
  */
 exports.createNewPiece = function (usingColor) {
     var items = [
-        pieceDeclaration(usingColor, ['xx',
-            'xx']),
-        pieceDeclaration(usingColor, ['   ',
-            'xxx',
-            ' x ']),
-        pieceDeclaration(usingColor, [' x ',
-            ' x ',
-            'xx ']),
-        pieceDeclaration(usingColor, [' x ',
-            ' x ',
-            ' xx']),
-        pieceDeclaration(usingColor, [' x  ',
-            ' x  ',
-            ' x  ',
-            ' x  ']),
+        pieceDeclaration(usingColor, ["xx", "xx"]),
+        pieceDeclaration(usingColor, ["   ", "xxx", " x "]),
+        pieceDeclaration(usingColor, [" x ", " x ", "xx "]),
+        pieceDeclaration(usingColor, [" x ", " x ", " xx"]),
+        pieceDeclaration(usingColor, [" x  ", " x  ", " x  ", " x  "])
     ];
     return items[Math.floor(Math.random() * items.length)];
 };
@@ -66,6 +56,8 @@ var TetrisModel = /** @class */ (function () {
         this.gameEnded = false;
         this.ticksPerMove = 10;
         this.tickCnt = 0;
+        this.dx = 0;
+        this.dy = 1;
     }
     TetrisModel.prototype.doesCollide = function (pieceX, pieceY, pieceCells) {
         var _this = this;
@@ -79,7 +71,7 @@ var TetrisModel = /** @class */ (function () {
                     collides = true;
                     return;
                 }
-                if (((pieceX + x) < 0) || ((pieceX + x) >= _this.cols)) {
+                if (pieceX + x < 0 || pieceX + x >= _this.cols) {
                     collides = true;
                     return;
                 }
@@ -94,7 +86,6 @@ var TetrisModel = /** @class */ (function () {
         });
         return collides;
     };
-    ;
     TetrisModel.prototype.tick = function () {
         this.tickCnt++;
         if (this.tickCnt >= this.ticksPerMove) {
@@ -140,7 +131,6 @@ var TetrisModel = /** @class */ (function () {
         }
         return res;
     };
-    ;
     TetrisModel.prototype.step = function () {
         if (this.gameOn) {
             if (!this.doesCollide(this.activePiece.x, this.activePiece.y + 1)) {

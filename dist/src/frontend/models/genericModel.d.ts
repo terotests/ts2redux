@@ -11,8 +11,12 @@ export declare class SomeList<T extends Summable> {
  */
 export declare class GenericModel {
     sum: number;
+    isLoading: {
+        [key: string]: boolean;
+    };
     list: SomeList<Summable>;
     refreshSum(): void;
     addItems<T extends Summable>(items: T[]): void;
     inc(): void;
+    testLoading(): Promise<void>;
 }

@@ -11,7 +11,7 @@ var __extends = (this && this.__extends) || (function () {
             ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
             function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
         return extendStatics(d, b);
-    }
+    };
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -86,6 +86,8 @@ var TetrisModel = /** @class */ (function () {
         this.gameEnded = false;
         this.ticksPerMove = 10;
         this.tickCnt = 0;
+        this.dx = 0;
+        this.dy = 1;
     }
     TetrisModel.prototype.doesCollide = function (pieceX, pieceY, pieceCells) {
         var _this = this;
@@ -264,7 +266,9 @@ exports.mapStateToProps = function (state) {
         gameOn: state.TetrisModel.gameOn,
         gameEnded: state.TetrisModel.gameEnded,
         ticksPerMove: state.TetrisModel.ticksPerMove,
-        tickCnt: state.TetrisModel.tickCnt
+        tickCnt: state.TetrisModel.tickCnt,
+        dx: state.TetrisModel.dx,
+        dy: state.TetrisModel.dy
     };
 };
 exports.mapDispatchToProps = function (dispatch) {
@@ -315,7 +319,9 @@ var initTetrisModel = function () {
         gameOn: o.gameOn,
         gameEnded: o.gameEnded,
         ticksPerMove: o.ticksPerMove,
-        tickCnt: o.tickCnt
+        tickCnt: o.tickCnt,
+        dx: o.dx,
+        dy: o.dy
     };
 };
 var initWithMethodsTetrisModel = function () {
@@ -332,6 +338,8 @@ var initWithMethodsTetrisModel = function () {
         gameEnded: o.gameEnded,
         ticksPerMove: o.ticksPerMove,
         tickCnt: o.tickCnt,
+        dx: o.dx,
+        dy: o.dy,
         tick: o.tick,
         left: o.left,
         right: o.right,
@@ -672,6 +680,64 @@ var RTetrisModel = /** @class */ (function () {
         enumerable: true,
         configurable: true
     });
+    Object.defineProperty(RTetrisModel.prototype, "dx", {
+        get: function () {
+            if (this._getState) {
+                return this._getState().TetrisModel.dx;
+            }
+            else {
+                if (this._state) {
+                    return this._state.dx;
+                }
+            }
+            throw "Invalid State in TetrisModel_dx";
+        },
+        set: function (value) {
+            if (this._state && typeof value !== "undefined") {
+                this._state.dx = value;
+            }
+            else {
+                // dispatch change for item dx
+                if (this._dispatch) {
+                    this._dispatch({
+                        type: exports.TetrisModelEnums.TetrisModel_dx,
+                        payload: value
+                    });
+                }
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(RTetrisModel.prototype, "dy", {
+        get: function () {
+            if (this._getState) {
+                return this._getState().TetrisModel.dy;
+            }
+            else {
+                if (this._state) {
+                    return this._state.dy;
+                }
+            }
+            throw "Invalid State in TetrisModel_dy";
+        },
+        set: function (value) {
+            if (this._state && typeof value !== "undefined") {
+                this._state.dy = value;
+            }
+            else {
+                // dispatch change for item dy
+                if (this._dispatch) {
+                    this._dispatch({
+                        type: exports.TetrisModelEnums.TetrisModel_dy,
+                        payload: value
+                    });
+                }
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
     RTetrisModel.prototype.doesCollide = function (pieceX, pieceY, pieceCells) {
         var _this = this;
         var collides = false;
@@ -962,6 +1028,8 @@ exports.TetrisModelEnums = {
     TetrisModel_gameEnded: "TetrisModel_gameEnded",
     TetrisModel_ticksPerMove: "TetrisModel_ticksPerMove",
     TetrisModel_tickCnt: "TetrisModel_tickCnt",
+    TetrisModel_dx: "TetrisModel_dx",
+    TetrisModel_dy: "TetrisModel_dy",
     TetrisModel_doesCollide: "TetrisModel_doesCollide",
     TetrisModel_tick: "TetrisModel_tick",
     TetrisModel_left: "TetrisModel_left",
@@ -1013,6 +1081,12 @@ exports.TetrisModelReducer = function (state, action) {
             case exports.TetrisModelEnums.TetrisModel_tickCnt:
                 new RTetrisModel(draft).tickCnt = action.payload;
                 break;
+            case exports.TetrisModelEnums.TetrisModel_dx:
+                new RTetrisModel(draft).dx = action.payload;
+                break;
+            case exports.TetrisModelEnums.TetrisModel_dy:
+                new RTetrisModel(draft).dy = action.payload;
+                break;
             case exports.TetrisModelEnums.TetrisModel_tick:
                 new RTetrisModel(draft).tick();
                 break;
@@ -1046,9 +1120,9 @@ exports.TetrisModelReducer = function (state, action) {
         }
     });
 };
-/***************************
- * React Context API test   *
- ***************************/
+/********************************
+ * React Context API component   *
+ ********************************/
 exports.TetrisModelContext = React.createContext(initWithMethodsTetrisModel());
 exports.TetrisModelConsumer = exports.TetrisModelContext.Consumer;
 var instanceCnt = 1;

@@ -137,6 +137,7 @@ function createProject(settings) {
                         }
                         sourceFile.getClasses().forEach(function (c) {
                             if (c.getJsDocs().filter(function (doc) { return doc.getTags().filter(function (tag) { return tag.getName() === 'redux'; }).length > 0; }).length > 0) {
+                                console.log('ts2redux: Transpiling ', sourceFile.getFilePath());
                                 var sourceDir = path.normalize(path.relative(process.cwd(), path.dirname(sourceFile.getFilePath())));
                                 var reducerFileName = sourceDir + reducerPath + c.getName() + '.tsx';
                                 var ng_1 = RFs.getFile(sourceDir + reducerPath, c.getName() + '.tsx').getWriter();
@@ -490,7 +491,7 @@ function createProject(settings) {
                                     // const ng = RFs.getFile(sourceDir + '/reducers/',  c.getName() + 'Ctx.tsx' ).getWriter()
                                     var ng = outer;
                                     // ng.raw(outer.getCode())
-                                    createComment(ng, 'React Context API test');
+                                    createComment(ng, 'React Context API component');
                                     // create context...
                                     ng.out("export const " + c.getName() + "Context = React.createContext<IProps>(initWithMethods" + c.getName() + "())", true);
                                     ng.out("export const " + c.getName() + "Consumer = " + c.getName() + "Context.Consumer", true);

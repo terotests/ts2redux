@@ -38,6 +38,8 @@ export declare class TetrisModel {
     gameEnded: boolean;
     ticksPerMove: number;
     tickCnt: number;
+    dx: number;
+    dy: number;
     private doesCollide;
     tick(): void;
     left(): void;
@@ -78,6 +80,8 @@ export interface ITetrisModel {
     gameEnded: boolean;
     ticksPerMove: number;
     tickCnt: number;
+    dx: number;
+    dy: number;
 }
 export declare type IContainerPropsState = ITetrisModel;
 export interface IProps extends IContainerPropsState, IContainerPropsMethods {
@@ -104,6 +108,8 @@ export declare class RTetrisModel {
     gameEnded: boolean;
     ticksPerMove: number;
     tickCnt: number;
+    dx: number;
+    dy: number;
     private doesCollide;
     tick(): void;
     static tick(): (dispatcher: any, getState: any) => void;
@@ -140,6 +146,8 @@ export declare const TetrisModelEnums: {
     TetrisModel_gameEnded: string;
     TetrisModel_ticksPerMove: string;
     TetrisModel_tickCnt: string;
+    TetrisModel_dx: string;
+    TetrisModel_dy: string;
     TetrisModel_doesCollide: string;
     TetrisModel_tick: string;
     TetrisModel_left: string;
@@ -155,11 +163,11 @@ export declare const TetrisModelEnums: {
     TetrisModel_start: string;
 };
 export declare const TetrisModelReducer: (state: ITetrisModel, action: any) => ITetrisModel;
-/***************************
- * React Context API test   *
- ***************************/
+/********************************
+ * React Context API component   *
+ ********************************/
 export declare const TetrisModelContext: React.Context<IProps>;
-export declare const TetrisModelConsumer: React.ExoticComponent<React.ConsumerProps<IProps>>;
+export declare const TetrisModelConsumer: React.ComponentType<React.ConsumerProps<IProps>>;
 export declare class TetrisModelProvider extends React.Component {
     state: ITetrisModel;
     lastSetState: ITetrisModel;

@@ -1,10 +1,9 @@
-
 /**
  * @redux true
  */
 class UIHelperModel {
-  showWasps = false
+  showWasps = false;
   toggle() {
-    this.showWasps = !this.showWasps
+    this.showWasps = !this.showWasps;
   }
 }

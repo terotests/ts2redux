@@ -44,11 +44,11 @@ export declare const IncModelEnums: {
     IncModel_decrement: string;
 };
 export declare const IncModelReducer: (state: IIncModel, action: any) => IIncModel;
-/***************************
- * React Context API test   *
- ***************************/
+/********************************
+ * React Context API component   *
+ ********************************/
 export declare const IncModelContext: React.Context<IProps>;
-export declare const IncModelConsumer: React.ExoticComponent<React.ConsumerProps<IProps>>;
+export declare const IncModelConsumer: React.ComponentType<React.ConsumerProps<IProps>>;
 export declare class IncModelProvider extends React.Component {
     state: IIncModel;
     lastSetState: IIncModel;

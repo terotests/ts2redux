@@ -17,10 +17,14 @@ export declare class SomeList<T extends Summable> {
  */
 export declare class GenericModel {
     sum: number;
+    isLoading: {
+        [key: string]: boolean;
+    };
     list: SomeList<Summable>;
     refreshSum(): void;
     addItems<T extends Summable>(items: T[]): void;
     inc(): void;
+    testLoading(): Promise<void>;
 }
 import { IState } from "./index";
 import * as React from "react";
@@ -28,9 +32,13 @@ export interface IContainerPropsMethods {
     refreshSum: () => any;
     addItems: <T extends Summable>(items: T[]) => any;
     inc: () => any;
+    testLoading: () => any;
 }
 export interface IGenericModel {
     sum: number;
+    isLoading: {
+        [key: string]: boolean;
+    };
     list: SomeList<Summable>;
 }
 export declare type IContainerPropsState = IGenericModel;
@@ -48,6 +56,9 @@ export declare class RGenericModel {
     private _getState?;
     constructor(state?: IGenericModel, dispatch?: (action: any) => void, getState?: () => any);
     sum: number;
+    isLoading: {
+        [key: string]: boolean;
+    };
     list: SomeList<Summable>;
     refreshSum(): void;
     static refreshSum(): (dispatcher: any, getState: any) => void;
@@ -55,20 +66,23 @@ export declare class RGenericModel {
     static addItems<T extends Summable>(items: T[]): (dispatcher: any, getState: any) => void;
     inc(): void;
     static inc(): (dispatcher: any, getState: any) => void;
+    testLoading(): Promise<void>;
+    static testLoading(): (dispatcher: any, getState: any) => void;
 }
 export declare const GenericModelEnums: {
     GenericModel_sum: string;
+    GenericModel_isLoading: string;
     GenericModel_list: string;
     GenericModel_refreshSum: string;
     GenericModel_addItems: string;
     GenericModel_inc: string;
 };
 export declare const GenericModelReducer: (state: IGenericModel, action: any) => IGenericModel;
-/***************************
- * React Context API test   *
- ***************************/
+/********************************
+ * React Context API component   *
+ ********************************/
 export declare const GenericModelContext: React.Context<IProps>;
-export declare const GenericModelConsumer: React.ExoticComponent<React.ConsumerProps<IProps>>;
+export declare const GenericModelConsumer: React.ComponentType<React.ConsumerProps<IProps>>;
 export declare class GenericModelProvider extends React.Component {
     state: IGenericModel;
     lastSetState: IGenericModel;
@@ -79,5 +93,6 @@ export declare class GenericModelProvider extends React.Component {
     refreshSum(): void;
     addItems<T extends Summable>(items: T[]): void;
     inc(): void;
+    testLoading(): Promise<void>;
     render(): JSX.Element;
 }

@@ -11,6 +11,7 @@ class UIHelperModel {
     this.showWasps = !this.showWasps;
   }
 }
+
 import * as immer from "immer";
 import { connect } from "react-redux";
 import { IState } from "./index";
@@ -133,9 +134,9 @@ export const UIHelperModelReducer = (
     }
   });
 };
-/***************************
- * React Context API test   *
- ***************************/
+/********************************
+ * React Context API component   *
+ ********************************/
 export const UIHelperModelContext = React.createContext<IProps>(
   initWithMethodsUIHelperModel()
 );

@@ -20,6 +20,7 @@ export class SomeList<T extends Summable> {
     this.items = [...this.items, ...items];
   }
 }
+
 /**
  * @redux true
  */
@@ -116,7 +117,7 @@ const initWithMethodsGenericModel = () => {
 /**
  * @generated true
  */
-export class RGenericModel {
+export class RGenericModel extends GenericModel {
   private _state?: IGenericModel;
   private _dispatch?: (action: any) => void;
   private _getState?: () => any;
@@ -125,6 +126,7 @@ export class RGenericModel {
     dispatch?: (action: any) => void,
     getState?: () => any
   ) {
+    super();
     this._state = state;
     this._dispatch = dispatch;
     this._getState = getState;

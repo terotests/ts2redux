@@ -22,7 +22,6 @@ export const AbstractTodoList = (props: Props) => {
         Set Title of List
       </button>
       <div>
-        <div>{props.state}</div>
         <div>{props.state === "ERROR" ? new String(props.stateError) : ""}</div>
         <PureList items={props.listToDisplay} />
       </div>

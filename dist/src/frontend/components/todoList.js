@@ -17,7 +17,6 @@ exports.AbstractTodoList = function (props) {
         React.createElement("button", { onClick: function () { return props.addLotOfItems(10000); } }, "Add 10000 items"),
         React.createElement("button", { onClick: function () { return props.setTitle("Jee" + Date.now()); } }, "Set Title of List"),
         React.createElement("div", null,
-            React.createElement("div", null, props.state),
             React.createElement("div", null, props.state === "ERROR" ? new String(props.stateError) : ""),
             React.createElement(PureList_1.PureList, { items: props.listToDisplay }))));
 };

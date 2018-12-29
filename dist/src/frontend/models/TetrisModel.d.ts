@@ -34,14 +34,14 @@ export declare class TetrisModel {
     tickCnt: number;
     dx: number;
     dy: number;
-    private doesCollide;
+    protected doesCollide(pieceX: number, pieceY: number, pieceCells?: Cell[][]): boolean;
     tick(): void;
     left(): void;
     right(): void;
     rotate(): void;
-    private rotateCells;
+    protected rotateCells(cells: Cell[][]): Cell[][];
     step(): void;
-    private pickNextColor;
+    protected pickNextColor(): string;
     masonPiece(): void;
     dropRows(): void;
     clearCells(): void;

@@ -355,11 +355,14 @@ var initWithMethodsTetrisModel = function () {
 /**
  * @generated true
  */
-var RTetrisModel = /** @class */ (function () {
+var RTetrisModel = /** @class */ (function (_super) {
+    __extends(RTetrisModel, _super);
     function RTetrisModel(state, dispatch, getState) {
-        this._state = state;
-        this._dispatch = dispatch;
-        this._getState = getState;
+        var _this = _super.call(this) || this;
+        _this._state = state;
+        _this._dispatch = dispatch;
+        _this._getState = getState;
+        return _this;
     }
     Object.defineProperty(RTetrisModel.prototype, "useColors", {
         get: function () {
@@ -1014,7 +1017,7 @@ var RTetrisModel = /** @class */ (function () {
         };
     };
     return RTetrisModel;
-}());
+}(TetrisModel));
 exports.RTetrisModel = RTetrisModel;
 exports.TetrisModelEnums = {
     TetrisModel_useColors: "TetrisModel_useColors",

@@ -78,7 +78,7 @@ export class TetrisModel {
   dx = 0;
   dy = 1;
 
-  private doesCollide(
+  protected doesCollide(
     pieceX: number,
     pieceY: number,
     pieceCells?: Cell[][]
@@ -137,7 +137,7 @@ export class TetrisModel {
     }
   }
   // creates a new piece with rotated values
-  private rotateCells(cells: Cell[][]): Cell[][] {
+  protected rotateCells(cells: Cell[][]): Cell[][] {
     const res: Cell[][] = new Array(cells.length);
     for (let j = 0; j < cells.length; j++) {
       res[j] = new Array(cells[j].length);
@@ -175,7 +175,7 @@ export class TetrisModel {
     }
   }
 
-  private pickNextColor(): string {
+  protected pickNextColor(): string {
     this.lastUsedColor++;
     if (this.lastUsedColor >= this.useColors.length) {
       this.lastUsedColor = 0;
@@ -388,7 +388,7 @@ const initWithMethodsTetrisModel = () => {
 /**
  * @generated true
  */
-export class RTetrisModel {
+export class RTetrisModel extends TetrisModel {
   private _state?: ITetrisModel;
   private _dispatch?: (action: any) => void;
   private _getState?: () => any;
@@ -397,6 +397,7 @@ export class RTetrisModel {
     dispatch?: (action: any) => void,
     getState?: () => any
   ) {
+    super();
     this._state = state;
     this._dispatch = dispatch;
     this._getState = getState;
@@ -701,7 +702,7 @@ export class RTetrisModel {
     }
   }
 
-  private doesCollide(
+  protected doesCollide(
     pieceX: number,
     pieceY: number,
     pieceCells?: Cell[][]
@@ -807,7 +808,7 @@ export class RTetrisModel {
     };
   }
   // creates a new piece with rotated values
-  private rotateCells(cells: Cell[][]): Cell[][] {
+  protected rotateCells(cells: Cell[][]): Cell[][] {
     const res: Cell[][] = new Array(cells.length);
     for (let j = 0; j < cells.length; j++) {
       res[j] = new Array(cells[j].length);
@@ -855,7 +856,7 @@ export class RTetrisModel {
       new RTetrisModel(undefined, dispatcher, getState).step();
     };
   }
-  private pickNextColor(): string {
+  protected pickNextColor(): string {
     this.lastUsedColor++;
     if (this.lastUsedColor >= this.useColors.length) {
       this.lastUsedColor = 0;

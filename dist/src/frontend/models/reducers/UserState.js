@@ -140,11 +140,14 @@ var initWithMethodsUserState = function () {
 /**
  * @generated true
  */
-var RUserState = /** @class */ (function () {
+var RUserState = /** @class */ (function (_super) {
+    __extends(RUserState, _super);
     function RUserState(state, dispatch, getState) {
-        this._state = state;
-        this._dispatch = dispatch;
-        this._getState = getState;
+        var _this = _super.call(this) || this;
+        _this._state = state;
+        _this._dispatch = dispatch;
+        _this._getState = getState;
+        return _this;
     }
     Object.defineProperty(RUserState.prototype, "logged", {
         get: function () {
@@ -330,7 +333,7 @@ var RUserState = /** @class */ (function () {
         };
     };
     return RUserState;
-}());
+}(UserState));
 exports.RUserState = RUserState;
 exports.UserStateEnums = {
     UserState_logged: "UserState_logged",

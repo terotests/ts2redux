@@ -359,7 +359,7 @@ const initWithMethodsTestModel = () => {
 /**
  * @generated true
  */
-export class RTestModel {
+export class RTestModel extends TestModel {
   private _state?: ITestModel;
   private _dispatch?: (action: any) => void;
   private _getState?: () => any;
@@ -368,6 +368,7 @@ export class RTestModel {
     dispatch?: (action: any) => void,
     getState?: () => any
   ) {
+    super();
     this._state = state;
     this._dispatch = dispatch;
     this._getState = getState;

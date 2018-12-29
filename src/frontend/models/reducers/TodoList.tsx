@@ -7,6 +7,7 @@
 
 import axios from "axios";
 import { TodoListItem } from "../interfaces";
+import { loadables, loadable, LoadableType } from "../loadables";
 
 export type TaskState = "UNDEFINED" | "RUNNING" | "LOADED" | "ERROR";
 export enum SortOrder {
@@ -19,10 +20,48 @@ const sortFn = (order: SortOrder) => (a: TodoListItem, b: TodoListItem) => {
   return b.id - a.id;
 };
 
+/*
+async function getItems2<
+  T extends { [K in keyof T]: R } & { [K2 in keyof T]: TaskState },
+  R,
+  K extends keyof T,
+  K2 extends keyof T
+>(obj: T, key: K, stateKey: K2) {
+  console.log("async ext getItems2 called...");
+  if (obj[stateKey] === "RUNNING") return;
+  try {
+    obj[stateKey] = "RUNNING";
+    obj[key] = (await axios.get(
+      "https://jsonplaceholder.typicode.com/todos"
+    )).data;
+    obj[stateKey] = "LOADED";
+  } catch (e) {
+    obj[stateKey] = "ERROR";
+  }
+}
+*/
+
+/*
+async function getItems(obj: TodoList) {
+  console.log("async ext getItems called...");
+  if (obj.state === "RUNNING") return;
+  try {
+    obj.state = "RUNNING";
+    obj.items = (await axios.get(
+      "https://jsonplaceholder.typicode.com/todos"
+    )).data;
+    obj.state = "LOADED";
+  } catch (e) {
+    obj.state = "ERROR";
+    obj.stateError = e;
+  }
+}
+*/
+
 /**
  * @redux true
  */
-export class TodoList {
+export class TodoList extends loadables {
   items: TodoListItem[] = [];
   state: TaskState = "UNDEFINED";
   stateError: any;
@@ -39,7 +78,7 @@ export class TodoList {
       .slice(this.listStart, this.listStart + this.listPageLength);
   }
 
-  private findMaxId(): number {
+  protected findMaxId(): number {
     let max = 0;
     this.items.forEach(item => {
       if (item.id > max) max = item.id;
@@ -91,17 +130,13 @@ export class TodoList {
    * Fetch items from json placeholder service
    */
   async getItems() {
-    if (this.state === "RUNNING") return;
-    try {
-      this.state = "RUNNING";
-      this.items = (await axios.get(
-        "https://jsonplaceholder.typicode.com/todos"
-      )).data;
-      this.state = "LOADED";
-    } catch (e) {
-      this.state = "ERROR";
-      this.stateError = e;
-    }
+    await this.loadItems(
+      this,
+      "items",
+      async () =>
+        (await axios.get("https://jsonplaceholder.typicode.com/todos")).data,
+      items => (this.items = items)
+    );
   }
 }
 
@@ -123,6 +158,25 @@ export interface IContainerPropsMethods {
   setTitle: (value: string) => any;
   addLotOfItems: (cnt: number) => any;
   getItems: () => any;
+  initState: (name: string) => any;
+  setLoadState: (
+    opts: {
+      name: string;
+      state: TaskState;
+    }
+  ) => any;
+  setData: (
+    opts: {
+      name: string;
+      data: any;
+    }
+  ) => any;
+  setError: (
+    opts: {
+      name: string;
+      err: any;
+    }
+  ) => any;
 }
 export interface ITodoList {
   items: TodoListItem[];
@@ -132,6 +186,7 @@ export interface ITodoList {
   listStart: number;
   listPageLength: number;
   listTitle: string;
+  loadables: LoadableType;
 }
 export const itemsSelectorFn = (state: ITodoList): TodoListItem[] =>
   state.items;
@@ -145,6 +200,8 @@ export const listPageLengthSelectorFn = (state: ITodoList): number =>
   state.listPageLength;
 export const listTitleSelectorFn = (state: ITodoList): string =>
   state.listTitle;
+export const loadablesSelectorFn = (state: ITodoList): LoadableType =>
+  state.loadables;
 export const listToDisplaySelectorFnCreator = () =>
   createSelector(
     [
@@ -177,6 +234,7 @@ export const mapStateToProps = (state: IState): IContainerPropsState => {
     listStart: state.TodoList.listStart,
     listPageLength: state.TodoList.listPageLength,
     listTitle: state.TodoList.listTitle,
+    loadables: state.TodoList.loadables,
     listToDisplay: listToDisplaySelector(state.TodoList)
   };
 };
@@ -214,6 +272,18 @@ export const mapDispatchToProps = (dispatch: any): IContainerPropsMethods => {
     },
     getItems: () => {
       return dispatch(RTodoList.getItems());
+    },
+    initState: (name: string) => {
+      return dispatch(RTodoList.initState(name));
+    },
+    setLoadState: (opts: { name: string; state: TaskState }) => {
+      return dispatch(RTodoList.setLoadState(opts));
+    },
+    setData: (opts: { name: string; data: any }) => {
+      return dispatch(RTodoList.setData(opts));
+    },
+    setError: (opts: { name: string; err: any }) => {
+      return dispatch(RTodoList.setError(opts));
     }
   };
 };
@@ -231,7 +301,8 @@ const initTodoList = () => {
     sortOrder: o.sortOrder,
     listStart: o.listStart,
     listPageLength: o.listPageLength,
-    listTitle: o.listTitle
+    listTitle: o.listTitle,
+    loadables: o.loadables
   };
 };
 const initWithMethodsTodoList = () => {
@@ -244,6 +315,7 @@ const initWithMethodsTodoList = () => {
     listStart: o.listStart,
     listPageLength: o.listPageLength,
     listTitle: o.listTitle,
+    loadables: o.loadables,
     nextPage: o.nextPage,
     prevPage: o.prevPage,
     toggleSortOrder: o.toggleSortOrder,
@@ -255,6 +327,10 @@ const initWithMethodsTodoList = () => {
     setTitle: o.setTitle,
     addLotOfItems: o.addLotOfItems,
     getItems: o.getItems,
+    initState: o.initState,
+    setLoadState: o.setLoadState,
+    setData: o.setData,
+    setError: o.setError,
     listToDisplay: o.listToDisplay
   };
 };
@@ -262,7 +338,7 @@ const initWithMethodsTodoList = () => {
 /**
  * @generated true
  */
-export class RTodoList {
+export class RTodoList extends TodoList {
   private _state?: ITodoList;
   private _dispatch?: (action: any) => void;
   private _getState?: () => any;
@@ -271,6 +347,7 @@ export class RTodoList {
     dispatch?: (action: any) => void,
     getState?: () => any
   ) {
+    super();
     this._state = state;
     this._dispatch = dispatch;
     this._getState = getState;
@@ -430,8 +507,31 @@ export class RTodoList {
       }
     }
   }
+  get loadables(): LoadableType {
+    if (this._getState) {
+      return this._getState().TodoList.loadables;
+    } else {
+      if (this._state) {
+        return this._state.loadables;
+      }
+    }
+    throw "Invalid State in TodoList_loadables";
+  }
+  set loadables(value: LoadableType) {
+    if (this._state && typeof value !== "undefined") {
+      this._state.loadables = value;
+    } else {
+      // dispatch change for item loadables
+      if (this._dispatch) {
+        this._dispatch({
+          type: TodoListEnums.TodoList_loadables,
+          payload: value
+        });
+      }
+    }
+  }
 
-  private findMaxId(): number {
+  protected findMaxId(): number {
     let max = 0;
     this.items.forEach(item => {
       if (item.id > max) max = item.id;
@@ -609,23 +709,121 @@ export class RTodoList {
    * Fetch items from json placeholder service
    */
   async getItems() {
-    if (this.state === "RUNNING") return;
-    try {
-      this.state = "RUNNING";
-      this.items = (await axios.get(
-        "https://jsonplaceholder.typicode.com/todos"
-      )).data;
-      this.state = "LOADED";
-    } catch (e) {
-      this.state = "ERROR";
-      this.stateError = e;
-    }
+    await this.loadItems(
+      this,
+      "items",
+      async () =>
+        (await axios.get("https://jsonplaceholder.typicode.com/todos")).data,
+      items => (this.items = items)
+    );
   }
 
   public static getItems() {
     return (dispatcher: any, getState: any) => {
       new RTodoList(undefined, dispatcher, getState).getItems();
     };
+  }
+  initState(name: string) {
+    if (this._state) {
+      if (!this.loadables[name]) {
+        this.loadables[name] = {
+          data: null,
+          state: "UNDEFINED",
+          stateError: null
+        };
+      }
+    } else {
+      if (this._dispatch) {
+        this._dispatch({
+          type: TodoListEnums.TodoList_initState,
+          payload: name
+        });
+      }
+    }
+  }
+
+  public static initState(name: string) {
+    return (dispatcher: any, getState: any) => {
+      new RTodoList(undefined, dispatcher, getState).initState(name);
+    };
+  }
+  setLoadState(opts: { name: string; state: TaskState }) {
+    if (this._state) {
+      if (!this.loadables[opts.name]) {
+        this.loadables[opts.name] = {
+          data: null,
+          state: "UNDEFINED",
+          stateError: null
+        };
+      }
+      this.loadables[opts.name].state = opts.state;
+    } else {
+      if (this._dispatch) {
+        this._dispatch({
+          type: TodoListEnums.TodoList_setLoadState,
+          payload: opts
+        });
+      }
+    }
+  }
+
+  public static setLoadState(opts: { name: string; state: TaskState }) {
+    return (dispatcher: any, getState: any) => {
+      new RTodoList(undefined, dispatcher, getState).setLoadState(opts);
+    };
+  }
+  setData(opts: { name: string; data: any }) {
+    if (this._state) {
+      this.loadables[opts.name].data = opts.data;
+    } else {
+      if (this._dispatch) {
+        this._dispatch({ type: TodoListEnums.TodoList_setData, payload: opts });
+      }
+    }
+  }
+
+  public static setData(opts: { name: string; data: any }) {
+    return (dispatcher: any, getState: any) => {
+      new RTodoList(undefined, dispatcher, getState).setData(opts);
+    };
+  }
+  setError(opts: { name: string; err: any }) {
+    if (this._state) {
+      this.loadables[opts.name].stateError = opts.err;
+    } else {
+      if (this._dispatch) {
+        this._dispatch({
+          type: TodoListEnums.TodoList_setError,
+          payload: opts
+        });
+      }
+    }
+  }
+
+  public static setError(opts: { name: string; err: any }) {
+    return (dispatcher: any, getState: any) => {
+      new RTodoList(undefined, dispatcher, getState).setError(opts);
+    };
+  }
+  protected async loadItems<T extends loadable>(
+    state: T,
+    key: string,
+    loader: () => Promise<any>,
+    ready?: (data: any) => void
+  ) {
+    state.initState(key);
+    const obj = state.loadables[key];
+    if (obj.state === "RUNNING") return;
+    try {
+      state.setLoadState({ name: key, state: "RUNNING" });
+      const data = await loader();
+      // state.setData({ name: key, data });
+      ready(data);
+      state.setLoadState({ name: key, state: "LOADED" });
+    } catch (e) {
+      state.setLoadState({ name: key, state: "ERROR" });
+      state.setError({ name: key, err: e });
+    }
   }
 }
 
@@ -637,6 +835,7 @@ export const TodoListEnums = {
   TodoList_listStart: "TodoList_listStart",
   TodoList_listPageLength: "TodoList_listPageLength",
   TodoList_listTitle: "TodoList_listTitle",
+  TodoList_loadables: "TodoList_loadables",
   TodoList_findMaxId: "TodoList_findMaxId",
   TodoList_nextPage: "TodoList_nextPage",
   TodoList_prevPage: "TodoList_prevPage",
@@ -647,7 +846,11 @@ export const TodoListEnums = {
   TodoList_sortByTitle: "TodoList_sortByTitle",
   TodoList_sortByCompletion: "TodoList_sortByCompletion",
   TodoList_setTitle: "TodoList_setTitle",
-  TodoList_addLotOfItems: "TodoList_addLotOfItems"
+  TodoList_addLotOfItems: "TodoList_addLotOfItems",
+  TodoList_initState: "TodoList_initState",
+  TodoList_setLoadState: "TodoList_setLoadState",
+  TodoList_setData: "TodoList_setData",
+  TodoList_setError: "TodoList_setError"
 };
 
 export const TodoListReducer = (
@@ -676,6 +879,9 @@ export const TodoListReducer = (
         break;
       case TodoListEnums.TodoList_listTitle:
         new RTodoList(draft).listTitle = action.payload;
+        break;
+      case TodoListEnums.TodoList_loadables:
+        new RTodoList(draft).loadables = action.payload;
         break;
       case TodoListEnums.TodoList_nextPage:
         new RTodoList(draft).nextPage();
@@ -707,6 +913,18 @@ export const TodoListReducer = (
       case TodoListEnums.TodoList_addLotOfItems:
         new RTodoList(draft).addLotOfItems(action.payload);
         break;
+      case TodoListEnums.TodoList_initState:
+        new RTodoList(draft).initState(action.payload);
+        break;
+      case TodoListEnums.TodoList_setLoadState:
+        new RTodoList(draft).setLoadState(action.payload);
+        break;
+      case TodoListEnums.TodoList_setData:
+        new RTodoList(draft).setData(action.payload);
+        break;
+      case TodoListEnums.TodoList_setError:
+        new RTodoList(draft).setError(action.payload);
+        break;
     }
   });
 };
@@ -737,6 +955,10 @@ export class TodoListProvider extends React.Component {
     this.setTitle = this.setTitle.bind(this);
     this.addLotOfItems = this.addLotOfItems.bind(this);
     this.getItems = this.getItems.bind(this);
+    this.initState = this.initState.bind(this);
+    this.setLoadState = this.setLoadState.bind(this);
+    this.setData = this.setData.bind(this);
+    this.setError = this.setError.bind(this);
     this.__selectorlistToDisplay = listToDisplaySelectorFnCreator();
     const devs = window["devToolsExtension"]
       ? window["devToolsExtension"]
@@ -866,6 +1088,42 @@ export class TodoListProvider extends React.Component {
       () => ({ TodoList: this.lastSetState })
     ).getItems();
   }
+  initState(name: string) {
+    const nextState = immer.produce(this.state, draft =>
+      new RTodoList(draft).initState(name)
+    );
+    if (this.__devTools) {
+      this.__devTools.send("initState", nextState);
+    }
+    this.setStateSync(nextState);
+  }
+  setLoadState(opts: { name: string; state: TaskState }) {
+    const nextState = immer.produce(this.state, draft =>
+      new RTodoList(draft).setLoadState(opts)
+    );
+    if (this.__devTools) {
+      this.__devTools.send("setLoadState", nextState);
+    }
+    this.setStateSync(nextState);
+  }
+  setData(opts: { name: string; data: any }) {
+    const nextState = immer.produce(this.state, draft =>
+      new RTodoList(draft).setData(opts)
+    );
+    if (this.__devTools) {
+      this.__devTools.send("setData", nextState);
+    }
+    this.setStateSync(nextState);
+  }
+  setError(opts: { name: string; err: any }) {
+    const nextState = immer.produce(this.state, draft =>
+      new RTodoList(draft).setError(opts)
+    );
+    if (this.__devTools) {
+      this.__devTools.send("setError", nextState);
+    }
+    this.setStateSync(nextState);
+  }
   public render() {
     return (
       <TodoListContext.Provider
@@ -882,6 +1140,10 @@ export class TodoListProvider extends React.Component {
           setTitle: this.setTitle,
           addLotOfItems: this.addLotOfItems,
           getItems: this.getItems,
+          initState: this.initState,
+          setLoadState: this.setLoadState,
+          setData: this.setData,
+          setError: this.setError,
           listToDisplay: this.__selectorlistToDisplay(this.state)
         }}
       >

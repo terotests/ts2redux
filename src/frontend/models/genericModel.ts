@@ -13,6 +13,7 @@ export class SomeList<T extends Summable> {
     this.items = [...this.items, ...items];
   }
 }
+
 /**
  * @redux true
  */

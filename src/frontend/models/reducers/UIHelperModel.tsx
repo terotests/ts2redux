@@ -60,7 +60,7 @@ const initWithMethodsUIHelperModel = () => {
 /**
  * @generated true
  */
-export class RUIHelperModel {
+export class RUIHelperModel extends UIHelperModel {
   private _state?: IUIHelperModel;
   private _dispatch?: (action: any) => void;
   private _getState?: () => any;
@@ -69,6 +69,7 @@ export class RUIHelperModel {
     dispatch?: (action: any) => void,
     getState?: () => any
   ) {
+    super();
     this._state = state;
     this._dispatch = dispatch;
     this._getState = getState;

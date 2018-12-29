@@ -1,4 +1,5 @@
 import { TodoListItem } from "./interfaces";
+import { loadables } from "./loadables";
 export declare type TaskState = "UNDEFINED" | "RUNNING" | "LOADED" | "ERROR";
 export declare enum SortOrder {
     ASC = "asc",
@@ -7,7 +8,7 @@ export declare enum SortOrder {
 /**
  * @redux true
  */
-export declare class TodoList {
+export declare class TodoList extends loadables {
     items: TodoListItem[];
     state: TaskState;
     stateError: any;
@@ -16,7 +17,7 @@ export declare class TodoList {
     listPageLength: number;
     listTitle: string;
     readonly listToDisplay: TodoListItem[];
-    private findMaxId;
+    protected findMaxId(): number;
     nextPage(): void;
     prevPage(): void;
     toggleSortOrder(): void;

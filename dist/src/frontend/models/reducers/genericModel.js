@@ -159,11 +159,14 @@ var initWithMethodsGenericModel = function () {
 /**
  * @generated true
  */
-var RGenericModel = /** @class */ (function () {
+var RGenericModel = /** @class */ (function (_super) {
+    __extends(RGenericModel, _super);
     function RGenericModel(state, dispatch, getState) {
-        this._state = state;
-        this._dispatch = dispatch;
-        this._getState = getState;
+        var _this = _super.call(this) || this;
+        _this._state = state;
+        _this._dispatch = dispatch;
+        _this._getState = getState;
+        return _this;
     }
     Object.defineProperty(RGenericModel.prototype, "sum", {
         get: function () {
@@ -313,7 +316,7 @@ var RGenericModel = /** @class */ (function () {
         };
     };
     return RGenericModel;
-}());
+}(GenericModel));
 exports.RGenericModel = RGenericModel;
 exports.GenericModelEnums = {
     GenericModel_sum: "GenericModel_sum",

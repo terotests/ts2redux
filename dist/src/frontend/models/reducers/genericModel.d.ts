@@ -50,7 +50,7 @@ export declare const StateConnector: any;
 /**
  * @generated true
  */
-export declare class RGenericModel {
+export declare class RGenericModel extends GenericModel {
     private _state?;
     private _dispatch?;
     private _getState?;

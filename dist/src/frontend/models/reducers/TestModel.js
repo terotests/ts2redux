@@ -339,11 +339,14 @@ var initWithMethodsTestModel = function () {
 /**
  * @generated true
  */
-var RTestModel = /** @class */ (function () {
+var RTestModel = /** @class */ (function (_super) {
+    __extends(RTestModel, _super);
     function RTestModel(state, dispatch, getState) {
-        this._state = state;
-        this._dispatch = dispatch;
-        this._getState = getState;
+        var _this = _super.call(this) || this;
+        _this._state = state;
+        _this._dispatch = dispatch;
+        _this._getState = getState;
+        return _this;
     }
     Object.defineProperty(RTestModel.prototype, "items", {
         get: function () {
@@ -1058,7 +1061,7 @@ var RTestModel = /** @class */ (function () {
         };
     };
     return RTestModel;
-}());
+}(TestModel));
 exports.RTestModel = RTestModel;
 exports.TestModelEnums = {
     TestModel_items: "TestModel_items",

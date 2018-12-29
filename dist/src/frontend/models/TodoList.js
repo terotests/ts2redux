@@ -1,4 +1,17 @@
 "use strict";
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
@@ -36,6 +49,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var axios_1 = require("axios");
+var loadables_1 = require("./loadables");
 var SortOrder;
 (function (SortOrder) {
     SortOrder["ASC"] = "asc";
@@ -46,17 +60,56 @@ var sortFn = function (order) { return function (a, b) {
         return a.id - b.id;
     return b.id - a.id;
 }; };
+/*
+async function getItems2<
+  T extends { [K in keyof T]: R } & { [K2 in keyof T]: TaskState },
+  R,
+  K extends keyof T,
+  K2 extends keyof T
+>(obj: T, key: K, stateKey: K2) {
+  console.log("async ext getItems2 called...");
+  if (obj[stateKey] === "RUNNING") return;
+  try {
+    obj[stateKey] = "RUNNING";
+    obj[key] = (await axios.get(
+      "https://jsonplaceholder.typicode.com/todos"
+    )).data;
+    obj[stateKey] = "LOADED";
+  } catch (e) {
+    obj[stateKey] = "ERROR";
+  }
+}
+*/
+/*
+async function getItems(obj: TodoList) {
+  console.log("async ext getItems called...");
+  if (obj.state === "RUNNING") return;
+  try {
+    obj.state = "RUNNING";
+    obj.items = (await axios.get(
+      "https://jsonplaceholder.typicode.com/todos"
+    )).data;
+    obj.state = "LOADED";
+  } catch (e) {
+    obj.state = "ERROR";
+    obj.stateError = e;
+  }
+}
+*/
 /**
  * @redux true
  */
-var TodoList = /** @class */ (function () {
+var TodoList = /** @class */ (function (_super) {
+    __extends(TodoList, _super);
     function TodoList() {
-        this.items = [];
-        this.state = "UNDEFINED";
-        this.sortOrder = SortOrder.ASC;
-        this.listStart = 0;
-        this.listPageLength = 10;
-        this.listTitle = "Title of TODO -list";
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.items = [];
+        _this.state = "UNDEFINED";
+        _this.sortOrder = SortOrder.ASC;
+        _this.listStart = 0;
+        _this.listPageLength = 10;
+        _this.listTitle = "Title of TODO -list";
+        return _this;
     }
     Object.defineProperty(TodoList.prototype, "listToDisplay", {
         // Example of memoized list using reselect
@@ -124,33 +177,23 @@ var TodoList = /** @class */ (function () {
      */
     TodoList.prototype.getItems = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var _a, e_1;
-            return __generator(this, function (_b) {
-                switch (_b.label) {
-                    case 0:
-                        if (this.state === "RUNNING")
-                            return [2 /*return*/];
-                        _b.label = 1;
+            var _this = this;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.loadItems(this, "items", function () { return __awaiter(_this, void 0, void 0, function () { return __generator(this, function (_a) {
+                            switch (_a.label) {
+                                case 0: return [4 /*yield*/, axios_1.default.get("https://jsonplaceholder.typicode.com/todos")];
+                                case 1: return [2 /*return*/, (_a.sent()).data];
+                            }
+                        }); }); }, function (items) { return (_this.items = items); })];
                     case 1:
-                        _b.trys.push([1, 3, , 4]);
-                        this.state = "RUNNING";
-                        _a = this;
-                        return [4 /*yield*/, axios_1.default.get("https://jsonplaceholder.typicode.com/todos")];
-                    case 2:
-                        _a.items = (_b.sent()).data;
-                        this.state = "LOADED";
-                        return [3 /*break*/, 4];
-                    case 3:
-                        e_1 = _b.sent();
-                        this.state = "ERROR";
-                        this.stateError = e_1;
-                        return [3 /*break*/, 4];
-                    case 4: return [2 /*return*/];
+                        _a.sent();
+                        return [2 /*return*/];
                 }
             });
         });
     };
     return TodoList;
-}());
+}(loadables_1.loadables));
 exports.TodoList = TodoList;
 //# sourceMappingURL=TodoList.js.map

@@ -71,11 +71,14 @@ var initWithMethodsUIHelperModel = function () {
 /**
  * @generated true
  */
-var RUIHelperModel = /** @class */ (function () {
+var RUIHelperModel = /** @class */ (function (_super) {
+    __extends(RUIHelperModel, _super);
     function RUIHelperModel(state, dispatch, getState) {
-        this._state = state;
-        this._dispatch = dispatch;
-        this._getState = getState;
+        var _this = _super.call(this) || this;
+        _this._state = state;
+        _this._dispatch = dispatch;
+        _this._getState = getState;
+        return _this;
     }
     Object.defineProperty(RUIHelperModel.prototype, "showWasps", {
         get: function () {
@@ -122,7 +125,7 @@ var RUIHelperModel = /** @class */ (function () {
         };
     };
     return RUIHelperModel;
-}());
+}(UIHelperModel));
 exports.RUIHelperModel = RUIHelperModel;
 exports.UIHelperModelEnums = {
     UIHelperModel_showWasps: "UIHelperModel_showWasps",

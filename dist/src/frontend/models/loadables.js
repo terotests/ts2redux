@@ -1,17 +1,4 @@
 "use strict";
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
@@ -48,45 +35,73 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var axios_1 = require("axios");
-var itemStorage = /** @class */ (function () {
-    function itemStorage() {
-        this.items = [];
+var loadables = /** @class */ (function () {
+    function loadables() {
+        this.loadables = {
+            items: {
+                data: null,
+                state: "UNDEFINED",
+                stateError: null
+            }
+        };
     }
-    return itemStorage;
-}());
-exports.itemStorage = itemStorage;
-/**
- * @redux true
- */
-var SimpleModel = /** @class */ (function (_super) {
-    __extends(SimpleModel, _super);
-    function SimpleModel() {
-        return _super !== null && _super.apply(this, arguments) || this;
-    }
-    SimpleModel.prototype.getItems = function () {
+    loadables.prototype.initState = function (name) {
+        if (!this.loadables[name]) {
+            this.loadables[name] = {
+                data: null,
+                state: "UNDEFINED",
+                stateError: null
+            };
+        }
+    };
+    loadables.prototype.setLoadState = function (opts) {
+        if (!this.loadables[opts.name]) {
+            this.loadables[opts.name] = {
+                data: null,
+                state: "UNDEFINED",
+                stateError: null
+            };
+        }
+        this.loadables[opts.name].state = opts.state;
+    };
+    loadables.prototype.setData = function (opts) {
+        this.loadables[opts.name].data = opts.data;
+    };
+    loadables.prototype.setError = function (opts) {
+        this.loadables[opts.name].stateError = opts.err;
+    };
+    loadables.prototype.loadItems = function (state, key, loader, ready) {
         return __awaiter(this, void 0, void 0, function () {
-            var _a;
-            return __generator(this, function (_b) {
-                switch (_b.label) {
+            var obj, data, e_1;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
                     case 0:
-                        _a = this;
-                        return [4 /*yield*/, axios_1.default.get("https://jsonplaceholder.typicode.com/todos")];
+                        state.initState(key);
+                        obj = state.loadables[key];
+                        if (obj.state === "RUNNING")
+                            return [2 /*return*/];
+                        _a.label = 1;
                     case 1:
-                        _a.items = (_b.sent()).data;
-                        return [2 /*return*/];
+                        _a.trys.push([1, 3, , 4]);
+                        state.setLoadState({ name: key, state: "RUNNING" });
+                        return [4 /*yield*/, loader()];
+                    case 2:
+                        data = _a.sent();
+                        // state.setData({ name: key, data });
+                        ready(data);
+                        state.setLoadState({ name: key, state: "LOADED" });
+                        return [3 /*break*/, 4];
+                    case 3:
+                        e_1 = _a.sent();
+                        state.setLoadState({ name: key, state: "ERROR" });
+                        state.setError({ name: key, err: e_1 });
+                        return [3 /*break*/, 4];
+                    case 4: return [2 /*return*/];
                 }
             });
         });
     };
-    Object.defineProperty(SimpleModel.prototype, "myItems", {
-        get: function () {
-            return this.items;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    return SimpleModel;
-}(itemStorage));
-exports.SimpleModel = SimpleModel;
-//# sourceMappingURL=SimpleModel.js.map
+    return loadables;
+}());
+exports.loadables = loadables;
+//# sourceMappingURL=loadables.js.map

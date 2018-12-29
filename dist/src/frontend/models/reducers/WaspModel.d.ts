@@ -13,6 +13,26 @@ export interface Wasp {
     steps?: number;
     color?: string;
 }
+/**
+ * @redux true
+ */
+declare class WaspModel {
+    speed: number;
+    lastId: number;
+    wasps: {
+        [id: number]: Wasp;
+    };
+    addWasp(pos: {
+        x: number;
+        y: number;
+    }): void;
+    incSpeed(value: number): void;
+    setColor(value: {
+        waspId: number;
+        colorValue: string;
+    }): void;
+    step(): void;
+}
 import { IState } from "./index";
 import * as React from "react";
 export interface IContainerPropsMethods {
@@ -43,7 +63,7 @@ export declare const StateConnector: any;
 /**
  * @generated true
  */
-export declare class RWaspModel {
+export declare class RWaspModel extends WaspModel {
     private _state?;
     private _dispatch?;
     private _getState?;
@@ -108,3 +128,4 @@ export declare class WaspModelProvider extends React.Component {
     step(): void;
     render(): JSX.Element;
 }
+export {};

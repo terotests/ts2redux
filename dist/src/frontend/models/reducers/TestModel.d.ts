@@ -24,6 +24,54 @@ export declare enum TaskState {
 export interface TestObj {
     name: string;
 }
+/**
+ * @redux true
+ */
+declare class TestModel {
+    items: ShopCartItem[];
+    maxId: number;
+    maybeString?: string;
+    str_init_test: string;
+    bool_init_test: boolean;
+    bool4: boolean;
+    obj_init_test: TestObj;
+    rand_init_test: number;
+    arr_init_test: number[];
+    arr_init_test2: (string | number)[];
+    obj_literal_test: {
+        cnt: number;
+    };
+    cartId: number;
+    shopState: TaskState;
+    carts: {
+        [key: string]: ShopCart;
+    };
+    userMessage: string;
+    testObj?: TestObj;
+    setUserMessage(value: string): void;
+    add(item: ShopCartItem): void;
+    removeFirst(): void;
+    sort(): void;
+    /**
+     * Creates a new shopping cart
+     */
+    addCart(): void;
+    addCartSync(): void;
+    addToCart(adding: {
+        cartId: string;
+        item: ShopCartItem;
+    }): void;
+    setCartNewItem(adding: {
+        cartId: string;
+        name: string;
+    }): void;
+    addToCartRandom(): void;
+    renameLast(newName: string): void;
+    createItem(someName: string): Promise<void>;
+    addOneFriend(name: any): Promise<void>;
+    fillSomeFriends(): Promise<void>;
+    ChangeLastItem(): Promise<void>;
+}
 import { IState } from "./index";
 import * as React from "react";
 export interface IContainerPropsMethods {
@@ -77,7 +125,7 @@ export declare const StateConnector: any;
 /**
  * @generated true
  */
-export declare class RTestModel {
+export declare class RTestModel extends TestModel {
     private _state?;
     private _dispatch?;
     private _getState?;
@@ -204,3 +252,4 @@ export declare class TestModelProvider extends React.Component {
     ChangeLastItem(): Promise<void>;
     render(): JSX.Element;
 }
+export {};

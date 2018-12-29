@@ -5,6 +5,7 @@
  *                                                                               *
  ********************************************************************************/
 import { TodoListItem } from "../interfaces";
+import { loadables, loadable, LoadableType } from "../loadables";
 export declare type TaskState = "UNDEFINED" | "RUNNING" | "LOADED" | "ERROR";
 export declare enum SortOrder {
     ASC = "asc",
@@ -13,7 +14,7 @@ export declare enum SortOrder {
 /**
  * @redux true
  */
-export declare class TodoList {
+export declare class TodoList extends loadables {
     items: TodoListItem[];
     state: TaskState;
     stateError: any;
@@ -22,7 +23,7 @@ export declare class TodoList {
     listPageLength: number;
     listTitle: string;
     readonly listToDisplay: TodoListItem[];
-    private findMaxId;
+    protected findMaxId(): number;
     nextPage(): void;
     prevPage(): void;
     toggleSortOrder(): void;
@@ -52,6 +53,19 @@ export interface IContainerPropsMethods {
     setTitle: (value: string) => any;
     addLotOfItems: (cnt: number) => any;
     getItems: () => any;
+    initState: (name: string) => any;
+    setLoadState: (opts: {
+        name: string;
+        state: TaskState;
+    }) => any;
+    setData: (opts: {
+        name: string;
+        data: any;
+    }) => any;
+    setError: (opts: {
+        name: string;
+        err: any;
+    }) => any;
 }
 export interface ITodoList {
     items: TodoListItem[];
@@ -61,14 +75,16 @@ export interface ITodoList {
     listStart: number;
     listPageLength: number;
     listTitle: string;
+    loadables: LoadableType;
 }
 export declare const itemsSelectorFn: (state: ITodoList) => TodoListItem[];
-export declare const stateSelectorFn: (state: ITodoList) => TaskState;
+export declare const stateSelectorFn: (state: ITodoList) => import("../loadables").TaskState;
 export declare const stateErrorSelectorFn: (state: ITodoList) => any;
 export declare const sortOrderSelectorFn: (state: ITodoList) => SortOrder;
 export declare const listStartSelectorFn: (state: ITodoList) => number;
 export declare const listPageLengthSelectorFn: (state: ITodoList) => number;
 export declare const listTitleSelectorFn: (state: ITodoList) => string;
+export declare const loadablesSelectorFn: (state: ITodoList) => LoadableType;
 export declare const listToDisplaySelectorFnCreator: () => import("reselect").OutputSelector<ITodoList, TodoListItem[], (res1: TodoListItem[], res2: SortOrder, res3: number, res4: number) => TodoListItem[]>;
 export declare const listToDisplaySelector: import("reselect").OutputSelector<ITodoList, TodoListItem[], (res1: TodoListItem[], res2: SortOrder, res3: number, res4: number) => TodoListItem[]>;
 export interface IContainerPropsState extends ITodoList {
@@ -82,7 +98,7 @@ export declare const StateConnector: any;
 /**
  * @generated true
  */
-export declare class RTodoList {
+export declare class RTodoList extends TodoList {
     private _state?;
     private _dispatch?;
     private _getState?;
@@ -94,7 +110,8 @@ export declare class RTodoList {
     listStart: number;
     listPageLength: number;
     listTitle: string;
-    private findMaxId;
+    loadables: LoadableType;
+    protected findMaxId(): number;
     nextPage(): void;
     static nextPage(): (dispatcher: any, getState: any) => void;
     prevPage(): void;
@@ -120,6 +137,33 @@ export declare class RTodoList {
      */
     getItems(): Promise<void>;
     static getItems(): (dispatcher: any, getState: any) => void;
+    initState(name: string): void;
+    static initState(name: string): (dispatcher: any, getState: any) => void;
+    setLoadState(opts: {
+        name: string;
+        state: TaskState;
+    }): void;
+    static setLoadState(opts: {
+        name: string;
+        state: TaskState;
+    }): (dispatcher: any, getState: any) => void;
+    setData(opts: {
+        name: string;
+        data: any;
+    }): void;
+    static setData(opts: {
+        name: string;
+        data: any;
+    }): (dispatcher: any, getState: any) => void;
+    setError(opts: {
+        name: string;
+        err: any;
+    }): void;
+    static setError(opts: {
+        name: string;
+        err: any;
+    }): (dispatcher: any, getState: any) => void;
+    protected loadItems<T extends loadable>(state: T, key: string, loader: () => Promise<any>, ready?: (data: any) => void): Promise<void>;
 }
 export declare const TodoListEnums: {
     TodoList_items: string;
@@ -129,6 +173,7 @@ export declare const TodoListEnums: {
     TodoList_listStart: string;
     TodoList_listPageLength: string;
     TodoList_listTitle: string;
+    TodoList_loadables: string;
     TodoList_findMaxId: string;
     TodoList_nextPage: string;
     TodoList_prevPage: string;
@@ -140,6 +185,10 @@ export declare const TodoListEnums: {
     TodoList_sortByCompletion: string;
     TodoList_setTitle: string;
     TodoList_addLotOfItems: string;
+    TodoList_initState: string;
+    TodoList_setLoadState: string;
+    TodoList_setData: string;
+    TodoList_setError: string;
 };
 export declare const TodoListReducer: (state: ITodoList, action: any) => ITodoList;
 /********************************
@@ -169,5 +218,18 @@ export declare class TodoListProvider extends React.Component {
      * Fetch items from json placeholder service
      */
     getItems(): Promise<void>;
+    initState(name: string): void;
+    setLoadState(opts: {
+        name: string;
+        state: TaskState;
+    }): void;
+    setData(opts: {
+        name: string;
+        data: any;
+    }): void;
+    setError(opts: {
+        name: string;
+        err: any;
+    }): void;
     render(): JSX.Element;
 }

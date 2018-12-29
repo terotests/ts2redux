@@ -71,7 +71,7 @@ export class TetrisModel {
   dx = 0;
   dy = 1;
 
-  private doesCollide(
+  protected doesCollide(
     pieceX: number,
     pieceY: number,
     pieceCells?: Cell[][]
@@ -130,7 +130,7 @@ export class TetrisModel {
     }
   }
   // creates a new piece with rotated values
-  private rotateCells(cells: Cell[][]): Cell[][] {
+  protected rotateCells(cells: Cell[][]): Cell[][] {
     const res: Cell[][] = new Array(cells.length);
     for (let j = 0; j < cells.length; j++) {
       res[j] = new Array(cells[j].length);
@@ -168,7 +168,7 @@ export class TetrisModel {
     }
   }
 
-  private pickNextColor(): string {
+  protected pickNextColor(): string {
     this.lastUsedColor++;
     if (this.lastUsedColor >= this.useColors.length) {
       this.lastUsedColor = 0;

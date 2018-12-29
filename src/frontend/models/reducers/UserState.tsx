@@ -99,7 +99,7 @@ const initWithMethodsUserState = () => {
 /**
  * @generated true
  */
-export class RUserState {
+export class RUserState extends UserState {
   private _state?: IUserState;
   private _dispatch?: (action: any) => void;
   private _getState?: () => any;
@@ -108,6 +108,7 @@ export class RUserState {
     dispatch?: (action: any) => void,
     getState?: () => any
   ) {
+    super();
     this._state = state;
     this._dispatch = dispatch;
     this._getState = getState;

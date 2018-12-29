@@ -142,11 +142,14 @@ var initWithMethodsWaspModel = function () {
 /**
  * @generated true
  */
-var RWaspModel = /** @class */ (function () {
+var RWaspModel = /** @class */ (function (_super) {
+    __extends(RWaspModel, _super);
     function RWaspModel(state, dispatch, getState) {
-        this._state = state;
-        this._dispatch = dispatch;
-        this._getState = getState;
+        var _this = _super.call(this) || this;
+        _this._state = state;
+        _this._dispatch = dispatch;
+        _this._getState = getState;
+        return _this;
     }
     Object.defineProperty(RWaspModel.prototype, "speed", {
         get: function () {
@@ -344,7 +347,7 @@ var RWaspModel = /** @class */ (function () {
         };
     };
     return RWaspModel;
-}());
+}(WaspModel));
 exports.RWaspModel = RWaspModel;
 exports.WaspModelEnums = {
     WaspModel_speed: "WaspModel_speed",

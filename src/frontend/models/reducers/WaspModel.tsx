@@ -163,7 +163,7 @@ const initWithMethodsWaspModel = () => {
 /**
  * @generated true
  */
-export class RWaspModel {
+export class RWaspModel extends WaspModel {
   private _state?: IWaspModel;
   private _dispatch?: (action: any) => void;
   private _getState?: () => any;
@@ -172,6 +172,7 @@ export class RWaspModel {
     dispatch?: (action: any) => void,
     getState?: () => any
   ) {
+    super();
     this._state = state;
     this._dispatch = dispatch;
     this._getState = getState;

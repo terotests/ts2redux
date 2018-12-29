@@ -7,11 +7,14 @@
 
 import axios from "axios";
 
+export class itemStorage {
+  items: any[] = [];
+}
+
 /**
  * @redux true
  */
-export class SimpleModel {
-  items: any[] = [];
+export class SimpleModel extends itemStorage {
   async getItems() {
     this.items = (await axios.get(
       "https://jsonplaceholder.typicode.com/todos"
@@ -86,7 +89,7 @@ const initWithMethodsSimpleModel = () => {
 /**
  * @generated true
  */
-export class RSimpleModel {
+export class RSimpleModel extends SimpleModel {
   private _state?: ISimpleModel;
   private _dispatch?: (action: any) => void;
   private _getState?: () => any;
@@ -95,6 +98,7 @@ export class RSimpleModel {
     dispatch?: (action: any) => void,
     getState?: () => any
   ) {
+    super();
     this._state = state;
     this._dispatch = dispatch;
     this._getState = getState;

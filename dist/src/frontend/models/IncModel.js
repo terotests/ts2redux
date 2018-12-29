@@ -1,14 +1,18 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+// separating code from the model
+function incMe(obj) {
+    obj.cnt++;
+}
 /**
  * @redux true
  */
-Object.defineProperty(exports, "__esModule", { value: true });
 var IncModel = /** @class */ (function () {
     function IncModel() {
         this.cnt = 0;
     }
     IncModel.prototype.increment = function () {
-        this.cnt++;
+        incMe(this);
     };
     IncModel.prototype.decrement = function () {
         this.cnt--;

@@ -36,7 +36,7 @@ exports.AbstractGeneric = function (props) {
 // This is the specialized version of the component
 exports.GenericRedux = container.StateConnector(exports.AbstractGeneric);
 
-},{"../models/reducers/GenericModel":13,"react":89}],2:[function(require,module,exports){
+},{"../models/reducers/GenericModel":14,"react":90}],2:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -71,7 +71,7 @@ var PureList = /** @class */ (function (_super) {
 }(React.PureComponent));
 exports.PureList = PureList;
 
-},{"react":89}],3:[function(require,module,exports){
+},{"react":90}],3:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var React = require("react");
@@ -86,7 +86,7 @@ exports.AbstractInc = function (props) {
 // This is the specialized version of the component
 exports.ReduxInc = container.StateConnector(exports.AbstractInc);
 
-},{"../models/reducers/IncModel":14,"react":89}],4:[function(require,module,exports){
+},{"../models/reducers/IncModel":15,"react":90}],4:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -192,7 +192,7 @@ exports.TetrisC = TetrisC;
 // This is the specialized version of the component
 exports.TetrisComponent = container.StateConnector(TetrisC);
 
-},{"../models/TetrisModel":11,"../models/reducers/TetrisModel":17,"react":89}],5:[function(require,module,exports){
+},{"../models/TetrisModel":11,"../models/reducers/TetrisModel":18,"react":90}],5:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -244,7 +244,7 @@ exports.WaspC = WaspC;
 // This is the specialized version of the component
 exports.WaspComponent = container.StateConnector(WaspC);
 
-},{"../models/reducers/WaspModel":21,"react":89}],6:[function(require,module,exports){
+},{"../models/reducers/WaspModel":22,"react":90}],6:[function(require,module,exports){
 "use strict";
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
@@ -307,7 +307,7 @@ var WaspContextComponent = /** @class */ (function (_super) {
 }(React.PureComponent));
 exports.WaspContextComponent = WaspContextComponent;
 
-},{"../models/reducers/WaspModel":21,"react":89}],7:[function(require,module,exports){
+},{"../models/reducers/WaspModel":22,"react":90}],7:[function(require,module,exports){
 "use strict";
 var __assign = (this && this.__assign) || function () {
     __assign = Object.assign || function(t) {
@@ -344,7 +344,7 @@ exports.StateConnector = react_redux_1.connect(function (state) { return (__assi
 // This is the specialized version of the component
 exports.CombinedStates = exports.StateConnector(exports.AbstractCombinedStates);
 
-},{"../models/reducers/TodoList":18,"../models/reducers/UserState":20,"react":89,"react-redux":80}],8:[function(require,module,exports){
+},{"../models/reducers/TodoList":19,"../models/reducers/UserState":21,"react":90,"react-redux":81}],8:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var React = require("react");
@@ -383,7 +383,7 @@ exports.AbstractMemberArea = function (props) {
 // This is the specialized version of the component
 exports.MemberArea = container.StateConnector(exports.AbstractMemberArea);
 
-},{"../models/reducers/TestModel":16,"react":89}],9:[function(require,module,exports){
+},{"../models/reducers/TestModel":17,"react":90}],9:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var React = require("react");
@@ -403,14 +403,13 @@ exports.AbstractTodoList = function (props) {
         React.createElement("button", { onClick: function () { return props.addLotOfItems(10000); } }, "Add 10000 items"),
         React.createElement("button", { onClick: function () { return props.setTitle("Jee" + Date.now()); } }, "Set Title of List"),
         React.createElement("div", null,
-            React.createElement("div", null, props.state),
             React.createElement("div", null, props.state === "ERROR" ? new String(props.stateError) : ""),
             React.createElement(PureList_1.PureList, { items: props.listToDisplay }))));
 };
 // This is the specialized version of the component
 exports.TodoList = container.StateConnector(exports.AbstractTodoList);
 
-},{"../models/reducers/TodoList":18,"./PureList":2,"react":89}],10:[function(require,module,exports){
+},{"../models/reducers/TodoList":19,"./PureList":2,"react":90}],10:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var React = require("react");
@@ -524,7 +523,7 @@ ReactDOM.render(React.createElement(react_redux_1.Provider, { store: store },
       </Router>
 */
 
-},{"./components/GenericComp":1,"./components/ReduxInc":3,"./components/TetrisComponent":4,"./components/WaspComponent":5,"./components/WaspContextComponent":6,"./components/combinedState":7,"./components/memberArea":8,"./components/todoList":9,"./models/TodoList":12,"./models/reducers/":22,"./models/reducers/IncModel":14,"./models/reducers/TodoList":18,"./models/reducers/UIHelperModel":19,"./models/reducers/UserState":20,"./models/reducers/WaspModel":21,"react":89,"react-dom":67,"react-redux":80,"redux":91,"redux-thunk":90}],11:[function(require,module,exports){
+},{"./components/GenericComp":1,"./components/ReduxInc":3,"./components/TetrisComponent":4,"./components/WaspComponent":5,"./components/WaspContextComponent":6,"./components/combinedState":7,"./components/memberArea":8,"./components/todoList":9,"./models/TodoList":12,"./models/reducers/":23,"./models/reducers/IncModel":15,"./models/reducers/TodoList":19,"./models/reducers/UIHelperModel":20,"./models/reducers/UserState":21,"./models/reducers/WaspModel":22,"react":90,"react-dom":68,"react-redux":81,"redux":92,"redux-thunk":91}],11:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var Colors;
@@ -751,6 +750,19 @@ exports.TetrisModel = TetrisModel;
 
 },{}],12:[function(require,module,exports){
 "use strict";
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
@@ -788,6 +800,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var axios_1 = require("axios");
+var loadables_1 = require("./loadables");
 var SortOrder;
 (function (SortOrder) {
     SortOrder["ASC"] = "asc";
@@ -798,17 +811,56 @@ var sortFn = function (order) { return function (a, b) {
         return a.id - b.id;
     return b.id - a.id;
 }; };
+/*
+async function getItems2<
+  T extends { [K in keyof T]: R } & { [K2 in keyof T]: TaskState },
+  R,
+  K extends keyof T,
+  K2 extends keyof T
+>(obj: T, key: K, stateKey: K2) {
+  console.log("async ext getItems2 called...");
+  if (obj[stateKey] === "RUNNING") return;
+  try {
+    obj[stateKey] = "RUNNING";
+    obj[key] = (await axios.get(
+      "https://jsonplaceholder.typicode.com/todos"
+    )).data;
+    obj[stateKey] = "LOADED";
+  } catch (e) {
+    obj[stateKey] = "ERROR";
+  }
+}
+*/
+/*
+async function getItems(obj: TodoList) {
+  console.log("async ext getItems called...");
+  if (obj.state === "RUNNING") return;
+  try {
+    obj.state = "RUNNING";
+    obj.items = (await axios.get(
+      "https://jsonplaceholder.typicode.com/todos"
+    )).data;
+    obj.state = "LOADED";
+  } catch (e) {
+    obj.state = "ERROR";
+    obj.stateError = e;
+  }
+}
+*/
 /**
  * @redux true
  */
-var TodoList = /** @class */ (function () {
+var TodoList = /** @class */ (function (_super) {
+    __extends(TodoList, _super);
     function TodoList() {
-        this.items = [];
-        this.state = "UNDEFINED";
-        this.sortOrder = SortOrder.ASC;
-        this.listStart = 0;
-        this.listPageLength = 10;
-        this.listTitle = "Title of TODO -list";
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.items = [];
+        _this.state = "UNDEFINED";
+        _this.sortOrder = SortOrder.ASC;
+        _this.listStart = 0;
+        _this.listPageLength = 10;
+        _this.listTitle = "Title of TODO -list";
+        return _this;
     }
     Object.defineProperty(TodoList.prototype, "listToDisplay", {
         // Example of memoized list using reselect
@@ -876,37 +928,135 @@ var TodoList = /** @class */ (function () {
      */
     TodoList.prototype.getItems = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var _a, e_1;
-            return __generator(this, function (_b) {
-                switch (_b.label) {
-                    case 0:
-                        if (this.state === "RUNNING")
-                            return [2 /*return*/];
-                        _b.label = 1;
+            var _this = this;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.loadItems(this, "items", function () { return __awaiter(_this, void 0, void 0, function () { return __generator(this, function (_a) {
+                            switch (_a.label) {
+                                case 0: return [4 /*yield*/, axios_1.default.get("https://jsonplaceholder.typicode.com/todos")];
+                                case 1: return [2 /*return*/, (_a.sent()).data];
+                            }
+                        }); }); }, function (items) { return (_this.items = items); })];
                     case 1:
-                        _b.trys.push([1, 3, , 4]);
-                        this.state = "RUNNING";
-                        _a = this;
-                        return [4 /*yield*/, axios_1.default.get("https://jsonplaceholder.typicode.com/todos")];
+                        _a.sent();
+                        return [2 /*return*/];
+                }
+            });
+        });
+    };
+    return TodoList;
+}(loadables_1.loadables));
+exports.TodoList = TodoList;
+
+},{"./loadables":13,"axios":30}],13:[function(require,module,exports){
+"use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __generator = (this && this.__generator) || function (thisArg, body) {
+    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
+    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
+    function verb(n) { return function (v) { return step([n, v]); }; }
+    function step(op) {
+        if (f) throw new TypeError("Generator is already executing.");
+        while (_) try {
+            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
+            if (y = 0, t) op = [op[0] & 2, t.value];
+            switch (op[0]) {
+                case 0: case 1: t = op; break;
+                case 4: _.label++; return { value: op[1], done: false };
+                case 5: _.label++; y = op[1]; op = [0]; continue;
+                case 7: op = _.ops.pop(); _.trys.pop(); continue;
+                default:
+                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
+                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
+                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
+                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
+                    if (t[2]) _.ops.pop();
+                    _.trys.pop(); continue;
+            }
+            op = body.call(thisArg, _);
+        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
+        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
+    }
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+var loadables = /** @class */ (function () {
+    function loadables() {
+        this.loadables = {
+            items: {
+                data: null,
+                state: "UNDEFINED",
+                stateError: null
+            }
+        };
+    }
+    loadables.prototype.initState = function (name) {
+        if (!this.loadables[name]) {
+            this.loadables[name] = {
+                data: null,
+                state: "UNDEFINED",
+                stateError: null
+            };
+        }
+    };
+    loadables.prototype.setLoadState = function (opts) {
+        if (!this.loadables[opts.name]) {
+            this.loadables[opts.name] = {
+                data: null,
+                state: "UNDEFINED",
+                stateError: null
+            };
+        }
+        this.loadables[opts.name].state = opts.state;
+    };
+    loadables.prototype.setData = function (opts) {
+        this.loadables[opts.name].data = opts.data;
+    };
+    loadables.prototype.setError = function (opts) {
+        this.loadables[opts.name].stateError = opts.err;
+    };
+    loadables.prototype.loadItems = function (state, key, loader, ready) {
+        return __awaiter(this, void 0, void 0, function () {
+            var obj, data, e_1;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        state.initState(key);
+                        obj = state.loadables[key];
+                        if (obj.state === "RUNNING")
+                            return [2 /*return*/];
+                        _a.label = 1;
+                    case 1:
+                        _a.trys.push([1, 3, , 4]);
+                        state.setLoadState({ name: key, state: "RUNNING" });
+                        return [4 /*yield*/, loader()];
                     case 2:
-                        _a.items = (_b.sent()).data;
-                        this.state = "LOADED";
+                        data = _a.sent();
+                        // state.setData({ name: key, data });
+                        ready(data);
+                        state.setLoadState({ name: key, state: "LOADED" });
                         return [3 /*break*/, 4];
                     case 3:
-                        e_1 = _b.sent();
-                        this.state = "ERROR";
-                        this.stateError = e_1;
+                        e_1 = _a.sent();
+                        state.setLoadState({ name: key, state: "ERROR" });
+                        state.setError({ name: key, err: e_1 });
                         return [3 /*break*/, 4];
                     case 4: return [2 /*return*/];
                 }
             });
         });
     };
-    return TodoList;
+    return loadables;
 }());
-exports.TodoList = TodoList;
+exports.loadables = loadables;
 
-},{"axios":29}],13:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 "use strict";
 /************************************************************************************
  *                                                                                   *
@@ -1068,11 +1218,14 @@ var initWithMethodsGenericModel = function () {
 /**
  * @generated true
  */
-var RGenericModel = /** @class */ (function () {
+var RGenericModel = /** @class */ (function (_super) {
+    __extends(RGenericModel, _super);
     function RGenericModel(state, dispatch, getState) {
-        this._state = state;
-        this._dispatch = dispatch;
-        this._getState = getState;
+        var _this = _super.call(this) || this;
+        _this._state = state;
+        _this._dispatch = dispatch;
+        _this._getState = getState;
+        return _this;
     }
     Object.defineProperty(RGenericModel.prototype, "sum", {
         get: function () {
@@ -1222,7 +1375,7 @@ var RGenericModel = /** @class */ (function () {
         };
     };
     return RGenericModel;
-}());
+}(GenericModel));
 exports.RGenericModel = RGenericModel;
 exports.GenericModelEnums = {
     GenericModel_sum: "GenericModel_sum",
@@ -1348,7 +1501,7 @@ var GenericModelProvider = /** @class */ (function (_super) {
 }(React.Component));
 exports.GenericModelProvider = GenericModelProvider;
 
-},{"immer":55,"react":89,"react-redux":80}],14:[function(require,module,exports){
+},{"immer":56,"react":90,"react-redux":81}],15:[function(require,module,exports){
 "use strict";
 /********************************************************************************
  *                                                                               *
@@ -1381,12 +1534,18 @@ var __assign = (this && this.__assign) || function () {
     return __assign.apply(this, arguments);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+function incMe(obj) {
+    obj.cnt++;
+}
+/**
+ * @redux true
+ */
 var IncModel = /** @class */ (function () {
     function IncModel() {
         this.cnt = 0;
     }
     IncModel.prototype.increment = function () {
-        this.cnt++;
+        incMe(this);
     };
     IncModel.prototype.decrement = function () {
         this.cnt--;
@@ -1430,11 +1589,14 @@ var initWithMethodsIncModel = function () {
 /**
  * @generated true
  */
-var RIncModel = /** @class */ (function () {
+var RIncModel = /** @class */ (function (_super) {
+    __extends(RIncModel, _super);
     function RIncModel(state, dispatch, getState) {
-        this._state = state;
-        this._dispatch = dispatch;
-        this._getState = getState;
+        var _this = _super.call(this) || this;
+        _this._state = state;
+        _this._dispatch = dispatch;
+        _this._getState = getState;
+        return _this;
     }
     Object.defineProperty(RIncModel.prototype, "cnt", {
         get: function () {
@@ -1464,7 +1626,7 @@ var RIncModel = /** @class */ (function () {
     });
     RIncModel.prototype.increment = function () {
         if (this._state) {
-            this.cnt++;
+            incMe(this);
         }
         else {
             if (this._dispatch) {
@@ -1493,7 +1655,7 @@ var RIncModel = /** @class */ (function () {
         };
     };
     return RIncModel;
-}());
+}(IncModel));
 exports.RIncModel = RIncModel;
 exports.IncModelEnums = {
     IncModel_cnt: "IncModel_cnt",
@@ -1581,7 +1743,7 @@ var IncModelProvider = /** @class */ (function (_super) {
 }(React.Component));
 exports.IncModelProvider = IncModelProvider;
 
-},{"immer":55,"react":89,"react-redux":80}],15:[function(require,module,exports){
+},{"immer":56,"react":90,"react-redux":81}],16:[function(require,module,exports){
 "use strict";
 /***********************************************************************************
  *                                                                                  *
@@ -1650,12 +1812,20 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var axios_1 = require("axios");
+var itemStorage = /** @class */ (function () {
+    function itemStorage() {
+        this.items = [];
+    }
+    return itemStorage;
+}());
+exports.itemStorage = itemStorage;
 /**
  * @redux true
  */
-var SimpleModel = /** @class */ (function () {
+var SimpleModel = /** @class */ (function (_super) {
+    __extends(SimpleModel, _super);
     function SimpleModel() {
-        this.items = [];
+        return _super !== null && _super.apply(this, arguments) || this;
     }
     SimpleModel.prototype.getItems = function () {
         return __awaiter(this, void 0, void 0, function () {
@@ -1680,7 +1850,7 @@ var SimpleModel = /** @class */ (function () {
         configurable: true
     });
     return SimpleModel;
-}());
+}(itemStorage));
 exports.SimpleModel = SimpleModel;
 var immer = require("immer");
 var reselect_1 = require("reselect");
@@ -1726,11 +1896,14 @@ var initWithMethodsSimpleModel = function () {
 /**
  * @generated true
  */
-var RSimpleModel = /** @class */ (function () {
+var RSimpleModel = /** @class */ (function (_super) {
+    __extends(RSimpleModel, _super);
     function RSimpleModel(state, dispatch, getState) {
-        this._state = state;
-        this._dispatch = dispatch;
-        this._getState = getState;
+        var _this = _super.call(this) || this;
+        _this._state = state;
+        _this._dispatch = dispatch;
+        _this._getState = getState;
+        return _this;
     }
     Object.defineProperty(RSimpleModel.prototype, "items", {
         get: function () {
@@ -1782,7 +1955,7 @@ var RSimpleModel = /** @class */ (function () {
         };
     };
     return RSimpleModel;
-}());
+}(SimpleModel));
 exports.RSimpleModel = RSimpleModel;
 exports.SimpleModelEnums = {
     SimpleModel_items: "SimpleModel_items"
@@ -1860,7 +2033,7 @@ var SimpleModelProvider = /** @class */ (function (_super) {
 }(React.Component));
 exports.SimpleModelProvider = SimpleModelProvider;
 
-},{"axios":29,"immer":55,"react":89,"react-redux":80,"reselect":92}],16:[function(require,module,exports){
+},{"axios":30,"immer":56,"react":90,"react-redux":81,"reselect":93}],17:[function(require,module,exports){
 "use strict";
 /*********************************************************************************
  *                                                                                *
@@ -2202,11 +2375,14 @@ var initWithMethodsTestModel = function () {
 /**
  * @generated true
  */
-var RTestModel = /** @class */ (function () {
+var RTestModel = /** @class */ (function (_super) {
+    __extends(RTestModel, _super);
     function RTestModel(state, dispatch, getState) {
-        this._state = state;
-        this._dispatch = dispatch;
-        this._getState = getState;
+        var _this = _super.call(this) || this;
+        _this._state = state;
+        _this._dispatch = dispatch;
+        _this._getState = getState;
+        return _this;
     }
     Object.defineProperty(RTestModel.prototype, "items", {
         get: function () {
@@ -2921,7 +3097,7 @@ var RTestModel = /** @class */ (function () {
         };
     };
     return RTestModel;
-}());
+}(TestModel));
 exports.RTestModel = RTestModel;
 exports.TestModelEnums = {
     TestModel_items: "TestModel_items",
@@ -3246,7 +3422,7 @@ var TestModelProvider = /** @class */ (function (_super) {
 }(React.Component));
 exports.TestModelProvider = TestModelProvider;
 
-},{"immer":55,"react":89,"react-redux":80,"timers":101}],17:[function(require,module,exports){
+},{"immer":56,"react":90,"react-redux":81,"timers":102}],18:[function(require,module,exports){
 "use strict";
 /***********************************************************************************
  *                                                                                  *
@@ -3604,11 +3780,14 @@ var initWithMethodsTetrisModel = function () {
 /**
  * @generated true
  */
-var RTetrisModel = /** @class */ (function () {
+var RTetrisModel = /** @class */ (function (_super) {
+    __extends(RTetrisModel, _super);
     function RTetrisModel(state, dispatch, getState) {
-        this._state = state;
-        this._dispatch = dispatch;
-        this._getState = getState;
+        var _this = _super.call(this) || this;
+        _this._state = state;
+        _this._dispatch = dispatch;
+        _this._getState = getState;
+        return _this;
     }
     Object.defineProperty(RTetrisModel.prototype, "useColors", {
         get: function () {
@@ -4263,7 +4442,7 @@ var RTetrisModel = /** @class */ (function () {
         };
     };
     return RTetrisModel;
-}());
+}(TetrisModel));
 exports.RTetrisModel = RTetrisModel;
 exports.TetrisModelEnums = {
     TetrisModel_useColors: "TetrisModel_useColors",
@@ -4514,7 +4693,7 @@ var TetrisModelProvider = /** @class */ (function (_super) {
 }(React.Component));
 exports.TetrisModelProvider = TetrisModelProvider;
 
-},{"immer":55,"react":89,"react-redux":80}],18:[function(require,module,exports){
+},{"immer":56,"react":90,"react-redux":81}],19:[function(require,module,exports){
 "use strict";
 /********************************************************************************
  *                                                                               *
@@ -4583,6 +4762,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var axios_1 = require("axios");
+var loadables_1 = require("../loadables");
 var SortOrder;
 (function (SortOrder) {
     SortOrder["ASC"] = "asc";
@@ -4593,17 +4773,56 @@ var sortFn = function (order) { return function (a, b) {
         return a.id - b.id;
     return b.id - a.id;
 }; };
+/*
+async function getItems2<
+  T extends { [K in keyof T]: R } & { [K2 in keyof T]: TaskState },
+  R,
+  K extends keyof T,
+  K2 extends keyof T
+>(obj: T, key: K, stateKey: K2) {
+  console.log("async ext getItems2 called...");
+  if (obj[stateKey] === "RUNNING") return;
+  try {
+    obj[stateKey] = "RUNNING";
+    obj[key] = (await axios.get(
+      "https://jsonplaceholder.typicode.com/todos"
+    )).data;
+    obj[stateKey] = "LOADED";
+  } catch (e) {
+    obj[stateKey] = "ERROR";
+  }
+}
+*/
+/*
+async function getItems(obj: TodoList) {
+  console.log("async ext getItems called...");
+  if (obj.state === "RUNNING") return;
+  try {
+    obj.state = "RUNNING";
+    obj.items = (await axios.get(
+      "https://jsonplaceholder.typicode.com/todos"
+    )).data;
+    obj.state = "LOADED";
+  } catch (e) {
+    obj.state = "ERROR";
+    obj.stateError = e;
+  }
+}
+*/
 /**
  * @redux true
  */
-var TodoList = /** @class */ (function () {
+var TodoList = /** @class */ (function (_super) {
+    __extends(TodoList, _super);
     function TodoList() {
-        this.items = [];
-        this.state = "UNDEFINED";
-        this.sortOrder = SortOrder.ASC;
-        this.listStart = 0;
-        this.listPageLength = 10;
-        this.listTitle = "Title of TODO -list";
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.items = [];
+        _this.state = "UNDEFINED";
+        _this.sortOrder = SortOrder.ASC;
+        _this.listStart = 0;
+        _this.listPageLength = 10;
+        _this.listTitle = "Title of TODO -list";
+        return _this;
     }
     Object.defineProperty(TodoList.prototype, "listToDisplay", {
         // Example of memoized list using reselect
@@ -4671,34 +4890,24 @@ var TodoList = /** @class */ (function () {
      */
     TodoList.prototype.getItems = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var _a, e_1;
-            return __generator(this, function (_b) {
-                switch (_b.label) {
-                    case 0:
-                        if (this.state === "RUNNING")
-                            return [2 /*return*/];
-                        _b.label = 1;
+            var _this = this;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.loadItems(this, "items", function () { return __awaiter(_this, void 0, void 0, function () { return __generator(this, function (_a) {
+                            switch (_a.label) {
+                                case 0: return [4 /*yield*/, axios_1.default.get("https://jsonplaceholder.typicode.com/todos")];
+                                case 1: return [2 /*return*/, (_a.sent()).data];
+                            }
+                        }); }); }, function (items) { return (_this.items = items); })];
                     case 1:
-                        _b.trys.push([1, 3, , 4]);
-                        this.state = "RUNNING";
-                        _a = this;
-                        return [4 /*yield*/, axios_1.default.get("https://jsonplaceholder.typicode.com/todos")];
-                    case 2:
-                        _a.items = (_b.sent()).data;
-                        this.state = "LOADED";
-                        return [3 /*break*/, 4];
-                    case 3:
-                        e_1 = _b.sent();
-                        this.state = "ERROR";
-                        this.stateError = e_1;
-                        return [3 /*break*/, 4];
-                    case 4: return [2 /*return*/];
+                        _a.sent();
+                        return [2 /*return*/];
                 }
             });
         });
     };
     return TodoList;
-}());
+}(loadables_1.loadables));
 exports.TodoList = TodoList;
 var immer = require("immer");
 var reselect_1 = require("reselect");
@@ -4720,6 +4929,9 @@ exports.listPageLengthSelectorFn = function (state) {
 };
 exports.listTitleSelectorFn = function (state) {
     return state.listTitle;
+};
+exports.loadablesSelectorFn = function (state) {
+    return state.loadables;
 };
 exports.listToDisplaySelectorFnCreator = function () {
     return reselect_1.createSelector([
@@ -4746,6 +4958,7 @@ exports.mapStateToProps = function (state) {
         listStart: state.TodoList.listStart,
         listPageLength: state.TodoList.listPageLength,
         listTitle: state.TodoList.listTitle,
+        loadables: state.TodoList.loadables,
         listToDisplay: exports.listToDisplaySelector(state.TodoList)
     };
 };
@@ -4783,6 +4996,18 @@ exports.mapDispatchToProps = function (dispatch) {
         },
         getItems: function () {
             return dispatch(RTodoList.getItems());
+        },
+        initState: function (name) {
+            return dispatch(RTodoList.initState(name));
+        },
+        setLoadState: function (opts) {
+            return dispatch(RTodoList.setLoadState(opts));
+        },
+        setData: function (opts) {
+            return dispatch(RTodoList.setData(opts));
+        },
+        setError: function (opts) {
+            return dispatch(RTodoList.setError(opts));
         }
     };
 };
@@ -4796,7 +5021,8 @@ var initTodoList = function () {
         sortOrder: o.sortOrder,
         listStart: o.listStart,
         listPageLength: o.listPageLength,
-        listTitle: o.listTitle
+        listTitle: o.listTitle,
+        loadables: o.loadables
     };
 };
 var initWithMethodsTodoList = function () {
@@ -4809,6 +5035,7 @@ var initWithMethodsTodoList = function () {
         listStart: o.listStart,
         listPageLength: o.listPageLength,
         listTitle: o.listTitle,
+        loadables: o.loadables,
         nextPage: o.nextPage,
         prevPage: o.prevPage,
         toggleSortOrder: o.toggleSortOrder,
@@ -4820,17 +5047,24 @@ var initWithMethodsTodoList = function () {
         setTitle: o.setTitle,
         addLotOfItems: o.addLotOfItems,
         getItems: o.getItems,
+        initState: o.initState,
+        setLoadState: o.setLoadState,
+        setData: o.setData,
+        setError: o.setError,
         listToDisplay: o.listToDisplay
     };
 };
 /**
  * @generated true
  */
-var RTodoList = /** @class */ (function () {
+var RTodoList = /** @class */ (function (_super) {
+    __extends(RTodoList, _super);
     function RTodoList(state, dispatch, getState) {
-        this._state = state;
-        this._dispatch = dispatch;
-        this._getState = getState;
+        var _this = _super.call(this) || this;
+        _this._state = state;
+        _this._dispatch = dispatch;
+        _this._getState = getState;
+        return _this;
     }
     Object.defineProperty(RTodoList.prototype, "items", {
         get: function () {
@@ -5029,6 +5263,35 @@ var RTodoList = /** @class */ (function () {
         enumerable: true,
         configurable: true
     });
+    Object.defineProperty(RTodoList.prototype, "loadables", {
+        get: function () {
+            if (this._getState) {
+                return this._getState().TodoList.loadables;
+            }
+            else {
+                if (this._state) {
+                    return this._state.loadables;
+                }
+            }
+            throw "Invalid State in TodoList_loadables";
+        },
+        set: function (value) {
+            if (this._state && typeof value !== "undefined") {
+                this._state.loadables = value;
+            }
+            else {
+                // dispatch change for item loadables
+                if (this._dispatch) {
+                    this._dispatch({
+                        type: exports.TodoListEnums.TodoList_loadables,
+                        payload: value
+                    });
+                }
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
     RTodoList.prototype.findMaxId = function () {
         var max = 0;
         this.items.forEach(function (item) {
@@ -5210,28 +5473,18 @@ var RTodoList = /** @class */ (function () {
      */
     RTodoList.prototype.getItems = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var _a, e_2;
-            return __generator(this, function (_b) {
-                switch (_b.label) {
-                    case 0:
-                        if (this.state === "RUNNING")
-                            return [2 /*return*/];
-                        _b.label = 1;
+            var _this = this;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.loadItems(this, "items", function () { return __awaiter(_this, void 0, void 0, function () { return __generator(this, function (_a) {
+                            switch (_a.label) {
+                                case 0: return [4 /*yield*/, axios_1.default.get("https://jsonplaceholder.typicode.com/todos")];
+                                case 1: return [2 /*return*/, (_a.sent()).data];
+                            }
+                        }); }); }, function (items) { return (_this.items = items); })];
                     case 1:
-                        _b.trys.push([1, 3, , 4]);
-                        this.state = "RUNNING";
-                        _a = this;
-                        return [4 /*yield*/, axios_1.default.get("https://jsonplaceholder.typicode.com/todos")];
-                    case 2:
-                        _a.items = (_b.sent()).data;
-                        this.state = "LOADED";
-                        return [3 /*break*/, 4];
-                    case 3:
-                        e_2 = _b.sent();
-                        this.state = "ERROR";
-                        this.stateError = e_2;
-                        return [3 /*break*/, 4];
-                    case 4: return [2 /*return*/];
+                        _a.sent();
+                        return [2 /*return*/];
                 }
             });
         });
@@ -5241,8 +5494,121 @@ var RTodoList = /** @class */ (function () {
             new RTodoList(undefined, dispatcher, getState).getItems();
         };
     };
+    RTodoList.prototype.initState = function (name) {
+        if (this._state) {
+            if (!this.loadables[name]) {
+                this.loadables[name] = {
+                    data: null,
+                    state: "UNDEFINED",
+                    stateError: null
+                };
+            }
+        }
+        else {
+            if (this._dispatch) {
+                this._dispatch({
+                    type: exports.TodoListEnums.TodoList_initState,
+                    payload: name
+                });
+            }
+        }
+    };
+    RTodoList.initState = function (name) {
+        return function (dispatcher, getState) {
+            new RTodoList(undefined, dispatcher, getState).initState(name);
+        };
+    };
+    RTodoList.prototype.setLoadState = function (opts) {
+        if (this._state) {
+            if (!this.loadables[opts.name]) {
+                this.loadables[opts.name] = {
+                    data: null,
+                    state: "UNDEFINED",
+                    stateError: null
+                };
+            }
+            this.loadables[opts.name].state = opts.state;
+        }
+        else {
+            if (this._dispatch) {
+                this._dispatch({
+                    type: exports.TodoListEnums.TodoList_setLoadState,
+                    payload: opts
+                });
+            }
+        }
+    };
+    RTodoList.setLoadState = function (opts) {
+        return function (dispatcher, getState) {
+            new RTodoList(undefined, dispatcher, getState).setLoadState(opts);
+        };
+    };
+    RTodoList.prototype.setData = function (opts) {
+        if (this._state) {
+            this.loadables[opts.name].data = opts.data;
+        }
+        else {
+            if (this._dispatch) {
+                this._dispatch({ type: exports.TodoListEnums.TodoList_setData, payload: opts });
+            }
+        }
+    };
+    RTodoList.setData = function (opts) {
+        return function (dispatcher, getState) {
+            new RTodoList(undefined, dispatcher, getState).setData(opts);
+        };
+    };
+    RTodoList.prototype.setError = function (opts) {
+        if (this._state) {
+            this.loadables[opts.name].stateError = opts.err;
+        }
+        else {
+            if (this._dispatch) {
+                this._dispatch({
+                    type: exports.TodoListEnums.TodoList_setError,
+                    payload: opts
+                });
+            }
+        }
+    };
+    RTodoList.setError = function (opts) {
+        return function (dispatcher, getState) {
+            new RTodoList(undefined, dispatcher, getState).setError(opts);
+        };
+    };
+    RTodoList.prototype.loadItems = function (state, key, loader, ready) {
+        return __awaiter(this, void 0, void 0, function () {
+            var obj, data, e_1;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        state.initState(key);
+                        obj = state.loadables[key];
+                        if (obj.state === "RUNNING")
+                            return [2 /*return*/];
+                        _a.label = 1;
+                    case 1:
+                        _a.trys.push([1, 3, , 4]);
+                        state.setLoadState({ name: key, state: "RUNNING" });
+                        return [4 /*yield*/, loader()];
+                    case 2:
+                        data = _a.sent();
+                        // state.setData({ name: key, data });
+                        ready(data);
+                        state.setLoadState({ name: key, state: "LOADED" });
+                        return [3 /*break*/, 4];
+                    case 3:
+                        e_1 = _a.sent();
+                        state.setLoadState({ name: key, state: "ERROR" });
+                        state.setError({ name: key, err: e_1 });
+                        return [3 /*break*/, 4];
+                    case 4: return [2 /*return*/];
+                }
+            });
+        });
+    };
     return RTodoList;
-}());
+}(TodoList));
 exports.RTodoList = RTodoList;
 exports.TodoListEnums = {
     TodoList_items: "TodoList_items",
@@ -5252,6 +5618,7 @@ exports.TodoListEnums = {
     TodoList_listStart: "TodoList_listStart",
     TodoList_listPageLength: "TodoList_listPageLength",
     TodoList_listTitle: "TodoList_listTitle",
+    TodoList_loadables: "TodoList_loadables",
     TodoList_findMaxId: "TodoList_findMaxId",
     TodoList_nextPage: "TodoList_nextPage",
     TodoList_prevPage: "TodoList_prevPage",
@@ -5262,7 +5629,11 @@ exports.TodoListEnums = {
     TodoList_sortByTitle: "TodoList_sortByTitle",
     TodoList_sortByCompletion: "TodoList_sortByCompletion",
     TodoList_setTitle: "TodoList_setTitle",
-    TodoList_addLotOfItems: "TodoList_addLotOfItems"
+    TodoList_addLotOfItems: "TodoList_addLotOfItems",
+    TodoList_initState: "TodoList_initState",
+    TodoList_setLoadState: "TodoList_setLoadState",
+    TodoList_setData: "TodoList_setData",
+    TodoList_setError: "TodoList_setError"
 };
 exports.TodoListReducer = function (state, action) {
     if (state === void 0) { state = initTodoList(); }
@@ -5288,6 +5659,9 @@ exports.TodoListReducer = function (state, action) {
                 break;
             case exports.TodoListEnums.TodoList_listTitle:
                 new RTodoList(draft).listTitle = action.payload;
+                break;
+            case exports.TodoListEnums.TodoList_loadables:
+                new RTodoList(draft).loadables = action.payload;
                 break;
             case exports.TodoListEnums.TodoList_nextPage:
                 new RTodoList(draft).nextPage();
@@ -5319,6 +5693,18 @@ exports.TodoListReducer = function (state, action) {
             case exports.TodoListEnums.TodoList_addLotOfItems:
                 new RTodoList(draft).addLotOfItems(action.payload);
                 break;
+            case exports.TodoListEnums.TodoList_initState:
+                new RTodoList(draft).initState(action.payload);
+                break;
+            case exports.TodoListEnums.TodoList_setLoadState:
+                new RTodoList(draft).setLoadState(action.payload);
+                break;
+            case exports.TodoListEnums.TodoList_setData:
+                new RTodoList(draft).setData(action.payload);
+                break;
+            case exports.TodoListEnums.TodoList_setError:
+                new RTodoList(draft).setError(action.payload);
+                break;
         }
     });
 };
@@ -5347,6 +5733,10 @@ var TodoListProvider = /** @class */ (function (_super) {
         _this.setTitle = _this.setTitle.bind(_this);
         _this.addLotOfItems = _this.addLotOfItems.bind(_this);
         _this.getItems = _this.getItems.bind(_this);
+        _this.initState = _this.initState.bind(_this);
+        _this.setLoadState = _this.setLoadState.bind(_this);
+        _this.setData = _this.setData.bind(_this);
+        _this.setError = _this.setError.bind(_this);
         _this.__selectorlistToDisplay = exports.listToDisplaySelectorFnCreator();
         var devs = window["devToolsExtension"]
             ? window["devToolsExtension"]
@@ -5479,8 +5869,44 @@ var TodoListProvider = /** @class */ (function (_super) {
             });
         });
     };
+    TodoListProvider.prototype.initState = function (name) {
+        var nextState = immer.produce(this.state, function (draft) {
+            return new RTodoList(draft).initState(name);
+        });
+        if (this.__devTools) {
+            this.__devTools.send("initState", nextState);
+        }
+        this.setStateSync(nextState);
+    };
+    TodoListProvider.prototype.setLoadState = function (opts) {
+        var nextState = immer.produce(this.state, function (draft) {
+            return new RTodoList(draft).setLoadState(opts);
+        });
+        if (this.__devTools) {
+            this.__devTools.send("setLoadState", nextState);
+        }
+        this.setStateSync(nextState);
+    };
+    TodoListProvider.prototype.setData = function (opts) {
+        var nextState = immer.produce(this.state, function (draft) {
+            return new RTodoList(draft).setData(opts);
+        });
+        if (this.__devTools) {
+            this.__devTools.send("setData", nextState);
+        }
+        this.setStateSync(nextState);
+    };
+    TodoListProvider.prototype.setError = function (opts) {
+        var nextState = immer.produce(this.state, function (draft) {
+            return new RTodoList(draft).setError(opts);
+        });
+        if (this.__devTools) {
+            this.__devTools.send("setError", nextState);
+        }
+        this.setStateSync(nextState);
+    };
     TodoListProvider.prototype.render = function () {
-        return (React.createElement(exports.TodoListContext.Provider, { value: __assign({}, this.state, { nextPage: this.nextPage, prevPage: this.prevPage, toggleSortOrder: this.toggleSortOrder, clearTodoList: this.clearTodoList, reverse: this.reverse, sortById: this.sortById, sortByTitle: this.sortByTitle, sortByCompletion: this.sortByCompletion, setTitle: this.setTitle, addLotOfItems: this.addLotOfItems, getItems: this.getItems, listToDisplay: this.__selectorlistToDisplay(this.state) }) },
+        return (React.createElement(exports.TodoListContext.Provider, { value: __assign({}, this.state, { nextPage: this.nextPage, prevPage: this.prevPage, toggleSortOrder: this.toggleSortOrder, clearTodoList: this.clearTodoList, reverse: this.reverse, sortById: this.sortById, sortByTitle: this.sortByTitle, sortByCompletion: this.sortByCompletion, setTitle: this.setTitle, addLotOfItems: this.addLotOfItems, getItems: this.getItems, initState: this.initState, setLoadState: this.setLoadState, setData: this.setData, setError: this.setError, listToDisplay: this.__selectorlistToDisplay(this.state) }) },
             " ",
             this.props.children));
     };
@@ -5488,7 +5914,7 @@ var TodoListProvider = /** @class */ (function (_super) {
 }(React.Component));
 exports.TodoListProvider = TodoListProvider;
 
-},{"axios":29,"immer":55,"react":89,"react-redux":80,"reselect":92}],19:[function(require,module,exports){
+},{"../loadables":13,"axios":30,"immer":56,"react":90,"react-redux":81,"reselect":93}],20:[function(require,module,exports){
 "use strict";
 /*************************************************************************************
  *                                                                                    *
@@ -5562,11 +5988,14 @@ var initWithMethodsUIHelperModel = function () {
 /**
  * @generated true
  */
-var RUIHelperModel = /** @class */ (function () {
+var RUIHelperModel = /** @class */ (function (_super) {
+    __extends(RUIHelperModel, _super);
     function RUIHelperModel(state, dispatch, getState) {
-        this._state = state;
-        this._dispatch = dispatch;
-        this._getState = getState;
+        var _this = _super.call(this) || this;
+        _this._state = state;
+        _this._dispatch = dispatch;
+        _this._getState = getState;
+        return _this;
     }
     Object.defineProperty(RUIHelperModel.prototype, "showWasps", {
         get: function () {
@@ -5613,7 +6042,7 @@ var RUIHelperModel = /** @class */ (function () {
         };
     };
     return RUIHelperModel;
-}());
+}(UIHelperModel));
 exports.RUIHelperModel = RUIHelperModel;
 exports.UIHelperModelEnums = {
     UIHelperModel_showWasps: "UIHelperModel_showWasps",
@@ -5687,7 +6116,7 @@ var UIHelperModelProvider = /** @class */ (function (_super) {
 }(React.Component));
 exports.UIHelperModelProvider = UIHelperModelProvider;
 
-},{"immer":55,"react":89,"react-redux":80}],20:[function(require,module,exports){
+},{"immer":56,"react":90,"react-redux":81}],21:[function(require,module,exports){
 "use strict";
 /*********************************************************************************
  *                                                                                *
@@ -5830,11 +6259,14 @@ var initWithMethodsUserState = function () {
 /**
  * @generated true
  */
-var RUserState = /** @class */ (function () {
+var RUserState = /** @class */ (function (_super) {
+    __extends(RUserState, _super);
     function RUserState(state, dispatch, getState) {
-        this._state = state;
-        this._dispatch = dispatch;
-        this._getState = getState;
+        var _this = _super.call(this) || this;
+        _this._state = state;
+        _this._dispatch = dispatch;
+        _this._getState = getState;
+        return _this;
     }
     Object.defineProperty(RUserState.prototype, "logged", {
         get: function () {
@@ -6020,7 +6452,7 @@ var RUserState = /** @class */ (function () {
         };
     };
     return RUserState;
-}());
+}(UserState));
 exports.RUserState = RUserState;
 exports.UserStateEnums = {
     UserState_logged: "UserState_logged",
@@ -6142,7 +6574,7 @@ var UserStateProvider = /** @class */ (function (_super) {
 }(React.Component));
 exports.UserStateProvider = UserStateProvider;
 
-},{"immer":55,"react":89,"react-redux":80}],21:[function(require,module,exports){
+},{"immer":56,"react":90,"react-redux":81}],22:[function(require,module,exports){
 "use strict";
 /*********************************************************************************
  *                                                                                *
@@ -6287,11 +6719,14 @@ var initWithMethodsWaspModel = function () {
 /**
  * @generated true
  */
-var RWaspModel = /** @class */ (function () {
+var RWaspModel = /** @class */ (function (_super) {
+    __extends(RWaspModel, _super);
     function RWaspModel(state, dispatch, getState) {
-        this._state = state;
-        this._dispatch = dispatch;
-        this._getState = getState;
+        var _this = _super.call(this) || this;
+        _this._state = state;
+        _this._dispatch = dispatch;
+        _this._getState = getState;
+        return _this;
     }
     Object.defineProperty(RWaspModel.prototype, "speed", {
         get: function () {
@@ -6489,7 +6924,7 @@ var RWaspModel = /** @class */ (function () {
         };
     };
     return RWaspModel;
-}());
+}(WaspModel));
 exports.RWaspModel = RWaspModel;
 exports.WaspModelEnums = {
     WaspModel_speed: "WaspModel_speed",
@@ -6613,7 +7048,7 @@ var WaspModelProvider = /** @class */ (function (_super) {
 }(React.Component));
 exports.WaspModelProvider = WaspModelProvider;
 
-},{"immer":55,"react":89,"react-redux":80}],22:[function(require,module,exports){
+},{"immer":56,"react":90,"react-redux":81}],23:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 /***********************************************
@@ -6644,7 +7079,7 @@ exports.reducers = redux.combineReducers({
     WaspModel: WaspModel_1.WaspModelReducer
 });
 
-},{"./GenericModel":13,"./IncModel":14,"./SimpleModel":15,"./TestModel":16,"./TetrisModel":17,"./TodoList":18,"./UIHelperModel":19,"./UserState":20,"./WaspModel":21,"redux":91}],23:[function(require,module,exports){
+},{"./GenericModel":14,"./IncModel":15,"./SimpleModel":16,"./TestModel":17,"./TetrisModel":18,"./TodoList":19,"./UIHelperModel":20,"./UserState":21,"./WaspModel":22,"redux":92}],24:[function(require,module,exports){
 function _assertThisInitialized(self) {
   if (self === void 0) {
     throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
@@ -6654,7 +7089,7 @@ function _assertThisInitialized(self) {
 }
 
 module.exports = _assertThisInitialized;
-},{}],24:[function(require,module,exports){
+},{}],25:[function(require,module,exports){
 function _extends() {
   module.exports = _extends = Object.assign || function (target) {
     for (var i = 1; i < arguments.length; i++) {
@@ -6674,7 +7109,7 @@ function _extends() {
 }
 
 module.exports = _extends;
-},{}],25:[function(require,module,exports){
+},{}],26:[function(require,module,exports){
 function _inheritsLoose(subClass, superClass) {
   subClass.prototype = Object.create(superClass.prototype);
   subClass.prototype.constructor = subClass;
@@ -6682,7 +7117,7 @@ function _inheritsLoose(subClass, superClass) {
 }
 
 module.exports = _inheritsLoose;
-},{}],26:[function(require,module,exports){
+},{}],27:[function(require,module,exports){
 function _interopRequireDefault(obj) {
   return obj && obj.__esModule ? obj : {
     default: obj
@@ -6690,7 +7125,7 @@ function _interopRequireDefault(obj) {
 }
 
 module.exports = _interopRequireDefault;
-},{}],27:[function(require,module,exports){
+},{}],28:[function(require,module,exports){
 function _interopRequireWildcard(obj) {
   if (obj && obj.__esModule) {
     return obj;
@@ -6717,7 +7152,7 @@ function _interopRequireWildcard(obj) {
 }
 
 module.exports = _interopRequireWildcard;
-},{}],28:[function(require,module,exports){
+},{}],29:[function(require,module,exports){
 function _objectWithoutPropertiesLoose(source, excluded) {
   if (source == null) return {};
   var target = {};
@@ -6734,9 +7169,9 @@ function _objectWithoutPropertiesLoose(source, excluded) {
 }
 
 module.exports = _objectWithoutPropertiesLoose;
-},{}],29:[function(require,module,exports){
+},{}],30:[function(require,module,exports){
 module.exports = require('./lib/axios');
-},{"./lib/axios":31}],30:[function(require,module,exports){
+},{"./lib/axios":32}],31:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -6920,7 +7355,7 @@ module.exports = function xhrAdapter(config) {
 };
 
 }).call(this,require('_process'))
-},{"../core/createError":37,"./../core/settle":40,"./../helpers/btoa":44,"./../helpers/buildURL":45,"./../helpers/cookies":47,"./../helpers/isURLSameOrigin":49,"./../helpers/parseHeaders":51,"./../utils":53,"_process":59}],31:[function(require,module,exports){
+},{"../core/createError":38,"./../core/settle":41,"./../helpers/btoa":45,"./../helpers/buildURL":46,"./../helpers/cookies":48,"./../helpers/isURLSameOrigin":50,"./../helpers/parseHeaders":52,"./../utils":54,"_process":60}],32:[function(require,module,exports){
 'use strict';
 
 var utils = require('./utils');
@@ -6974,7 +7409,7 @@ module.exports = axios;
 // Allow use of default import syntax in TypeScript
 module.exports.default = axios;
 
-},{"./cancel/Cancel":32,"./cancel/CancelToken":33,"./cancel/isCancel":34,"./core/Axios":35,"./defaults":42,"./helpers/bind":43,"./helpers/spread":52,"./utils":53}],32:[function(require,module,exports){
+},{"./cancel/Cancel":33,"./cancel/CancelToken":34,"./cancel/isCancel":35,"./core/Axios":36,"./defaults":43,"./helpers/bind":44,"./helpers/spread":53,"./utils":54}],33:[function(require,module,exports){
 'use strict';
 
 /**
@@ -6995,7 +7430,7 @@ Cancel.prototype.__CANCEL__ = true;
 
 module.exports = Cancel;
 
-},{}],33:[function(require,module,exports){
+},{}],34:[function(require,module,exports){
 'use strict';
 
 var Cancel = require('./Cancel');
@@ -7054,14 +7489,14 @@ CancelToken.source = function source() {
 
 module.exports = CancelToken;
 
-},{"./Cancel":32}],34:[function(require,module,exports){
+},{"./Cancel":33}],35:[function(require,module,exports){
 'use strict';
 
 module.exports = function isCancel(value) {
   return !!(value && value.__CANCEL__);
 };
 
-},{}],35:[function(require,module,exports){
+},{}],36:[function(require,module,exports){
 'use strict';
 
 var defaults = require('./../defaults');
@@ -7142,7 +7577,7 @@ utils.forEach(['post', 'put', 'patch'], function forEachMethodWithData(method) {
 
 module.exports = Axios;
 
-},{"./../defaults":42,"./../utils":53,"./InterceptorManager":36,"./dispatchRequest":38}],36:[function(require,module,exports){
+},{"./../defaults":43,"./../utils":54,"./InterceptorManager":37,"./dispatchRequest":39}],37:[function(require,module,exports){
 'use strict';
 
 var utils = require('./../utils');
@@ -7196,7 +7631,7 @@ InterceptorManager.prototype.forEach = function forEach(fn) {
 
 module.exports = InterceptorManager;
 
-},{"./../utils":53}],37:[function(require,module,exports){
+},{"./../utils":54}],38:[function(require,module,exports){
 'use strict';
 
 var enhanceError = require('./enhanceError');
@@ -7216,7 +7651,7 @@ module.exports = function createError(message, config, code, request, response) 
   return enhanceError(error, config, code, request, response);
 };
 
-},{"./enhanceError":39}],38:[function(require,module,exports){
+},{"./enhanceError":40}],39:[function(require,module,exports){
 'use strict';
 
 var utils = require('./../utils');
@@ -7304,7 +7739,7 @@ module.exports = function dispatchRequest(config) {
   });
 };
 
-},{"../cancel/isCancel":34,"../defaults":42,"./../helpers/combineURLs":46,"./../helpers/isAbsoluteURL":48,"./../utils":53,"./transformData":41}],39:[function(require,module,exports){
+},{"../cancel/isCancel":35,"../defaults":43,"./../helpers/combineURLs":47,"./../helpers/isAbsoluteURL":49,"./../utils":54,"./transformData":42}],40:[function(require,module,exports){
 'use strict';
 
 /**
@@ -7327,7 +7762,7 @@ module.exports = function enhanceError(error, config, code, request, response) {
   return error;
 };
 
-},{}],40:[function(require,module,exports){
+},{}],41:[function(require,module,exports){
 'use strict';
 
 var createError = require('./createError');
@@ -7355,7 +7790,7 @@ module.exports = function settle(resolve, reject, response) {
   }
 };
 
-},{"./createError":37}],41:[function(require,module,exports){
+},{"./createError":38}],42:[function(require,module,exports){
 'use strict';
 
 var utils = require('./../utils');
@@ -7377,7 +7812,7 @@ module.exports = function transformData(data, headers, fns) {
   return data;
 };
 
-},{"./../utils":53}],42:[function(require,module,exports){
+},{"./../utils":54}],43:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -7477,7 +7912,7 @@ utils.forEach(['post', 'put', 'patch'], function forEachMethodWithData(method) {
 module.exports = defaults;
 
 }).call(this,require('_process'))
-},{"./adapters/http":30,"./adapters/xhr":30,"./helpers/normalizeHeaderName":50,"./utils":53,"_process":59}],43:[function(require,module,exports){
+},{"./adapters/http":31,"./adapters/xhr":31,"./helpers/normalizeHeaderName":51,"./utils":54,"_process":60}],44:[function(require,module,exports){
 'use strict';
 
 module.exports = function bind(fn, thisArg) {
@@ -7490,7 +7925,7 @@ module.exports = function bind(fn, thisArg) {
   };
 };
 
-},{}],44:[function(require,module,exports){
+},{}],45:[function(require,module,exports){
 'use strict';
 
 // btoa polyfill for IE<10 courtesy https://github.com/davidchambers/Base64.js
@@ -7528,7 +7963,7 @@ function btoa(input) {
 
 module.exports = btoa;
 
-},{}],45:[function(require,module,exports){
+},{}],46:[function(require,module,exports){
 'use strict';
 
 var utils = require('./../utils');
@@ -7596,7 +8031,7 @@ module.exports = function buildURL(url, params, paramsSerializer) {
   return url;
 };
 
-},{"./../utils":53}],46:[function(require,module,exports){
+},{"./../utils":54}],47:[function(require,module,exports){
 'use strict';
 
 /**
@@ -7612,7 +8047,7 @@ module.exports = function combineURLs(baseURL, relativeURL) {
     : baseURL;
 };
 
-},{}],47:[function(require,module,exports){
+},{}],48:[function(require,module,exports){
 'use strict';
 
 var utils = require('./../utils');
@@ -7667,7 +8102,7 @@ module.exports = (
   })()
 );
 
-},{"./../utils":53}],48:[function(require,module,exports){
+},{"./../utils":54}],49:[function(require,module,exports){
 'use strict';
 
 /**
@@ -7683,7 +8118,7 @@ module.exports = function isAbsoluteURL(url) {
   return /^([a-z][a-z\d\+\-\.]*:)?\/\//i.test(url);
 };
 
-},{}],49:[function(require,module,exports){
+},{}],50:[function(require,module,exports){
 'use strict';
 
 var utils = require('./../utils');
@@ -7753,7 +8188,7 @@ module.exports = (
   })()
 );
 
-},{"./../utils":53}],50:[function(require,module,exports){
+},{"./../utils":54}],51:[function(require,module,exports){
 'use strict';
 
 var utils = require('../utils');
@@ -7767,7 +8202,7 @@ module.exports = function normalizeHeaderName(headers, normalizedName) {
   });
 };
 
-},{"../utils":53}],51:[function(require,module,exports){
+},{"../utils":54}],52:[function(require,module,exports){
 'use strict';
 
 var utils = require('./../utils');
@@ -7822,7 +8257,7 @@ module.exports = function parseHeaders(headers) {
   return parsed;
 };
 
-},{"./../utils":53}],52:[function(require,module,exports){
+},{"./../utils":54}],53:[function(require,module,exports){
 'use strict';
 
 /**
@@ -7851,7 +8286,7 @@ module.exports = function spread(callback) {
   };
 };
 
-},{}],53:[function(require,module,exports){
+},{}],54:[function(require,module,exports){
 'use strict';
 
 var bind = require('./helpers/bind');
@@ -8156,7 +8591,7 @@ module.exports = {
   trim: trim
 };
 
-},{"./helpers/bind":43,"is-buffer":57}],54:[function(require,module,exports){
+},{"./helpers/bind":44,"is-buffer":58}],55:[function(require,module,exports){
 'use strict';
 
 /**
@@ -8242,7 +8677,7 @@ function hoistNonReactStatics(targetComponent, sourceComponent, blacklist) {
 
 module.exports = hoistNonReactStatics;
 
-},{"react-is":70}],55:[function(require,module,exports){
+},{"react-is":71}],56:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -8992,7 +9427,7 @@ exports.isDraft = isProxy;
 
 
 }).call(this,require('_process'))
-},{"_process":59}],56:[function(require,module,exports){
+},{"_process":60}],57:[function(require,module,exports){
 (function (process){
 /**
  * Copyright (c) 2013-present, Facebook, Inc.
@@ -9045,7 +9480,7 @@ var invariant = function(condition, format, a, b, c, d, e, f) {
 module.exports = invariant;
 
 }).call(this,require('_process'))
-},{"_process":59}],57:[function(require,module,exports){
+},{"_process":60}],58:[function(require,module,exports){
 /*!
  * Determine if an object is a Buffer
  *
@@ -9068,7 +9503,7 @@ function isSlowBuffer (obj) {
   return typeof obj.readFloatLE === 'function' && typeof obj.slice === 'function' && isBuffer(obj.slice(0, 0))
 }
 
-},{}],58:[function(require,module,exports){
+},{}],59:[function(require,module,exports){
 /*
 object-assign
 (c) Sindre Sorhus
@@ -9160,7 +9595,7 @@ module.exports = shouldUseNative() ? Object.assign : function (target, source) {
 	return to;
 };
 
-},{}],59:[function(require,module,exports){
+},{}],60:[function(require,module,exports){
 // shim for using process in browser
 var process = module.exports = {};
 
@@ -9346,7 +9781,7 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}],60:[function(require,module,exports){
+},{}],61:[function(require,module,exports){
 (function (process){
 /**
  * Copyright (c) 2013-present, Facebook, Inc.
@@ -9441,7 +9876,7 @@ function checkPropTypes(typeSpecs, values, location, componentName, getStack) {
 module.exports = checkPropTypes;
 
 }).call(this,require('_process'))
-},{"./lib/ReactPropTypesSecret":64,"_process":59}],61:[function(require,module,exports){
+},{"./lib/ReactPropTypesSecret":65,"_process":60}],62:[function(require,module,exports){
 /**
  * Copyright (c) 2013-present, Facebook, Inc.
  *
@@ -9502,7 +9937,7 @@ module.exports = function() {
   return ReactPropTypes;
 };
 
-},{"./lib/ReactPropTypesSecret":64}],62:[function(require,module,exports){
+},{"./lib/ReactPropTypesSecret":65}],63:[function(require,module,exports){
 (function (process){
 /**
  * Copyright (c) 2013-present, Facebook, Inc.
@@ -10061,7 +10496,7 @@ module.exports = function(isValidElement, throwOnDirectAccess) {
 };
 
 }).call(this,require('_process'))
-},{"./checkPropTypes":60,"./lib/ReactPropTypesSecret":64,"_process":59,"object-assign":58}],63:[function(require,module,exports){
+},{"./checkPropTypes":61,"./lib/ReactPropTypesSecret":65,"_process":60,"object-assign":59}],64:[function(require,module,exports){
 (function (process){
 /**
  * Copyright (c) 2013-present, Facebook, Inc.
@@ -10093,7 +10528,7 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 }).call(this,require('_process'))
-},{"./factoryWithThrowingShims":61,"./factoryWithTypeCheckers":62,"_process":59}],64:[function(require,module,exports){
+},{"./factoryWithThrowingShims":62,"./factoryWithTypeCheckers":63,"_process":60}],65:[function(require,module,exports){
 /**
  * Copyright (c) 2013-present, Facebook, Inc.
  *
@@ -10107,7 +10542,7 @@ var ReactPropTypesSecret = 'SECRET_DO_NOT_PASS_THIS_OR_YOU_WILL_BE_FIRED';
 
 module.exports = ReactPropTypesSecret;
 
-},{}],65:[function(require,module,exports){
+},{}],66:[function(require,module,exports){
 (function (process){
 /** @license React v16.6.1
  * react-dom.development.js
@@ -29838,7 +30273,7 @@ module.exports = reactDom;
 }
 
 }).call(this,require('_process'))
-},{"_process":59,"object-assign":58,"prop-types/checkPropTypes":60,"react":89,"scheduler":97,"scheduler/tracing":98}],66:[function(require,module,exports){
+},{"_process":60,"object-assign":59,"prop-types/checkPropTypes":61,"react":90,"scheduler":98,"scheduler/tracing":99}],67:[function(require,module,exports){
 /** @license React v16.6.1
  * react-dom.production.min.js
  *
@@ -30089,7 +30524,7 @@ void 0:t("40");return a._reactRootContainer?(Oh(function(){$h(null,null,a,!1,fun
 Ka,La,Ca.injectEventPluginsByName,qa,Ra,function(a){za(a,Qa)},Ib,Jb,Jd,Ea]},unstable_createRoot:function(a,b){Yh(a)?void 0:t("299","unstable_createRoot");return new Xh(a,!0,null!=b&&!0===b.hydrate)}};(function(a){var b=a.findFiberByHostInstance;return Ve(n({},a,{findHostInstanceByFiber:function(a){a=nd(a);return null===a?null:a.stateNode},findFiberByHostInstance:function(a){return b?b(a):null}}))})({findFiberByHostInstance:Ia,bundleType:0,version:"16.6.3",rendererPackageName:"react-dom"});
 var ei={default:bi},fi=ei&&bi||ei;module.exports=fi.default||fi;
 
-},{"object-assign":58,"react":89,"scheduler":97}],67:[function(require,module,exports){
+},{"object-assign":59,"react":90,"scheduler":98}],68:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -30131,7 +30566,7 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 }).call(this,require('_process'))
-},{"./cjs/react-dom.development.js":65,"./cjs/react-dom.production.min.js":66,"_process":59}],68:[function(require,module,exports){
+},{"./cjs/react-dom.development.js":66,"./cjs/react-dom.production.min.js":67,"_process":60}],69:[function(require,module,exports){
 (function (process){
 /** @license React v16.6.1
  * react-is.development.js
@@ -30342,7 +30777,7 @@ exports.isStrictMode = isStrictMode;
 }
 
 }).call(this,require('_process'))
-},{"_process":59}],69:[function(require,module,exports){
+},{"_process":60}],70:[function(require,module,exports){
 /** @license React v16.6.1
  * react-is.production.min.js
  *
@@ -30358,7 +30793,7 @@ var b="function"===typeof Symbol&&Symbol.for,c=b?Symbol.for("react.element"):601
 exports.Profiler=g;exports.Portal=d;exports.StrictMode=f;exports.isValidElementType=function(a){return"string"===typeof a||"function"===typeof a||a===e||a===m||a===g||a===f||a===p||"object"===typeof a&&null!==a&&(a.$$typeof===t||a.$$typeof===r||a.$$typeof===h||a.$$typeof===k||a.$$typeof===n)};exports.isAsyncMode=function(a){return v(a)||u(a)===l};exports.isConcurrentMode=v;exports.isContextConsumer=function(a){return u(a)===k};exports.isContextProvider=function(a){return u(a)===h};
 exports.isElement=function(a){return"object"===typeof a&&null!==a&&a.$$typeof===c};exports.isForwardRef=function(a){return u(a)===n};exports.isFragment=function(a){return u(a)===e};exports.isProfiler=function(a){return u(a)===g};exports.isPortal=function(a){return u(a)===d};exports.isStrictMode=function(a){return u(a)===f};
 
-},{}],70:[function(require,module,exports){
+},{}],71:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -30369,7 +30804,7 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 }).call(this,require('_process'))
-},{"./cjs/react-is.development.js":68,"./cjs/react-is.production.min.js":69,"_process":59}],71:[function(require,module,exports){
+},{"./cjs/react-is.development.js":69,"./cjs/react-is.production.min.js":70,"_process":60}],72:[function(require,module,exports){
 (function (process){
 "use strict";
 
@@ -30456,7 +30891,7 @@ var _default = createProvider();
 
 exports.default = _default;
 }).call(this,require('_process'))
-},{"../utils/PropTypes":81,"../utils/warning":86,"@babel/runtime/helpers/inheritsLoose":25,"@babel/runtime/helpers/interopRequireDefault":26,"_process":59,"prop-types":63,"react":89}],72:[function(require,module,exports){
+},{"../utils/PropTypes":82,"../utils/warning":87,"@babel/runtime/helpers/inheritsLoose":26,"@babel/runtime/helpers/interopRequireDefault":27,"_process":60,"prop-types":64,"react":90}],73:[function(require,module,exports){
 (function (process){
 "use strict";
 
@@ -30766,7 +31201,7 @@ _ref) {
   };
 }
 }).call(this,require('_process'))
-},{"../utils/PropTypes":81,"../utils/Subscription":82,"@babel/runtime/helpers/assertThisInitialized":23,"@babel/runtime/helpers/extends":24,"@babel/runtime/helpers/inheritsLoose":25,"@babel/runtime/helpers/interopRequireDefault":26,"@babel/runtime/helpers/objectWithoutPropertiesLoose":28,"_process":59,"hoist-non-react-statics":54,"invariant":56,"react":89,"react-is":70}],73:[function(require,module,exports){
+},{"../utils/PropTypes":82,"../utils/Subscription":83,"@babel/runtime/helpers/assertThisInitialized":24,"@babel/runtime/helpers/extends":25,"@babel/runtime/helpers/inheritsLoose":26,"@babel/runtime/helpers/interopRequireDefault":27,"@babel/runtime/helpers/objectWithoutPropertiesLoose":29,"_process":60,"hoist-non-react-statics":55,"invariant":57,"react":90,"react-is":71}],74:[function(require,module,exports){
 "use strict";
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
@@ -30882,7 +31317,7 @@ function createConnect(_temp) {
 var _default = createConnect();
 
 exports.default = _default;
-},{"../components/connectAdvanced":72,"../utils/shallowEqual":84,"./mapDispatchToProps":74,"./mapStateToProps":75,"./mergeProps":76,"./selectorFactory":77,"@babel/runtime/helpers/extends":24,"@babel/runtime/helpers/interopRequireDefault":26,"@babel/runtime/helpers/objectWithoutPropertiesLoose":28}],74:[function(require,module,exports){
+},{"../components/connectAdvanced":73,"../utils/shallowEqual":85,"./mapDispatchToProps":75,"./mapStateToProps":76,"./mergeProps":77,"./selectorFactory":78,"@babel/runtime/helpers/extends":25,"@babel/runtime/helpers/interopRequireDefault":27,"@babel/runtime/helpers/objectWithoutPropertiesLoose":29}],75:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -30915,7 +31350,7 @@ function whenMapDispatchToPropsIsObject(mapDispatchToProps) {
 
 var _default = [whenMapDispatchToPropsIsFunction, whenMapDispatchToPropsIsMissing, whenMapDispatchToPropsIsObject];
 exports.default = _default;
-},{"./wrapMapToProps":79,"redux":91}],75:[function(require,module,exports){
+},{"./wrapMapToProps":80,"redux":92}],76:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -30937,7 +31372,7 @@ function whenMapStateToPropsIsMissing(mapStateToProps) {
 
 var _default = [whenMapStateToPropsIsFunction, whenMapStateToPropsIsMissing];
 exports.default = _default;
-},{"./wrapMapToProps":79}],76:[function(require,module,exports){
+},{"./wrapMapToProps":80}],77:[function(require,module,exports){
 (function (process){
 "use strict";
 
@@ -30994,7 +31429,7 @@ function whenMergePropsIsOmitted(mergeProps) {
 var _default = [whenMergePropsIsFunction, whenMergePropsIsOmitted];
 exports.default = _default;
 }).call(this,require('_process'))
-},{"../utils/verifyPlainObject":85,"@babel/runtime/helpers/extends":24,"@babel/runtime/helpers/interopRequireDefault":26,"_process":59}],77:[function(require,module,exports){
+},{"../utils/verifyPlainObject":86,"@babel/runtime/helpers/extends":25,"@babel/runtime/helpers/interopRequireDefault":27,"_process":60}],78:[function(require,module,exports){
 (function (process){
 "use strict";
 
@@ -31096,7 +31531,7 @@ function finalPropsSelectorFactory(dispatch, _ref2) {
   return selectorFactory(mapStateToProps, mapDispatchToProps, mergeProps, dispatch, options);
 }
 }).call(this,require('_process'))
-},{"./verifySubselectors":78,"@babel/runtime/helpers/interopRequireDefault":26,"@babel/runtime/helpers/objectWithoutPropertiesLoose":28,"_process":59}],78:[function(require,module,exports){
+},{"./verifySubselectors":79,"@babel/runtime/helpers/interopRequireDefault":27,"@babel/runtime/helpers/objectWithoutPropertiesLoose":29,"_process":60}],79:[function(require,module,exports){
 "use strict";
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
@@ -31121,7 +31556,7 @@ function verifySubselectors(mapStateToProps, mapDispatchToProps, mergeProps, dis
   verify(mapDispatchToProps, 'mapDispatchToProps', displayName);
   verify(mergeProps, 'mergeProps', displayName);
 }
-},{"../utils/warning":86,"@babel/runtime/helpers/interopRequireDefault":26}],79:[function(require,module,exports){
+},{"../utils/warning":87,"@babel/runtime/helpers/interopRequireDefault":27}],80:[function(require,module,exports){
 (function (process){
 "use strict";
 
@@ -31200,7 +31635,7 @@ function wrapMapToPropsFunc(mapToProps, methodName) {
   };
 }
 }).call(this,require('_process'))
-},{"../utils/verifyPlainObject":85,"@babel/runtime/helpers/interopRequireDefault":26,"_process":59}],80:[function(require,module,exports){
+},{"../utils/verifyPlainObject":86,"@babel/runtime/helpers/interopRequireDefault":27,"_process":60}],81:[function(require,module,exports){
 "use strict";
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
@@ -31221,7 +31656,7 @@ exports.connectAdvanced = _connectAdvanced.default;
 var _connect = _interopRequireDefault(require("./connect/connect"));
 
 exports.connect = _connect.default;
-},{"./components/Provider":71,"./components/connectAdvanced":72,"./connect/connect":73,"@babel/runtime/helpers/interopRequireDefault":26,"@babel/runtime/helpers/interopRequireWildcard":27}],81:[function(require,module,exports){
+},{"./components/Provider":72,"./components/connectAdvanced":73,"./connect/connect":74,"@babel/runtime/helpers/interopRequireDefault":27,"@babel/runtime/helpers/interopRequireWildcard":28}],82:[function(require,module,exports){
 "use strict";
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
@@ -31247,7 +31682,7 @@ var storeShape = _propTypes.default.shape({
 });
 
 exports.storeShape = storeShape;
-},{"@babel/runtime/helpers/interopRequireDefault":26,"prop-types":63}],82:[function(require,module,exports){
+},{"@babel/runtime/helpers/interopRequireDefault":27,"prop-types":64}],83:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -31340,7 +31775,7 @@ function () {
 }();
 
 exports.default = Subscription;
-},{}],83:[function(require,module,exports){
+},{}],84:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -31362,7 +31797,7 @@ function isPlainObject(obj) {
 
   return proto === baseProto;
 }
-},{}],84:[function(require,module,exports){
+},{}],85:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -31396,7 +31831,7 @@ function shallowEqual(objA, objB) {
 
   return true;
 }
-},{}],85:[function(require,module,exports){
+},{}],86:[function(require,module,exports){
 "use strict";
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
@@ -31413,7 +31848,7 @@ function verifyPlainObject(value, displayName, methodName) {
     (0, _warning.default)(methodName + "() in " + displayName + " must return a plain object. Instead received " + value + ".");
   }
 }
-},{"./isPlainObject":83,"./warning":86,"@babel/runtime/helpers/interopRequireDefault":26}],86:[function(require,module,exports){
+},{"./isPlainObject":84,"./warning":87,"@babel/runtime/helpers/interopRequireDefault":27}],87:[function(require,module,exports){
 "use strict";
 
 exports.__esModule = true;
@@ -31443,7 +31878,7 @@ function warning(message) {
   /* eslint-enable no-empty */
 
 }
-},{}],87:[function(require,module,exports){
+},{}],88:[function(require,module,exports){
 (function (process){
 /** @license React v16.6.1
  * react.development.js
@@ -33287,7 +33722,7 @@ module.exports = react;
 }
 
 }).call(this,require('_process'))
-},{"_process":59,"object-assign":58,"prop-types/checkPropTypes":60}],88:[function(require,module,exports){
+},{"_process":60,"object-assign":59,"prop-types/checkPropTypes":61}],89:[function(require,module,exports){
 /** @license React v16.6.1
  * react.production.min.js
  *
@@ -33313,7 +33748,7 @@ _currentValue:a,_currentValue2:a,_threadCount:0,Provider:null,Consumer:null};a.P
 if(null!=b){void 0!==b.ref&&(h=b.ref,f=K.current);void 0!==b.key&&(g=""+b.key);var l=void 0;a.type&&a.type.defaultProps&&(l=a.type.defaultProps);for(c in b)L.call(b,c)&&!M.hasOwnProperty(c)&&(d[c]=void 0===b[c]&&void 0!==l?l[c]:b[c])}c=arguments.length-2;if(1===c)d.children=e;else if(1<c){l=Array(c);for(var m=0;m<c;m++)l[m]=arguments[m+2];d.children=l}return{$$typeof:p,type:a.type,key:g,ref:h,props:d,_owner:f}},createFactory:function(a){var b=N.bind(null,a);b.type=a;return b},isValidElement:O,version:"16.6.3",
 __SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED:{ReactCurrentOwner:K,assign:k}};X.unstable_ConcurrentMode=x;X.unstable_Profiler=u;var Y={default:X},Z=Y&&X||Y;module.exports=Z.default||Z;
 
-},{"object-assign":58}],89:[function(require,module,exports){
+},{"object-assign":59}],90:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -33324,7 +33759,7 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 }).call(this,require('_process'))
-},{"./cjs/react.development.js":87,"./cjs/react.production.min.js":88,"_process":59}],90:[function(require,module,exports){
+},{"./cjs/react.development.js":88,"./cjs/react.production.min.js":89,"_process":60}],91:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -33348,7 +33783,7 @@ var thunk = createThunkMiddleware();
 thunk.withExtraArgument = createThunkMiddleware;
 
 exports['default'] = thunk;
-},{}],91:[function(require,module,exports){
+},{}],92:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -33999,7 +34434,7 @@ exports.compose = compose;
 exports.__DO_NOT_USE__ActionTypes = ActionTypes;
 
 }).call(this,require('_process'))
-},{"_process":59,"symbol-observable":99}],92:[function(require,module,exports){
+},{"_process":60,"symbol-observable":100}],93:[function(require,module,exports){
 'use strict';
 
 exports.__esModule = true;
@@ -34126,7 +34561,7 @@ function createStructuredSelector(selectors) {
     }, {});
   });
 }
-},{}],93:[function(require,module,exports){
+},{}],94:[function(require,module,exports){
 (function (process){
 /** @license React v16.6.1
  * scheduler-tracing.development.js
@@ -34550,7 +34985,7 @@ exports.unstable_unsubscribe = unstable_unsubscribe;
 }
 
 }).call(this,require('_process'))
-},{"_process":59}],94:[function(require,module,exports){
+},{"_process":60}],95:[function(require,module,exports){
 /** @license React v16.6.1
  * scheduler-tracing.production.min.js
  *
@@ -34562,7 +34997,7 @@ exports.unstable_unsubscribe = unstable_unsubscribe;
 
 'use strict';Object.defineProperty(exports,"__esModule",{value:!0});var b=0;exports.__interactionsRef=null;exports.__subscriberRef=null;exports.unstable_clear=function(a){return a()};exports.unstable_getCurrent=function(){return null};exports.unstable_getThreadID=function(){return++b};exports.unstable_trace=function(a,d,c){return c()};exports.unstable_wrap=function(a){return a};exports.unstable_subscribe=function(){};exports.unstable_unsubscribe=function(){};
 
-},{}],95:[function(require,module,exports){
+},{}],96:[function(require,module,exports){
 (function (process){
 /** @license React v16.6.1
  * scheduler.development.js
@@ -35205,7 +35640,7 @@ exports.unstable_shouldYield = unstable_shouldYield;
 }
 
 }).call(this,require('_process'))
-},{"_process":59}],96:[function(require,module,exports){
+},{"_process":60}],97:[function(require,module,exports){
 /** @license React v16.6.1
  * scheduler.production.min.js
  *
@@ -35228,7 +35663,7 @@ exports.unstable_scheduleCallback=function(a,b){var c=-1!==k?k:exports.unstable_
 b=c.previous;b.next=c.previous=a;a.next=c;a.previous=b}return a};exports.unstable_cancelCallback=function(a){var b=a.next;if(null!==b){if(b===a)d=null;else{a===d&&(d=b);var c=a.previous;c.next=b;b.previous=c}a.next=a.previous=null}};exports.unstable_wrapCallback=function(a){var b=h;return function(){var c=h,e=k;h=b;k=exports.unstable_now();try{return a.apply(this,arguments)}finally{h=c,k=e,v()}}};exports.unstable_getCurrentPriorityLevel=function(){return h};
 exports.unstable_shouldYield=function(){return!f&&(null!==d&&d.expirationTime<l||w())};
 
-},{}],97:[function(require,module,exports){
+},{}],98:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -35239,7 +35674,7 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 }).call(this,require('_process'))
-},{"./cjs/scheduler.development.js":95,"./cjs/scheduler.production.min.js":96,"_process":59}],98:[function(require,module,exports){
+},{"./cjs/scheduler.development.js":96,"./cjs/scheduler.production.min.js":97,"_process":60}],99:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -35250,7 +35685,7 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 }).call(this,require('_process'))
-},{"./cjs/scheduler-tracing.development.js":93,"./cjs/scheduler-tracing.production.min.js":94,"_process":59}],99:[function(require,module,exports){
+},{"./cjs/scheduler-tracing.development.js":94,"./cjs/scheduler-tracing.production.min.js":95,"_process":60}],100:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -35282,7 +35717,7 @@ if (typeof self !== 'undefined') {
 var result = (0, _ponyfill2['default'])(root);
 exports['default'] = result;
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./ponyfill.js":100}],100:[function(require,module,exports){
+},{"./ponyfill.js":101}],101:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -35306,7 +35741,7 @@ function symbolObservablePonyfill(root) {
 
 	return result;
 };
-},{}],101:[function(require,module,exports){
+},{}],102:[function(require,module,exports){
 (function (setImmediate,clearImmediate){
 var nextTick = require('process/browser.js').nextTick;
 var apply = Function.prototype.apply;
@@ -35385,4 +35820,4 @@ exports.clearImmediate = typeof clearImmediate === "function" ? clearImmediate :
   delete immediateIds[id];
 };
 }).call(this,require("timers").setImmediate,require("timers").clearImmediate)
-},{"process/browser.js":59,"timers":101}]},{},[10]);
+},{"process/browser.js":60,"timers":102}]},{},[10]);

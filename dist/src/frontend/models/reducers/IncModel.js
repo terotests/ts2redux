@@ -30,12 +30,18 @@ var __assign = (this && this.__assign) || function () {
     return __assign.apply(this, arguments);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+function incMe(obj) {
+    obj.cnt++;
+}
+/**
+ * @redux true
+ */
 var IncModel = /** @class */ (function () {
     function IncModel() {
         this.cnt = 0;
     }
     IncModel.prototype.increment = function () {
-        this.cnt++;
+        incMe(this);
     };
     IncModel.prototype.decrement = function () {
         this.cnt--;
@@ -79,11 +85,14 @@ var initWithMethodsIncModel = function () {
 /**
  * @generated true
  */
-var RIncModel = /** @class */ (function () {
+var RIncModel = /** @class */ (function (_super) {
+    __extends(RIncModel, _super);
     function RIncModel(state, dispatch, getState) {
-        this._state = state;
-        this._dispatch = dispatch;
-        this._getState = getState;
+        var _this = _super.call(this) || this;
+        _this._state = state;
+        _this._dispatch = dispatch;
+        _this._getState = getState;
+        return _this;
     }
     Object.defineProperty(RIncModel.prototype, "cnt", {
         get: function () {
@@ -113,7 +122,7 @@ var RIncModel = /** @class */ (function () {
     });
     RIncModel.prototype.increment = function () {
         if (this._state) {
-            this.cnt++;
+            incMe(this);
         }
         else {
             if (this._dispatch) {
@@ -142,7 +151,7 @@ var RIncModel = /** @class */ (function () {
         };
     };
     return RIncModel;
-}());
+}(IncModel));
 exports.RIncModel = RIncModel;
 exports.IncModelEnums = {
     IncModel_cnt: "IncModel_cnt",

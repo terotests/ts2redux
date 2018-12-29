@@ -1,10 +1,13 @@
 import axios from "axios";
 
+export class itemStorage {
+  items: any[] = [];
+}
+
 /**
  * @redux true
  */
-export class SimpleModel {
-  items: any[] = [];
+export class SimpleModel extends itemStorage {
   async getItems() {
     this.items = (await axios.get(
       "https://jsonplaceholder.typicode.com/todos"

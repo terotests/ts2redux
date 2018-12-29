@@ -1,5 +1,6 @@
 import axios from "axios";
 import { TodoListItem } from "./interfaces";
+import { loadables, loadable, LoadableType } from "./loadables";
 
 export type TaskState = "UNDEFINED" | "RUNNING" | "LOADED" | "ERROR";
 export enum SortOrder {
@@ -12,10 +13,48 @@ const sortFn = (order: SortOrder) => (a: TodoListItem, b: TodoListItem) => {
   return b.id - a.id;
 };
 
+/*
+async function getItems2<
+  T extends { [K in keyof T]: R } & { [K2 in keyof T]: TaskState },
+  R,
+  K extends keyof T,
+  K2 extends keyof T
+>(obj: T, key: K, stateKey: K2) {
+  console.log("async ext getItems2 called...");
+  if (obj[stateKey] === "RUNNING") return;
+  try {
+    obj[stateKey] = "RUNNING";
+    obj[key] = (await axios.get(
+      "https://jsonplaceholder.typicode.com/todos"
+    )).data;
+    obj[stateKey] = "LOADED";
+  } catch (e) {
+    obj[stateKey] = "ERROR";
+  }
+}
+*/
+
+/*
+async function getItems(obj: TodoList) {
+  console.log("async ext getItems called...");
+  if (obj.state === "RUNNING") return;
+  try {
+    obj.state = "RUNNING";
+    obj.items = (await axios.get(
+      "https://jsonplaceholder.typicode.com/todos"
+    )).data;
+    obj.state = "LOADED";
+  } catch (e) {
+    obj.state = "ERROR";
+    obj.stateError = e;
+  }
+}
+*/
+
 /**
  * @redux true
  */
-export class TodoList {
+export class TodoList extends loadables {
   items: TodoListItem[] = [];
   state: TaskState = "UNDEFINED";
   stateError: any;
@@ -32,7 +71,7 @@ export class TodoList {
       .slice(this.listStart, this.listStart + this.listPageLength);
   }
 
-  private findMaxId(): number {
+  protected findMaxId(): number {
     let max = 0;
     this.items.forEach(item => {
       if (item.id > max) max = item.id;
@@ -84,16 +123,12 @@ export class TodoList {
    * Fetch items from json placeholder service
    */
   async getItems() {
-    if (this.state === "RUNNING") return;
-    try {
-      this.state = "RUNNING";
-      this.items = (await axios.get(
-        "https://jsonplaceholder.typicode.com/todos"
-      )).data;
-      this.state = "LOADED";
-    } catch (e) {
-      this.state = "ERROR";
-      this.stateError = e;
-    }
+    await this.loadItems(
+      this,
+      "items",
+      async () =>
+        (await axios.get("https://jsonplaceholder.typicode.com/todos")).data,
+      items => (this.items = items)
+    );
   }
 }

@@ -40,14 +40,14 @@ export declare class TetrisModel {
     tickCnt: number;
     dx: number;
     dy: number;
-    private doesCollide;
+    protected doesCollide(pieceX: number, pieceY: number, pieceCells?: Cell[][]): boolean;
     tick(): void;
     left(): void;
     right(): void;
     rotate(): void;
-    private rotateCells;
+    protected rotateCells(cells: Cell[][]): Cell[][];
     step(): void;
-    private pickNextColor;
+    protected pickNextColor(): string;
     masonPiece(): void;
     dropRows(): void;
     clearCells(): void;
@@ -92,7 +92,7 @@ export declare const StateConnector: any;
 /**
  * @generated true
  */
-export declare class RTetrisModel {
+export declare class RTetrisModel extends TetrisModel {
     private _state?;
     private _dispatch?;
     private _getState?;
@@ -110,7 +110,7 @@ export declare class RTetrisModel {
     tickCnt: number;
     dx: number;
     dy: number;
-    private doesCollide;
+    protected doesCollide(pieceX: number, pieceY: number, pieceCells?: Cell[][]): boolean;
     tick(): void;
     static tick(): (dispatcher: any, getState: any) => void;
     left(): void;
@@ -119,10 +119,10 @@ export declare class RTetrisModel {
     static right(): (dispatcher: any, getState: any) => void;
     rotate(): void;
     static rotate(): (dispatcher: any, getState: any) => void;
-    private rotateCells;
+    protected rotateCells(cells: Cell[][]): Cell[][];
     step(): void;
     static step(): (dispatcher: any, getState: any) => void;
-    private pickNextColor;
+    protected pickNextColor(): string;
     masonPiece(): void;
     static masonPiece(): (dispatcher: any, getState: any) => void;
     dropRows(): void;

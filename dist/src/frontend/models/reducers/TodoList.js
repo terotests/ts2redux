@@ -66,6 +66,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var axios_1 = require("axios");
+var loadables_1 = require("../loadables");
 var SortOrder;
 (function (SortOrder) {
     SortOrder["ASC"] = "asc";
@@ -76,17 +77,56 @@ var sortFn = function (order) { return function (a, b) {
         return a.id - b.id;
     return b.id - a.id;
 }; };
+/*
+async function getItems2<
+  T extends { [K in keyof T]: R } & { [K2 in keyof T]: TaskState },
+  R,
+  K extends keyof T,
+  K2 extends keyof T
+>(obj: T, key: K, stateKey: K2) {
+  console.log("async ext getItems2 called...");
+  if (obj[stateKey] === "RUNNING") return;
+  try {
+    obj[stateKey] = "RUNNING";
+    obj[key] = (await axios.get(
+      "https://jsonplaceholder.typicode.com/todos"
+    )).data;
+    obj[stateKey] = "LOADED";
+  } catch (e) {
+    obj[stateKey] = "ERROR";
+  }
+}
+*/
+/*
+async function getItems(obj: TodoList) {
+  console.log("async ext getItems called...");
+  if (obj.state === "RUNNING") return;
+  try {
+    obj.state = "RUNNING";
+    obj.items = (await axios.get(
+      "https://jsonplaceholder.typicode.com/todos"
+    )).data;
+    obj.state = "LOADED";
+  } catch (e) {
+    obj.state = "ERROR";
+    obj.stateError = e;
+  }
+}
+*/
 /**
  * @redux true
  */
-var TodoList = /** @class */ (function () {
+var TodoList = /** @class */ (function (_super) {
+    __extends(TodoList, _super);
     function TodoList() {
-        this.items = [];
-        this.state = "UNDEFINED";
-        this.sortOrder = SortOrder.ASC;
-        this.listStart = 0;
-        this.listPageLength = 10;
-        this.listTitle = "Title of TODO -list";
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this.items = [];
+        _this.state = "UNDEFINED";
+        _this.sortOrder = SortOrder.ASC;
+        _this.listStart = 0;
+        _this.listPageLength = 10;
+        _this.listTitle = "Title of TODO -list";
+        return _this;
     }
     Object.defineProperty(TodoList.prototype, "listToDisplay", {
         // Example of memoized list using reselect
@@ -154,34 +194,24 @@ var TodoList = /** @class */ (function () {
      */
     TodoList.prototype.getItems = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var _a, e_1;
-            return __generator(this, function (_b) {
-                switch (_b.label) {
-                    case 0:
-                        if (this.state === "RUNNING")
-                            return [2 /*return*/];
-                        _b.label = 1;
+            var _this = this;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.loadItems(this, "items", function () { return __awaiter(_this, void 0, void 0, function () { return __generator(this, function (_a) {
+                            switch (_a.label) {
+                                case 0: return [4 /*yield*/, axios_1.default.get("https://jsonplaceholder.typicode.com/todos")];
+                                case 1: return [2 /*return*/, (_a.sent()).data];
+                            }
+                        }); }); }, function (items) { return (_this.items = items); })];
                     case 1:
-                        _b.trys.push([1, 3, , 4]);
-                        this.state = "RUNNING";
-                        _a = this;
-                        return [4 /*yield*/, axios_1.default.get("https://jsonplaceholder.typicode.com/todos")];
-                    case 2:
-                        _a.items = (_b.sent()).data;
-                        this.state = "LOADED";
-                        return [3 /*break*/, 4];
-                    case 3:
-                        e_1 = _b.sent();
-                        this.state = "ERROR";
-                        this.stateError = e_1;
-                        return [3 /*break*/, 4];
-                    case 4: return [2 /*return*/];
+                        _a.sent();
+                        return [2 /*return*/];
                 }
             });
         });
     };
     return TodoList;
-}());
+}(loadables_1.loadables));
 exports.TodoList = TodoList;
 var immer = require("immer");
 var reselect_1 = require("reselect");
@@ -203,6 +233,9 @@ exports.listPageLengthSelectorFn = function (state) {
 };
 exports.listTitleSelectorFn = function (state) {
     return state.listTitle;
+};
+exports.loadablesSelectorFn = function (state) {
+    return state.loadables;
 };
 exports.listToDisplaySelectorFnCreator = function () {
     return reselect_1.createSelector([
@@ -229,6 +262,7 @@ exports.mapStateToProps = function (state) {
         listStart: state.TodoList.listStart,
         listPageLength: state.TodoList.listPageLength,
         listTitle: state.TodoList.listTitle,
+        loadables: state.TodoList.loadables,
         listToDisplay: exports.listToDisplaySelector(state.TodoList)
     };
 };
@@ -266,6 +300,18 @@ exports.mapDispatchToProps = function (dispatch) {
         },
         getItems: function () {
             return dispatch(RTodoList.getItems());
+        },
+        initState: function (name) {
+            return dispatch(RTodoList.initState(name));
+        },
+        setLoadState: function (opts) {
+            return dispatch(RTodoList.setLoadState(opts));
+        },
+        setData: function (opts) {
+            return dispatch(RTodoList.setData(opts));
+        },
+        setError: function (opts) {
+            return dispatch(RTodoList.setError(opts));
         }
     };
 };
@@ -279,7 +325,8 @@ var initTodoList = function () {
         sortOrder: o.sortOrder,
         listStart: o.listStart,
         listPageLength: o.listPageLength,
-        listTitle: o.listTitle
+        listTitle: o.listTitle,
+        loadables: o.loadables
     };
 };
 var initWithMethodsTodoList = function () {
@@ -292,6 +339,7 @@ var initWithMethodsTodoList = function () {
         listStart: o.listStart,
         listPageLength: o.listPageLength,
         listTitle: o.listTitle,
+        loadables: o.loadables,
         nextPage: o.nextPage,
         prevPage: o.prevPage,
         toggleSortOrder: o.toggleSortOrder,
@@ -303,17 +351,24 @@ var initWithMethodsTodoList = function () {
         setTitle: o.setTitle,
         addLotOfItems: o.addLotOfItems,
         getItems: o.getItems,
+        initState: o.initState,
+        setLoadState: o.setLoadState,
+        setData: o.setData,
+        setError: o.setError,
         listToDisplay: o.listToDisplay
     };
 };
 /**
  * @generated true
  */
-var RTodoList = /** @class */ (function () {
+var RTodoList = /** @class */ (function (_super) {
+    __extends(RTodoList, _super);
     function RTodoList(state, dispatch, getState) {
-        this._state = state;
-        this._dispatch = dispatch;
-        this._getState = getState;
+        var _this = _super.call(this) || this;
+        _this._state = state;
+        _this._dispatch = dispatch;
+        _this._getState = getState;
+        return _this;
     }
     Object.defineProperty(RTodoList.prototype, "items", {
         get: function () {
@@ -512,6 +567,35 @@ var RTodoList = /** @class */ (function () {
         enumerable: true,
         configurable: true
     });
+    Object.defineProperty(RTodoList.prototype, "loadables", {
+        get: function () {
+            if (this._getState) {
+                return this._getState().TodoList.loadables;
+            }
+            else {
+                if (this._state) {
+                    return this._state.loadables;
+                }
+            }
+            throw "Invalid State in TodoList_loadables";
+        },
+        set: function (value) {
+            if (this._state && typeof value !== "undefined") {
+                this._state.loadables = value;
+            }
+            else {
+                // dispatch change for item loadables
+                if (this._dispatch) {
+                    this._dispatch({
+                        type: exports.TodoListEnums.TodoList_loadables,
+                        payload: value
+                    });
+                }
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
     RTodoList.prototype.findMaxId = function () {
         var max = 0;
         this.items.forEach(function (item) {
@@ -693,28 +777,18 @@ var RTodoList = /** @class */ (function () {
      */
     RTodoList.prototype.getItems = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var _a, e_2;
-            return __generator(this, function (_b) {
-                switch (_b.label) {
-                    case 0:
-                        if (this.state === "RUNNING")
-                            return [2 /*return*/];
-                        _b.label = 1;
+            var _this = this;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.loadItems(this, "items", function () { return __awaiter(_this, void 0, void 0, function () { return __generator(this, function (_a) {
+                            switch (_a.label) {
+                                case 0: return [4 /*yield*/, axios_1.default.get("https://jsonplaceholder.typicode.com/todos")];
+                                case 1: return [2 /*return*/, (_a.sent()).data];
+                            }
+                        }); }); }, function (items) { return (_this.items = items); })];
                     case 1:
-                        _b.trys.push([1, 3, , 4]);
-                        this.state = "RUNNING";
-                        _a = this;
-                        return [4 /*yield*/, axios_1.default.get("https://jsonplaceholder.typicode.com/todos")];
-                    case 2:
-                        _a.items = (_b.sent()).data;
-                        this.state = "LOADED";
-                        return [3 /*break*/, 4];
-                    case 3:
-                        e_2 = _b.sent();
-                        this.state = "ERROR";
-                        this.stateError = e_2;
-                        return [3 /*break*/, 4];
-                    case 4: return [2 /*return*/];
+                        _a.sent();
+                        return [2 /*return*/];
                 }
             });
         });
@@ -724,8 +798,121 @@ var RTodoList = /** @class */ (function () {
             new RTodoList(undefined, dispatcher, getState).getItems();
         };
     };
+    RTodoList.prototype.initState = function (name) {
+        if (this._state) {
+            if (!this.loadables[name]) {
+                this.loadables[name] = {
+                    data: null,
+                    state: "UNDEFINED",
+                    stateError: null
+                };
+            }
+        }
+        else {
+            if (this._dispatch) {
+                this._dispatch({
+                    type: exports.TodoListEnums.TodoList_initState,
+                    payload: name
+                });
+            }
+        }
+    };
+    RTodoList.initState = function (name) {
+        return function (dispatcher, getState) {
+            new RTodoList(undefined, dispatcher, getState).initState(name);
+        };
+    };
+    RTodoList.prototype.setLoadState = function (opts) {
+        if (this._state) {
+            if (!this.loadables[opts.name]) {
+                this.loadables[opts.name] = {
+                    data: null,
+                    state: "UNDEFINED",
+                    stateError: null
+                };
+            }
+            this.loadables[opts.name].state = opts.state;
+        }
+        else {
+            if (this._dispatch) {
+                this._dispatch({
+                    type: exports.TodoListEnums.TodoList_setLoadState,
+                    payload: opts
+                });
+            }
+        }
+    };
+    RTodoList.setLoadState = function (opts) {
+        return function (dispatcher, getState) {
+            new RTodoList(undefined, dispatcher, getState).setLoadState(opts);
+        };
+    };
+    RTodoList.prototype.setData = function (opts) {
+        if (this._state) {
+            this.loadables[opts.name].data = opts.data;
+        }
+        else {
+            if (this._dispatch) {
+                this._dispatch({ type: exports.TodoListEnums.TodoList_setData, payload: opts });
+            }
+        }
+    };
+    RTodoList.setData = function (opts) {
+        return function (dispatcher, getState) {
+            new RTodoList(undefined, dispatcher, getState).setData(opts);
+        };
+    };
+    RTodoList.prototype.setError = function (opts) {
+        if (this._state) {
+            this.loadables[opts.name].stateError = opts.err;
+        }
+        else {
+            if (this._dispatch) {
+                this._dispatch({
+                    type: exports.TodoListEnums.TodoList_setError,
+                    payload: opts
+                });
+            }
+        }
+    };
+    RTodoList.setError = function (opts) {
+        return function (dispatcher, getState) {
+            new RTodoList(undefined, dispatcher, getState).setError(opts);
+        };
+    };
+    RTodoList.prototype.loadItems = function (state, key, loader, ready) {
+        return __awaiter(this, void 0, void 0, function () {
+            var obj, data, e_1;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        state.initState(key);
+                        obj = state.loadables[key];
+                        if (obj.state === "RUNNING")
+                            return [2 /*return*/];
+                        _a.label = 1;
+                    case 1:
+                        _a.trys.push([1, 3, , 4]);
+                        state.setLoadState({ name: key, state: "RUNNING" });
+                        return [4 /*yield*/, loader()];
+                    case 2:
+                        data = _a.sent();
+                        // state.setData({ name: key, data });
+                        ready(data);
+                        state.setLoadState({ name: key, state: "LOADED" });
+                        return [3 /*break*/, 4];
+                    case 3:
+                        e_1 = _a.sent();
+                        state.setLoadState({ name: key, state: "ERROR" });
+                        state.setError({ name: key, err: e_1 });
+                        return [3 /*break*/, 4];
+                    case 4: return [2 /*return*/];
+                }
+            });
+        });
+    };
     return RTodoList;
-}());
+}(TodoList));
 exports.RTodoList = RTodoList;
 exports.TodoListEnums = {
     TodoList_items: "TodoList_items",
@@ -735,6 +922,7 @@ exports.TodoListEnums = {
     TodoList_listStart: "TodoList_listStart",
     TodoList_listPageLength: "TodoList_listPageLength",
     TodoList_listTitle: "TodoList_listTitle",
+    TodoList_loadables: "TodoList_loadables",
     TodoList_findMaxId: "TodoList_findMaxId",
     TodoList_nextPage: "TodoList_nextPage",
     TodoList_prevPage: "TodoList_prevPage",
@@ -745,7 +933,11 @@ exports.TodoListEnums = {
     TodoList_sortByTitle: "TodoList_sortByTitle",
     TodoList_sortByCompletion: "TodoList_sortByCompletion",
     TodoList_setTitle: "TodoList_setTitle",
-    TodoList_addLotOfItems: "TodoList_addLotOfItems"
+    TodoList_addLotOfItems: "TodoList_addLotOfItems",
+    TodoList_initState: "TodoList_initState",
+    TodoList_setLoadState: "TodoList_setLoadState",
+    TodoList_setData: "TodoList_setData",
+    TodoList_setError: "TodoList_setError"
 };
 exports.TodoListReducer = function (state, action) {
     if (state === void 0) { state = initTodoList(); }
@@ -771,6 +963,9 @@ exports.TodoListReducer = function (state, action) {
                 break;
             case exports.TodoListEnums.TodoList_listTitle:
                 new RTodoList(draft).listTitle = action.payload;
+                break;
+            case exports.TodoListEnums.TodoList_loadables:
+                new RTodoList(draft).loadables = action.payload;
                 break;
             case exports.TodoListEnums.TodoList_nextPage:
                 new RTodoList(draft).nextPage();
@@ -802,6 +997,18 @@ exports.TodoListReducer = function (state, action) {
             case exports.TodoListEnums.TodoList_addLotOfItems:
                 new RTodoList(draft).addLotOfItems(action.payload);
                 break;
+            case exports.TodoListEnums.TodoList_initState:
+                new RTodoList(draft).initState(action.payload);
+                break;
+            case exports.TodoListEnums.TodoList_setLoadState:
+                new RTodoList(draft).setLoadState(action.payload);
+                break;
+            case exports.TodoListEnums.TodoList_setData:
+                new RTodoList(draft).setData(action.payload);
+                break;
+            case exports.TodoListEnums.TodoList_setError:
+                new RTodoList(draft).setError(action.payload);
+                break;
         }
     });
 };
@@ -830,6 +1037,10 @@ var TodoListProvider = /** @class */ (function (_super) {
         _this.setTitle = _this.setTitle.bind(_this);
         _this.addLotOfItems = _this.addLotOfItems.bind(_this);
         _this.getItems = _this.getItems.bind(_this);
+        _this.initState = _this.initState.bind(_this);
+        _this.setLoadState = _this.setLoadState.bind(_this);
+        _this.setData = _this.setData.bind(_this);
+        _this.setError = _this.setError.bind(_this);
         _this.__selectorlistToDisplay = exports.listToDisplaySelectorFnCreator();
         var devs = window["devToolsExtension"]
             ? window["devToolsExtension"]
@@ -962,8 +1173,44 @@ var TodoListProvider = /** @class */ (function (_super) {
             });
         });
     };
+    TodoListProvider.prototype.initState = function (name) {
+        var nextState = immer.produce(this.state, function (draft) {
+            return new RTodoList(draft).initState(name);
+        });
+        if (this.__devTools) {
+            this.__devTools.send("initState", nextState);
+        }
+        this.setStateSync(nextState);
+    };
+    TodoListProvider.prototype.setLoadState = function (opts) {
+        var nextState = immer.produce(this.state, function (draft) {
+            return new RTodoList(draft).setLoadState(opts);
+        });
+        if (this.__devTools) {
+            this.__devTools.send("setLoadState", nextState);
+        }
+        this.setStateSync(nextState);
+    };
+    TodoListProvider.prototype.setData = function (opts) {
+        var nextState = immer.produce(this.state, function (draft) {
+            return new RTodoList(draft).setData(opts);
+        });
+        if (this.__devTools) {
+            this.__devTools.send("setData", nextState);
+        }
+        this.setStateSync(nextState);
+    };
+    TodoListProvider.prototype.setError = function (opts) {
+        var nextState = immer.produce(this.state, function (draft) {
+            return new RTodoList(draft).setError(opts);
+        });
+        if (this.__devTools) {
+            this.__devTools.send("setError", nextState);
+        }
+        this.setStateSync(nextState);
+    };
     TodoListProvider.prototype.render = function () {
-        return (React.createElement(exports.TodoListContext.Provider, { value: __assign({}, this.state, { nextPage: this.nextPage, prevPage: this.prevPage, toggleSortOrder: this.toggleSortOrder, clearTodoList: this.clearTodoList, reverse: this.reverse, sortById: this.sortById, sortByTitle: this.sortByTitle, sortByCompletion: this.sortByCompletion, setTitle: this.setTitle, addLotOfItems: this.addLotOfItems, getItems: this.getItems, listToDisplay: this.__selectorlistToDisplay(this.state) }) },
+        return (React.createElement(exports.TodoListContext.Provider, { value: __assign({}, this.state, { nextPage: this.nextPage, prevPage: this.prevPage, toggleSortOrder: this.toggleSortOrder, clearTodoList: this.clearTodoList, reverse: this.reverse, sortById: this.sortById, sortByTitle: this.sortByTitle, sortByCompletion: this.sortByCompletion, setTitle: this.setTitle, addLotOfItems: this.addLotOfItems, getItems: this.getItems, initState: this.initState, setLoadState: this.setLoadState, setData: this.setData, setError: this.setError, listToDisplay: this.__selectorlistToDisplay(this.state) }) },
             " ",
             this.props.children));
     };

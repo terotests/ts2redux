@@ -66,12 +66,20 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var axios_1 = require("axios");
+var itemStorage = /** @class */ (function () {
+    function itemStorage() {
+        this.items = [];
+    }
+    return itemStorage;
+}());
+exports.itemStorage = itemStorage;
 /**
  * @redux true
  */
-var SimpleModel = /** @class */ (function () {
+var SimpleModel = /** @class */ (function (_super) {
+    __extends(SimpleModel, _super);
     function SimpleModel() {
-        this.items = [];
+        return _super !== null && _super.apply(this, arguments) || this;
     }
     SimpleModel.prototype.getItems = function () {
         return __awaiter(this, void 0, void 0, function () {
@@ -96,7 +104,7 @@ var SimpleModel = /** @class */ (function () {
         configurable: true
     });
     return SimpleModel;
-}());
+}(itemStorage));
 exports.SimpleModel = SimpleModel;
 var immer = require("immer");
 var reselect_1 = require("reselect");
@@ -142,11 +150,14 @@ var initWithMethodsSimpleModel = function () {
 /**
  * @generated true
  */
-var RSimpleModel = /** @class */ (function () {
+var RSimpleModel = /** @class */ (function (_super) {
+    __extends(RSimpleModel, _super);
     function RSimpleModel(state, dispatch, getState) {
-        this._state = state;
-        this._dispatch = dispatch;
-        this._getState = getState;
+        var _this = _super.call(this) || this;
+        _this._state = state;
+        _this._dispatch = dispatch;
+        _this._getState = getState;
+        return _this;
     }
     Object.defineProperty(RSimpleModel.prototype, "items", {
         get: function () {
@@ -198,7 +209,7 @@ var RSimpleModel = /** @class */ (function () {
         };
     };
     return RSimpleModel;
-}());
+}(SimpleModel));
 exports.RSimpleModel = RSimpleModel;
 exports.SimpleModelEnums = {
     SimpleModel_items: "SimpleModel_items"

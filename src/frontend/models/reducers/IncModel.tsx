@@ -5,10 +5,18 @@
  *                                                                               *
  ********************************************************************************/
 
+function incMe(obj: IncModel) {
+  obj.cnt++;
+}
+
+/**
+ * @redux true
+ */
+
 export class IncModel {
   cnt = 0;
   increment() {
-    this.cnt++;
+    incMe(this);
   }
   decrement() {
     this.cnt--;
@@ -68,7 +76,7 @@ const initWithMethodsIncModel = () => {
 /**
  * @generated true
  */
-export class RIncModel {
+export class RIncModel extends IncModel {
   private _state?: IIncModel;
   private _dispatch?: (action: any) => void;
   private _getState?: () => any;
@@ -77,6 +85,7 @@ export class RIncModel {
     dispatch?: (action: any) => void,
     getState?: () => any
   ) {
+    super();
     this._state = state;
     this._dispatch = dispatch;
     this._getState = getState;
@@ -104,7 +113,7 @@ export class RIncModel {
 
   increment() {
     if (this._state) {
-      this.cnt++;
+      incMe(this);
     } else {
       if (this._dispatch) {
         this._dispatch({ type: IncModelEnums.IncModel_increment });

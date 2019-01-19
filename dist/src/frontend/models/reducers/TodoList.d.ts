@@ -52,7 +52,6 @@ export interface IContainerPropsMethods {
     setTitle: (value: string) => any;
     addLotOfItems: (cnt: number) => any;
     getItems: () => any;
-    ReduxDispatch: (action: any) => void;
 }
 export interface ITodoList {
     items: TodoListItem[];

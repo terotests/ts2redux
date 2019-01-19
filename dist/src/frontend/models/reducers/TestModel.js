@@ -293,9 +293,6 @@ exports.mapDispatchToProps = function (dispatch) {
         },
         ChangeLastItem: function () {
             return dispatch(RTestModel.ChangeLastItem());
-        },
-        ReduxDispatch: function (action) {
-            return dispatch(action);
         }
     };
 };
@@ -357,8 +354,7 @@ var initWithMethodsTestModel = function () {
         createItem: o.createItem,
         addOneFriend: o.addOneFriend,
         fillSomeFriends: o.fillSomeFriends,
-        ChangeLastItem: o.ChangeLastItem,
-        ReduxDispatch: function (action) { return null; }
+        ChangeLastItem: o.ChangeLastItem
     };
 };
 /**
@@ -1011,6 +1007,7 @@ var RTestModel = /** @class */ (function () {
             new RTestModel(undefined, dispatcher, getState).renameLast(newName);
         };
     };
+    // createItem
     // action
     RTestModel.prototype.createItem = function (someName) {
         return __awaiter(this, void 0, void 0, function () {
@@ -1040,6 +1037,7 @@ var RTestModel = /** @class */ (function () {
             new RTestModel(undefined, dispatcher, getState).createItem(someName);
         };
     };
+    // addOneFriend
     RTestModel.prototype.addOneFriend = function (name) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
@@ -1053,6 +1051,7 @@ var RTestModel = /** @class */ (function () {
             new RTestModel(undefined, dispatcher, getState).addOneFriend(name);
         };
     };
+    // fillSomeFriends
     RTestModel.prototype.fillSomeFriends = function () {
         return __awaiter(this, void 0, void 0, function () {
             var _this = this;
@@ -1069,6 +1068,7 @@ var RTestModel = /** @class */ (function () {
             new RTestModel(undefined, dispatcher, getState).fillSomeFriends();
         };
     };
+    // ChangeLastItem
     RTestModel.prototype.ChangeLastItem = function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
@@ -1400,7 +1400,7 @@ var TestModelProvider = /** @class */ (function (_super) {
         });
     };
     TestModelProvider.prototype.render = function () {
-        return (React.createElement(exports.TestModelContext.Provider, { value: __assign({}, this.state, { setUserMessage: this.setUserMessage, add: this.add, removeFirst: this.removeFirst, sort: this.sort, addCart: this.addCart, addCartSync: this.addCartSync, addToCart: this.addToCart, setCartNewItem: this.setCartNewItem, addToCartRandom: this.addToCartRandom, renameLast: this.renameLast, createItem: this.createItem, addOneFriend: this.addOneFriend, fillSomeFriends: this.fillSomeFriends, ChangeLastItem: this.ChangeLastItem, ReduxDispatch: function (action) { return null; } }) },
+        return (React.createElement(exports.TestModelContext.Provider, { value: __assign({}, this.state, { setUserMessage: this.setUserMessage, add: this.add, removeFirst: this.removeFirst, sort: this.sort, addCart: this.addCart, addCartSync: this.addCartSync, addToCart: this.addToCart, setCartNewItem: this.setCartNewItem, addToCartRandom: this.addToCartRandom, renameLast: this.renameLast, createItem: this.createItem, addOneFriend: this.addOneFriend, fillSomeFriends: this.fillSomeFriends, ChangeLastItem: this.ChangeLastItem }) },
             " ",
             this.props.children));
     };

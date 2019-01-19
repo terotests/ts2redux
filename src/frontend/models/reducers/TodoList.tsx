@@ -123,7 +123,6 @@ export interface IContainerPropsMethods {
   setTitle: (value: string) => any;
   addLotOfItems: (cnt: number) => any;
   getItems: () => any;
-  ReduxDispatch: (action: any) => void;
 }
 export interface ITodoList {
   items: TodoListItem[];
@@ -234,9 +233,6 @@ export const mapDispatchToProps = (dispatch: any): IContainerPropsMethods => {
     },
     getItems: () => {
       return dispatch(RTodoList.getItems());
-    },
-    ReduxDispatch: (action: any) => {
-      return dispatch(action);
     }
   };
 };
@@ -289,8 +285,7 @@ const initWithMethodsTodoList = () => {
     setTitle: o.setTitle,
     addLotOfItems: o.addLotOfItems,
     getItems: o.getItems,
-    listToDisplay: o.listToDisplay,
-    ReduxDispatch: (action: any) => null
+    listToDisplay: o.listToDisplay
   };
 };
 
@@ -640,6 +635,7 @@ export class RTodoList {
       new RTodoList(undefined, dispatcher, getState).addLotOfItems(cnt);
     };
   }
+  // getItems
   /**
    * Fetch items from json placeholder service
    */
@@ -917,8 +913,7 @@ export class TodoListProvider extends React.Component {
           setTitle: this.setTitle,
           addLotOfItems: this.addLotOfItems,
           getItems: this.getItems,
-          listToDisplay: this.__selectorlistToDisplay(this.state),
-          ReduxDispatch: (action: any) => null
+          listToDisplay: this.__selectorlistToDisplay(this.state)
         }}
       >
         {" "}

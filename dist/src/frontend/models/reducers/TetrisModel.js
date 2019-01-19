@@ -319,9 +319,6 @@ exports.mapDispatchToProps = function (dispatch) {
         },
         start: function () {
             return dispatch(RTetrisModel.start());
-        },
-        ReduxDispatch: function (action) {
-            return dispatch(action);
         }
     };
 };
@@ -373,8 +370,7 @@ var initWithMethodsTetrisModel = function () {
         dropRows: o.dropRows,
         clearCells: o.clearCells,
         resetGame: o.resetGame,
-        start: o.start,
-        ReduxDispatch: function (action) { return null; }
+        start: o.start
     };
 };
 /**
@@ -1282,7 +1278,7 @@ var TetrisModelProvider = /** @class */ (function (_super) {
         this.setStateSync(nextState);
     };
     TetrisModelProvider.prototype.render = function () {
-        return (React.createElement(exports.TetrisModelContext.Provider, { value: __assign({}, this.state, { tick: this.tick, left: this.left, right: this.right, rotate: this.rotate, step: this.step, masonPiece: this.masonPiece, dropRows: this.dropRows, clearCells: this.clearCells, resetGame: this.resetGame, start: this.start, ReduxDispatch: function (action) { return null; } }) },
+        return (React.createElement(exports.TetrisModelContext.Provider, { value: __assign({}, this.state, { tick: this.tick, left: this.left, right: this.right, rotate: this.rotate, step: this.step, masonPiece: this.masonPiece, dropRows: this.dropRows, clearCells: this.clearCells, resetGame: this.resetGame, start: this.start }) },
             " ",
             this.props.children));
     };

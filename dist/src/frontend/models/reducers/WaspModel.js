@@ -132,9 +132,6 @@ exports.mapDispatchToProps = function (dispatch) {
         },
         step: function () {
             return dispatch(RWaspModel.step());
-        },
-        ReduxDispatch: function (action) {
-            return dispatch(action);
         }
     };
 };
@@ -160,8 +157,7 @@ var initWithMethodsWaspModel = function () {
         addWasp: o.addWasp,
         incSpeed: o.incSpeed,
         setColor: o.setColor,
-        step: o.step,
-        ReduxDispatch: function (action) { return null; }
+        step: o.step
     };
 };
 /**
@@ -485,7 +481,7 @@ var WaspModelProvider = /** @class */ (function (_super) {
         this.setStateSync(nextState);
     };
     WaspModelProvider.prototype.render = function () {
-        return (React.createElement(exports.WaspModelContext.Provider, { value: __assign({}, this.state, { addWasp: this.addWasp, incSpeed: this.incSpeed, setColor: this.setColor, step: this.step, ReduxDispatch: function (action) { return null; } }) },
+        return (React.createElement(exports.WaspModelContext.Provider, { value: __assign({}, this.state, { addWasp: this.addWasp, incSpeed: this.incSpeed, setColor: this.setColor, step: this.step }) },
             " ",
             this.props.children));
     };

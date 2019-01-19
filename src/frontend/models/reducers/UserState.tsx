@@ -34,7 +34,6 @@ export interface IContainerPropsMethods {
   ) => any;
   logout: () => any;
   fakeLogin: () => any;
-  ReduxDispatch: (action: any) => void;
 }
 export interface IUserState {
   logged: boolean;
@@ -84,9 +83,6 @@ export const mapDispatchToProps = (dispatch: any): IContainerPropsMethods => {
     },
     fakeLogin: () => {
       return dispatch(RUserState.fakeLogin());
-    },
-    ReduxDispatch: (action: any) => {
-      return dispatch(action);
     }
   };
 };
@@ -126,8 +122,7 @@ const initWithMethodsUserState = () => {
     lastLogin: o.lastLogin,
     login: o.login,
     logout: o.logout,
-    fakeLogin: o.fakeLogin,
-    ReduxDispatch: (action: any) => null
+    fakeLogin: o.fakeLogin
   };
 };
 
@@ -263,6 +258,7 @@ export class RUserState {
     }
   }
 
+  // login
   async login(loginInfo: { username: string; password: string }) {
     console.log("Login called with ", loginInfo);
   }
@@ -272,6 +268,7 @@ export class RUserState {
       new RUserState(undefined, dispatcher, getState).login(loginInfo);
     };
   }
+  // logout
   async logout() {}
 
   public static logout() {
@@ -414,8 +411,7 @@ export class UserStateProvider extends React.Component {
           ...this.state,
           login: this.login,
           logout: this.logout,
-          fakeLogin: this.fakeLogin,
-          ReduxDispatch: (action: any) => null
+          fakeLogin: this.fakeLogin
         }}
       >
         {" "}

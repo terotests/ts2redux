@@ -127,9 +127,6 @@ exports.mapDispatchToProps = function (dispatch) {
         },
         fakeLogin: function () {
             return dispatch(RUserState.fakeLogin());
-        },
-        ReduxDispatch: function (action) {
-            return dispatch(action);
         }
     };
 };
@@ -158,8 +155,7 @@ var initWithMethodsUserState = function () {
         lastLogin: o.lastLogin,
         login: o.login,
         logout: o.logout,
-        fakeLogin: o.fakeLogin,
-        ReduxDispatch: function (action) { return null; }
+        fakeLogin: o.fakeLogin
     };
 };
 /**
@@ -316,6 +312,7 @@ var RUserState = /** @class */ (function () {
         enumerable: true,
         configurable: true
     });
+    // login
     RUserState.prototype.login = function (loginInfo) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
@@ -329,6 +326,7 @@ var RUserState = /** @class */ (function () {
             new RUserState(undefined, dispatcher, getState).login(loginInfo);
         };
     };
+    // logout
     RUserState.prototype.logout = function () {
         return __awaiter(this, void 0, void 0, function () { return __generator(this, function (_a) {
             return [2 /*return*/];
@@ -469,7 +467,7 @@ var UserStateProvider = /** @class */ (function (_super) {
         this.setStateSync(nextState);
     };
     UserStateProvider.prototype.render = function () {
-        return (React.createElement(exports.UserStateContext.Provider, { value: __assign({}, this.state, { login: this.login, logout: this.logout, fakeLogin: this.fakeLogin, ReduxDispatch: function (action) { return null; } }) },
+        return (React.createElement(exports.UserStateContext.Provider, { value: __assign({}, this.state, { login: this.login, logout: this.logout, fakeLogin: this.fakeLogin }) },
             " ",
             this.props.children));
     };

@@ -200,7 +200,6 @@ export interface IContainerPropsMethods {
   addOneFriend: (name) => any;
   fillSomeFriends: () => any;
   ChangeLastItem: () => any;
-  ReduxDispatch: (action: any) => void;
 }
 export interface ITestModel {
   // model with initializer
@@ -311,9 +310,6 @@ export const mapDispatchToProps = (dispatch: any): IContainerPropsMethods => {
     },
     ChangeLastItem: () => {
       return dispatch(RTestModel.ChangeLastItem());
-    },
-    ReduxDispatch: (action: any) => {
-      return dispatch(action);
     }
   };
 };
@@ -386,8 +382,7 @@ const initWithMethodsTestModel = () => {
     createItem: o.createItem,
     addOneFriend: o.addOneFriend,
     fillSomeFriends: o.fillSomeFriends,
-    ChangeLastItem: o.ChangeLastItem,
-    ReduxDispatch: (action: any) => null
+    ChangeLastItem: o.ChangeLastItem
   };
 };
 
@@ -960,6 +955,7 @@ export class RTestModel {
       new RTestModel(undefined, dispatcher, getState).renameLast(newName);
     };
   }
+  // createItem
   // action
   async createItem(someName: string) {
     console.log(MSG, this.shopState);
@@ -980,6 +976,7 @@ export class RTestModel {
       new RTestModel(undefined, dispatcher, getState).createItem(someName);
     };
   }
+  // addOneFriend
   async addOneFriend(name) {
     this.add({ name });
   }
@@ -989,6 +986,7 @@ export class RTestModel {
       new RTestModel(undefined, dispatcher, getState).addOneFriend(name);
     };
   }
+  // fillSomeFriends
   async fillSomeFriends() {
     FRIEND_LIST.forEach(name => {
       this.add({ name });
@@ -1000,6 +998,7 @@ export class RTestModel {
       new RTestModel(undefined, dispatcher, getState).fillSomeFriends();
     };
   }
+  // ChangeLastItem
   async ChangeLastItem() {
     this.renameLast(LAST_NAME);
   }
@@ -1339,8 +1338,7 @@ export class TestModelProvider extends React.Component {
           createItem: this.createItem,
           addOneFriend: this.addOneFriend,
           fillSomeFriends: this.fillSomeFriends,
-          ChangeLastItem: this.ChangeLastItem,
-          ReduxDispatch: (action: any) => null
+          ChangeLastItem: this.ChangeLastItem
         }}
       >
         {" "}

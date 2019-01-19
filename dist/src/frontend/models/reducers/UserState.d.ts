@@ -13,7 +13,6 @@ export interface IContainerPropsMethods {
     }) => any;
     logout: () => any;
     fakeLogin: () => any;
-    ReduxDispatch: (action: any) => void;
 }
 export interface IUserState {
     logged: boolean;

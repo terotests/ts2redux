@@ -47,7 +47,6 @@ export interface IContainerPropsMethods {
     addOneFriend: (name: any) => any;
     fillSomeFriends: () => any;
     ChangeLastItem: () => any;
-    ReduxDispatch: (action: any) => void;
 }
 export interface ITestModel {
     items: ShopCartItem[];

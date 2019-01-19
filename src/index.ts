@@ -261,7 +261,7 @@ export async function createProject(settings: GenerationOptions) {
         ng.out(`export interface IContainerPropsMethods {`, true);
         ng.indent(1);
         const propsMethods = ng.fork();
-        ng.out(`ReduxDispatch: (action:any) => void;`, true);
+        // ng.out(`ReduxDispatch: (action:any) => void;`, true);
         ng.indent(-1);
         ng.out(`}`, true);
 
@@ -360,10 +360,12 @@ export async function createProject(settings: GenerationOptions) {
         ng.out("return {", true);
         ng.indent(1);
         const dispatchMethods = ng.fork();
+        /*
         ng.out(
           `ReduxDispatch: (action:any) => { return dispatch(action) },`,
           true
         );
+        */
         ng.indent(-1);
         ng.out("}", true);
         ng.indent(-1);
@@ -413,7 +415,7 @@ export async function createProject(settings: GenerationOptions) {
           ng.out(m.getName() + ": o." + m.getName() + ",", true);
         });
 
-        ng.out(`ReduxDispatch: (action:any) => null,`, true);
+        // ng.out(`ReduxDispatch: (action:any) => null,`, true);
         ng.indent(-1);
         ng.out("}", true);
         ng.indent(-1);
@@ -651,8 +653,21 @@ export async function createProject(settings: GenerationOptions) {
             .join("");
 
           if (m.isAsync()) {
-            // body.out('// is task', true)
-            body.raw(m.print(), true);
+            body.out("// " + m.getName(), true);
+            if (m.getName() === "ReduxDispatch") {
+              body.out(
+                `
+async ReduxDispatch(action:any) {
+  if(typeof(this._dispatch) !== "undefined") {
+    this._dispatch(action);              
+  }
+}
+              `,
+                true
+              );
+            } else {
+              body.raw(m.print(), true);
+            }
           } else {
             // body.out('// is a reducer', true)
             const r_name = `${c.getName()}_${m.getName()}`;
@@ -758,25 +773,33 @@ export async function createProject(settings: GenerationOptions) {
                 ") => any",
               true
             );
-            dispatchMethods.out(
-              m.getName() +
-                " : " +
-                typeArgStr +
-                "(" +
-                m
-                  .getParameters()
-                  .map(mod => mod.print())
-                  .join(", ") +
-                ") => {",
-              true
-            );
-            dispatchMethods.indent(1);
-            dispatchMethods.out(
-              `return dispatch(R${c.getName()}.${m.getName()}(${pName}))`,
-              true
-            );
-            dispatchMethods.indent(-1);
-            dispatchMethods.out("},", true);
+            if (m.getName() === "ReduxDispatch") {
+              dispatchMethods.out(`
+              ReduxDispatch: (action: any) => {
+                return dispatch(action);
+              },              
+              `);
+            } else {
+              dispatchMethods.out(
+                m.getName() +
+                  " : " +
+                  typeArgStr +
+                  "(" +
+                  m
+                    .getParameters()
+                    .map(mod => mod.print())
+                    .join(", ") +
+                  ") => {",
+                true
+              );
+              dispatchMethods.indent(1);
+              dispatchMethods.out(
+                `return dispatch(R${c.getName()}.${m.getName()}(${pName}))`,
+                true
+              );
+              dispatchMethods.indent(-1);
+              dispatchMethods.out("},", true);
+            }
 
             if (m.getReturnTypeNode())
               body.out(": " + m.getReturnTypeNode().print());
@@ -991,7 +1014,7 @@ export async function createProject(settings: GenerationOptions) {
               true
             );
           });
-          ng.out("ReduxDispatch: (action:any) => null,", true);
+          // ng.out("ReduxDispatch: (action:any) => null,", true);
           ng.indent(-1);
           ng.out(`}}> {this.props.children} `, true);
           ng.out(`</${c.getName()}Context.Provider>)`, true);

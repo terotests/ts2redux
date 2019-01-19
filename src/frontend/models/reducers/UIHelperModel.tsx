@@ -19,7 +19,6 @@ import * as React from "react";
 
 export interface IContainerPropsMethods {
   toggle: () => any;
-  ReduxDispatch: (action: any) => void;
 }
 export interface IUIHelperModel {
   showWasps: boolean;
@@ -55,9 +54,6 @@ export const mapDispatchToProps = (dispatch: any): IContainerPropsMethods => {
   return {
     toggle: () => {
       return dispatch(RUIHelperModel.toggle());
-    },
-    ReduxDispatch: (action: any) => {
-      return dispatch(action);
     }
   };
 };
@@ -87,8 +83,7 @@ const initWithMethodsUIHelperModel = () => {
   const o = new UIHelperModel();
   return {
     showWasps: o.showWasps,
-    toggle: o.toggle,
-    ReduxDispatch: (action: any) => null
+    toggle: o.toggle
   };
 };
 
@@ -219,11 +214,7 @@ export class UIHelperModelProvider extends React.Component {
   public render() {
     return (
       <UIHelperModelContext.Provider
-        value={{
-          ...this.state,
-          toggle: this.toggle,
-          ReduxDispatch: (action: any) => null
-        }}
+        value={{ ...this.state, toggle: this.toggle }}
       >
         {" "}
         {this.props.children}

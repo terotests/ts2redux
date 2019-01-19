@@ -33,7 +33,6 @@ export interface IContainerPropsMethods {
     addItems: <T extends Summable>(items: T[]) => any;
     inc: () => any;
     testLoading: () => any;
-    ReduxDispatch: (action: any) => void;
 }
 export interface IGenericModel {
     sum: number;

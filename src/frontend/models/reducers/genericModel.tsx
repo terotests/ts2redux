@@ -52,7 +52,6 @@ export interface IContainerPropsMethods {
   addItems: <T extends Summable>(items: T[]) => any;
   inc: () => any;
   testLoading: () => any;
-  ReduxDispatch: (action: any) => void;
 }
 export interface IGenericModel {
   sum: number;
@@ -104,9 +103,6 @@ export const mapDispatchToProps = (dispatch: any): IContainerPropsMethods => {
     },
     testLoading: () => {
       return dispatch(RGenericModel.testLoading());
-    },
-    ReduxDispatch: (action: any) => {
-      return dispatch(action);
     }
   };
 };
@@ -143,8 +139,7 @@ const initWithMethodsGenericModel = () => {
     refreshSum: o.refreshSum,
     addItems: o.addItems,
     inc: o.inc,
-    testLoading: o.testLoading,
-    ReduxDispatch: (action: any) => null
+    testLoading: o.testLoading
   };
 };
 
@@ -286,6 +281,7 @@ export class RGenericModel {
       new RGenericModel(undefined, dispatcher, getState).inc();
     };
   }
+  // testLoading
   async testLoading() {}
 
   public static testLoading() {
@@ -420,8 +416,7 @@ export class GenericModelProvider extends React.Component {
           refreshSum: this.refreshSum,
           addItems: this.addItems,
           inc: this.inc,
-          testLoading: this.testLoading,
-          ReduxDispatch: (action: any) => null
+          testLoading: this.testLoading
         }}
       >
         {" "}

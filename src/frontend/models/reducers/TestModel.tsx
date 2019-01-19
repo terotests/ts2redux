@@ -228,6 +228,17 @@ export interface ITestModel {
 
 export type IContainerPropsState = ITestModel;
 export interface IProps extends IContainerPropsState, IContainerPropsMethods {}
+
+function pick<T, K extends keyof T>(o: T, ...props: K[]) {
+  return props.reduce((a, e) => ({ ...a, [e]: o[e] }), {}) as Pick<T, K>;
+}
+export function mapStateToPropsWithKeys<K extends keyof ITestModel>(
+  state: IState,
+  keys: K[]
+): Pick<IContainerPropsState, K> {
+  return pick(state.TestModel, ...keys);
+}
+
 export const mapStateToProps = (state: IState): IContainerPropsState => {
   return {
     items: state.TestModel.items,
@@ -248,6 +259,14 @@ export const mapStateToProps = (state: IState): IContainerPropsState => {
     testObj: state.TestModel.testObj
   };
 };
+
+function mapDispatchToPropsWithKeys<K extends keyof IContainerPropsMethods>(
+  dispatch: any,
+  keys: K[]
+): Pick<IContainerPropsMethods, K> {
+  return pick(mapDispatchToProps(dispatch), ...keys);
+}
+
 export const mapDispatchToProps = (dispatch: any): IContainerPropsMethods => {
   return {
     setUserMessage: (value: string) => {
@@ -294,6 +313,17 @@ export const mapDispatchToProps = (dispatch: any): IContainerPropsMethods => {
     }
   };
 };
+
+export function ConnectKeys<
+  K extends keyof ITestModel,
+  J extends keyof IContainerPropsMethods
+>(keys: K[], methods: J[]) {
+  return connect(
+    (state: IState) => mapStateToPropsWithKeys(state, keys),
+    (dispatch: any) => mapDispatchToPropsWithKeys(dispatch, methods)
+  );
+}
+
 export const StateConnector = connect(
   mapStateToProps,
   mapDispatchToProps
@@ -1121,8 +1151,8 @@ export class TestModelProvider extends React.Component {
     this.addOneFriend = this.addOneFriend.bind(this);
     this.fillSomeFriends = this.fillSomeFriends.bind(this);
     this.ChangeLastItem = this.ChangeLastItem.bind(this);
-    const devs = window["devToolsExtension"]
-      ? window["devToolsExtension"]
+    const devs = window["__REDUX_DEVTOOLS_EXTENSION__"]
+      ? window["__REDUX_DEVTOOLS_EXTENSION__"]
       : null;
     if (devs) {
       this.__devTools = devs.connect({ name: "TestModel" + instanceCnt++ });

@@ -16,7 +16,9 @@ var TodoList_1 = require("./TodoList");
 var UIHelperModel_1 = require("./UIHelperModel");
 var UserState_1 = require("./UserState");
 var WaspModel_1 = require("./WaspModel");
-exports.reducers = redux.combineReducers({
+// use reducerObject if you combine reducers manually
+// for example when using connected-react-router
+exports.reducerObject = {
     GenericModel: GenericModel_1.GenericModelReducer,
     IncModel: IncModel_1.IncModelReducer,
     SimpleModel: SimpleModel_1.SimpleModelReducer,
@@ -26,5 +28,6 @@ exports.reducers = redux.combineReducers({
     UIHelperModel: UIHelperModel_1.UIHelperModelReducer,
     UserState: UserState_1.UserStateReducer,
     WaspModel: WaspModel_1.WaspModelReducer
-});
+};
+exports.reducers = redux.combineReducers(exports.reducerObject);
 //# sourceMappingURL=index.js.map

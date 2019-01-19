@@ -220,6 +220,20 @@ exports.listToDisplaySelectorFnCreator = function () {
     });
 };
 exports.listToDisplaySelector = exports.listToDisplaySelectorFnCreator();
+function pick(o) {
+    var props = [];
+    for (var _i = 1; _i < arguments.length; _i++) {
+        props[_i - 1] = arguments[_i];
+    }
+    return props.reduce(function (a, e) {
+        var _a;
+        return (__assign({}, a, (_a = {}, _a[e] = o[e], _a)));
+    }, {});
+}
+function mapStateToPropsWithKeys(state, keys) {
+    return pick.apply(void 0, [state.TodoList].concat(keys));
+}
+exports.mapStateToPropsWithKeys = mapStateToPropsWithKeys;
 exports.mapStateToProps = function (state) {
     return {
         items: state.TodoList.items,
@@ -232,6 +246,9 @@ exports.mapStateToProps = function (state) {
         listToDisplay: exports.listToDisplaySelector(state.TodoList)
     };
 };
+function mapDispatchToPropsWithKeys(dispatch, keys) {
+    return pick.apply(void 0, [exports.mapDispatchToProps(dispatch)].concat(keys));
+}
 exports.mapDispatchToProps = function (dispatch) {
     return {
         nextPage: function () {
@@ -269,6 +286,10 @@ exports.mapDispatchToProps = function (dispatch) {
         }
     };
 };
+function ConnectKeys(keys, methods) {
+    return react_redux_1.connect(function (state) { return mapStateToPropsWithKeys(state, keys); }, function (dispatch) { return mapDispatchToPropsWithKeys(dispatch, methods); });
+}
+exports.ConnectKeys = ConnectKeys;
 exports.StateConnector = react_redux_1.connect(exports.mapStateToProps, exports.mapDispatchToProps);
 var initTodoList = function () {
     var o = new TodoList();
@@ -831,8 +852,8 @@ var TodoListProvider = /** @class */ (function (_super) {
         _this.addLotOfItems = _this.addLotOfItems.bind(_this);
         _this.getItems = _this.getItems.bind(_this);
         _this.__selectorlistToDisplay = exports.listToDisplaySelectorFnCreator();
-        var devs = window["devToolsExtension"]
-            ? window["devToolsExtension"]
+        var devs = window["__REDUX_DEVTOOLS_EXTENSION__"]
+            ? window["__REDUX_DEVTOOLS_EXTENSION__"]
             : null;
         if (devs) {
             _this.__devTools = devs.connect({ name: "TodoList" + instanceCnt++ });

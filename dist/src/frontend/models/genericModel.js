@@ -79,4 +79,4 @@ var GenericModel = /** @class */ (function () {
     return GenericModel;
 }());
 exports.GenericModel = GenericModel;
-//# sourceMappingURL=GenericModel.js.map
+//# sourceMappingURL=genericModel.js.map

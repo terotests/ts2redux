@@ -22,7 +22,9 @@ var WaspComponent_1 = require("./components/WaspComponent");
 var TetrisComponent_1 = require("./components/TetrisComponent");
 var WaspContextComponent_1 = require("./components/WaspContextComponent");
 var UIHelperModel_1 = require("./models/reducers/UIHelperModel");
-var store = redux_1.createStore(reducers_1.reducers, redux_1.compose(redux_1.applyMiddleware(redux_thunk_1.default), window["devToolsExtension"] ? window["devToolsExtension"]() : function (f) { return f; }));
+var store = redux_1.createStore(reducers_1.reducers, redux_1.compose(redux_1.applyMiddleware(redux_thunk_1.default), window["__REDUX_DEVTOOLS_EXTENSION__"]
+    ? window["__REDUX_DEVTOOLS_EXTENSION__"]()
+    : function (f) { return f; }));
 var Nro = /** @class */ (function () {
     function Nro(n) {
         this.val = 0;

@@ -25,7 +25,9 @@ export interface IState {
   UserState: IUserState;
   WaspModel: IWaspModel;
 }
-export const reducers = redux.combineReducers<IState>({
+// use reducerObject if you combine reducers manually
+// for example when using connected-react-router
+export const reducerObject = {
   GenericModel: GenericModelReducer,
   IncModel: IncModelReducer,
   SimpleModel: SimpleModelReducer,
@@ -35,4 +37,5 @@ export const reducers = redux.combineReducers<IState>({
   UIHelperModel: UIHelperModelReducer,
   UserState: UserStateReducer,
   WaspModel: WaspModelReducer
-});
+};
+export const reducers = redux.combineReducers<IState>(reducerObject);

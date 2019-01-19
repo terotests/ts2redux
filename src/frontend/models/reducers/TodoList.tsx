@@ -168,6 +168,17 @@ export interface IContainerPropsState extends ITodoList {
   listToDisplay: TodoListItem[];
 }
 export interface IProps extends IContainerPropsState, IContainerPropsMethods {}
+
+function pick<T, K extends keyof T>(o: T, ...props: K[]) {
+  return props.reduce((a, e) => ({ ...a, [e]: o[e] }), {}) as Pick<T, K>;
+}
+export function mapStateToPropsWithKeys<K extends keyof ITodoList>(
+  state: IState,
+  keys: K[]
+): Pick<IContainerPropsState, K> {
+  return pick(state.TodoList, ...keys);
+}
+
 export const mapStateToProps = (state: IState): IContainerPropsState => {
   return {
     items: state.TodoList.items,
@@ -180,6 +191,14 @@ export const mapStateToProps = (state: IState): IContainerPropsState => {
     listToDisplay: listToDisplaySelector(state.TodoList)
   };
 };
+
+function mapDispatchToPropsWithKeys<K extends keyof IContainerPropsMethods>(
+  dispatch: any,
+  keys: K[]
+): Pick<IContainerPropsMethods, K> {
+  return pick(mapDispatchToProps(dispatch), ...keys);
+}
+
 export const mapDispatchToProps = (dispatch: any): IContainerPropsMethods => {
   return {
     nextPage: () => {
@@ -217,6 +236,17 @@ export const mapDispatchToProps = (dispatch: any): IContainerPropsMethods => {
     }
   };
 };
+
+export function ConnectKeys<
+  K extends keyof ITodoList,
+  J extends keyof IContainerPropsMethods
+>(keys: K[], methods: J[]) {
+  return connect(
+    (state: IState) => mapStateToPropsWithKeys(state, keys),
+    (dispatch: any) => mapDispatchToPropsWithKeys(dispatch, methods)
+  );
+}
+
 export const StateConnector = connect(
   mapStateToProps,
   mapDispatchToProps
@@ -738,8 +768,8 @@ export class TodoListProvider extends React.Component {
     this.addLotOfItems = this.addLotOfItems.bind(this);
     this.getItems = this.getItems.bind(this);
     this.__selectorlistToDisplay = listToDisplaySelectorFnCreator();
-    const devs = window["devToolsExtension"]
-      ? window["devToolsExtension"]
+    const devs = window["__REDUX_DEVTOOLS_EXTENSION__"]
+      ? window["__REDUX_DEVTOOLS_EXTENSION__"]
       : null;
     if (devs) {
       this.__devTools = devs.connect({ name: "TodoList" + instanceCnt++ });

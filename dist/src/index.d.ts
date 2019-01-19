@@ -1,10 +1,11 @@
 import { InterfaceDeclaration, SourceFile, ClassDeclaration } from "ts-simple-ast";
-import * as R from 'robowr';
+import * as R from "robowr";
 export interface GenerationOptions {
     path: string;
     reducerPath?: string;
     disableDevtoolsFromContext?: boolean;
     onlyFile?: string;
+    router?: boolean;
 }
 export interface ModelDefinition {
     name: string;

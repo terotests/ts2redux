@@ -25,4 +25,15 @@ export interface IState {
     UserState: IUserState;
     WaspModel: IWaspModel;
 }
+export declare const reducerObject: {
+    GenericModel: (state: IGenericModel, action: any) => IGenericModel;
+    IncModel: (state: IIncModel, action: any) => IIncModel;
+    SimpleModel: (state: ISimpleModel, action: any) => ISimpleModel;
+    TestModel: (state: ITestModel, action: any) => ITestModel;
+    TetrisModel: (state: ITetrisModel, action: any) => ITetrisModel;
+    TodoList: (state: ITodoList, action: any) => ITodoList;
+    UIHelperModel: (state: IUIHelperModel, action: any) => IUIHelperModel;
+    UserState: (state: IUserState, action: any) => IUserState;
+    WaspModel: (state: IWaspModel, action: any) => IWaspModel;
+};
 export declare const reducers: redux.Reducer<IState, redux.AnyAction>;

@@ -86,7 +86,7 @@ export interface ITetrisModel {
 export declare type IContainerPropsState = ITetrisModel;
 export interface IProps extends IContainerPropsState, IContainerPropsMethods {
 }
-export declare function mapStateToPropsWithKeys<K extends keyof ITetrisModel>(state: IState, keys: K[]): Pick<IContainerPropsState, K>;
+export declare function mapStateToPropsWithKeys<K extends keyof IContainerPropsState>(state: IState, keys: K[]): Pick<IContainerPropsState, K>;
 export declare const mapStateToProps: (state: IState) => ITetrisModel;
 export declare const mapDispatchToProps: (dispatch: any) => IContainerPropsMethods;
 export declare function ConnectKeys<K extends keyof ITetrisModel, J extends keyof IContainerPropsMethods>(keys: K[], methods: J[]): any;

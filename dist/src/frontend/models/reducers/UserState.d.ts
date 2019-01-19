@@ -24,7 +24,7 @@ export interface IUserState {
 export declare type IContainerPropsState = IUserState;
 export interface IProps extends IContainerPropsState, IContainerPropsMethods {
 }
-export declare function mapStateToPropsWithKeys<K extends keyof IUserState>(state: IState, keys: K[]): Pick<IContainerPropsState, K>;
+export declare function mapStateToPropsWithKeys<K extends keyof IContainerPropsState>(state: IState, keys: K[]): Pick<IContainerPropsState, K>;
 export declare const mapStateToProps: (state: IState) => IUserState;
 export declare const mapDispatchToProps: (dispatch: any) => IContainerPropsMethods;
 export declare function ConnectKeys<K extends keyof IUserState, J extends keyof IContainerPropsMethods>(keys: K[], methods: J[]): any;

@@ -71,7 +71,7 @@ export interface ITestModel {
 export declare type IContainerPropsState = ITestModel;
 export interface IProps extends IContainerPropsState, IContainerPropsMethods {
 }
-export declare function mapStateToPropsWithKeys<K extends keyof ITestModel>(state: IState, keys: K[]): Pick<IContainerPropsState, K>;
+export declare function mapStateToPropsWithKeys<K extends keyof IContainerPropsState>(state: IState, keys: K[]): Pick<IContainerPropsState, K>;
 export declare const mapStateToProps: (state: IState) => ITestModel;
 export declare const mapDispatchToProps: (dispatch: any) => IContainerPropsMethods;
 export declare function ConnectKeys<K extends keyof ITestModel, J extends keyof IContainerPropsMethods>(keys: K[], methods: J[]): any;

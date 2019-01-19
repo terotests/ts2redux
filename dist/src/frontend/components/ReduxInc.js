@@ -9,6 +9,7 @@ exports.AbstractInc = function (props) {
         React.createElement("button", { onClick: props.increment }, "+"),
         React.createElement("button", { onClick: props.decrement }, "-")));
 };
-// This is the specialized version of the component
-exports.ReduxInc = container.StateConnector(exports.AbstractInc);
+// ConnectKeys can be used to map specific functions and properties
+// to the target object
+exports.ReduxInc = container.ConnectKeys(["cnt"], ["increment", "decrement"])(exports.AbstractInc);
 //# sourceMappingURL=ReduxInc.js.map

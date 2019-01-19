@@ -300,6 +300,22 @@ export async function createProject(settings: GenerationOptions) {
         );
 
         ng.out(
+          `
+        function pick<T, K extends keyof T>(o: T, ...props: K[]) {
+          return props.reduce((a, e) => ({ ...a, [e]: o[e] }), {}) as Pick<T, K>;
+        }        
+        export function mapStateToPropsWithKeys<K extends keyof I${c.getName()}>(
+          state: IState,
+          keys: K[]
+        ): Pick<IContainerPropsState, K> {
+          return pick(state.${c.getName()}, ...keys);
+        }               
+
+        `,
+          true
+        );
+
+        ng.out(
           "export const mapStateToProps = (state : IState) : IContainerPropsState => {",
           true
         );
@@ -327,6 +343,15 @@ export async function createProject(settings: GenerationOptions) {
         ng.out("}", true);
 
         ng.out(
+          `
+          function mapDispatchToPropsWithKeys<K extends keyof IContainerPropsMethods> (dispatch: any, keys:K[]): Pick<IContainerPropsMethods, K> {
+            return pick(mapDispatchToProps(dispatch), ...keys);
+          };
+          `,
+          true
+        );
+
+        ng.out(
           "export const mapDispatchToProps = (dispatch:any) : IContainerPropsMethods => {",
           true
         );
@@ -338,6 +363,16 @@ export async function createProject(settings: GenerationOptions) {
         ng.out("}", true);
         ng.indent(-1);
         ng.out("}", true);
+
+        ng.out(`
+        export function ConnectKeys<K extends keyof I${c.getName()}, J extends keyof IContainerPropsMethods>(keys: K[], methods:J[]) {
+          return connect(
+            (state: IState) => mapStateToPropsWithKeys(state, keys),
+            (dispatch: any) => mapDispatchToPropsWithKeys(dispatch, methods)
+          );
+        }      
+        
+        `);
 
         ng.out(
           `export const StateConnector = connect( mapStateToProps, mapDispatchToProps);`,
@@ -804,7 +839,7 @@ export async function createProject(settings: GenerationOptions) {
 
           if (!settings.disableDevtoolsFromContext) {
             ng.out(
-              `const devs = window['devToolsExtension'] ? window['devToolsExtension'] : null`,
+              `const devs = window['__REDUX_DEVTOOLS_EXTENSION__'] ? window['__REDUX_DEVTOOLS_EXTENSION__'] : null`,
               true
             );
             ng.out(`if(devs) {`, true);
@@ -1009,3 +1044,23 @@ export async function createProject(settings: GenerationOptions) {
   await RFs.saveTo("./", { usePrettier: true, prettierConfig });
   await project.save();
 }
+
+// Idea of picking reducer values
+/*
+export type IContainerPropsState = ITestModel;
+export interface IProps extends IContainerPropsState, IContainerPropsMethods {}
+
+function pick<T, K extends keyof T> (o:T, ...props:K[])  {
+  return (props.reduce((a, e) => ({ ...a, [e]: o[e] }), {})) as Pick<T, K>
+}
+
+interface Jee {
+  a:number
+  b:number
+}
+
+export const mapStateToProps2 = (state: IState) => {
+  const o:Jee = {a:1, b:2}
+  const n = pick(o, 'a')
+};
+*/

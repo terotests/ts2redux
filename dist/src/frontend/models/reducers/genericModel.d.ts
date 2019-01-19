@@ -44,8 +44,10 @@ export interface IGenericModel {
 export declare type IContainerPropsState = IGenericModel;
 export interface IProps extends IContainerPropsState, IContainerPropsMethods {
 }
+export declare function mapStateToPropsWithKeys<K extends keyof IGenericModel>(state: IState, keys: K[]): Pick<IContainerPropsState, K>;
 export declare const mapStateToProps: (state: IState) => IGenericModel;
 export declare const mapDispatchToProps: (dispatch: any) => IContainerPropsMethods;
+export declare function ConnectKeys<K extends keyof IGenericModel, J extends keyof IContainerPropsMethods>(keys: K[], methods: J[]): any;
 export declare const StateConnector: any;
 /**
  * @generated true

@@ -26,11 +26,30 @@ export interface IUIHelperModel {
 
 export type IContainerPropsState = IUIHelperModel;
 export interface IProps extends IContainerPropsState, IContainerPropsMethods {}
+
+function pick<T, K extends keyof T>(o: T, ...props: K[]) {
+  return props.reduce((a, e) => ({ ...a, [e]: o[e] }), {}) as Pick<T, K>;
+}
+export function mapStateToPropsWithKeys<K extends keyof IUIHelperModel>(
+  state: IState,
+  keys: K[]
+): Pick<IContainerPropsState, K> {
+  return pick(state.UIHelperModel, ...keys);
+}
+
 export const mapStateToProps = (state: IState): IContainerPropsState => {
   return {
     showWasps: state.UIHelperModel.showWasps
   };
 };
+
+function mapDispatchToPropsWithKeys<K extends keyof IContainerPropsMethods>(
+  dispatch: any,
+  keys: K[]
+): Pick<IContainerPropsMethods, K> {
+  return pick(mapDispatchToProps(dispatch), ...keys);
+}
+
 export const mapDispatchToProps = (dispatch: any): IContainerPropsMethods => {
   return {
     toggle: () => {
@@ -38,6 +57,17 @@ export const mapDispatchToProps = (dispatch: any): IContainerPropsMethods => {
     }
   };
 };
+
+export function ConnectKeys<
+  K extends keyof IUIHelperModel,
+  J extends keyof IContainerPropsMethods
+>(keys: K[], methods: J[]) {
+  return connect(
+    (state: IState) => mapStateToPropsWithKeys(state, keys),
+    (dispatch: any) => mapDispatchToPropsWithKeys(dispatch, methods)
+  );
+}
+
 export const StateConnector = connect(
   mapStateToProps,
   mapDispatchToProps
@@ -150,8 +180,8 @@ export class UIHelperModelProvider extends React.Component {
     super(props);
     this.lastSetState = this.state;
     this.toggle = this.toggle.bind(this);
-    const devs = window["devToolsExtension"]
-      ? window["devToolsExtension"]
+    const devs = window["__REDUX_DEVTOOLS_EXTENSION__"]
+      ? window["__REDUX_DEVTOOLS_EXTENSION__"]
       : null;
     if (devs) {
       this.__devTools = devs.connect({ name: "UIHelperModel" + instanceCnt++ });

@@ -282,6 +282,17 @@ export interface ITetrisModel {
 
 export type IContainerPropsState = ITetrisModel;
 export interface IProps extends IContainerPropsState, IContainerPropsMethods {}
+
+function pick<T, K extends keyof T>(o: T, ...props: K[]) {
+  return props.reduce((a, e) => ({ ...a, [e]: o[e] }), {}) as Pick<T, K>;
+}
+export function mapStateToPropsWithKeys<K extends keyof ITetrisModel>(
+  state: IState,
+  keys: K[]
+): Pick<IContainerPropsState, K> {
+  return pick(state.TetrisModel, ...keys);
+}
+
 export const mapStateToProps = (state: IState): IContainerPropsState => {
   return {
     useColors: state.TetrisModel.useColors,
@@ -299,6 +310,14 @@ export const mapStateToProps = (state: IState): IContainerPropsState => {
     dy: state.TetrisModel.dy
   };
 };
+
+function mapDispatchToPropsWithKeys<K extends keyof IContainerPropsMethods>(
+  dispatch: any,
+  keys: K[]
+): Pick<IContainerPropsMethods, K> {
+  return pick(mapDispatchToProps(dispatch), ...keys);
+}
+
 export const mapDispatchToProps = (dispatch: any): IContainerPropsMethods => {
   return {
     tick: () => {
@@ -333,6 +352,17 @@ export const mapDispatchToProps = (dispatch: any): IContainerPropsMethods => {
     }
   };
 };
+
+export function ConnectKeys<
+  K extends keyof ITetrisModel,
+  J extends keyof IContainerPropsMethods
+>(keys: K[], methods: J[]) {
+  return connect(
+    (state: IState) => mapStateToPropsWithKeys(state, keys),
+    (dispatch: any) => mapDispatchToPropsWithKeys(dispatch, methods)
+  );
+}
+
 export const StateConnector = connect(
   mapStateToProps,
   mapDispatchToProps
@@ -1112,8 +1142,8 @@ export class TetrisModelProvider extends React.Component {
     this.clearCells = this.clearCells.bind(this);
     this.resetGame = this.resetGame.bind(this);
     this.start = this.start.bind(this);
-    const devs = window["devToolsExtension"]
-      ? window["devToolsExtension"]
+    const devs = window["__REDUX_DEVTOOLS_EXTENSION__"]
+      ? window["__REDUX_DEVTOOLS_EXTENSION__"]
       : null;
     if (devs) {
       this.__devTools = devs.connect({ name: "TetrisModel" + instanceCnt++ });

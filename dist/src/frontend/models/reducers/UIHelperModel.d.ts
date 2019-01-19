@@ -15,8 +15,10 @@ export interface IUIHelperModel {
 export declare type IContainerPropsState = IUIHelperModel;
 export interface IProps extends IContainerPropsState, IContainerPropsMethods {
 }
+export declare function mapStateToPropsWithKeys<K extends keyof IUIHelperModel>(state: IState, keys: K[]): Pick<IContainerPropsState, K>;
 export declare const mapStateToProps: (state: IState) => IUIHelperModel;
 export declare const mapDispatchToProps: (dispatch: any) => IContainerPropsMethods;
+export declare function ConnectKeys<K extends keyof IUIHelperModel, J extends keyof IContainerPropsMethods>(keys: K[], methods: J[]): any;
 export declare const StateConnector: any;
 /**
  * @generated true

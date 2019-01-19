@@ -25,7 +25,8 @@ export interface IState {
   UserState: IUserState;
   WaspModel: IWaspModel;
 }
-// use reducerObject if you want to use your own combineReducers for example with connected-react-router
+// use reducerObject if you combine reducers manually
+// for example when using connected-react-router
 export const reducerObject = {
   GenericModel: GenericModelReducer,
   IncModel: IncModelReducer,

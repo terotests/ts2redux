@@ -76,8 +76,10 @@ export interface IContainerPropsState extends ITodoList {
 }
 export interface IProps extends IContainerPropsState, IContainerPropsMethods {
 }
+export declare function mapStateToPropsWithKeys<K extends keyof ITodoList>(state: IState, keys: K[]): Pick<IContainerPropsState, K>;
 export declare const mapStateToProps: (state: IState) => IContainerPropsState;
 export declare const mapDispatchToProps: (dispatch: any) => IContainerPropsMethods;
+export declare function ConnectKeys<K extends keyof ITodoList, J extends keyof IContainerPropsMethods>(keys: K[], methods: J[]): any;
 export declare const StateConnector: any;
 /**
  * @generated true

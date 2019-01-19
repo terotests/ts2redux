@@ -21,8 +21,10 @@ export interface IIncModel {
 export declare type IContainerPropsState = IIncModel;
 export interface IProps extends IContainerPropsState, IContainerPropsMethods {
 }
+export declare function mapStateToPropsWithKeys<K extends keyof IIncModel>(state: IState, keys: K[]): Pick<IContainerPropsState, K>;
 export declare const mapStateToProps: (state: IState) => IIncModel;
 export declare const mapDispatchToProps: (dispatch: any) => IContainerPropsMethods;
+export declare function ConnectKeys<K extends keyof IIncModel, J extends keyof IContainerPropsMethods>(keys: K[], methods: J[]): any;
 export declare const StateConnector: any;
 /**
  * @generated true

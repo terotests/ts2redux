@@ -230,6 +230,7 @@ function createProject(settings) {
                                     ng_1.out("export type IContainerPropsState = I" + c.getName(), true);
                                 }
                                 ng_1.out("export interface IProps extends IContainerPropsState, IContainerPropsMethods {}", true);
+                                ng_1.out("\n        function pick<T, K extends keyof T>(o: T, ...props: K[]) {\n          return props.reduce((a, e) => ({ ...a, [e]: o[e] }), {}) as Pick<T, K>;\n        }        \n        export function mapStateToPropsWithKeys<K extends keyof I" + c.getName() + ">(\n          state: IState,\n          keys: K[]\n        ): Pick<IContainerPropsState, K> {\n          return pick(state." + c.getName() + ", ...keys);\n        }               \n\n        ", true);
                                 ng_1.out("export const mapStateToProps = (state : IState) : IContainerPropsState => {", true);
                                 ng_1.indent(1);
                                 ng_1.out("return {", true);
@@ -247,6 +248,7 @@ function createProject(settings) {
                                 ng_1.out("}", true);
                                 ng_1.indent(-1);
                                 ng_1.out("}", true);
+                                ng_1.out("\n          function mapDispatchToPropsWithKeys<K extends keyof IContainerPropsMethods> (dispatch: any, keys:K[]): Pick<IContainerPropsMethods, K> {\n            return pick(mapDispatchToProps(dispatch), ...keys);\n          };\n          ", true);
                                 ng_1.out("export const mapDispatchToProps = (dispatch:any) : IContainerPropsMethods => {", true);
                                 ng_1.indent(1);
                                 ng_1.out("return {", true);
@@ -256,6 +258,7 @@ function createProject(settings) {
                                 ng_1.out("}", true);
                                 ng_1.indent(-1);
                                 ng_1.out("}", true);
+                                ng_1.out("\n        export function ConnectKeys<K extends keyof I" + c.getName() + ", J extends keyof IContainerPropsMethods>(keys: K[], methods:J[]) {\n          return connect(\n            (state: IState) => mapStateToPropsWithKeys(state, keys),\n            (dispatch: any) => mapDispatchToPropsWithKeys(dispatch, methods)\n          );\n        }      \n        \n        ");
                                 ng_1.out("export const StateConnector = connect( mapStateToProps, mapDispatchToProps);", true);
                                 ng_1.out("", true);
                                 // Create model of all the variables...
@@ -600,7 +603,7 @@ function createProject(settings) {
                                         ng.out("this.__selector" + m.getName() + " = " + m.getName() + "SelectorFnCreator()", true);
                                     });
                                     if (!settings.disableDevtoolsFromContext) {
-                                        ng.out("const devs = window['devToolsExtension'] ? window['devToolsExtension'] : null", true);
+                                        ng.out("const devs = window['__REDUX_DEVTOOLS_EXTENSION__'] ? window['__REDUX_DEVTOOLS_EXTENSION__'] : null", true);
                                         ng.out("if(devs) {", true);
                                         ng.indent(1);
                                         ng.out("this.__devTools = devs.connect({name:'" + c.getName() + "'+instanceCnt++})", true);
@@ -758,4 +761,23 @@ function createProject(settings) {
     });
 }
 exports.createProject = createProject;
+// Idea of picking reducer values
+/*
+export type IContainerPropsState = ITestModel;
+export interface IProps extends IContainerPropsState, IContainerPropsMethods {}
+
+function pick<T, K extends keyof T> (o:T, ...props:K[])  {
+  return (props.reduce((a, e) => ({ ...a, [e]: o[e] }), {})) as Pick<T, K>
+}
+
+interface Jee {
+  a:number
+  b:number
+}
+
+export const mapStateToProps2 = (state: IState) => {
+  const o:Jee = {a:1, b:2}
+  const n = pick(o, 'a')
+};
+*/
 //# sourceMappingURL=index.js.map

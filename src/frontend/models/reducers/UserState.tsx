@@ -45,6 +45,17 @@ export interface IUserState {
 
 export type IContainerPropsState = IUserState;
 export interface IProps extends IContainerPropsState, IContainerPropsMethods {}
+
+function pick<T, K extends keyof T>(o: T, ...props: K[]) {
+  return props.reduce((a, e) => ({ ...a, [e]: o[e] }), {}) as Pick<T, K>;
+}
+export function mapStateToPropsWithKeys<K extends keyof IUserState>(
+  state: IState,
+  keys: K[]
+): Pick<IContainerPropsState, K> {
+  return pick(state.UserState, ...keys);
+}
+
 export const mapStateToProps = (state: IState): IContainerPropsState => {
   return {
     logged: state.UserState.logged,
@@ -54,6 +65,14 @@ export const mapStateToProps = (state: IState): IContainerPropsState => {
     lastLogin: state.UserState.lastLogin
   };
 };
+
+function mapDispatchToPropsWithKeys<K extends keyof IContainerPropsMethods>(
+  dispatch: any,
+  keys: K[]
+): Pick<IContainerPropsMethods, K> {
+  return pick(mapDispatchToProps(dispatch), ...keys);
+}
+
 export const mapDispatchToProps = (dispatch: any): IContainerPropsMethods => {
   return {
     login: (loginInfo: { username: string; password: string }) => {
@@ -67,6 +86,17 @@ export const mapDispatchToProps = (dispatch: any): IContainerPropsMethods => {
     }
   };
 };
+
+export function ConnectKeys<
+  K extends keyof IUserState,
+  J extends keyof IContainerPropsMethods
+>(keys: K[], methods: J[]) {
+  return connect(
+    (state: IState) => mapStateToPropsWithKeys(state, keys),
+    (dispatch: any) => mapDispatchToPropsWithKeys(dispatch, methods)
+  );
+}
+
 export const StateConnector = connect(
   mapStateToProps,
   mapDispatchToProps
@@ -315,8 +345,8 @@ export class UserStateProvider extends React.Component {
     this.login = this.login.bind(this);
     this.logout = this.logout.bind(this);
     this.fakeLogin = this.fakeLogin.bind(this);
-    const devs = window["devToolsExtension"]
-      ? window["devToolsExtension"]
+    const devs = window["__REDUX_DEVTOOLS_EXTENSION__"]
+      ? window["__REDUX_DEVTOOLS_EXTENSION__"]
       : null;
     if (devs) {
       this.__devTools = devs.connect({ name: "UserState" + instanceCnt++ });

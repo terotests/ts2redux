@@ -111,12 +111,29 @@ exports.myItemsSelectorFnCreator = function () {
     });
 };
 exports.myItemsSelector = exports.myItemsSelectorFnCreator();
+function pick(o) {
+    var props = [];
+    for (var _i = 1; _i < arguments.length; _i++) {
+        props[_i - 1] = arguments[_i];
+    }
+    return props.reduce(function (a, e) {
+        var _a;
+        return (__assign({}, a, (_a = {}, _a[e] = o[e], _a)));
+    }, {});
+}
+function mapStateToPropsWithKeys(state, keys) {
+    return pick.apply(void 0, [state.SimpleModel].concat(keys));
+}
+exports.mapStateToPropsWithKeys = mapStateToPropsWithKeys;
 exports.mapStateToProps = function (state) {
     return {
         items: state.SimpleModel.items,
         myItems: exports.myItemsSelector(state.SimpleModel)
     };
 };
+function mapDispatchToPropsWithKeys(dispatch, keys) {
+    return pick.apply(void 0, [exports.mapDispatchToProps(dispatch)].concat(keys));
+}
 exports.mapDispatchToProps = function (dispatch) {
     return {
         getItems: function () {
@@ -124,6 +141,10 @@ exports.mapDispatchToProps = function (dispatch) {
         }
     };
 };
+function ConnectKeys(keys, methods) {
+    return react_redux_1.connect(function (state) { return mapStateToPropsWithKeys(state, keys); }, function (dispatch) { return mapDispatchToPropsWithKeys(dispatch, methods); });
+}
+exports.ConnectKeys = ConnectKeys;
 exports.StateConnector = react_redux_1.connect(exports.mapStateToProps, exports.mapDispatchToProps);
 var initSimpleModel = function () {
     var o = new SimpleModel();
@@ -229,8 +250,8 @@ var SimpleModelProvider = /** @class */ (function (_super) {
         _this.lastSetState = _this.state;
         _this.getItems = _this.getItems.bind(_this);
         _this.__selectormyItems = exports.myItemsSelectorFnCreator();
-        var devs = window["devToolsExtension"]
-            ? window["devToolsExtension"]
+        var devs = window["__REDUX_DEVTOOLS_EXTENSION__"]
+            ? window["__REDUX_DEVTOOLS_EXTENSION__"]
             : null;
         if (devs) {
             _this.__devTools = devs.connect({ name: "SimpleModel" + instanceCnt++ });

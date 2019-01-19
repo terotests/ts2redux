@@ -304,11 +304,11 @@ export async function createProject(settings: GenerationOptions) {
         function pick<T, K extends keyof T>(o: T, ...props: K[]) {
           return props.reduce((a, e) => ({ ...a, [e]: o[e] }), {}) as Pick<T, K>;
         }        
-        export function mapStateToPropsWithKeys<K extends keyof I${c.getName()}>(
+        export function mapStateToPropsWithKeys<K extends keyof IContainerPropsState>(
           state: IState,
           keys: K[]
         ): Pick<IContainerPropsState, K> {
-          return pick(state.${c.getName()}, ...keys);
+          return pick(state.${c.getName()} as IContainerPropsState, ...keys);
         }               
 
         `,
@@ -1044,23 +1044,3 @@ export async function createProject(settings: GenerationOptions) {
   await RFs.saveTo("./", { usePrettier: true, prettierConfig });
   await project.save();
 }
-
-// Idea of picking reducer values
-/*
-export type IContainerPropsState = ITestModel;
-export interface IProps extends IContainerPropsState, IContainerPropsMethods {}
-
-function pick<T, K extends keyof T> (o:T, ...props:K[])  {
-  return (props.reduce((a, e) => ({ ...a, [e]: o[e] }), {})) as Pick<T, K>
-}
-
-interface Jee {
-  a:number
-  b:number
-}
-
-export const mapStateToProps2 = (state: IState) => {
-  const o:Jee = {a:1, b:2}
-  const n = pick(o, 'a')
-};
-*/

@@ -286,11 +286,11 @@ export interface IProps extends IContainerPropsState, IContainerPropsMethods {}
 function pick<T, K extends keyof T>(o: T, ...props: K[]) {
   return props.reduce((a, e) => ({ ...a, [e]: o[e] }), {}) as Pick<T, K>;
 }
-export function mapStateToPropsWithKeys<K extends keyof ITetrisModel>(
+export function mapStateToPropsWithKeys<K extends keyof IContainerPropsState>(
   state: IState,
   keys: K[]
 ): Pick<IContainerPropsState, K> {
-  return pick(state.TetrisModel, ...keys);
+  return pick(state.TetrisModel as IContainerPropsState, ...keys);
 }
 
 export const mapStateToProps = (state: IState): IContainerPropsState => {

@@ -37,7 +37,7 @@ export interface IWaspModel {
 export declare type IContainerPropsState = IWaspModel;
 export interface IProps extends IContainerPropsState, IContainerPropsMethods {
 }
-export declare function mapStateToPropsWithKeys<K extends keyof IWaspModel>(state: IState, keys: K[]): Pick<IContainerPropsState, K>;
+export declare function mapStateToPropsWithKeys<K extends keyof IContainerPropsState>(state: IState, keys: K[]): Pick<IContainerPropsState, K>;
 export declare const mapStateToProps: (state: IState) => IWaspModel;
 export declare const mapDispatchToProps: (dispatch: any) => IContainerPropsMethods;
 export declare function ConnectKeys<K extends keyof IWaspModel, J extends keyof IContainerPropsMethods>(keys: K[], methods: J[]): any;

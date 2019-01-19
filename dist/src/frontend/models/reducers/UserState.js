@@ -127,6 +127,9 @@ exports.mapDispatchToProps = function (dispatch) {
         },
         fakeLogin: function () {
             return dispatch(RUserState.fakeLogin());
+        },
+        ReduxDispatch: function (action) {
+            return dispatch(action);
         }
     };
 };
@@ -155,7 +158,8 @@ var initWithMethodsUserState = function () {
         lastLogin: o.lastLogin,
         login: o.login,
         logout: o.logout,
-        fakeLogin: o.fakeLogin
+        fakeLogin: o.fakeLogin,
+        ReduxDispatch: function (action) { return null; }
     };
 };
 /**
@@ -465,7 +469,7 @@ var UserStateProvider = /** @class */ (function (_super) {
         this.setStateSync(nextState);
     };
     UserStateProvider.prototype.render = function () {
-        return (React.createElement(exports.UserStateContext.Provider, { value: __assign({}, this.state, { login: this.login, logout: this.logout, fakeLogin: this.fakeLogin }) },
+        return (React.createElement(exports.UserStateContext.Provider, { value: __assign({}, this.state, { login: this.login, logout: this.logout, fakeLogin: this.fakeLogin, ReduxDispatch: function (action) { return null; } }) },
             " ",
             this.props.children));
     };

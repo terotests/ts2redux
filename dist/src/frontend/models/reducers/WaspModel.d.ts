@@ -26,6 +26,7 @@ export interface IContainerPropsMethods {
         colorValue: string;
     }) => any;
     step: () => any;
+    ReduxDispatch: (action: any) => void;
 }
 export interface IWaspModel {
     speed: number;

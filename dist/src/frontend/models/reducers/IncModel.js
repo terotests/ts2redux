@@ -75,6 +75,9 @@ exports.mapDispatchToProps = function (dispatch) {
         },
         decrement: function () {
             return dispatch(RIncModel.decrement());
+        },
+        ReduxDispatch: function (action) {
+            return dispatch(action);
         }
     };
 };
@@ -94,7 +97,8 @@ var initWithMethodsIncModel = function () {
     return {
         cnt: o.cnt,
         increment: o.increment,
-        decrement: o.decrement
+        decrement: o.decrement,
+        ReduxDispatch: function (action) { return null; }
     };
 };
 /**
@@ -243,7 +247,7 @@ var IncModelProvider = /** @class */ (function (_super) {
         this.setStateSync(nextState);
     };
     IncModelProvider.prototype.render = function () {
-        return (React.createElement(exports.IncModelContext.Provider, { value: __assign({}, this.state, { increment: this.increment, decrement: this.decrement }) },
+        return (React.createElement(exports.IncModelContext.Provider, { value: __assign({}, this.state, { increment: this.increment, decrement: this.decrement, ReduxDispatch: function (action) { return null; } }) },
             " ",
             this.props.children));
     };

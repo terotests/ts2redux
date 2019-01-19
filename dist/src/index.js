@@ -203,6 +203,7 @@ function createProject(settings) {
                                 ng_1.out("export interface IContainerPropsMethods {", true);
                                 ng_1.indent(1);
                                 var propsMethods_1 = ng_1.fork();
+                                ng_1.out("ReduxDispatch: (action:any) => void;", true);
                                 ng_1.indent(-1);
                                 ng_1.out("}", true);
                                 ng_1.out("export interface I" + c.getName() + " {", true);
@@ -254,6 +255,7 @@ function createProject(settings) {
                                 ng_1.out("return {", true);
                                 ng_1.indent(1);
                                 var dispatchMethods_1 = ng_1.fork();
+                                ng_1.out("ReduxDispatch: (action:any) => { return dispatch(action) },", true);
                                 ng_1.indent(-1);
                                 ng_1.out("}", true);
                                 ng_1.indent(-1);
@@ -288,6 +290,7 @@ function createProject(settings) {
                                 selectorMethods_1.forEach(function (m) {
                                     ng_1.out(m.getName() + ": o." + m.getName() + ",", true);
                                 });
+                                ng_1.out("ReduxDispatch: (action:any) => null,", true);
                                 ng_1.indent(-1);
                                 ng_1.out("}", true);
                                 ng_1.indent(-1);
@@ -702,6 +705,7 @@ function createProject(settings) {
                                         // ng.out(`this.__selector${m.getName()} = ${m.getName()}SelectorFnCreator()`, true)
                                         ng.out(m.getName() + (": this.__selector" + m.getName() + "(this.state),"), true);
                                     });
+                                    ng.out("ReduxDispatch: (action:any) => null,", true);
                                     ng.indent(-1);
                                     ng.out("}}> {this.props.children} ", true);
                                     ng.out("</" + c.getName() + "Context.Provider>)", true);

@@ -263,6 +263,7 @@ export interface IContainerPropsMethods {
   clearCells: () => any;
   resetGame: () => any;
   start: () => any;
+  ReduxDispatch: (action: any) => void;
 }
 export interface ITetrisModel {
   useColors: Array<string>;
@@ -349,6 +350,9 @@ export const mapDispatchToProps = (dispatch: any): IContainerPropsMethods => {
     },
     start: () => {
       return dispatch(RTetrisModel.start());
+    },
+    ReduxDispatch: (action: any) => {
+      return dispatch(action);
     }
   };
 };
@@ -411,7 +415,8 @@ const initWithMethodsTetrisModel = () => {
     dropRows: o.dropRows,
     clearCells: o.clearCells,
     resetGame: o.resetGame,
-    start: o.start
+    start: o.start,
+    ReduxDispatch: (action: any) => null
   };
 };
 
@@ -1268,7 +1273,8 @@ export class TetrisModelProvider extends React.Component {
           dropRows: this.dropRows,
           clearCells: this.clearCells,
           resetGame: this.resetGame,
-          start: this.start
+          start: this.start,
+          ReduxDispatch: (action: any) => null
         }}
       >
         {" "}

@@ -138,6 +138,9 @@ exports.mapDispatchToProps = function (dispatch) {
     return {
         getItems: function () {
             return dispatch(RSimpleModel.getItems());
+        },
+        ReduxDispatch: function (action) {
+            return dispatch(action);
         }
     };
 };
@@ -157,7 +160,8 @@ var initWithMethodsSimpleModel = function () {
     return {
         items: o.items,
         getItems: o.getItems,
-        myItems: o.myItems
+        myItems: o.myItems,
+        ReduxDispatch: function (action) { return null; }
     };
 };
 /**
@@ -289,7 +293,7 @@ var SimpleModelProvider = /** @class */ (function (_super) {
         });
     };
     SimpleModelProvider.prototype.render = function () {
-        return (React.createElement(exports.SimpleModelContext.Provider, { value: __assign({}, this.state, { getItems: this.getItems, myItems: this.__selectormyItems(this.state) }) },
+        return (React.createElement(exports.SimpleModelContext.Provider, { value: __assign({}, this.state, { getItems: this.getItems, myItems: this.__selectormyItems(this.state), ReduxDispatch: function (action) { return null; } }) },
             " ",
             this.props.children));
     };

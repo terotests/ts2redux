@@ -149,6 +149,9 @@ exports.mapDispatchToProps = function (dispatch) {
         },
         testLoading: function () {
             return dispatch(RGenericModel.testLoading());
+        },
+        ReduxDispatch: function (action) {
+            return dispatch(action);
         }
     };
 };
@@ -174,7 +177,8 @@ var initWithMethodsGenericModel = function () {
         refreshSum: o.refreshSum,
         addItems: o.addItems,
         inc: o.inc,
-        testLoading: o.testLoading
+        testLoading: o.testLoading,
+        ReduxDispatch: function (action) { return null; }
     };
 };
 /**
@@ -452,7 +456,7 @@ var GenericModelProvider = /** @class */ (function (_super) {
         });
     };
     GenericModelProvider.prototype.render = function () {
-        return (React.createElement(exports.GenericModelContext.Provider, { value: __assign({}, this.state, { refreshSum: this.refreshSum, addItems: this.addItems, inc: this.inc, testLoading: this.testLoading }) },
+        return (React.createElement(exports.GenericModelContext.Provider, { value: __assign({}, this.state, { refreshSum: this.refreshSum, addItems: this.addItems, inc: this.inc, testLoading: this.testLoading, ReduxDispatch: function (action) { return null; } }) },
             " ",
             this.props.children));
     };

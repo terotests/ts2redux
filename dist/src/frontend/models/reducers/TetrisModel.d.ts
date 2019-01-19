@@ -67,6 +67,7 @@ export interface IContainerPropsMethods {
     clearCells: () => any;
     resetGame: () => any;
     start: () => any;
+    ReduxDispatch: (action: any) => void;
 }
 export interface ITetrisModel {
     useColors: Array<string>;

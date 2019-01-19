@@ -68,6 +68,9 @@ exports.mapDispatchToProps = function (dispatch) {
     return {
         toggle: function () {
             return dispatch(RUIHelperModel.toggle());
+        },
+        ReduxDispatch: function (action) {
+            return dispatch(action);
         }
     };
 };
@@ -86,7 +89,8 @@ var initWithMethodsUIHelperModel = function () {
     var o = new UIHelperModel();
     return {
         showWasps: o.showWasps,
-        toggle: o.toggle
+        toggle: o.toggle,
+        ReduxDispatch: function (action) { return null; }
     };
 };
 /**
@@ -209,7 +213,7 @@ var UIHelperModelProvider = /** @class */ (function (_super) {
         this.setStateSync(nextState);
     };
     UIHelperModelProvider.prototype.render = function () {
-        return (React.createElement(exports.UIHelperModelContext.Provider, { value: __assign({}, this.state, { toggle: this.toggle }) },
+        return (React.createElement(exports.UIHelperModelContext.Provider, { value: __assign({}, this.state, { toggle: this.toggle, ReduxDispatch: function (action) { return null; } }) },
             " ",
             this.props.children));
     };

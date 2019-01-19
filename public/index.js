@@ -1061,6 +1061,9 @@ exports.mapDispatchToProps = function (dispatch) {
         },
         testLoading: function () {
             return dispatch(RGenericModel.testLoading());
+        },
+        ReduxDispatch: function (action) {
+            return dispatch(action);
         }
     };
 };
@@ -1086,7 +1089,8 @@ var initWithMethodsGenericModel = function () {
         refreshSum: o.refreshSum,
         addItems: o.addItems,
         inc: o.inc,
-        testLoading: o.testLoading
+        testLoading: o.testLoading,
+        ReduxDispatch: function (action) { return null; }
     };
 };
 /**
@@ -1364,7 +1368,7 @@ var GenericModelProvider = /** @class */ (function (_super) {
         });
     };
     GenericModelProvider.prototype.render = function () {
-        return (React.createElement(exports.GenericModelContext.Provider, { value: __assign({}, this.state, { refreshSum: this.refreshSum, addItems: this.addItems, inc: this.inc, testLoading: this.testLoading }) },
+        return (React.createElement(exports.GenericModelContext.Provider, { value: __assign({}, this.state, { refreshSum: this.refreshSum, addItems: this.addItems, inc: this.inc, testLoading: this.testLoading, ReduxDispatch: function (action) { return null; } }) },
             " ",
             this.props.children));
     };
@@ -1450,6 +1454,9 @@ exports.mapDispatchToProps = function (dispatch) {
         },
         decrement: function () {
             return dispatch(RIncModel.decrement());
+        },
+        ReduxDispatch: function (action) {
+            return dispatch(action);
         }
     };
 };
@@ -1469,7 +1476,8 @@ var initWithMethodsIncModel = function () {
     return {
         cnt: o.cnt,
         increment: o.increment,
-        decrement: o.decrement
+        decrement: o.decrement,
+        ReduxDispatch: function (action) { return null; }
     };
 };
 /**
@@ -1618,7 +1626,7 @@ var IncModelProvider = /** @class */ (function (_super) {
         this.setStateSync(nextState);
     };
     IncModelProvider.prototype.render = function () {
-        return (React.createElement(exports.IncModelContext.Provider, { value: __assign({}, this.state, { increment: this.increment, decrement: this.decrement }) },
+        return (React.createElement(exports.IncModelContext.Provider, { value: __assign({}, this.state, { increment: this.increment, decrement: this.decrement, ReduxDispatch: function (action) { return null; } }) },
             " ",
             this.props.children));
     };
@@ -1767,6 +1775,9 @@ exports.mapDispatchToProps = function (dispatch) {
     return {
         getItems: function () {
             return dispatch(RSimpleModel.getItems());
+        },
+        ReduxDispatch: function (action) {
+            return dispatch(action);
         }
     };
 };
@@ -1786,7 +1797,8 @@ var initWithMethodsSimpleModel = function () {
     return {
         items: o.items,
         getItems: o.getItems,
-        myItems: o.myItems
+        myItems: o.myItems,
+        ReduxDispatch: function (action) { return null; }
     };
 };
 /**
@@ -1918,7 +1930,7 @@ var SimpleModelProvider = /** @class */ (function (_super) {
         });
     };
     SimpleModelProvider.prototype.render = function () {
-        return (React.createElement(exports.SimpleModelContext.Provider, { value: __assign({}, this.state, { getItems: this.getItems, myItems: this.__selectormyItems(this.state) }) },
+        return (React.createElement(exports.SimpleModelContext.Provider, { value: __assign({}, this.state, { getItems: this.getItems, myItems: this.__selectormyItems(this.state), ReduxDispatch: function (action) { return null; } }) },
             " ",
             this.props.children));
     };
@@ -2222,6 +2234,9 @@ exports.mapDispatchToProps = function (dispatch) {
         },
         ChangeLastItem: function () {
             return dispatch(RTestModel.ChangeLastItem());
+        },
+        ReduxDispatch: function (action) {
+            return dispatch(action);
         }
     };
 };
@@ -2283,7 +2298,8 @@ var initWithMethodsTestModel = function () {
         createItem: o.createItem,
         addOneFriend: o.addOneFriend,
         fillSomeFriends: o.fillSomeFriends,
-        ChangeLastItem: o.ChangeLastItem
+        ChangeLastItem: o.ChangeLastItem,
+        ReduxDispatch: function (action) { return null; }
     };
 };
 /**
@@ -3325,7 +3341,7 @@ var TestModelProvider = /** @class */ (function (_super) {
         });
     };
     TestModelProvider.prototype.render = function () {
-        return (React.createElement(exports.TestModelContext.Provider, { value: __assign({}, this.state, { setUserMessage: this.setUserMessage, add: this.add, removeFirst: this.removeFirst, sort: this.sort, addCart: this.addCart, addCartSync: this.addCartSync, addToCart: this.addToCart, setCartNewItem: this.setCartNewItem, addToCartRandom: this.addToCartRandom, renameLast: this.renameLast, createItem: this.createItem, addOneFriend: this.addOneFriend, fillSomeFriends: this.fillSomeFriends, ChangeLastItem: this.ChangeLastItem }) },
+        return (React.createElement(exports.TestModelContext.Provider, { value: __assign({}, this.state, { setUserMessage: this.setUserMessage, add: this.add, removeFirst: this.removeFirst, sort: this.sort, addCart: this.addCart, addCartSync: this.addCartSync, addToCart: this.addToCart, setCartNewItem: this.setCartNewItem, addToCartRandom: this.addToCartRandom, renameLast: this.renameLast, createItem: this.createItem, addOneFriend: this.addOneFriend, fillSomeFriends: this.fillSomeFriends, ChangeLastItem: this.ChangeLastItem, ReduxDispatch: function (action) { return null; } }) },
             " ",
             this.props.children));
     };
@@ -3655,6 +3671,9 @@ exports.mapDispatchToProps = function (dispatch) {
         },
         start: function () {
             return dispatch(RTetrisModel.start());
+        },
+        ReduxDispatch: function (action) {
+            return dispatch(action);
         }
     };
 };
@@ -3706,7 +3725,8 @@ var initWithMethodsTetrisModel = function () {
         dropRows: o.dropRows,
         clearCells: o.clearCells,
         resetGame: o.resetGame,
-        start: o.start
+        start: o.start,
+        ReduxDispatch: function (action) { return null; }
     };
 };
 /**
@@ -4614,7 +4634,7 @@ var TetrisModelProvider = /** @class */ (function (_super) {
         this.setStateSync(nextState);
     };
     TetrisModelProvider.prototype.render = function () {
-        return (React.createElement(exports.TetrisModelContext.Provider, { value: __assign({}, this.state, { tick: this.tick, left: this.left, right: this.right, rotate: this.rotate, step: this.step, masonPiece: this.masonPiece, dropRows: this.dropRows, clearCells: this.clearCells, resetGame: this.resetGame, start: this.start }) },
+        return (React.createElement(exports.TetrisModelContext.Provider, { value: __assign({}, this.state, { tick: this.tick, left: this.left, right: this.right, rotate: this.rotate, step: this.step, masonPiece: this.masonPiece, dropRows: this.dropRows, clearCells: this.clearCells, resetGame: this.resetGame, start: this.start, ReduxDispatch: function (action) { return null; } }) },
             " ",
             this.props.children));
     };
@@ -4908,6 +4928,9 @@ exports.mapDispatchToProps = function (dispatch) {
         },
         getItems: function () {
             return dispatch(RTodoList.getItems());
+        },
+        ReduxDispatch: function (action) {
+            return dispatch(action);
         }
     };
 };
@@ -4949,7 +4972,8 @@ var initWithMethodsTodoList = function () {
         setTitle: o.setTitle,
         addLotOfItems: o.addLotOfItems,
         getItems: o.getItems,
-        listToDisplay: o.listToDisplay
+        listToDisplay: o.listToDisplay,
+        ReduxDispatch: function (action) { return null; }
     };
 };
 /**
@@ -5609,7 +5633,7 @@ var TodoListProvider = /** @class */ (function (_super) {
         });
     };
     TodoListProvider.prototype.render = function () {
-        return (React.createElement(exports.TodoListContext.Provider, { value: __assign({}, this.state, { nextPage: this.nextPage, prevPage: this.prevPage, toggleSortOrder: this.toggleSortOrder, clearTodoList: this.clearTodoList, reverse: this.reverse, sortById: this.sortById, sortByTitle: this.sortByTitle, sortByCompletion: this.sortByCompletion, setTitle: this.setTitle, addLotOfItems: this.addLotOfItems, getItems: this.getItems, listToDisplay: this.__selectorlistToDisplay(this.state) }) },
+        return (React.createElement(exports.TodoListContext.Provider, { value: __assign({}, this.state, { nextPage: this.nextPage, prevPage: this.prevPage, toggleSortOrder: this.toggleSortOrder, clearTodoList: this.clearTodoList, reverse: this.reverse, sortById: this.sortById, sortByTitle: this.sortByTitle, sortByCompletion: this.sortByCompletion, setTitle: this.setTitle, addLotOfItems: this.addLotOfItems, getItems: this.getItems, listToDisplay: this.__selectorlistToDisplay(this.state), ReduxDispatch: function (action) { return null; } }) },
             " ",
             this.props.children));
     };
@@ -5688,6 +5712,9 @@ exports.mapDispatchToProps = function (dispatch) {
     return {
         toggle: function () {
             return dispatch(RUIHelperModel.toggle());
+        },
+        ReduxDispatch: function (action) {
+            return dispatch(action);
         }
     };
 };
@@ -5706,7 +5733,8 @@ var initWithMethodsUIHelperModel = function () {
     var o = new UIHelperModel();
     return {
         showWasps: o.showWasps,
-        toggle: o.toggle
+        toggle: o.toggle,
+        ReduxDispatch: function (action) { return null; }
     };
 };
 /**
@@ -5829,7 +5857,7 @@ var UIHelperModelProvider = /** @class */ (function (_super) {
         this.setStateSync(nextState);
     };
     UIHelperModelProvider.prototype.render = function () {
-        return (React.createElement(exports.UIHelperModelContext.Provider, { value: __assign({}, this.state, { toggle: this.toggle }) },
+        return (React.createElement(exports.UIHelperModelContext.Provider, { value: __assign({}, this.state, { toggle: this.toggle, ReduxDispatch: function (action) { return null; } }) },
             " ",
             this.props.children));
     };
@@ -5967,6 +5995,9 @@ exports.mapDispatchToProps = function (dispatch) {
         },
         fakeLogin: function () {
             return dispatch(RUserState.fakeLogin());
+        },
+        ReduxDispatch: function (action) {
+            return dispatch(action);
         }
     };
 };
@@ -5995,7 +6026,8 @@ var initWithMethodsUserState = function () {
         lastLogin: o.lastLogin,
         login: o.login,
         logout: o.logout,
-        fakeLogin: o.fakeLogin
+        fakeLogin: o.fakeLogin,
+        ReduxDispatch: function (action) { return null; }
     };
 };
 /**
@@ -6305,7 +6337,7 @@ var UserStateProvider = /** @class */ (function (_super) {
         this.setStateSync(nextState);
     };
     UserStateProvider.prototype.render = function () {
-        return (React.createElement(exports.UserStateContext.Provider, { value: __assign({}, this.state, { login: this.login, logout: this.logout, fakeLogin: this.fakeLogin }) },
+        return (React.createElement(exports.UserStateContext.Provider, { value: __assign({}, this.state, { login: this.login, logout: this.logout, fakeLogin: this.fakeLogin, ReduxDispatch: function (action) { return null; } }) },
             " ",
             this.props.children));
     };
@@ -6448,6 +6480,9 @@ exports.mapDispatchToProps = function (dispatch) {
         },
         step: function () {
             return dispatch(RWaspModel.step());
+        },
+        ReduxDispatch: function (action) {
+            return dispatch(action);
         }
     };
 };
@@ -6473,7 +6508,8 @@ var initWithMethodsWaspModel = function () {
         addWasp: o.addWasp,
         incSpeed: o.incSpeed,
         setColor: o.setColor,
-        step: o.step
+        step: o.step,
+        ReduxDispatch: function (action) { return null; }
     };
 };
 /**
@@ -6797,7 +6833,7 @@ var WaspModelProvider = /** @class */ (function (_super) {
         this.setStateSync(nextState);
     };
     WaspModelProvider.prototype.render = function () {
-        return (React.createElement(exports.WaspModelContext.Provider, { value: __assign({}, this.state, { addWasp: this.addWasp, incSpeed: this.incSpeed, setColor: this.setColor, step: this.step }) },
+        return (React.createElement(exports.WaspModelContext.Provider, { value: __assign({}, this.state, { addWasp: this.addWasp, incSpeed: this.incSpeed, setColor: this.setColor, step: this.step, ReduxDispatch: function (action) { return null; } }) },
             " ",
             this.props.children));
     };

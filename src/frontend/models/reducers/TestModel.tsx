@@ -200,6 +200,7 @@ export interface IContainerPropsMethods {
   addOneFriend: (name) => any;
   fillSomeFriends: () => any;
   ChangeLastItem: () => any;
+  ReduxDispatch: (action: any) => void;
 }
 export interface ITestModel {
   // model with initializer
@@ -310,6 +311,9 @@ export const mapDispatchToProps = (dispatch: any): IContainerPropsMethods => {
     },
     ChangeLastItem: () => {
       return dispatch(RTestModel.ChangeLastItem());
+    },
+    ReduxDispatch: (action: any) => {
+      return dispatch(action);
     }
   };
 };
@@ -382,7 +386,8 @@ const initWithMethodsTestModel = () => {
     createItem: o.createItem,
     addOneFriend: o.addOneFriend,
     fillSomeFriends: o.fillSomeFriends,
-    ChangeLastItem: o.ChangeLastItem
+    ChangeLastItem: o.ChangeLastItem,
+    ReduxDispatch: (action: any) => null
   };
 };
 
@@ -1334,7 +1339,8 @@ export class TestModelProvider extends React.Component {
           createItem: this.createItem,
           addOneFriend: this.addOneFriend,
           fillSomeFriends: this.fillSomeFriends,
-          ChangeLastItem: this.ChangeLastItem
+          ChangeLastItem: this.ChangeLastItem,
+          ReduxDispatch: (action: any) => null
         }}
       >
         {" "}

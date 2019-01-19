@@ -23,6 +23,7 @@ import * as React from "react";
 export interface IContainerPropsMethods {
   increment: () => any;
   decrement: () => any;
+  ReduxDispatch: (action: any) => void;
 }
 export interface IIncModel {
   cnt: number;
@@ -61,6 +62,9 @@ export const mapDispatchToProps = (dispatch: any): IContainerPropsMethods => {
     },
     decrement: () => {
       return dispatch(RIncModel.decrement());
+    },
+    ReduxDispatch: (action: any) => {
+      return dispatch(action);
     }
   };
 };
@@ -91,7 +95,8 @@ const initWithMethodsIncModel = () => {
   return {
     cnt: o.cnt,
     increment: o.increment,
-    decrement: o.decrement
+    decrement: o.decrement,
+    ReduxDispatch: (action: any) => null
   };
 };
 
@@ -251,7 +256,8 @@ export class IncModelProvider extends React.Component {
         value={{
           ...this.state,
           increment: this.increment,
-          decrement: this.decrement
+          decrement: this.decrement,
+          ReduxDispatch: (action: any) => null
         }}
       >
         {" "}

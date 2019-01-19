@@ -261,6 +261,7 @@ export async function createProject(settings: GenerationOptions) {
         ng.out(`export interface IContainerPropsMethods {`, true);
         ng.indent(1);
         const propsMethods = ng.fork();
+        ng.out(`ReduxDispatch: (action:any) => void;`, true);
         ng.indent(-1);
         ng.out(`}`, true);
 
@@ -359,6 +360,10 @@ export async function createProject(settings: GenerationOptions) {
         ng.out("return {", true);
         ng.indent(1);
         const dispatchMethods = ng.fork();
+        ng.out(
+          `ReduxDispatch: (action:any) => { return dispatch(action) },`,
+          true
+        );
         ng.indent(-1);
         ng.out("}", true);
         ng.indent(-1);
@@ -407,6 +412,8 @@ export async function createProject(settings: GenerationOptions) {
         selectorMethods.forEach(m => {
           ng.out(m.getName() + ": o." + m.getName() + ",", true);
         });
+
+        ng.out(`ReduxDispatch: (action:any) => null,`, true);
         ng.indent(-1);
         ng.out("}", true);
         ng.indent(-1);
@@ -984,6 +991,7 @@ export async function createProject(settings: GenerationOptions) {
               true
             );
           });
+          ng.out("ReduxDispatch: (action:any) => null,", true);
           ng.indent(-1);
           ng.out(`}}> {this.props.children} `, true);
           ng.out(`</${c.getName()}Context.Provider>)`, true);

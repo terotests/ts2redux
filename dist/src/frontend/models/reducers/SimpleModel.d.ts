@@ -16,6 +16,7 @@ import { IState } from "./index";
 import * as React from "react";
 export interface IContainerPropsMethods {
     getItems: () => any;
+    ReduxDispatch: (action: any) => void;
 }
 export interface ISimpleModel {
     items: any[];

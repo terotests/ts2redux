@@ -293,6 +293,9 @@ exports.mapDispatchToProps = function (dispatch) {
         },
         ChangeLastItem: function () {
             return dispatch(RTestModel.ChangeLastItem());
+        },
+        ReduxDispatch: function (action) {
+            return dispatch(action);
         }
     };
 };
@@ -354,7 +357,8 @@ var initWithMethodsTestModel = function () {
         createItem: o.createItem,
         addOneFriend: o.addOneFriend,
         fillSomeFriends: o.fillSomeFriends,
-        ChangeLastItem: o.ChangeLastItem
+        ChangeLastItem: o.ChangeLastItem,
+        ReduxDispatch: function (action) { return null; }
     };
 };
 /**
@@ -1396,7 +1400,7 @@ var TestModelProvider = /** @class */ (function (_super) {
         });
     };
     TestModelProvider.prototype.render = function () {
-        return (React.createElement(exports.TestModelContext.Provider, { value: __assign({}, this.state, { setUserMessage: this.setUserMessage, add: this.add, removeFirst: this.removeFirst, sort: this.sort, addCart: this.addCart, addCartSync: this.addCartSync, addToCart: this.addToCart, setCartNewItem: this.setCartNewItem, addToCartRandom: this.addToCartRandom, renameLast: this.renameLast, createItem: this.createItem, addOneFriend: this.addOneFriend, fillSomeFriends: this.fillSomeFriends, ChangeLastItem: this.ChangeLastItem }) },
+        return (React.createElement(exports.TestModelContext.Provider, { value: __assign({}, this.state, { setUserMessage: this.setUserMessage, add: this.add, removeFirst: this.removeFirst, sort: this.sort, addCart: this.addCart, addCartSync: this.addCartSync, addToCart: this.addToCart, setCartNewItem: this.setCartNewItem, addToCartRandom: this.addToCartRandom, renameLast: this.renameLast, createItem: this.createItem, addOneFriend: this.addOneFriend, fillSomeFriends: this.fillSomeFriends, ChangeLastItem: this.ChangeLastItem, ReduxDispatch: function (action) { return null; } }) },
             " ",
             this.props.children));
     };

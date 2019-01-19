@@ -8,6 +8,7 @@ import { IState } from "./index";
 import * as React from "react";
 export interface IContainerPropsMethods {
     toggle: () => any;
+    ReduxDispatch: (action: any) => void;
 }
 export interface IUIHelperModel {
     showWasps: boolean;

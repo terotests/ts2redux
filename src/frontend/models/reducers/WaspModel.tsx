@@ -100,6 +100,7 @@ export interface IContainerPropsMethods {
     }
   ) => any;
   step: () => any;
+  ReduxDispatch: (action: any) => void;
 }
 export interface IWaspModel {
   speed: number;
@@ -150,6 +151,9 @@ export const mapDispatchToProps = (dispatch: any): IContainerPropsMethods => {
     },
     step: () => {
       return dispatch(RWaspModel.step());
+    },
+    ReduxDispatch: (action: any) => {
+      return dispatch(action);
     }
   };
 };
@@ -186,7 +190,8 @@ const initWithMethodsWaspModel = () => {
     addWasp: o.addWasp,
     incSpeed: o.incSpeed,
     setColor: o.setColor,
-    step: o.step
+    step: o.step,
+    ReduxDispatch: (action: any) => null
   };
 };
 
@@ -512,7 +517,8 @@ export class WaspModelProvider extends React.Component {
           addWasp: this.addWasp,
           incSpeed: this.incSpeed,
           setColor: this.setColor,
-          step: this.step
+          step: this.step,
+          ReduxDispatch: (action: any) => null
         }}
       >
         {" "}

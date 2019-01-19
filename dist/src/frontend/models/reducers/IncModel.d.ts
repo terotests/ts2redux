@@ -14,6 +14,7 @@ import * as React from "react";
 export interface IContainerPropsMethods {
     increment: () => any;
     decrement: () => any;
+    ReduxDispatch: (action: any) => void;
 }
 export interface IIncModel {
     cnt: number;

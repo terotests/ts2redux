@@ -30,6 +30,7 @@ import * as React from "react";
 
 export interface IContainerPropsMethods {
   getItems: () => any;
+  ReduxDispatch: (action: any) => void;
 }
 export interface ISimpleModel {
   items: any[];
@@ -79,6 +80,9 @@ export const mapDispatchToProps = (dispatch: any): IContainerPropsMethods => {
   return {
     getItems: () => {
       return dispatch(RSimpleModel.getItems());
+    },
+    ReduxDispatch: (action: any) => {
+      return dispatch(action);
     }
   };
 };
@@ -109,7 +113,8 @@ const initWithMethodsSimpleModel = () => {
   return {
     items: o.items,
     getItems: o.getItems,
-    myItems: o.myItems
+    myItems: o.myItems,
+    ReduxDispatch: (action: any) => null
   };
 };
 
@@ -241,7 +246,8 @@ export class SimpleModelProvider extends React.Component {
         value={{
           ...this.state,
           getItems: this.getItems,
-          myItems: this.__selectormyItems(this.state)
+          myItems: this.__selectormyItems(this.state),
+          ReduxDispatch: (action: any) => null
         }}
       >
         {" "}

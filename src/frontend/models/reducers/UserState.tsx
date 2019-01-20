@@ -258,6 +258,7 @@ export class RUserState {
     }
   }
 
+  // login
   async login(loginInfo: { username: string; password: string }) {
     console.log("Login called with ", loginInfo);
   }
@@ -267,6 +268,7 @@ export class RUserState {
       new RUserState(undefined, dispatcher, getState).login(loginInfo);
     };
   }
+  // logout
   async logout() {}
 
   public static logout() {

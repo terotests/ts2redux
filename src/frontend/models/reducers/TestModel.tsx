@@ -955,6 +955,7 @@ export class RTestModel {
       new RTestModel(undefined, dispatcher, getState).renameLast(newName);
     };
   }
+  // createItem
   // action
   async createItem(someName: string) {
     console.log(MSG, this.shopState);
@@ -975,6 +976,7 @@ export class RTestModel {
       new RTestModel(undefined, dispatcher, getState).createItem(someName);
     };
   }
+  // addOneFriend
   async addOneFriend(name) {
     this.add({ name });
   }
@@ -984,6 +986,7 @@ export class RTestModel {
       new RTestModel(undefined, dispatcher, getState).addOneFriend(name);
     };
   }
+  // fillSomeFriends
   async fillSomeFriends() {
     FRIEND_LIST.forEach(name => {
       this.add({ name });
@@ -995,6 +998,7 @@ export class RTestModel {
       new RTestModel(undefined, dispatcher, getState).fillSomeFriends();
     };
   }
+  // ChangeLastItem
   async ChangeLastItem() {
     this.renameLast(LAST_NAME);
   }

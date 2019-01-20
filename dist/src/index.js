@@ -203,6 +203,7 @@ function createProject(settings) {
                                 ng_1.out("export interface IContainerPropsMethods {", true);
                                 ng_1.indent(1);
                                 var propsMethods_1 = ng_1.fork();
+                                // ng.out(`ReduxDispatch: (action:any) => void;`, true);
                                 ng_1.indent(-1);
                                 ng_1.out("}", true);
                                 ng_1.out("export interface I" + c.getName() + " {", true);
@@ -254,6 +255,12 @@ function createProject(settings) {
                                 ng_1.out("return {", true);
                                 ng_1.indent(1);
                                 var dispatchMethods_1 = ng_1.fork();
+                                /*
+                                ng.out(
+                                  `ReduxDispatch: (action:any) => { return dispatch(action) },`,
+                                  true
+                                );
+                                */
                                 ng_1.indent(-1);
                                 ng_1.out("}", true);
                                 ng_1.indent(-1);
@@ -288,6 +295,7 @@ function createProject(settings) {
                                 selectorMethods_1.forEach(function (m) {
                                     ng_1.out(m.getName() + ": o." + m.getName() + ",", true);
                                 });
+                                // ng.out(`ReduxDispatch: (action:any) => null,`, true);
                                 ng_1.indent(-1);
                                 ng_1.out("}", true);
                                 ng_1.indent(-1);
@@ -460,8 +468,13 @@ function createProject(settings) {
                                         .map(function (mod) { return mod.getName(); })
                                         .join("");
                                     if (m.isAsync()) {
-                                        // body.out('// is task', true)
-                                        body_1.raw(m.print(), true);
+                                        body_1.out("// " + m.getName(), true);
+                                        if (m.getName() === "ReduxDispatch") {
+                                            body_1.out("\nasync ReduxDispatch(action:any) {\n  if(typeof(this._dispatch) !== \"undefined\") {\n    this._dispatch(action);              \n  }\n}\n              ", true);
+                                        }
+                                        else {
+                                            body_1.raw(m.print(), true);
+                                        }
                                     }
                                     else {
                                         // body.out('// is a reducer', true)
@@ -544,19 +557,24 @@ function createProject(settings) {
                                                 .map(function (mod) { return mod.print(); })
                                                 .join(", ") +
                                             ") => any", true);
-                                        dispatchMethods_1.out(m.getName() +
-                                            " : " +
-                                            typeArgStr +
-                                            "(" +
-                                            m
-                                                .getParameters()
-                                                .map(function (mod) { return mod.print(); })
-                                                .join(", ") +
-                                            ") => {", true);
-                                        dispatchMethods_1.indent(1);
-                                        dispatchMethods_1.out("return dispatch(R" + c.getName() + "." + m.getName() + "(" + pName + "))", true);
-                                        dispatchMethods_1.indent(-1);
-                                        dispatchMethods_1.out("},", true);
+                                        if (m.getName() === "ReduxDispatch") {
+                                            dispatchMethods_1.out("\n              ReduxDispatch: (action: any) => {\n                return dispatch(action);\n              },              \n              ");
+                                        }
+                                        else {
+                                            dispatchMethods_1.out(m.getName() +
+                                                " : " +
+                                                typeArgStr +
+                                                "(" +
+                                                m
+                                                    .getParameters()
+                                                    .map(function (mod) { return mod.print(); })
+                                                    .join(", ") +
+                                                ") => {", true);
+                                            dispatchMethods_1.indent(1);
+                                            dispatchMethods_1.out("return dispatch(R" + c.getName() + "." + m.getName() + "(" + pName + "))", true);
+                                            dispatchMethods_1.indent(-1);
+                                            dispatchMethods_1.out("},", true);
+                                        }
                                         if (m.getReturnTypeNode())
                                             body_1.out(": " + m.getReturnTypeNode().print());
                                         body_1.out("{", true);
@@ -702,6 +720,7 @@ function createProject(settings) {
                                         // ng.out(`this.__selector${m.getName()} = ${m.getName()}SelectorFnCreator()`, true)
                                         ng.out(m.getName() + (": this.__selector" + m.getName() + "(this.state),"), true);
                                     });
+                                    // ng.out("ReduxDispatch: (action:any) => null,", true);
                                     ng.indent(-1);
                                     ng.out("}}> {this.props.children} ", true);
                                     ng.out("</" + c.getName() + "Context.Provider>)", true);

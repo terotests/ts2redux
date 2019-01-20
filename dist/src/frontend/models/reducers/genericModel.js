@@ -323,6 +323,7 @@ var RGenericModel = /** @class */ (function () {
             new RGenericModel(undefined, dispatcher, getState).inc();
         };
     };
+    // testLoading
     RGenericModel.prototype.testLoading = function () {
         return __awaiter(this, void 0, void 0, function () { return __generator(this, function (_a) {
             return [2 /*return*/];

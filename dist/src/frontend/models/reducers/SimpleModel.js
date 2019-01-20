@@ -198,6 +198,7 @@ var RSimpleModel = /** @class */ (function () {
         enumerable: true,
         configurable: true
     });
+    // getItems
     RSimpleModel.prototype.getItems = function () {
         return __awaiter(this, void 0, void 0, function () {
             var _a;

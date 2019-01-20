@@ -7,6 +7,10 @@
 
 export class IncModel {
   cnt = 0;
+
+  // placeholder routine
+  async ReduxDispatch(action: any) {}
+
   increment() {
     this.cnt++;
   }
@@ -21,6 +25,7 @@ import { IState } from "./index";
 import * as React from "react";
 
 export interface IContainerPropsMethods {
+  ReduxDispatch: (action: any) => any;
   increment: () => any;
   decrement: () => any;
 }
@@ -56,6 +61,9 @@ function mapDispatchToPropsWithKeys<K extends keyof IContainerPropsMethods>(
 
 export const mapDispatchToProps = (dispatch: any): IContainerPropsMethods => {
   return {
+    ReduxDispatch: (action: any) => {
+      return dispatch(action);
+    },
     increment: () => {
       return dispatch(RIncModel.increment());
     },
@@ -90,6 +98,7 @@ const initWithMethodsIncModel = () => {
   const o = new IncModel();
   return {
     cnt: o.cnt,
+    ReduxDispatch: o.ReduxDispatch,
     increment: o.increment,
     decrement: o.decrement
   };
@@ -132,6 +141,19 @@ export class RIncModel {
     }
   }
 
+  // ReduxDispatch
+
+  async ReduxDispatch(action: any) {
+    if (typeof this._dispatch !== "undefined") {
+      this._dispatch(action);
+    }
+  }
+
+  public static ReduxDispatch(action: any) {
+    return (dispatcher: any, getState: any) => {
+      new RIncModel(undefined, dispatcher, getState).ReduxDispatch(action);
+    };
+  }
   increment() {
     if (this._state) {
       this.cnt++;
@@ -203,6 +225,7 @@ export class IncModelProvider extends React.Component {
   constructor(props: any) {
     super(props);
     this.lastSetState = this.state;
+    this.ReduxDispatch = this.ReduxDispatch.bind(this);
     this.increment = this.increment.bind(this);
     this.decrement = this.decrement.bind(this);
     const devs = window["__REDUX_DEVTOOLS_EXTENSION__"]
@@ -227,6 +250,20 @@ export class IncModelProvider extends React.Component {
     this.lastSetState = state;
     this.setState(state);
   }
+  // placeholder routine
+  async ReduxDispatch(action: any) {
+    new RIncModel(
+      undefined,
+      (action: any) => {
+        const nextState = IncModelReducer(this.lastSetState, action);
+        if (this.__devTools) {
+          this.__devTools.send(action.type, nextState);
+        }
+        this.setStateSync(nextState);
+      },
+      () => ({ IncModel: this.lastSetState })
+    ).ReduxDispatch(action);
+  }
   increment() {
     const nextState = immer.produce(this.state, draft =>
       new RIncModel(draft).increment()
@@ -250,6 +287,7 @@ export class IncModelProvider extends React.Component {
       <IncModelContext.Provider
         value={{
           ...this.state,
+          ReduxDispatch: this.ReduxDispatch,
           increment: this.increment,
           decrement: this.decrement
         }}

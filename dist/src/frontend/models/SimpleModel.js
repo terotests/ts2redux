@@ -43,6 +43,17 @@ var SimpleModel = /** @class */ (function () {
     function SimpleModel() {
         this.items = [];
     }
+    /**
+     * @dispatch true
+     * @param action
+     */
+    SimpleModel.prototype.SimpleDispatch = function (action) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/];
+            });
+        });
+    };
     SimpleModel.prototype.getItems = function () {
         return __awaiter(this, void 0, void 0, function () {
             var _a;

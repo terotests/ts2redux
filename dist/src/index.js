@@ -62,7 +62,7 @@ var createComment = function (wr, txt) {
 };
 function createProject(settings) {
     return __awaiter(this, void 0, void 0, function () {
-        var project, reducerPath, RFs, targetFiles, modelsList, generatedFiles, dirReducers, JSTags, getOptionalityOf, getPropTypeString, prettierConfig;
+        var project, reducerPath, RFs, targetFiles, modelsList, generatedFiles, dirReducers, JSTags, hasJSTag, getOptionalityOf, getPropTypeString, prettierConfig;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -86,6 +86,17 @@ function createProject(settings) {
                             });
                         });
                         return res;
+                    };
+                    hasJSTag = function (c, name) {
+                        var has = false;
+                        c.getJsDocs().forEach(function (doc) {
+                            return doc.getTags().forEach(function (tag) {
+                                if (tag.getName() === name) {
+                                    has = true;
+                                }
+                            });
+                        });
+                        return has;
                     };
                     project.getSourceFiles().forEach(function (sourceFile) {
                         sourceFile.getClasses().forEach(function (c) {
@@ -468,9 +479,8 @@ function createProject(settings) {
                                         .map(function (mod) { return mod.getName(); })
                                         .join("");
                                     if (m.isAsync()) {
-                                        body_1.out("// " + m.getName(), true);
-                                        if (m.getName() === "ReduxDispatch") {
-                                            body_1.out("\nasync ReduxDispatch(action:any) {\n  if(typeof(this._dispatch) !== \"undefined\") {\n    this._dispatch(action);              \n  }\n}\n              ", true);
+                                        if (hasJSTag(m, "dispatch")) {
+                                            body_1.out("\nasync " + m.getName() + "(action:any) {\n  if(typeof(this._dispatch) !== \"undefined\") {\n    this._dispatch(action);              \n  }\n}\n              ", true);
                                         }
                                         else {
                                             body_1.raw(m.print(), true);
@@ -557,8 +567,8 @@ function createProject(settings) {
                                                 .map(function (mod) { return mod.print(); })
                                                 .join(", ") +
                                             ") => any", true);
-                                        if (m.getName() === "ReduxDispatch") {
-                                            dispatchMethods_1.out("\n              ReduxDispatch: (action: any) => {\n                return dispatch(action);\n              },              \n              ");
+                                        if (hasJSTag(m, "dispatch")) {
+                                            dispatchMethods_1.out("\n              " + m.getName() + ": (action: any) => {\n                return dispatch(action);\n              },              \n              ");
                                         }
                                         else {
                                             dispatchMethods_1.out(m.getName() +

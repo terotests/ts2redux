@@ -9,12 +9,18 @@
  */
 export declare class SimpleModel {
     items: any[];
+    /**
+     * @dispatch true
+     * @param action
+     */
+    SimpleDispatch(action: any): Promise<void>;
     getItems(): Promise<void>;
     readonly myItems: any[];
 }
 import { IState } from "./index";
 import * as React from "react";
 export interface IContainerPropsMethods {
+    SimpleDispatch: (action: any) => any;
     getItems: () => any;
 }
 export interface ISimpleModel {
@@ -42,6 +48,8 @@ export declare class RSimpleModel {
     private _getState?;
     constructor(state?: ISimpleModel, dispatch?: (action: any) => void, getState?: () => any);
     items: any[];
+    SimpleDispatch(action: any): Promise<void>;
+    static SimpleDispatch(action: any): (dispatcher: any, getState: any) => void;
     getItems(): Promise<void>;
     static getItems(): (dispatcher: any, getState: any) => void;
 }
@@ -62,6 +70,11 @@ export declare class SimpleModelProvider extends React.Component {
     constructor(props: any);
     componentWillUnmount(): void;
     setStateSync(state: ISimpleModel): void;
+    /**
+     * @dispatch true
+     * @param action
+     */
+    SimpleDispatch(action: any): Promise<void>;
     getItems(): Promise<void>;
     render(): JSX.Element;
 }

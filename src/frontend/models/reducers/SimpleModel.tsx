@@ -12,6 +12,15 @@ import axios from "axios";
  */
 export class SimpleModel {
   items: any[] = [];
+
+  /**
+   * @dispatch true
+   * @param action
+   */
+  async SimpleDispatch(action: any) {
+    // Example of dispatcher routine
+  }
+
   async getItems() {
     this.items = (await axios.get(
       "https://jsonplaceholder.typicode.com/todos"
@@ -29,6 +38,7 @@ import { IState } from "./index";
 import * as React from "react";
 
 export interface IContainerPropsMethods {
+  SimpleDispatch: (action: any) => any;
   getItems: () => any;
 }
 export interface ISimpleModel {
@@ -77,6 +87,9 @@ function mapDispatchToPropsWithKeys<K extends keyof IContainerPropsMethods>(
 
 export const mapDispatchToProps = (dispatch: any): IContainerPropsMethods => {
   return {
+    SimpleDispatch: (action: any) => {
+      return dispatch(action);
+    },
     getItems: () => {
       return dispatch(RSimpleModel.getItems());
     }
@@ -108,6 +121,7 @@ const initWithMethodsSimpleModel = () => {
   const o = new SimpleModel();
   return {
     items: o.items,
+    SimpleDispatch: o.SimpleDispatch,
     getItems: o.getItems,
     myItems: o.myItems
   };
@@ -153,7 +167,17 @@ export class RSimpleModel {
     }
   }
 
-  // getItems
+  async SimpleDispatch(action: any) {
+    if (typeof this._dispatch !== "undefined") {
+      this._dispatch(action);
+    }
+  }
+
+  public static SimpleDispatch(action: any) {
+    return (dispatcher: any, getState: any) => {
+      new RSimpleModel(undefined, dispatcher, getState).SimpleDispatch(action);
+    };
+  }
   async getItems() {
     this.items = (await axios.get(
       "https://jsonplaceholder.typicode.com/todos"
@@ -199,6 +223,7 @@ export class SimpleModelProvider extends React.Component {
   constructor(props: any) {
     super(props);
     this.lastSetState = this.state;
+    this.SimpleDispatch = this.SimpleDispatch.bind(this);
     this.getItems = this.getItems.bind(this);
     this.__selectormyItems = myItemsSelectorFnCreator();
     const devs = window["__REDUX_DEVTOOLS_EXTENSION__"]
@@ -223,6 +248,23 @@ export class SimpleModelProvider extends React.Component {
     this.lastSetState = state;
     this.setState(state);
   }
+  /**
+   * @dispatch true
+   * @param action
+   */
+  async SimpleDispatch(action: any) {
+    new RSimpleModel(
+      undefined,
+      (action: any) => {
+        const nextState = SimpleModelReducer(this.lastSetState, action);
+        if (this.__devTools) {
+          this.__devTools.send(action.type, nextState);
+        }
+        this.setStateSync(nextState);
+      },
+      () => ({ SimpleModel: this.lastSetState })
+    ).SimpleDispatch(action);
+  }
   async getItems() {
     new RSimpleModel(
       undefined,
@@ -241,6 +283,7 @@ export class SimpleModelProvider extends React.Component {
       <SimpleModelContext.Provider
         value={{
           ...this.state,
+          SimpleDispatch: this.SimpleDispatch,
           getItems: this.getItems,
           myItems: this.__selectormyItems(this.state)
         }}

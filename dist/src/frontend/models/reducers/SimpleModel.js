@@ -73,6 +73,17 @@ var SimpleModel = /** @class */ (function () {
     function SimpleModel() {
         this.items = [];
     }
+    /**
+     * @dispatch true
+     * @param action
+     */
+    SimpleModel.prototype.SimpleDispatch = function (action) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/];
+            });
+        });
+    };
     SimpleModel.prototype.getItems = function () {
         return __awaiter(this, void 0, void 0, function () {
             var _a;
@@ -136,6 +147,9 @@ function mapDispatchToPropsWithKeys(dispatch, keys) {
 }
 exports.mapDispatchToProps = function (dispatch) {
     return {
+        SimpleDispatch: function (action) {
+            return dispatch(action);
+        },
         getItems: function () {
             return dispatch(RSimpleModel.getItems());
         }
@@ -156,6 +170,7 @@ var initWithMethodsSimpleModel = function () {
     var o = new SimpleModel();
     return {
         items: o.items,
+        SimpleDispatch: o.SimpleDispatch,
         getItems: o.getItems,
         myItems: o.myItems
     };
@@ -198,7 +213,21 @@ var RSimpleModel = /** @class */ (function () {
         enumerable: true,
         configurable: true
     });
-    // getItems
+    RSimpleModel.prototype.SimpleDispatch = function (action) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                if (typeof this._dispatch !== "undefined") {
+                    this._dispatch(action);
+                }
+                return [2 /*return*/];
+            });
+        });
+    };
+    RSimpleModel.SimpleDispatch = function (action) {
+        return function (dispatcher, getState) {
+            new RSimpleModel(undefined, dispatcher, getState).SimpleDispatch(action);
+        };
+    };
     RSimpleModel.prototype.getItems = function () {
         return __awaiter(this, void 0, void 0, function () {
             var _a;
@@ -249,6 +278,7 @@ var SimpleModelProvider = /** @class */ (function (_super) {
         _this.__devTools = null;
         _this.__selectormyItems = null;
         _this.lastSetState = _this.state;
+        _this.SimpleDispatch = _this.SimpleDispatch.bind(_this);
         _this.getItems = _this.getItems.bind(_this);
         _this.__selectormyItems = exports.myItemsSelectorFnCreator();
         var devs = window["__REDUX_DEVTOOLS_EXTENSION__"]
@@ -274,6 +304,25 @@ var SimpleModelProvider = /** @class */ (function (_super) {
         this.lastSetState = state;
         this.setState(state);
     };
+    /**
+     * @dispatch true
+     * @param action
+     */
+    SimpleModelProvider.prototype.SimpleDispatch = function (action) {
+        return __awaiter(this, void 0, void 0, function () {
+            var _this = this;
+            return __generator(this, function (_a) {
+                new RSimpleModel(undefined, function (action) {
+                    var nextState = exports.SimpleModelReducer(_this.lastSetState, action);
+                    if (_this.__devTools) {
+                        _this.__devTools.send(action.type, nextState);
+                    }
+                    _this.setStateSync(nextState);
+                }, function () { return ({ SimpleModel: _this.lastSetState }); }).SimpleDispatch(action);
+                return [2 /*return*/];
+            });
+        });
+    };
     SimpleModelProvider.prototype.getItems = function () {
         return __awaiter(this, void 0, void 0, function () {
             var _this = this;
@@ -290,7 +339,7 @@ var SimpleModelProvider = /** @class */ (function (_super) {
         });
     };
     SimpleModelProvider.prototype.render = function () {
-        return (React.createElement(exports.SimpleModelContext.Provider, { value: __assign({}, this.state, { getItems: this.getItems, myItems: this.__selectormyItems(this.state) }) },
+        return (React.createElement(exports.SimpleModelContext.Provider, { value: __assign({}, this.state, { SimpleDispatch: this.SimpleDispatch, getItems: this.getItems, myItems: this.__selectormyItems(this.state) }) },
             " ",
             this.props.children));
     };

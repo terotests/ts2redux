@@ -97,7 +97,11 @@ export async function createProject(settings: GenerationOptions) {
   // https://daveceddia.com/context-api-vs-redux/
 
   const JSTags = (
-    c: InterfaceDeclaration | ClassDeclaration | FunctionDeclaration,
+    c:
+      | InterfaceDeclaration
+      | ClassDeclaration
+      | FunctionDeclaration
+      | MethodDeclaration,
     name: string
   ): string[] => {
     const res: string[] = [];
@@ -107,6 +111,25 @@ export async function createProject(settings: GenerationOptions) {
       })
     );
     return res;
+  };
+
+  const hasJSTag = (
+    c:
+      | InterfaceDeclaration
+      | ClassDeclaration
+      | FunctionDeclaration
+      | MethodDeclaration,
+    name: string
+  ): boolean => {
+    let has = false;
+    c.getJsDocs().forEach(doc =>
+      doc.getTags().forEach(tag => {
+        if (tag.getName() === name) {
+          has = true;
+        }
+      })
+    );
+    return has;
   };
 
   project.getSourceFiles().forEach(sourceFile => {
@@ -653,11 +676,10 @@ export async function createProject(settings: GenerationOptions) {
             .join("");
 
           if (m.isAsync()) {
-            body.out("// " + m.getName(), true);
-            if (m.getName() === "ReduxDispatch") {
+            if (hasJSTag(m, "dispatch")) {
               body.out(
                 `
-async ReduxDispatch(action:any) {
+async ${m.getName()}(action:any) {
   if(typeof(this._dispatch) !== "undefined") {
     this._dispatch(action);              
   }
@@ -773,9 +795,9 @@ async ReduxDispatch(action:any) {
                 ") => any",
               true
             );
-            if (m.getName() === "ReduxDispatch") {
+            if (hasJSTag(m, "dispatch")) {
               dispatchMethods.out(`
-              ReduxDispatch: (action: any) => {
+              ${m.getName()}: (action: any) => {
                 return dispatch(action);
               },              
               `);

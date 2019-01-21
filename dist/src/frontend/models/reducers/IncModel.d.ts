@@ -6,14 +6,12 @@
  ********************************************************************************/
 export declare class IncModel {
     cnt: number;
-    ReduxDispatch(action: any): Promise<void>;
     increment(): void;
     decrement(): void;
 }
 import { IState } from "./index";
 import * as React from "react";
 export interface IContainerPropsMethods {
-    ReduxDispatch: (action: any) => any;
     increment: () => any;
     decrement: () => any;
 }
@@ -37,8 +35,6 @@ export declare class RIncModel {
     private _getState?;
     constructor(state?: IIncModel, dispatch?: (action: any) => void, getState?: () => any);
     cnt: number;
-    ReduxDispatch(action: any): Promise<void>;
-    static ReduxDispatch(action: any): (dispatcher: any, getState: any) => void;
     increment(): void;
     static increment(): (dispatcher: any, getState: any) => void;
     decrement(): void;
@@ -62,7 +58,6 @@ export declare class IncModelProvider extends React.Component {
     constructor(props: any);
     componentWillUnmount(): void;
     setStateSync(state: IIncModel): void;
-    ReduxDispatch(action: any): Promise<void>;
     increment(): void;
     decrement(): void;
     render(): JSX.Element;

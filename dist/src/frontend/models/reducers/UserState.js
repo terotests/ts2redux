@@ -312,7 +312,6 @@ var RUserState = /** @class */ (function () {
         enumerable: true,
         configurable: true
     });
-    // login
     RUserState.prototype.login = function (loginInfo) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
@@ -326,7 +325,6 @@ var RUserState = /** @class */ (function () {
             new RUserState(undefined, dispatcher, getState).login(loginInfo);
         };
     };
-    // logout
     RUserState.prototype.logout = function () {
         return __awaiter(this, void 0, void 0, function () { return __generator(this, function (_a) {
             return [2 /*return*/];

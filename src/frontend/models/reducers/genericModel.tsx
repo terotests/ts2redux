@@ -281,7 +281,6 @@ export class RGenericModel {
       new RGenericModel(undefined, dispatcher, getState).inc();
     };
   }
-  // testLoading
   async testLoading() {}
 
   public static testLoading() {

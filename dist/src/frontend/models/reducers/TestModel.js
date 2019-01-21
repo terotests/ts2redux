@@ -1007,7 +1007,6 @@ var RTestModel = /** @class */ (function () {
             new RTestModel(undefined, dispatcher, getState).renameLast(newName);
         };
     };
-    // createItem
     // action
     RTestModel.prototype.createItem = function (someName) {
         return __awaiter(this, void 0, void 0, function () {
@@ -1037,7 +1036,6 @@ var RTestModel = /** @class */ (function () {
             new RTestModel(undefined, dispatcher, getState).createItem(someName);
         };
     };
-    // addOneFriend
     RTestModel.prototype.addOneFriend = function (name) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
@@ -1051,7 +1049,6 @@ var RTestModel = /** @class */ (function () {
             new RTestModel(undefined, dispatcher, getState).addOneFriend(name);
         };
     };
-    // fillSomeFriends
     RTestModel.prototype.fillSomeFriends = function () {
         return __awaiter(this, void 0, void 0, function () {
             var _this = this;
@@ -1068,7 +1065,6 @@ var RTestModel = /** @class */ (function () {
             new RTestModel(undefined, dispatcher, getState).fillSomeFriends();
         };
     };
-    // ChangeLastItem
     RTestModel.prototype.ChangeLastItem = function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {

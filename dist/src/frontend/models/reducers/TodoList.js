@@ -709,7 +709,6 @@ var RTodoList = /** @class */ (function () {
             new RTodoList(undefined, dispatcher, getState).addLotOfItems(cnt);
         };
     };
-    // getItems
     /**
      * Fetch items from json placeholder service
      */

@@ -1,6 +1,6 @@
 {
   "name": "ts2redux",
-  "version": "1.0.28",
+  "version": "1.0.29",
   "description": "Convert TypeScript classes into Reducers",
   "main": "dist/src/index.js",
   "bin": {
@@ -27,7 +27,7 @@
     "@types/chokidar": "^1.7.5",
     "chokidar": "^2.0.4",
     "prettier": "^1.15.1",
-    "robowr": "^1.0.10",
+    "robowr": "^1.0.11",
     "ts-simple-ast": "^17.1.1",
     "typescript": "^3.2.2",
     "yargs": "^12.0.2"

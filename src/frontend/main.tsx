@@ -1,15 +1,16 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
-import { createStore, applyMiddleware, compose } from "redux";
+import { createStore, applyMiddleware, compose, AnyAction, Store } from "redux";
 // import { Router, Route, IndexRoute, hashHistory } from 'react-router';
 // import { syncHistoryWithStore } from 'react-router-redux'
 import reduxThunk from "redux-thunk";
 import { Provider } from "react-redux";
-import { reducers } from "./models/reducers/";
+import { reducers, IState } from "./models/reducers/";
 import {
   TodoListContext,
   TodoListProvider,
-  TodoListConsumer
+  TodoListConsumer,
+  TodoListEnums
 } from "./models/reducers/TodoList";
 
 import {
@@ -41,6 +42,7 @@ import {
   UIHelperModelProvider,
   UIHelperModelConsumer
 } from "./models/reducers/UIHelperModel";
+import { TodoListItem } from "./models/interfaces";
 
 let store = createStore(
   reducers,
@@ -51,6 +53,41 @@ let store = createStore(
       : f => f
   )
 );
+
+// Testing...
+export class TodoStoreController {
+  private _store: Store<IState, AnyAction>;
+
+  constructor(store: Store<IState, AnyAction>) {
+    this._store = store;
+  }
+
+  set items(value: TodoListItem[]) {
+    this._store.dispatch({
+      type: TodoListEnums.TodoList_items,
+      payload: value
+    });
+  }
+
+  async getItems() {
+    const items = await new Promise<TodoListItem[]>(resolve => {
+      setTimeout(() => {
+        resolve([
+          {
+            userId: 1,
+            completed: true,
+            title: "Generated Item 1 ",
+            id: 1
+          }
+        ]);
+      }, 1000);
+    });
+    this.items = items;
+    return items;
+  }
+}
+
+const engine = new TodoStoreController(store);
 
 class Nro {
   val = 0;
@@ -82,6 +119,14 @@ const UserInfo = props => (
 ReactDOM.render(
   <Provider store={store}>
     <Ctx.Provider value={listValue}>
+      <button
+        onClick={async () => {
+          console.log("items : ", await engine.getItems());
+        }}
+      >
+        Get Them
+      </button>
+      <TodoList />
       <GenericRedux />
       <TetrisComponent />
       <UserStateProvider>
@@ -120,7 +165,6 @@ ReactDOM.render(
         <div>
           <MemberArea />
           <CombinedStates />
-          <TodoList />
         </div>
         <div>
           <h4>Context API test</h4>

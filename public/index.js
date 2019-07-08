@@ -413,6 +413,42 @@ exports.TodoList = container.StateConnector(exports.AbstractTodoList);
 
 },{"../models/reducers/TodoList":18,"./PureList":2,"react":89}],10:[function(require,module,exports){
 "use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __generator = (this && this.__generator) || function (thisArg, body) {
+    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
+    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
+    function verb(n) { return function (v) { return step([n, v]); }; }
+    function step(op) {
+        if (f) throw new TypeError("Generator is already executing.");
+        while (_) try {
+            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
+            if (y = 0, t) op = [op[0] & 2, t.value];
+            switch (op[0]) {
+                case 0: case 1: t = op; break;
+                case 4: _.label++; return { value: op[1], done: false };
+                case 5: _.label++; y = op[1]; op = [0]; continue;
+                case 7: op = _.ops.pop(); _.trys.pop(); continue;
+                default:
+                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
+                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
+                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
+                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
+                    if (t[2]) _.ops.pop();
+                    _.trys.pop(); continue;
+            }
+            op = body.call(thisArg, _);
+        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
+        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
+    }
+};
+var _this = this;
 Object.defineProperty(exports, "__esModule", { value: true });
 var React = require("react");
 var ReactDOM = require("react-dom");
@@ -439,6 +475,50 @@ var UIHelperModel_1 = require("./models/reducers/UIHelperModel");
 var store = redux_1.createStore(reducers_1.reducers, redux_1.compose(redux_1.applyMiddleware(redux_thunk_1.default), window["__REDUX_DEVTOOLS_EXTENSION__"]
     ? window["__REDUX_DEVTOOLS_EXTENSION__"]()
     : function (f) { return f; }));
+// Testing...
+var TodoStoreController = /** @class */ (function () {
+    function TodoStoreController(store) {
+        this._store = store;
+    }
+    Object.defineProperty(TodoStoreController.prototype, "items", {
+        set: function (value) {
+            this._store.dispatch({
+                type: TodoList_1.TodoListEnums.TodoList_items,
+                payload: value
+            });
+        },
+        enumerable: true,
+        configurable: true
+    });
+    TodoStoreController.prototype.getItems = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var items;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, new Promise(function (resolve) {
+                            setTimeout(function () {
+                                resolve([
+                                    {
+                                        userId: 1,
+                                        completed: true,
+                                        title: "Generated Item 1 ",
+                                        id: 1
+                                    }
+                                ]);
+                            }, 1000);
+                        })];
+                    case 1:
+                        items = _a.sent();
+                        this.items = items;
+                        return [2 /*return*/, items];
+                }
+            });
+        });
+    };
+    return TodoStoreController;
+}());
+exports.TodoStoreController = TodoStoreController;
+var engine = new TodoStoreController(store);
 var Nro = /** @class */ (function () {
     function Nro(n) {
         this.val = 0;
@@ -460,6 +540,21 @@ var UserInfo = function (props) { return (React.createElement(UserState_1.UserSt
 })); };
 ReactDOM.render(React.createElement(react_redux_1.Provider, { store: store },
     React.createElement(Ctx.Provider, { value: listValue },
+        React.createElement("button", { onClick: function () { return __awaiter(_this, void 0, void 0, function () {
+                var _a, _b, _c;
+                return __generator(this, function (_d) {
+                    switch (_d.label) {
+                        case 0:
+                            _b = (_a = console).log;
+                            _c = ["items : "];
+                            return [4 /*yield*/, engine.getItems()];
+                        case 1:
+                            _b.apply(_a, _c.concat([_d.sent()]));
+                            return [2 /*return*/];
+                    }
+                });
+            }); } }, "Get Them"),
+        React.createElement(todoList_1.TodoList, null),
         React.createElement(GenericComp_1.GenericRedux, null),
         React.createElement(TetrisComponent_1.TetrisComponent, null),
         React.createElement(UserState_1.UserStateProvider, null,
@@ -478,8 +573,7 @@ ReactDOM.render(React.createElement(react_redux_1.Provider, { store: store },
             React.createElement(ReduxInc_1.ReduxInc, null),
             React.createElement("div", null,
                 React.createElement(memberArea_1.MemberArea, null),
-                React.createElement(combinedState_1.CombinedStates, null),
-                React.createElement(todoList_1.TodoList, null)),
+                React.createElement(combinedState_1.CombinedStates, null)),
             React.createElement("div", null,
                 React.createElement("h4", null, "Context API test"),
                 React.createElement(UserState_1.UserStateContext.Consumer, null, function (state) {
@@ -1372,7 +1466,7 @@ var GenericModelProvider = /** @class */ (function (_super) {
 }(React.Component));
 exports.GenericModelProvider = GenericModelProvider;
 
-},{"immer":55,"react":89,"react-redux":80}],14:[function(require,module,exports){
+},{"immer":56,"react":89,"react-redux":80}],14:[function(require,module,exports){
 "use strict";
 /********************************************************************************
  *                                                                               *
@@ -1626,7 +1720,7 @@ var IncModelProvider = /** @class */ (function (_super) {
 }(React.Component));
 exports.IncModelProvider = IncModelProvider;
 
-},{"immer":55,"react":89,"react-redux":80}],15:[function(require,module,exports){
+},{"immer":56,"react":89,"react-redux":80}],15:[function(require,module,exports){
 "use strict";
 /***********************************************************************************
  *                                                                                  *
@@ -1976,7 +2070,7 @@ var SimpleModelProvider = /** @class */ (function (_super) {
 }(React.Component));
 exports.SimpleModelProvider = SimpleModelProvider;
 
-},{"axios":29,"immer":55,"react":89,"react-redux":80,"reselect":92}],16:[function(require,module,exports){
+},{"axios":29,"immer":56,"react":89,"react-redux":80,"reselect":92}],16:[function(require,module,exports){
 "use strict";
 /*********************************************************************************
  *                                                                                *
@@ -3383,7 +3477,7 @@ var TestModelProvider = /** @class */ (function (_super) {
 }(React.Component));
 exports.TestModelProvider = TestModelProvider;
 
-},{"immer":55,"react":89,"react-redux":80,"timers":101}],17:[function(require,module,exports){
+},{"immer":56,"react":89,"react-redux":80,"timers":101}],17:[function(require,module,exports){
 "use strict";
 /***********************************************************************************
  *                                                                                  *
@@ -4672,7 +4766,7 @@ var TetrisModelProvider = /** @class */ (function (_super) {
 }(React.Component));
 exports.TetrisModelProvider = TetrisModelProvider;
 
-},{"immer":55,"react":89,"react-redux":80}],18:[function(require,module,exports){
+},{"immer":56,"react":89,"react-redux":80}],18:[function(require,module,exports){
 "use strict";
 /********************************************************************************
  *                                                                               *
@@ -5667,7 +5761,7 @@ var TodoListProvider = /** @class */ (function (_super) {
 }(React.Component));
 exports.TodoListProvider = TodoListProvider;
 
-},{"axios":29,"immer":55,"react":89,"react-redux":80,"reselect":92}],19:[function(require,module,exports){
+},{"axios":29,"immer":56,"react":89,"react-redux":80,"reselect":92}],19:[function(require,module,exports){
 "use strict";
 /*************************************************************************************
  *                                                                                    *
@@ -5887,7 +5981,7 @@ var UIHelperModelProvider = /** @class */ (function (_super) {
 }(React.Component));
 exports.UIHelperModelProvider = UIHelperModelProvider;
 
-},{"immer":55,"react":89,"react-redux":80}],20:[function(require,module,exports){
+},{"immer":56,"react":89,"react-redux":80}],20:[function(require,module,exports){
 "use strict";
 /*********************************************************************************
  *                                                                                *
@@ -6363,7 +6457,7 @@ var UserStateProvider = /** @class */ (function (_super) {
 }(React.Component));
 exports.UserStateProvider = UserStateProvider;
 
-},{"immer":55,"react":89,"react-redux":80}],21:[function(require,module,exports){
+},{"immer":56,"react":89,"react-redux":80}],21:[function(require,module,exports){
 "use strict";
 /*********************************************************************************
  *                                                                                *
@@ -6855,7 +6949,7 @@ var WaspModelProvider = /** @class */ (function (_super) {
 }(React.Component));
 exports.WaspModelProvider = WaspModelProvider;
 
-},{"immer":55,"react":89,"react-redux":80}],22:[function(require,module,exports){
+},{"immer":56,"react":89,"react-redux":80}],22:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 /***********************************************
@@ -6982,7 +7076,6 @@ module.exports = _objectWithoutPropertiesLoose;
 },{}],29:[function(require,module,exports){
 module.exports = require('./lib/axios');
 },{"./lib/axios":31}],30:[function(require,module,exports){
-(function (process){
 'use strict';
 
 var utils = require('./../utils');
@@ -6991,7 +7084,6 @@ var buildURL = require('./../helpers/buildURL');
 var parseHeaders = require('./../helpers/parseHeaders');
 var isURLSameOrigin = require('./../helpers/isURLSameOrigin');
 var createError = require('../core/createError');
-var btoa = (typeof window !== 'undefined' && window.btoa && window.btoa.bind(window)) || require('./../helpers/btoa');
 
 module.exports = function xhrAdapter(config) {
   return new Promise(function dispatchXhrRequest(resolve, reject) {
@@ -7003,22 +7095,6 @@ module.exports = function xhrAdapter(config) {
     }
 
     var request = new XMLHttpRequest();
-    var loadEvent = 'onreadystatechange';
-    var xDomain = false;
-
-    // For IE 8/9 CORS support
-    // Only supports POST and GET calls and doesn't returns the response headers.
-    // DON'T do this for testing b/c XMLHttpRequest is mocked, not XDomainRequest.
-    if (process.env.NODE_ENV !== 'test' &&
-        typeof window !== 'undefined' &&
-        window.XDomainRequest && !('withCredentials' in request) &&
-        !isURLSameOrigin(config.url)) {
-      request = new window.XDomainRequest();
-      loadEvent = 'onload';
-      xDomain = true;
-      request.onprogress = function handleProgress() {};
-      request.ontimeout = function handleTimeout() {};
-    }
 
     // HTTP basic authentication
     if (config.auth) {
@@ -7033,8 +7109,8 @@ module.exports = function xhrAdapter(config) {
     request.timeout = config.timeout;
 
     // Listen for ready state
-    request[loadEvent] = function handleLoad() {
-      if (!request || (request.readyState !== 4 && !xDomain)) {
+    request.onreadystatechange = function handleLoad() {
+      if (!request || request.readyState !== 4) {
         return;
       }
 
@@ -7051,15 +7127,26 @@ module.exports = function xhrAdapter(config) {
       var responseData = !config.responseType || config.responseType === 'text' ? request.responseText : request.response;
       var response = {
         data: responseData,
-        // IE sends 1223 instead of 204 (https://github.com/axios/axios/issues/201)
-        status: request.status === 1223 ? 204 : request.status,
-        statusText: request.status === 1223 ? 'No Content' : request.statusText,
+        status: request.status,
+        statusText: request.statusText,
         headers: responseHeaders,
         config: config,
         request: request
       };
 
       settle(resolve, reject, response);
+
+      // Clean up request
+      request = null;
+    };
+
+    // Handle browser request cancellation (as opposed to a manual cancellation)
+    request.onabort = function handleAbort() {
+      if (!request) {
+        return;
+      }
+
+      reject(createError('Request aborted', config, 'ECONNABORTED', request));
 
       // Clean up request
       request = null;
@@ -7092,8 +7179,8 @@ module.exports = function xhrAdapter(config) {
 
       // Add xsrf header
       var xsrfValue = (config.withCredentials || isURLSameOrigin(config.url)) && config.xsrfCookieName ?
-          cookies.read(config.xsrfCookieName) :
-          undefined;
+        cookies.read(config.xsrfCookieName) :
+        undefined;
 
       if (xsrfValue) {
         requestHeaders[config.xsrfHeaderName] = xsrfValue;
@@ -7164,13 +7251,13 @@ module.exports = function xhrAdapter(config) {
   });
 };
 
-}).call(this,require('_process'))
-},{"../core/createError":37,"./../core/settle":40,"./../helpers/btoa":44,"./../helpers/buildURL":45,"./../helpers/cookies":47,"./../helpers/isURLSameOrigin":49,"./../helpers/parseHeaders":51,"./../utils":53,"_process":59}],31:[function(require,module,exports){
+},{"../core/createError":37,"./../core/settle":41,"./../helpers/buildURL":45,"./../helpers/cookies":47,"./../helpers/isURLSameOrigin":49,"./../helpers/parseHeaders":51,"./../utils":53}],31:[function(require,module,exports){
 'use strict';
 
 var utils = require('./utils');
 var bind = require('./helpers/bind');
 var Axios = require('./core/Axios');
+var mergeConfig = require('./core/mergeConfig');
 var defaults = require('./defaults');
 
 /**
@@ -7200,7 +7287,7 @@ axios.Axios = Axios;
 
 // Factory for creating new instances
 axios.create = function create(instanceConfig) {
-  return createInstance(utils.merge(defaults, instanceConfig));
+  return createInstance(mergeConfig(axios.defaults, instanceConfig));
 };
 
 // Expose Cancel & CancelToken
@@ -7219,7 +7306,7 @@ module.exports = axios;
 // Allow use of default import syntax in TypeScript
 module.exports.default = axios;
 
-},{"./cancel/Cancel":32,"./cancel/CancelToken":33,"./cancel/isCancel":34,"./core/Axios":35,"./defaults":42,"./helpers/bind":43,"./helpers/spread":52,"./utils":53}],32:[function(require,module,exports){
+},{"./cancel/Cancel":32,"./cancel/CancelToken":33,"./cancel/isCancel":34,"./core/Axios":35,"./core/mergeConfig":40,"./defaults":43,"./helpers/bind":44,"./helpers/spread":52,"./utils":53}],32:[function(require,module,exports){
 'use strict';
 
 /**
@@ -7309,10 +7396,11 @@ module.exports = function isCancel(value) {
 },{}],35:[function(require,module,exports){
 'use strict';
 
-var defaults = require('./../defaults');
 var utils = require('./../utils');
+var buildURL = require('../helpers/buildURL');
 var InterceptorManager = require('./InterceptorManager');
 var dispatchRequest = require('./dispatchRequest');
+var mergeConfig = require('./mergeConfig');
 
 /**
  * Create a new instance of Axios
@@ -7336,13 +7424,14 @@ Axios.prototype.request = function request(config) {
   /*eslint no-param-reassign:0*/
   // Allow for axios('example/url'[, config]) a la fetch API
   if (typeof config === 'string') {
-    config = utils.merge({
-      url: arguments[0]
-    }, arguments[1]);
+    config = arguments[1] || {};
+    config.url = arguments[0];
+  } else {
+    config = config || {};
   }
 
-  config = utils.merge(defaults, {method: 'get'}, this.defaults, config);
-  config.method = config.method.toLowerCase();
+  config = mergeConfig(this.defaults, config);
+  config.method = config.method ? config.method.toLowerCase() : 'get';
 
   // Hook up interceptors middleware
   var chain = [dispatchRequest, undefined];
@@ -7361,6 +7450,11 @@ Axios.prototype.request = function request(config) {
   }
 
   return promise;
+};
+
+Axios.prototype.getUri = function getUri(config) {
+  config = mergeConfig(this.defaults, config);
+  return buildURL(config.url, config.params, config.paramsSerializer).replace(/^\?/, '');
 };
 
 // Provide aliases for supported request methods
@@ -7387,7 +7481,7 @@ utils.forEach(['post', 'put', 'patch'], function forEachMethodWithData(method) {
 
 module.exports = Axios;
 
-},{"./../defaults":42,"./../utils":53,"./InterceptorManager":36,"./dispatchRequest":38}],36:[function(require,module,exports){
+},{"../helpers/buildURL":45,"./../utils":53,"./InterceptorManager":36,"./dispatchRequest":38,"./mergeConfig":40}],36:[function(require,module,exports){
 'use strict';
 
 var utils = require('./../utils');
@@ -7549,7 +7643,7 @@ module.exports = function dispatchRequest(config) {
   });
 };
 
-},{"../cancel/isCancel":34,"../defaults":42,"./../helpers/combineURLs":46,"./../helpers/isAbsoluteURL":48,"./../utils":53,"./transformData":41}],39:[function(require,module,exports){
+},{"../cancel/isCancel":34,"../defaults":43,"./../helpers/combineURLs":46,"./../helpers/isAbsoluteURL":48,"./../utils":53,"./transformData":42}],39:[function(require,module,exports){
 'use strict';
 
 /**
@@ -7567,12 +7661,86 @@ module.exports = function enhanceError(error, config, code, request, response) {
   if (code) {
     error.code = code;
   }
+
   error.request = request;
   error.response = response;
+  error.isAxiosError = true;
+
+  error.toJSON = function() {
+    return {
+      // Standard
+      message: this.message,
+      name: this.name,
+      // Microsoft
+      description: this.description,
+      number: this.number,
+      // Mozilla
+      fileName: this.fileName,
+      lineNumber: this.lineNumber,
+      columnNumber: this.columnNumber,
+      stack: this.stack,
+      // Axios
+      config: this.config,
+      code: this.code
+    };
+  };
   return error;
 };
 
 },{}],40:[function(require,module,exports){
+'use strict';
+
+var utils = require('../utils');
+
+/**
+ * Config-specific merge-function which creates a new config-object
+ * by merging two configuration objects together.
+ *
+ * @param {Object} config1
+ * @param {Object} config2
+ * @returns {Object} New object resulting from merging config2 to config1
+ */
+module.exports = function mergeConfig(config1, config2) {
+  // eslint-disable-next-line no-param-reassign
+  config2 = config2 || {};
+  var config = {};
+
+  utils.forEach(['url', 'method', 'params', 'data'], function valueFromConfig2(prop) {
+    if (typeof config2[prop] !== 'undefined') {
+      config[prop] = config2[prop];
+    }
+  });
+
+  utils.forEach(['headers', 'auth', 'proxy'], function mergeDeepProperties(prop) {
+    if (utils.isObject(config2[prop])) {
+      config[prop] = utils.deepMerge(config1[prop], config2[prop]);
+    } else if (typeof config2[prop] !== 'undefined') {
+      config[prop] = config2[prop];
+    } else if (utils.isObject(config1[prop])) {
+      config[prop] = utils.deepMerge(config1[prop]);
+    } else if (typeof config1[prop] !== 'undefined') {
+      config[prop] = config1[prop];
+    }
+  });
+
+  utils.forEach([
+    'baseURL', 'transformRequest', 'transformResponse', 'paramsSerializer',
+    'timeout', 'withCredentials', 'adapter', 'responseType', 'xsrfCookieName',
+    'xsrfHeaderName', 'onUploadProgress', 'onDownloadProgress', 'maxContentLength',
+    'validateStatus', 'maxRedirects', 'httpAgent', 'httpsAgent', 'cancelToken',
+    'socketPath'
+  ], function defaultToConfig2(prop) {
+    if (typeof config2[prop] !== 'undefined') {
+      config[prop] = config2[prop];
+    } else if (typeof config1[prop] !== 'undefined') {
+      config[prop] = config1[prop];
+    }
+  });
+
+  return config;
+};
+
+},{"../utils":53}],41:[function(require,module,exports){
 'use strict';
 
 var createError = require('./createError');
@@ -7586,8 +7754,7 @@ var createError = require('./createError');
  */
 module.exports = function settle(resolve, reject, response) {
   var validateStatus = response.config.validateStatus;
-  // Note: status is not exposed by XDomainRequest
-  if (!response.status || !validateStatus || validateStatus(response.status)) {
+  if (!validateStatus || validateStatus(response.status)) {
     resolve(response);
   } else {
     reject(createError(
@@ -7600,7 +7767,7 @@ module.exports = function settle(resolve, reject, response) {
   }
 };
 
-},{"./createError":37}],41:[function(require,module,exports){
+},{"./createError":37}],42:[function(require,module,exports){
 'use strict';
 
 var utils = require('./../utils');
@@ -7622,7 +7789,7 @@ module.exports = function transformData(data, headers, fns) {
   return data;
 };
 
-},{"./../utils":53}],42:[function(require,module,exports){
+},{"./../utils":53}],43:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -7641,12 +7808,13 @@ function setContentTypeIfUnset(headers, value) {
 
 function getDefaultAdapter() {
   var adapter;
-  if (typeof XMLHttpRequest !== 'undefined') {
-    // For browsers use XHR adapter
-    adapter = require('./adapters/xhr');
-  } else if (typeof process !== 'undefined') {
+  // Only Node.JS has a process variable that is of [[Class]] process
+  if (typeof process !== 'undefined' && Object.prototype.toString.call(process) === '[object process]') {
     // For node use HTTP adapter
     adapter = require('./adapters/http');
+  } else if (typeof XMLHttpRequest !== 'undefined') {
+    // For browsers use XHR adapter
+    adapter = require('./adapters/xhr');
   }
   return adapter;
 }
@@ -7655,6 +7823,7 @@ var defaults = {
   adapter: getDefaultAdapter(),
 
   transformRequest: [function transformRequest(data, headers) {
+    normalizeHeaderName(headers, 'Accept');
     normalizeHeaderName(headers, 'Content-Type');
     if (utils.isFormData(data) ||
       utils.isArrayBuffer(data) ||
@@ -7722,7 +7891,7 @@ utils.forEach(['post', 'put', 'patch'], function forEachMethodWithData(method) {
 module.exports = defaults;
 
 }).call(this,require('_process'))
-},{"./adapters/http":30,"./adapters/xhr":30,"./helpers/normalizeHeaderName":50,"./utils":53,"_process":59}],43:[function(require,module,exports){
+},{"./adapters/http":30,"./adapters/xhr":30,"./helpers/normalizeHeaderName":50,"./utils":53,"_process":59}],44:[function(require,module,exports){
 'use strict';
 
 module.exports = function bind(fn, thisArg) {
@@ -7734,44 +7903,6 @@ module.exports = function bind(fn, thisArg) {
     return fn.apply(thisArg, args);
   };
 };
-
-},{}],44:[function(require,module,exports){
-'use strict';
-
-// btoa polyfill for IE<10 courtesy https://github.com/davidchambers/Base64.js
-
-var chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
-
-function E() {
-  this.message = 'String contains an invalid character';
-}
-E.prototype = new Error;
-E.prototype.code = 5;
-E.prototype.name = 'InvalidCharacterError';
-
-function btoa(input) {
-  var str = String(input);
-  var output = '';
-  for (
-    // initialize result and counter
-    var block, charCode, idx = 0, map = chars;
-    // if the next str index does not exist:
-    //   change the mapping table to "="
-    //   check if d has no fractional digits
-    str.charAt(idx | 0) || (map = '=', idx % 1);
-    // "8 - idx % 1 * 8" generates the sequence 2, 4, 6, 8
-    output += map.charAt(63 & block >> 8 - idx % 1 * 8)
-  ) {
-    charCode = str.charCodeAt(idx += 3 / 4);
-    if (charCode > 0xFF) {
-      throw new E();
-    }
-    block = block << 8 | charCode;
-  }
-  return output;
-}
-
-module.exports = btoa;
 
 },{}],45:[function(require,module,exports){
 'use strict';
@@ -7835,6 +7966,11 @@ module.exports = function buildURL(url, params, paramsSerializer) {
   }
 
   if (serializedParams) {
+    var hashmarkIndex = url.indexOf('#');
+    if (hashmarkIndex !== -1) {
+      url = url.slice(0, hashmarkIndex);
+    }
+
     url += (url.indexOf('?') === -1 ? '?' : '&') + serializedParams;
   }
 
@@ -7866,50 +8002,50 @@ module.exports = (
   utils.isStandardBrowserEnv() ?
 
   // Standard browser envs support document.cookie
-  (function standardBrowserEnv() {
-    return {
-      write: function write(name, value, expires, path, domain, secure) {
-        var cookie = [];
-        cookie.push(name + '=' + encodeURIComponent(value));
+    (function standardBrowserEnv() {
+      return {
+        write: function write(name, value, expires, path, domain, secure) {
+          var cookie = [];
+          cookie.push(name + '=' + encodeURIComponent(value));
 
-        if (utils.isNumber(expires)) {
-          cookie.push('expires=' + new Date(expires).toGMTString());
+          if (utils.isNumber(expires)) {
+            cookie.push('expires=' + new Date(expires).toGMTString());
+          }
+
+          if (utils.isString(path)) {
+            cookie.push('path=' + path);
+          }
+
+          if (utils.isString(domain)) {
+            cookie.push('domain=' + domain);
+          }
+
+          if (secure === true) {
+            cookie.push('secure');
+          }
+
+          document.cookie = cookie.join('; ');
+        },
+
+        read: function read(name) {
+          var match = document.cookie.match(new RegExp('(^|;\\s*)(' + name + ')=([^;]*)'));
+          return (match ? decodeURIComponent(match[3]) : null);
+        },
+
+        remove: function remove(name) {
+          this.write(name, '', Date.now() - 86400000);
         }
-
-        if (utils.isString(path)) {
-          cookie.push('path=' + path);
-        }
-
-        if (utils.isString(domain)) {
-          cookie.push('domain=' + domain);
-        }
-
-        if (secure === true) {
-          cookie.push('secure');
-        }
-
-        document.cookie = cookie.join('; ');
-      },
-
-      read: function read(name) {
-        var match = document.cookie.match(new RegExp('(^|;\\s*)(' + name + ')=([^;]*)'));
-        return (match ? decodeURIComponent(match[3]) : null);
-      },
-
-      remove: function remove(name) {
-        this.write(name, '', Date.now() - 86400000);
-      }
-    };
-  })() :
+      };
+    })() :
 
   // Non standard browser env (web workers, react-native) lack needed support.
-  (function nonStandardBrowserEnv() {
-    return {
-      write: function write() {},
-      read: function read() { return null; },
-      remove: function remove() {}
-    };
-  })()
+    (function nonStandardBrowserEnv() {
+      return {
+        write: function write() {},
+        read: function read() { return null; },
+        remove: function remove() {}
+      };
+    })()
 );
 
 },{"./../utils":53}],48:[function(require,module,exports){
@@ -7938,64 +8074,64 @@ module.exports = (
 
   // Standard browser envs have full support of the APIs needed to test
   // whether the request URL is of the same origin as current location.
-  (function standardBrowserEnv() {
-    var msie = /(msie|trident)/i.test(navigator.userAgent);
-    var urlParsingNode = document.createElement('a');
-    var originURL;
+    (function standardBrowserEnv() {
+      var msie = /(msie|trident)/i.test(navigator.userAgent);
+      var urlParsingNode = document.createElement('a');
+      var originURL;
 
-    /**
+      /**
     * Parse a URL to discover it's components
     *
     * @param {String} url The URL to be parsed
     * @returns {Object}
     */
-    function resolveURL(url) {
-      var href = url;
+      function resolveURL(url) {
+        var href = url;
 
-      if (msie) {
+        if (msie) {
         // IE needs attribute set twice to normalize properties
+          urlParsingNode.setAttribute('href', href);
+          href = urlParsingNode.href;
+        }
+
         urlParsingNode.setAttribute('href', href);
-        href = urlParsingNode.href;
+
+        // urlParsingNode provides the UrlUtils interface - http://url.spec.whatwg.org/#urlutils
+        return {
+          href: urlParsingNode.href,
+          protocol: urlParsingNode.protocol ? urlParsingNode.protocol.replace(/:$/, '') : '',
+          host: urlParsingNode.host,
+          search: urlParsingNode.search ? urlParsingNode.search.replace(/^\?/, '') : '',
+          hash: urlParsingNode.hash ? urlParsingNode.hash.replace(/^#/, '') : '',
+          hostname: urlParsingNode.hostname,
+          port: urlParsingNode.port,
+          pathname: (urlParsingNode.pathname.charAt(0) === '/') ?
+            urlParsingNode.pathname :
+            '/' + urlParsingNode.pathname
+        };
       }
 
-      urlParsingNode.setAttribute('href', href);
+      originURL = resolveURL(window.location.href);
 
-      // urlParsingNode provides the UrlUtils interface - http://url.spec.whatwg.org/#urlutils
-      return {
-        href: urlParsingNode.href,
-        protocol: urlParsingNode.protocol ? urlParsingNode.protocol.replace(/:$/, '') : '',
-        host: urlParsingNode.host,
-        search: urlParsingNode.search ? urlParsingNode.search.replace(/^\?/, '') : '',
-        hash: urlParsingNode.hash ? urlParsingNode.hash.replace(/^#/, '') : '',
-        hostname: urlParsingNode.hostname,
-        port: urlParsingNode.port,
-        pathname: (urlParsingNode.pathname.charAt(0) === '/') ?
-                  urlParsingNode.pathname :
-                  '/' + urlParsingNode.pathname
-      };
-    }
-
-    originURL = resolveURL(window.location.href);
-
-    /**
+      /**
     * Determine if a URL shares the same origin as the current location
     *
     * @param {String} requestURL The URL to test
     * @returns {boolean} True if URL shares the same origin, otherwise false
     */
-    return function isURLSameOrigin(requestURL) {
-      var parsed = (utils.isString(requestURL)) ? resolveURL(requestURL) : requestURL;
-      return (parsed.protocol === originURL.protocol &&
+      return function isURLSameOrigin(requestURL) {
+        var parsed = (utils.isString(requestURL)) ? resolveURL(requestURL) : requestURL;
+        return (parsed.protocol === originURL.protocol &&
             parsed.host === originURL.host);
-    };
-  })() :
+      };
+    })() :
 
   // Non standard browser envs (web workers, react-native) lack needed support.
-  (function nonStandardBrowserEnv() {
-    return function isURLSameOrigin() {
-      return true;
-    };
-  })()
+    (function nonStandardBrowserEnv() {
+      return function isURLSameOrigin() {
+        return true;
+      };
+    })()
 );
 
 },{"./../utils":53}],50:[function(require,module,exports){
@@ -8276,9 +8412,13 @@ function trim(str) {
  *
  * react-native:
  *  navigator.product -> 'ReactNative'
+ * nativescript
+ *  navigator.product -> 'NativeScript' or 'NS'
  */
 function isStandardBrowserEnv() {
-  if (typeof navigator !== 'undefined' && navigator.product === 'ReactNative') {
+  if (typeof navigator !== 'undefined' && (navigator.product === 'ReactNative' ||
+                                           navigator.product === 'NativeScript' ||
+                                           navigator.product === 'NS')) {
     return false;
   }
   return (
@@ -8360,6 +8500,32 @@ function merge(/* obj1, obj2, obj3, ... */) {
 }
 
 /**
+ * Function equal to merge with the difference being that no reference
+ * to original objects is kept.
+ *
+ * @see merge
+ * @param {Object} obj1 Object to merge
+ * @returns {Object} Result of all merge properties
+ */
+function deepMerge(/* obj1, obj2, obj3, ... */) {
+  var result = {};
+  function assignValue(val, key) {
+    if (typeof result[key] === 'object' && typeof val === 'object') {
+      result[key] = deepMerge(result[key], val);
+    } else if (typeof val === 'object') {
+      result[key] = deepMerge({}, val);
+    } else {
+      result[key] = val;
+    }
+  }
+
+  for (var i = 0, l = arguments.length; i < l; i++) {
+    forEach(arguments[i], assignValue);
+  }
+  return result;
+}
+
+/**
  * Extends object a by mutably adding to it the properties of object b.
  *
  * @param {Object} a The object to be extended
@@ -8397,11 +8563,25 @@ module.exports = {
   isStandardBrowserEnv: isStandardBrowserEnv,
   forEach: forEach,
   merge: merge,
+  deepMerge: deepMerge,
   extend: extend,
   trim: trim
 };
 
-},{"./helpers/bind":43,"is-buffer":57}],54:[function(require,module,exports){
+},{"./helpers/bind":44,"is-buffer":54}],54:[function(require,module,exports){
+/*!
+ * Determine if an object is a Buffer
+ *
+ * @author   Feross Aboukhadijeh <https://feross.org>
+ * @license  MIT
+ */
+
+module.exports = function isBuffer (obj) {
+  return obj != null && obj.constructor != null &&
+    typeof obj.constructor.isBuffer === 'function' && obj.constructor.isBuffer(obj)
+}
+
+},{}],55:[function(require,module,exports){
 'use strict';
 
 /**
@@ -8487,7 +8667,7 @@ function hoistNonReactStatics(targetComponent, sourceComponent, blacklist) {
 
 module.exports = hoistNonReactStatics;
 
-},{"react-is":70}],55:[function(require,module,exports){
+},{"react-is":70}],56:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -9237,7 +9417,7 @@ exports.isDraft = isProxy;
 
 
 }).call(this,require('_process'))
-},{"_process":59}],56:[function(require,module,exports){
+},{"_process":59}],57:[function(require,module,exports){
 (function (process){
 /**
  * Copyright (c) 2013-present, Facebook, Inc.
@@ -9290,30 +9470,7 @@ var invariant = function(condition, format, a, b, c, d, e, f) {
 module.exports = invariant;
 
 }).call(this,require('_process'))
-},{"_process":59}],57:[function(require,module,exports){
-/*!
- * Determine if an object is a Buffer
- *
- * @author   Feross Aboukhadijeh <https://feross.org>
- * @license  MIT
- */
-
-// The _isBuffer check is for Safari 5-7 support, because it's missing
-// Object.prototype.constructor. Remove this eventually
-module.exports = function (obj) {
-  return obj != null && (isBuffer(obj) || isSlowBuffer(obj) || !!obj._isBuffer)
-}
-
-function isBuffer (obj) {
-  return !!obj.constructor && typeof obj.constructor.isBuffer === 'function' && obj.constructor.isBuffer(obj)
-}
-
-// For Node v0.10 support. Remove this eventually.
-function isSlowBuffer (obj) {
-  return typeof obj.readFloatLE === 'function' && typeof obj.slice === 'function' && isBuffer(obj.slice(0, 0))
-}
-
-},{}],58:[function(require,module,exports){
+},{"_process":59}],58:[function(require,module,exports){
 /*
 object-assign
 (c) Sindre Sorhus
@@ -31011,7 +31168,7 @@ _ref) {
   };
 }
 }).call(this,require('_process'))
-},{"../utils/PropTypes":81,"../utils/Subscription":82,"@babel/runtime/helpers/assertThisInitialized":23,"@babel/runtime/helpers/extends":24,"@babel/runtime/helpers/inheritsLoose":25,"@babel/runtime/helpers/interopRequireDefault":26,"@babel/runtime/helpers/objectWithoutPropertiesLoose":28,"_process":59,"hoist-non-react-statics":54,"invariant":56,"react":89,"react-is":70}],73:[function(require,module,exports){
+},{"../utils/PropTypes":81,"../utils/Subscription":82,"@babel/runtime/helpers/assertThisInitialized":23,"@babel/runtime/helpers/extends":24,"@babel/runtime/helpers/inheritsLoose":25,"@babel/runtime/helpers/interopRequireDefault":26,"@babel/runtime/helpers/objectWithoutPropertiesLoose":28,"_process":59,"hoist-non-react-statics":55,"invariant":57,"react":89,"react-is":70}],73:[function(require,module,exports){
 "use strict";
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");

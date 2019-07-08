@@ -1,6 +1,6 @@
 {
   "name": "ts2redux",
-  "version": "1.0.29",
+  "version": "1.0.30",
   "description": "Convert TypeScript classes into Reducers",
   "main": "dist/src/index.js",
   "bin": {
@@ -38,7 +38,7 @@
     "@types/mocha": "^5.2.5",
     "@types/node": "^10.12.3",
     "@types/react": "16.4.18",
-    "axios": "^0.18.0",
+    "axios": ">=0.18.1",
     "body-parser": "^1.18.3",
     "browserify": "^16.2.3",
     "chai": "^4.2.0",

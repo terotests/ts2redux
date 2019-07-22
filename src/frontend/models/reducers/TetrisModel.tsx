@@ -5,6 +5,10 @@
  *                                                                                  *
  ***********************************************************************************/
 
+import * as immer from "immer";
+import { connect } from "react-redux";
+import { IState } from "./index";
+import * as React from "react";
 export interface Cell {
   color: string;
 }
@@ -246,11 +250,6 @@ export class TetrisModel {
     this.points = 0;
   }
 }
-
-import * as immer from "immer";
-import { connect } from "react-redux";
-import { IState } from "./index";
-import * as React from "react";
 
 export interface IContainerPropsMethods {
   tick: () => any;

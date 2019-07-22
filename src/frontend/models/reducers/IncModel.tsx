@@ -5,6 +5,10 @@
  *                                                                               *
  ********************************************************************************/
 
+import * as immer from "immer";
+import { connect } from "react-redux";
+import { IState } from "./index";
+import * as React from "react";
 export class IncModel {
   cnt = 0;
 
@@ -14,12 +18,11 @@ export class IncModel {
   decrement() {
     this.cnt--;
   }
-}
 
-import * as immer from "immer";
-import { connect } from "react-redux";
-import { IState } from "./index";
-import * as React from "react";
+  get incValue() {
+    return this.cnt;
+  }
+}
 
 export interface IContainerPropsMethods {
   increment: () => any;

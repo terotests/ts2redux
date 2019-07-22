@@ -268,16 +268,18 @@ export async function createProject(settings: GenerationOptions) {
             );
           }
         }
+
+        const addImportsHere = ng.fork();
         ng.raw(myFile.getText(), true);
         myFile.delete();
 
-        ng.out(`import * as immer from 'immer'`, true);
+        addImportsHere.out(`import * as immer from 'immer'`, true);
         if (selectorMethods.length > 0) {
-          ng.out(`import { createSelector } from 'reselect'`, true);
+          addImportsHere.out(`import { createSelector } from 'reselect'`, true);
         }
-        ng.out(`import { connect } from 'react-redux'`, true);
-        ng.out(`import { IState } from './index'`, true);
-        ng.out(`import * as React from 'react'`, true);
+        addImportsHere.out(`import { connect } from 'react-redux'`, true);
+        addImportsHere.out(`import { IState } from './index'`, true);
+        addImportsHere.out(`import * as React from 'react'`, true);
         // Create model of all the variables...
 
         ng.out(``, true);

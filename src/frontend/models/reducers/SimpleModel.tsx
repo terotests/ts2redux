@@ -5,6 +5,11 @@
  *                                                                                  *
  ***********************************************************************************/
 
+import * as immer from "immer";
+import { createSelector } from "reselect";
+import { connect } from "react-redux";
+import { IState } from "./index";
+import * as React from "react";
 import axios from "axios";
 
 /**
@@ -30,12 +35,6 @@ export class SimpleModel {
     return this.items;
   }
 }
-
-import * as immer from "immer";
-import { createSelector } from "reselect";
-import { connect } from "react-redux";
-import { IState } from "./index";
-import * as React from "react";
 
 export interface IContainerPropsMethods {
   SimpleDispatch: (action: any) => any;

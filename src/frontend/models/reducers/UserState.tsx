@@ -5,6 +5,10 @@
  *                                                                                *
  *********************************************************************************/
 
+import * as immer from "immer";
+import { connect } from "react-redux";
+import { IState } from "./index";
+import * as React from "react";
 class UserState {
   logged = false;
   username: string = "anonymous";
@@ -19,11 +23,6 @@ class UserState {
     this.username = "Fake Login";
   }
 }
-
-import * as immer from "immer";
-import { connect } from "react-redux";
-import { IState } from "./index";
-import * as React from "react";
 
 export interface IContainerPropsMethods {
   login: (

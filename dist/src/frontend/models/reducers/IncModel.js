@@ -30,6 +30,9 @@ var __assign = (this && this.__assign) || function () {
     return __assign.apply(this, arguments);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+var immer = require("immer");
+var react_redux_1 = require("react-redux");
+var React = require("react");
 var IncModel = /** @class */ (function () {
     function IncModel() {
         this.cnt = 0;
@@ -40,12 +43,16 @@ var IncModel = /** @class */ (function () {
     IncModel.prototype.decrement = function () {
         this.cnt--;
     };
+    Object.defineProperty(IncModel.prototype, "incValue", {
+        get: function () {
+            return this.cnt;
+        },
+        enumerable: true,
+        configurable: true
+    });
     return IncModel;
 }());
 exports.IncModel = IncModel;
-var immer = require("immer");
-var react_redux_1 = require("react-redux");
-var React = require("react");
 function pick(o) {
     var props = [];
     for (var _i = 1; _i < arguments.length; _i++) {

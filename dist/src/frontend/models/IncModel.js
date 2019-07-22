@@ -13,6 +13,13 @@ var IncModel = /** @class */ (function () {
     IncModel.prototype.decrement = function () {
         this.cnt--;
     };
+    Object.defineProperty(IncModel.prototype, "incValue", {
+        get: function () {
+            return this.cnt;
+        },
+        enumerable: true,
+        configurable: true
+    });
     return IncModel;
 }());
 exports.IncModel = IncModel;

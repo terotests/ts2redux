@@ -1071,6 +1071,9 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+var immer = require("immer");
+var react_redux_1 = require("react-redux");
+var React = require("react");
 var SomeList = /** @class */ (function () {
     function SomeList() {
         this.items = [];
@@ -1115,9 +1118,6 @@ var GenericModel = /** @class */ (function () {
     return GenericModel;
 }());
 exports.GenericModel = GenericModel;
-var immer = require("immer");
-var react_redux_1 = require("react-redux");
-var React = require("react");
 function pick(o) {
     var props = [];
     for (var _i = 1; _i < arguments.length; _i++) {
@@ -1499,6 +1499,9 @@ var __assign = (this && this.__assign) || function () {
     return __assign.apply(this, arguments);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+var immer = require("immer");
+var react_redux_1 = require("react-redux");
+var React = require("react");
 var IncModel = /** @class */ (function () {
     function IncModel() {
         this.cnt = 0;
@@ -1509,12 +1512,16 @@ var IncModel = /** @class */ (function () {
     IncModel.prototype.decrement = function () {
         this.cnt--;
     };
+    Object.defineProperty(IncModel.prototype, "incValue", {
+        get: function () {
+            return this.cnt;
+        },
+        enumerable: true,
+        configurable: true
+    });
     return IncModel;
 }());
 exports.IncModel = IncModel;
-var immer = require("immer");
-var react_redux_1 = require("react-redux");
-var React = require("react");
 function pick(o) {
     var props = [];
     for (var _i = 1; _i < arguments.length; _i++) {
@@ -1788,6 +1795,9 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+var immer = require("immer");
+var react_redux_1 = require("react-redux");
+var React = require("react");
 var axios_1 = require("axios");
 /**
  * @redux true
@@ -1832,10 +1842,7 @@ var SimpleModel = /** @class */ (function () {
     return SimpleModel;
 }());
 exports.SimpleModel = SimpleModel;
-var immer = require("immer");
 var reselect_1 = require("reselect");
-var react_redux_1 = require("react-redux");
-var React = require("react");
 exports.itemsSelectorFn = function (state) { return state.items; };
 exports.myItemsSelectorFnCreator = function () {
     return reselect_1.createSelector([exports.itemsSelectorFn], function (items) {
@@ -2138,6 +2145,9 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+var immer = require("immer");
+var react_redux_1 = require("react-redux");
+var React = require("react");
 var timers_1 = require("timers");
 var TaskState;
 (function (TaskState) {
@@ -2283,9 +2293,6 @@ var TestModel = /** @class */ (function () {
     };
     return TestModel;
 }());
-var immer = require("immer");
-var react_redux_1 = require("react-redux");
-var React = require("react");
 function pick(o) {
     var props = [];
     for (var _i = 1; _i < arguments.length; _i++) {
@@ -3510,6 +3517,9 @@ var __assign = (this && this.__assign) || function () {
     return __assign.apply(this, arguments);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+var immer = require("immer");
+var react_redux_1 = require("react-redux");
+var React = require("react");
 var Colors;
 (function (Colors) {
     Colors["EMPTY"] = "";
@@ -3731,9 +3741,6 @@ var TetrisModel = /** @class */ (function () {
     return TetrisModel;
 }());
 exports.TetrisModel = TetrisModel;
-var immer = require("immer");
-var react_redux_1 = require("react-redux");
-var React = require("react");
 function pick(o) {
     var props = [];
     for (var _i = 1; _i < arguments.length; _i++) {
@@ -4834,6 +4841,9 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+var immer = require("immer");
+var react_redux_1 = require("react-redux");
+var React = require("react");
 var axios_1 = require("axios");
 var SortOrder;
 (function (SortOrder) {
@@ -4952,10 +4962,7 @@ var TodoList = /** @class */ (function () {
     return TodoList;
 }());
 exports.TodoList = TodoList;
-var immer = require("immer");
 var reselect_1 = require("reselect");
-var react_redux_1 = require("react-redux");
-var React = require("react");
 exports.itemsSelectorFn = function (state) {
     return state.items;
 };
@@ -5794,6 +5801,9 @@ var __assign = (this && this.__assign) || function () {
     return __assign.apply(this, arguments);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+var immer = require("immer");
+var react_redux_1 = require("react-redux");
+var React = require("react");
 var UIHelperModel = /** @class */ (function () {
     function UIHelperModel() {
         this.showWasps = false;
@@ -5803,9 +5813,6 @@ var UIHelperModel = /** @class */ (function () {
     };
     return UIHelperModel;
 }());
-var immer = require("immer");
-var react_redux_1 = require("react-redux");
-var React = require("react");
 function pick(o) {
     var props = [];
     for (var _i = 1; _i < arguments.length; _i++) {
@@ -6049,6 +6056,9 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+var immer = require("immer");
+var react_redux_1 = require("react-redux");
+var React = require("react");
 var UserState = /** @class */ (function () {
     function UserState() {
         this.logged = false;
@@ -6072,9 +6082,6 @@ var UserState = /** @class */ (function () {
     };
     return UserState;
 }());
-var immer = require("immer");
-var react_redux_1 = require("react-redux");
-var React = require("react");
 function pick(o) {
     var props = [];
     for (var _i = 1; _i < arguments.length; _i++) {
@@ -6490,6 +6497,9 @@ var __assign = (this && this.__assign) || function () {
     return __assign.apply(this, arguments);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+var immer = require("immer");
+var react_redux_1 = require("react-redux");
+var React = require("react");
 /**
  * @redux true
  */
@@ -6552,9 +6562,6 @@ var WaspModel = /** @class */ (function () {
     };
     return WaspModel;
 }());
-var immer = require("immer");
-var react_redux_1 = require("react-redux");
-var React = require("react");
 function pick(o) {
     var props = [];
     for (var _i = 1; _i < arguments.length; _i++) {

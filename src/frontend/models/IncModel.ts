@@ -11,4 +11,8 @@ export class IncModel {
   decrement() {
     this.cnt--;
   }
+
+  get incValue() {
+    return this.cnt;
+  }
 }

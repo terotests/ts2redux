@@ -5,6 +5,10 @@
  *                                                                                *
  *********************************************************************************/
 
+import * as immer from "immer";
+import { connect } from "react-redux";
+import { IState } from "./index";
+import * as React from "react";
 import { setTimeout } from "timers";
 
 /**
@@ -169,11 +173,6 @@ class TestModel {
     this.renameLast(LAST_NAME);
   }
 }
-
-import * as immer from "immer";
-import { connect } from "react-redux";
-import { IState } from "./index";
-import * as React from "react";
 
 export interface IContainerPropsMethods {
   setUserMessage: (value: string) => any;

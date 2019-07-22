@@ -5,17 +5,16 @@
  *                                                                                    *
  *************************************************************************************/
 
+import * as immer from "immer";
+import { connect } from "react-redux";
+import { IState } from "./index";
+import * as React from "react";
 class UIHelperModel {
   showWasps = false;
   toggle() {
     this.showWasps = !this.showWasps;
   }
 }
-
-import * as immer from "immer";
-import { connect } from "react-redux";
-import { IState } from "./index";
-import * as React from "react";
 
 export interface IContainerPropsMethods {
   toggle: () => any;

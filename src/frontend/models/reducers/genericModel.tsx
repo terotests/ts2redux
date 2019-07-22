@@ -5,6 +5,10 @@
  *                                                                                   *
  ************************************************************************************/
 
+import * as immer from "immer";
+import { connect } from "react-redux";
+import { IState } from "./index";
+import * as React from "react";
 export interface Summable {
   value: () => number;
 }
@@ -41,11 +45,6 @@ export class GenericModel {
   }
   async testLoading() {}
 }
-
-import * as immer from "immer";
-import { connect } from "react-redux";
-import { IState } from "./index";
-import * as React from "react";
 
 export interface IContainerPropsMethods {
   refreshSum: () => any;

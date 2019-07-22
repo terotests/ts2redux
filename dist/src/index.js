@@ -200,15 +200,16 @@ function createProject(settings) {
                                         importDeclaration.setModuleSpecifier(path.relative(targetPath, path.normalize(sourcePath + "/" + moduleSpecifierValue)));
                                     }
                                 }
+                                var addImportsHere = ng_1.fork();
                                 ng_1.raw(myFile.getText(), true);
                                 myFile.delete();
-                                ng_1.out("import * as immer from 'immer'", true);
+                                addImportsHere.out("import * as immer from 'immer'", true);
                                 if (selectorMethods_1.length > 0) {
-                                    ng_1.out("import { createSelector } from 'reselect'", true);
+                                    addImportsHere.out("import { createSelector } from 'reselect'", true);
                                 }
-                                ng_1.out("import { connect } from 'react-redux'", true);
-                                ng_1.out("import { IState } from './index'", true);
-                                ng_1.out("import * as React from 'react'", true);
+                                addImportsHere.out("import { connect } from 'react-redux'", true);
+                                addImportsHere.out("import { IState } from './index'", true);
+                                addImportsHere.out("import * as React from 'react'", true);
                                 // Create model of all the variables...
                                 ng_1.out("", true);
                                 ng_1.out("export interface IContainerPropsMethods {", true);

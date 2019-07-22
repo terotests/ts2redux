@@ -65,6 +65,9 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+var immer = require("immer");
+var react_redux_1 = require("react-redux");
+var React = require("react");
 var UserState = /** @class */ (function () {
     function UserState() {
         this.logged = false;
@@ -88,9 +91,6 @@ var UserState = /** @class */ (function () {
     };
     return UserState;
 }());
-var immer = require("immer");
-var react_redux_1 = require("react-redux");
-var React = require("react");
 function pick(o) {
     var props = [];
     for (var _i = 1; _i < arguments.length; _i++) {

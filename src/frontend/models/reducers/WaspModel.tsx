@@ -5,6 +5,10 @@
  *                                                                                *
  *********************************************************************************/
 
+import * as immer from "immer";
+import { connect } from "react-redux";
+import { IState } from "./index";
+import * as React from "react";
 import { clearInterval } from "timers";
 
 export interface Wasp {
@@ -79,11 +83,6 @@ class WaspModel {
     }
   }
 }
-
-import * as immer from "immer";
-import { connect } from "react-redux";
-import { IState } from "./index";
-import * as React from "react";
 
 export interface IContainerPropsMethods {
   addWasp: (

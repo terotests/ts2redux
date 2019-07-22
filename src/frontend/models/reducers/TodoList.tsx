@@ -5,6 +5,11 @@
  *                                                                               *
  ********************************************************************************/
 
+import * as immer from "immer";
+import { createSelector } from "reselect";
+import { connect } from "react-redux";
+import { IState } from "./index";
+import * as React from "react";
 import axios from "axios";
 import { TodoListItem } from "../interfaces";
 
@@ -104,12 +109,6 @@ export class TodoList {
     }
   }
 }
-
-import * as immer from "immer";
-import { createSelector } from "reselect";
-import { connect } from "react-redux";
-import { IState } from "./index";
-import * as React from "react";
 
 export interface IContainerPropsMethods {
   nextPage: () => any;

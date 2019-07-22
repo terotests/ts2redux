@@ -30,6 +30,9 @@ var __assign = (this && this.__assign) || function () {
     return __assign.apply(this, arguments);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+var immer = require("immer");
+var react_redux_1 = require("react-redux");
+var React = require("react");
 var Colors;
 (function (Colors) {
     Colors["EMPTY"] = "";
@@ -251,9 +254,6 @@ var TetrisModel = /** @class */ (function () {
     return TetrisModel;
 }());
 exports.TetrisModel = TetrisModel;
-var immer = require("immer");
-var react_redux_1 = require("react-redux");
-var React = require("react");
 function pick(o) {
     var props = [];
     for (var _i = 1; _i < arguments.length; _i++) {

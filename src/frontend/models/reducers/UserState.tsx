@@ -130,11 +130,11 @@ const initWithMethodsUserState = () => {
  */
 export class RUserState {
   private _state?: IUserState;
-  private _dispatch?: (action: any) => void;
+  private _dispatch?: <A extends {}, T extends {}>(action: A) => T;
   private _getState?: () => any;
   constructor(
     state?: IUserState,
-    dispatch?: (action: any) => void,
+    dispatch?: (action: any) => any,
     getState?: () => any
   ) {
     this._state = state;
@@ -263,14 +263,14 @@ export class RUserState {
 
   public static login(loginInfo: { username: string; password: string }) {
     return (dispatcher: any, getState: any) => {
-      new RUserState(undefined, dispatcher, getState).login(loginInfo);
+      return new RUserState(undefined, dispatcher, getState).login(loginInfo);
     };
   }
   async logout() {}
 
   public static logout() {
     return (dispatcher: any, getState: any) => {
-      new RUserState(undefined, dispatcher, getState).logout();
+      return new RUserState(undefined, dispatcher, getState).logout();
     };
   }
   fakeLogin() {
@@ -285,7 +285,7 @@ export class RUserState {
 
   public static fakeLogin() {
     return (dispatcher: any, getState: any) => {
-      new RUserState(undefined, dispatcher, getState).fakeLogin();
+      return new RUserState(undefined, dispatcher, getState).fakeLogin();
     };
   }
 }
@@ -303,7 +303,7 @@ export const UserStateReducer = (
   state: IUserState = initUserState(),
   action: any
 ) => {
-  return immer.produce(state, draft => {
+  return immer.produce(state, (draft: IUserState) => {
     switch (action.type) {
       case UserStateEnums.UserState_logged:
         new RUserState(draft).logged = action.payload;
@@ -367,7 +367,7 @@ export class UserStateProvider extends React.Component {
     this.setState(state);
   }
   async login(loginInfo: { username: string; password: string }) {
-    new RUserState(
+    return new RUserState(
       undefined,
       (action: any) => {
         const nextState = UserStateReducer(this.lastSetState, action);
@@ -380,7 +380,7 @@ export class UserStateProvider extends React.Component {
     ).login(loginInfo);
   }
   async logout() {
-    new RUserState(
+    return new RUserState(
       undefined,
       (action: any) => {
         const nextState = UserStateReducer(this.lastSetState, action);
@@ -393,7 +393,7 @@ export class UserStateProvider extends React.Component {
     ).logout();
   }
   fakeLogin() {
-    const nextState = immer.produce(this.state, draft =>
+    const nextState = immer.produce(this.state, (draft: IUserState) =>
       new RUserState(draft).fakeLogin()
     );
     if (this.__devTools) {

@@ -49,7 +49,7 @@ export declare class RWaspModel {
     private _state?;
     private _dispatch?;
     private _getState?;
-    constructor(state?: IWaspModel, dispatch?: (action: any) => void, getState?: () => any);
+    constructor(state?: IWaspModel, dispatch?: (action: any) => any, getState?: () => any);
     speed: number;
     lastId: number;
     wasps: {

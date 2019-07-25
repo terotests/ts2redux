@@ -34,7 +34,7 @@ export declare class RIncModel {
     private _state?;
     private _dispatch?;
     private _getState?;
-    constructor(state?: IIncModel, dispatch?: (action: any) => void, getState?: () => any);
+    constructor(state?: IIncModel, dispatch?: (action: any) => any, getState?: () => any);
     cnt: number;
     increment(): void;
     static increment(): (dispatcher: any, getState: any) => void;

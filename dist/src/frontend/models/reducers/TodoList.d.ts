@@ -23,6 +23,7 @@ export declare class TodoList {
     listStart: number;
     listPageLength: number;
     listTitle: string;
+    customMessage: string;
     readonly listToDisplay: TodoListItem[];
     private findMaxId;
     nextPage(): void;
@@ -39,6 +40,7 @@ export declare class TodoList {
      * Fetch items from json placeholder service
      */
     getItems(): Promise<void>;
+    getShortList(makeError: boolean): Promise<unknown>;
 }
 export interface IContainerPropsMethods {
     nextPage: () => any;
@@ -52,6 +54,7 @@ export interface IContainerPropsMethods {
     setTitle: (value: string) => any;
     addLotOfItems: (cnt: number) => any;
     getItems: () => any;
+    getShortList: (makeError: boolean) => any;
 }
 export interface ITodoList {
     items: TodoListItem[];
@@ -61,6 +64,7 @@ export interface ITodoList {
     listStart: number;
     listPageLength: number;
     listTitle: string;
+    customMessage: string;
 }
 export declare const itemsSelectorFn: (state: ITodoList) => TodoListItem[];
 export declare const stateSelectorFn: (state: ITodoList) => TaskState;
@@ -69,6 +73,7 @@ export declare const sortOrderSelectorFn: (state: ITodoList) => SortOrder;
 export declare const listStartSelectorFn: (state: ITodoList) => number;
 export declare const listPageLengthSelectorFn: (state: ITodoList) => number;
 export declare const listTitleSelectorFn: (state: ITodoList) => string;
+export declare const customMessageSelectorFn: (state: ITodoList) => string;
 export declare const listToDisplaySelectorFnCreator: () => import("reselect").OutputSelector<ITodoList, TodoListItem[], (res1: TodoListItem[], res2: SortOrder, res3: number, res4: number) => TodoListItem[]>;
 export declare const listToDisplaySelector: import("reselect").OutputSelector<ITodoList, TodoListItem[], (res1: TodoListItem[], res2: SortOrder, res3: number, res4: number) => TodoListItem[]>;
 export interface IContainerPropsState extends ITodoList {
@@ -88,7 +93,7 @@ export declare class RTodoList {
     private _state?;
     private _dispatch?;
     private _getState?;
-    constructor(state?: ITodoList, dispatch?: (action: any) => void, getState?: () => any);
+    constructor(state?: ITodoList, dispatch?: (action: any) => any, getState?: () => any);
     items: TodoListItem[];
     state: TaskState;
     stateError: any;
@@ -96,6 +101,7 @@ export declare class RTodoList {
     listStart: number;
     listPageLength: number;
     listTitle: string;
+    customMessage: string;
     private findMaxId;
     nextPage(): void;
     static nextPage(): (dispatcher: any, getState: any) => void;
@@ -121,7 +127,9 @@ export declare class RTodoList {
      * Fetch items from json placeholder service
      */
     getItems(): Promise<void>;
-    static getItems(): (dispatcher: any, getState: any) => void;
+    static getItems(): (dispatcher: any, getState: any) => Promise<void>;
+    getShortList(makeError: boolean): Promise<unknown>;
+    static getShortList(makeError: boolean): (dispatcher: any, getState: any) => Promise<unknown>;
 }
 export declare const TodoListEnums: {
     TodoList_items: string;
@@ -131,6 +139,7 @@ export declare const TodoListEnums: {
     TodoList_listStart: string;
     TodoList_listPageLength: string;
     TodoList_listTitle: string;
+    TodoList_customMessage: string;
     TodoList_findMaxId: string;
     TodoList_nextPage: string;
     TodoList_prevPage: string;
@@ -171,5 +180,6 @@ export declare class TodoListProvider extends React.Component {
      * Fetch items from json placeholder service
      */
     getItems(): Promise<void>;
+    getShortList(makeError: boolean): Promise<unknown>;
     render(): JSX.Element;
 }

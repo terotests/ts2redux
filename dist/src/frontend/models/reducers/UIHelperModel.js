@@ -139,7 +139,7 @@ var RUIHelperModel = /** @class */ (function () {
     };
     RUIHelperModel.toggle = function () {
         return function (dispatcher, getState) {
-            new RUIHelperModel(undefined, dispatcher, getState).toggle();
+            return new RUIHelperModel(undefined, dispatcher, getState).toggle();
         };
     };
     return RUIHelperModel;

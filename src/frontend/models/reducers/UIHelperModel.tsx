@@ -91,11 +91,11 @@ const initWithMethodsUIHelperModel = () => {
  */
 export class RUIHelperModel {
   private _state?: IUIHelperModel;
-  private _dispatch?: (action: any) => void;
+  private _dispatch?: <A extends {}, T extends {}>(action: A) => T;
   private _getState?: () => any;
   constructor(
     state?: IUIHelperModel,
-    dispatch?: (action: any) => void,
+    dispatch?: (action: any) => any,
     getState?: () => any
   ) {
     this._state = state;
@@ -138,7 +138,7 @@ export class RUIHelperModel {
 
   public static toggle() {
     return (dispatcher: any, getState: any) => {
-      new RUIHelperModel(undefined, dispatcher, getState).toggle();
+      return new RUIHelperModel(undefined, dispatcher, getState).toggle();
     };
   }
 }
@@ -152,7 +152,7 @@ export const UIHelperModelReducer = (
   state: IUIHelperModel = initUIHelperModel(),
   action: any
 ) => {
-  return immer.produce(state, draft => {
+  return immer.produce(state, (draft: IUIHelperModel) => {
     switch (action.type) {
       case UIHelperModelEnums.UIHelperModel_showWasps:
         new RUIHelperModel(draft).showWasps = action.payload;
@@ -202,7 +202,7 @@ export class UIHelperModelProvider extends React.Component {
     this.setState(state);
   }
   toggle() {
-    const nextState = immer.produce(this.state, draft =>
+    const nextState = immer.produce(this.state, (draft: IUIHelperModel) =>
       new RUIHelperModel(draft).toggle()
     );
     if (this.__devTools) {

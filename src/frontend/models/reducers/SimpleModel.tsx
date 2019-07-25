@@ -131,11 +131,11 @@ const initWithMethodsSimpleModel = () => {
  */
 export class RSimpleModel {
   private _state?: ISimpleModel;
-  private _dispatch?: (action: any) => void;
+  private _dispatch?: <A extends {}, T extends {}>(action: A) => T;
   private _getState?: () => any;
   constructor(
     state?: ISimpleModel,
-    dispatch?: (action: any) => void,
+    dispatch?: (action: any) => any,
     getState?: () => any
   ) {
     this._state = state;
@@ -174,7 +174,9 @@ export class RSimpleModel {
 
   public static SimpleDispatch(action: any) {
     return (dispatcher: any, getState: any) => {
-      new RSimpleModel(undefined, dispatcher, getState).SimpleDispatch(action);
+      return new RSimpleModel(undefined, dispatcher, getState).SimpleDispatch(
+        action
+      );
     };
   }
   async getItems() {
@@ -185,7 +187,7 @@ export class RSimpleModel {
 
   public static getItems() {
     return (dispatcher: any, getState: any) => {
-      new RSimpleModel(undefined, dispatcher, getState).getItems();
+      return new RSimpleModel(undefined, dispatcher, getState).getItems();
     };
   }
 }
@@ -198,7 +200,7 @@ export const SimpleModelReducer = (
   state: ISimpleModel = initSimpleModel(),
   action: any
 ) => {
-  return immer.produce(state, draft => {
+  return immer.produce(state, (draft: ISimpleModel) => {
     switch (action.type) {
       case SimpleModelEnums.SimpleModel_items:
         new RSimpleModel(draft).items = action.payload;
@@ -252,7 +254,7 @@ export class SimpleModelProvider extends React.Component {
    * @param action
    */
   async SimpleDispatch(action: any) {
-    new RSimpleModel(
+    return new RSimpleModel(
       undefined,
       (action: any) => {
         const nextState = SimpleModelReducer(this.lastSetState, action);
@@ -265,7 +267,7 @@ export class SimpleModelProvider extends React.Component {
     ).SimpleDispatch(action);
   }
   async getItems() {
-    new RSimpleModel(
+    return new RSimpleModel(
       undefined,
       (action: any) => {
         const nextState = SimpleModelReducer(this.lastSetState, action);

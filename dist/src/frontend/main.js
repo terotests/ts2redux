@@ -176,6 +176,32 @@ ReactDOM.render(React.createElement(react_redux_1.Provider, { store: store },
                                 todolist.items.length),
                             React.createElement("button", { onClick: function () { return todolist.getItems(); } }, "Load"),
                             React.createElement("button", { onClick: function () { return todolist.reverse(); } }, "Revert"),
+                            React.createElement("button", { onClick: function () { return __awaiter(_this, void 0, void 0, function () {
+                                    var _a, _b, _c, _d, e_1;
+                                    return __generator(this, function (_e) {
+                                        switch (_e.label) {
+                                            case 0:
+                                                _b = (_a = console).log;
+                                                return [4 /*yield*/, todolist.getShortList(false)];
+                                            case 1:
+                                                _b.apply(_a, [_e.sent()]);
+                                                _e.label = 2;
+                                            case 2:
+                                                _e.trys.push([2, 4, , 5]);
+                                                _d = (_c = console).log;
+                                                return [4 /*yield*/, todolist.getShortList(true)];
+                                            case 3:
+                                                _d.apply(_c, [_e.sent()]);
+                                                return [3 /*break*/, 5];
+                                            case 4:
+                                                e_1 = _e.sent();
+                                                console.log(e_1);
+                                                return [3 /*break*/, 5];
+                                            case 5: return [2 /*return*/];
+                                        }
+                                    });
+                                }); } }, "Test async function"),
+                            React.createElement("div", null, todolist.customMessage),
                             React.createElement("ul", null, todolist.items.map(function (item) { return (React.createElement("li", { key: item.id }, item.title)); }))));
                     })),
                 React.createElement(TodoList_1.TodoListProvider, null,

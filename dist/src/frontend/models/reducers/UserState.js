@@ -322,7 +322,7 @@ var RUserState = /** @class */ (function () {
     };
     RUserState.login = function (loginInfo) {
         return function (dispatcher, getState) {
-            new RUserState(undefined, dispatcher, getState).login(loginInfo);
+            return new RUserState(undefined, dispatcher, getState).login(loginInfo);
         };
     };
     RUserState.prototype.logout = function () {
@@ -332,7 +332,7 @@ var RUserState = /** @class */ (function () {
     };
     RUserState.logout = function () {
         return function (dispatcher, getState) {
-            new RUserState(undefined, dispatcher, getState).logout();
+            return new RUserState(undefined, dispatcher, getState).logout();
         };
     };
     RUserState.prototype.fakeLogin = function () {
@@ -347,7 +347,7 @@ var RUserState = /** @class */ (function () {
     };
     RUserState.fakeLogin = function () {
         return function (dispatcher, getState) {
-            new RUserState(undefined, dispatcher, getState).fakeLogin();
+            return new RUserState(undefined, dispatcher, getState).fakeLogin();
         };
     };
     return RUserState;
@@ -429,14 +429,13 @@ var UserStateProvider = /** @class */ (function (_super) {
         return __awaiter(this, void 0, void 0, function () {
             var _this = this;
             return __generator(this, function (_a) {
-                new RUserState(undefined, function (action) {
-                    var nextState = exports.UserStateReducer(_this.lastSetState, action);
-                    if (_this.__devTools) {
-                        _this.__devTools.send(action.type, nextState);
-                    }
-                    _this.setStateSync(nextState);
-                }, function () { return ({ UserState: _this.lastSetState }); }).login(loginInfo);
-                return [2 /*return*/];
+                return [2 /*return*/, new RUserState(undefined, function (action) {
+                        var nextState = exports.UserStateReducer(_this.lastSetState, action);
+                        if (_this.__devTools) {
+                            _this.__devTools.send(action.type, nextState);
+                        }
+                        _this.setStateSync(nextState);
+                    }, function () { return ({ UserState: _this.lastSetState }); }).login(loginInfo)];
             });
         });
     };
@@ -444,14 +443,13 @@ var UserStateProvider = /** @class */ (function (_super) {
         return __awaiter(this, void 0, void 0, function () {
             var _this = this;
             return __generator(this, function (_a) {
-                new RUserState(undefined, function (action) {
-                    var nextState = exports.UserStateReducer(_this.lastSetState, action);
-                    if (_this.__devTools) {
-                        _this.__devTools.send(action.type, nextState);
-                    }
-                    _this.setStateSync(nextState);
-                }, function () { return ({ UserState: _this.lastSetState }); }).logout();
-                return [2 /*return*/];
+                return [2 /*return*/, new RUserState(undefined, function (action) {
+                        var nextState = exports.UserStateReducer(_this.lastSetState, action);
+                        if (_this.__devTools) {
+                            _this.__devTools.send(action.type, nextState);
+                        }
+                        _this.setStateSync(nextState);
+                    }, function () { return ({ UserState: _this.lastSetState }); }).logout()];
             });
         });
     };

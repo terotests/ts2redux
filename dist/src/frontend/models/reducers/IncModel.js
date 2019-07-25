@@ -151,7 +151,7 @@ var RIncModel = /** @class */ (function () {
     };
     RIncModel.increment = function () {
         return function (dispatcher, getState) {
-            new RIncModel(undefined, dispatcher, getState).increment();
+            return new RIncModel(undefined, dispatcher, getState).increment();
         };
     };
     RIncModel.prototype.decrement = function () {
@@ -166,7 +166,7 @@ var RIncModel = /** @class */ (function () {
     };
     RIncModel.decrement = function () {
         return function (dispatcher, getState) {
-            new RIncModel(undefined, dispatcher, getState).decrement();
+            return new RIncModel(undefined, dispatcher, getState).decrement();
         };
     };
     return RIncModel;

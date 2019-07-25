@@ -590,6 +590,32 @@ ReactDOM.render(React.createElement(react_redux_1.Provider, { store: store },
                                 todolist.items.length),
                             React.createElement("button", { onClick: function () { return todolist.getItems(); } }, "Load"),
                             React.createElement("button", { onClick: function () { return todolist.reverse(); } }, "Revert"),
+                            React.createElement("button", { onClick: function () { return __awaiter(_this, void 0, void 0, function () {
+                                    var _a, _b, _c, _d, e_1;
+                                    return __generator(this, function (_e) {
+                                        switch (_e.label) {
+                                            case 0:
+                                                _b = (_a = console).log;
+                                                return [4 /*yield*/, todolist.getShortList(false)];
+                                            case 1:
+                                                _b.apply(_a, [_e.sent()]);
+                                                _e.label = 2;
+                                            case 2:
+                                                _e.trys.push([2, 4, , 5]);
+                                                _d = (_c = console).log;
+                                                return [4 /*yield*/, todolist.getShortList(true)];
+                                            case 3:
+                                                _d.apply(_c, [_e.sent()]);
+                                                return [3 /*break*/, 5];
+                                            case 4:
+                                                e_1 = _e.sent();
+                                                console.log(e_1);
+                                                return [3 /*break*/, 5];
+                                            case 5: return [2 /*return*/];
+                                        }
+                                    });
+                                }); } }, "Test async function"),
+                            React.createElement("div", null, todolist.customMessage),
                             React.createElement("ul", null, todolist.items.map(function (item) { return (React.createElement("li", { key: item.id }, item.title)); }))));
                     })),
                 React.createElement(TodoList_1.TodoListProvider, null,
@@ -906,6 +932,7 @@ var TodoList = /** @class */ (function () {
         this.listStart = 0;
         this.listPageLength = 10;
         this.listTitle = "Title of TODO -list";
+        this.customMessage = "";
     }
     Object.defineProperty(TodoList.prototype, "listToDisplay", {
         // Example of memoized list using reselect
@@ -996,6 +1023,22 @@ var TodoList = /** @class */ (function () {
                         return [3 /*break*/, 4];
                     case 4: return [2 /*return*/];
                 }
+            });
+        });
+    };
+    TodoList.prototype.getShortList = function (makeError) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                if (makeError) {
+                    this.customMessage = "Custom Exception send this custom message to state";
+                    throw "Custom Exception";
+                }
+                this.customMessage = "";
+                return [2 /*return*/, new Promise(function (resolve) {
+                        setTimeout(function () {
+                            resolve([1, 2, 3, 4, 5]);
+                        }, 1000);
+                    })];
             });
         });
     };
@@ -1291,7 +1334,7 @@ var RGenericModel = /** @class */ (function () {
     };
     RGenericModel.refreshSum = function () {
         return function (dispatcher, getState) {
-            new RGenericModel(undefined, dispatcher, getState).refreshSum();
+            return new RGenericModel(undefined, dispatcher, getState).refreshSum();
         };
     };
     RGenericModel.prototype.addItems = function (items) {
@@ -1311,7 +1354,7 @@ var RGenericModel = /** @class */ (function () {
     };
     RGenericModel.addItems = function (items) {
         return function (dispatcher, getState) {
-            new RGenericModel(undefined, dispatcher, getState).addItems(items);
+            return new RGenericModel(undefined, dispatcher, getState).addItems(items);
         };
     };
     RGenericModel.prototype.inc = function () {
@@ -1326,7 +1369,7 @@ var RGenericModel = /** @class */ (function () {
     };
     RGenericModel.inc = function () {
         return function (dispatcher, getState) {
-            new RGenericModel(undefined, dispatcher, getState).inc();
+            return new RGenericModel(undefined, dispatcher, getState).inc();
         };
     };
     RGenericModel.prototype.testLoading = function () {
@@ -1336,7 +1379,7 @@ var RGenericModel = /** @class */ (function () {
     };
     RGenericModel.testLoading = function () {
         return function (dispatcher, getState) {
-            new RGenericModel(undefined, dispatcher, getState).testLoading();
+            return new RGenericModel(undefined, dispatcher, getState).testLoading();
         };
     };
     return RGenericModel;
@@ -1446,14 +1489,13 @@ var GenericModelProvider = /** @class */ (function (_super) {
         return __awaiter(this, void 0, void 0, function () {
             var _this = this;
             return __generator(this, function (_a) {
-                new RGenericModel(undefined, function (action) {
-                    var nextState = exports.GenericModelReducer(_this.lastSetState, action);
-                    if (_this.__devTools) {
-                        _this.__devTools.send(action.type, nextState);
-                    }
-                    _this.setStateSync(nextState);
-                }, function () { return ({ GenericModel: _this.lastSetState }); }).testLoading();
-                return [2 /*return*/];
+                return [2 /*return*/, new RGenericModel(undefined, function (action) {
+                        var nextState = exports.GenericModelReducer(_this.lastSetState, action);
+                        if (_this.__devTools) {
+                            _this.__devTools.send(action.type, nextState);
+                        }
+                        _this.setStateSync(nextState);
+                    }, function () { return ({ GenericModel: _this.lastSetState }); }).testLoading()];
             });
         });
     };
@@ -1620,7 +1662,7 @@ var RIncModel = /** @class */ (function () {
     };
     RIncModel.increment = function () {
         return function (dispatcher, getState) {
-            new RIncModel(undefined, dispatcher, getState).increment();
+            return new RIncModel(undefined, dispatcher, getState).increment();
         };
     };
     RIncModel.prototype.decrement = function () {
@@ -1635,7 +1677,7 @@ var RIncModel = /** @class */ (function () {
     };
     RIncModel.decrement = function () {
         return function (dispatcher, getState) {
-            new RIncModel(undefined, dispatcher, getState).decrement();
+            return new RIncModel(undefined, dispatcher, getState).decrement();
         };
     };
     return RIncModel;
@@ -1796,6 +1838,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var immer = require("immer");
+var reselect_1 = require("reselect");
 var react_redux_1 = require("react-redux");
 var React = require("react");
 var axios_1 = require("axios");
@@ -1842,7 +1885,6 @@ var SimpleModel = /** @class */ (function () {
     return SimpleModel;
 }());
 exports.SimpleModel = SimpleModel;
-var reselect_1 = require("reselect");
 exports.itemsSelectorFn = function (state) { return state.items; };
 exports.myItemsSelectorFnCreator = function () {
     return reselect_1.createSelector([exports.itemsSelectorFn], function (items) {
@@ -1955,7 +1997,7 @@ var RSimpleModel = /** @class */ (function () {
     };
     RSimpleModel.SimpleDispatch = function (action) {
         return function (dispatcher, getState) {
-            new RSimpleModel(undefined, dispatcher, getState).SimpleDispatch(action);
+            return new RSimpleModel(undefined, dispatcher, getState).SimpleDispatch(action);
         };
     };
     RSimpleModel.prototype.getItems = function () {
@@ -1975,7 +2017,7 @@ var RSimpleModel = /** @class */ (function () {
     };
     RSimpleModel.getItems = function () {
         return function (dispatcher, getState) {
-            new RSimpleModel(undefined, dispatcher, getState).getItems();
+            return new RSimpleModel(undefined, dispatcher, getState).getItems();
         };
     };
     return RSimpleModel;
@@ -2042,14 +2084,13 @@ var SimpleModelProvider = /** @class */ (function (_super) {
         return __awaiter(this, void 0, void 0, function () {
             var _this = this;
             return __generator(this, function (_a) {
-                new RSimpleModel(undefined, function (action) {
-                    var nextState = exports.SimpleModelReducer(_this.lastSetState, action);
-                    if (_this.__devTools) {
-                        _this.__devTools.send(action.type, nextState);
-                    }
-                    _this.setStateSync(nextState);
-                }, function () { return ({ SimpleModel: _this.lastSetState }); }).SimpleDispatch(action);
-                return [2 /*return*/];
+                return [2 /*return*/, new RSimpleModel(undefined, function (action) {
+                        var nextState = exports.SimpleModelReducer(_this.lastSetState, action);
+                        if (_this.__devTools) {
+                            _this.__devTools.send(action.type, nextState);
+                        }
+                        _this.setStateSync(nextState);
+                    }, function () { return ({ SimpleModel: _this.lastSetState }); }).SimpleDispatch(action)];
             });
         });
     };
@@ -2057,14 +2098,13 @@ var SimpleModelProvider = /** @class */ (function (_super) {
         return __awaiter(this, void 0, void 0, function () {
             var _this = this;
             return __generator(this, function (_a) {
-                new RSimpleModel(undefined, function (action) {
-                    var nextState = exports.SimpleModelReducer(_this.lastSetState, action);
-                    if (_this.__devTools) {
-                        _this.__devTools.send(action.type, nextState);
-                    }
-                    _this.setStateSync(nextState);
-                }, function () { return ({ SimpleModel: _this.lastSetState }); }).getItems();
-                return [2 /*return*/];
+                return [2 /*return*/, new RSimpleModel(undefined, function (action) {
+                        var nextState = exports.SimpleModelReducer(_this.lastSetState, action);
+                        if (_this.__devTools) {
+                            _this.__devTools.send(action.type, nextState);
+                        }
+                        _this.setStateSync(nextState);
+                    }, function () { return ({ SimpleModel: _this.lastSetState }); }).getItems()];
             });
         });
     };
@@ -2925,7 +2965,7 @@ var RTestModel = /** @class */ (function () {
     };
     RTestModel.setUserMessage = function (value) {
         return function (dispatcher, getState) {
-            new RTestModel(undefined, dispatcher, getState).setUserMessage(value);
+            return new RTestModel(undefined, dispatcher, getState).setUserMessage(value);
         };
     };
     RTestModel.prototype.add = function (item) {
@@ -2941,7 +2981,7 @@ var RTestModel = /** @class */ (function () {
     };
     RTestModel.add = function (item) {
         return function (dispatcher, getState) {
-            new RTestModel(undefined, dispatcher, getState).add(item);
+            return new RTestModel(undefined, dispatcher, getState).add(item);
         };
     };
     RTestModel.prototype.removeFirst = function () {
@@ -2956,7 +2996,7 @@ var RTestModel = /** @class */ (function () {
     };
     RTestModel.removeFirst = function () {
         return function (dispatcher, getState) {
-            new RTestModel(undefined, dispatcher, getState).removeFirst();
+            return new RTestModel(undefined, dispatcher, getState).removeFirst();
         };
     };
     RTestModel.prototype.sort = function () {
@@ -2973,7 +3013,7 @@ var RTestModel = /** @class */ (function () {
     };
     RTestModel.sort = function () {
         return function (dispatcher, getState) {
-            new RTestModel(undefined, dispatcher, getState).sort();
+            return new RTestModel(undefined, dispatcher, getState).sort();
         };
     };
     RTestModel.prototype.addCart = function () {
@@ -2991,7 +3031,7 @@ var RTestModel = /** @class */ (function () {
     };
     RTestModel.addCart = function () {
         return function (dispatcher, getState) {
-            new RTestModel(undefined, dispatcher, getState).addCart();
+            return new RTestModel(undefined, dispatcher, getState).addCart();
         };
     };
     RTestModel.prototype.addCartSync = function () {
@@ -3009,7 +3049,7 @@ var RTestModel = /** @class */ (function () {
     };
     RTestModel.addCartSync = function () {
         return function (dispatcher, getState) {
-            new RTestModel(undefined, dispatcher, getState).addCartSync();
+            return new RTestModel(undefined, dispatcher, getState).addCartSync();
         };
     };
     RTestModel.prototype.addToCart = function (adding) {
@@ -3027,7 +3067,7 @@ var RTestModel = /** @class */ (function () {
     };
     RTestModel.addToCart = function (adding) {
         return function (dispatcher, getState) {
-            new RTestModel(undefined, dispatcher, getState).addToCart(adding);
+            return new RTestModel(undefined, dispatcher, getState).addToCart(adding);
         };
     };
     RTestModel.prototype.setCartNewItem = function (adding) {
@@ -3045,7 +3085,7 @@ var RTestModel = /** @class */ (function () {
     };
     RTestModel.setCartNewItem = function (adding) {
         return function (dispatcher, getState) {
-            new RTestModel(undefined, dispatcher, getState).setCartNewItem(adding);
+            return new RTestModel(undefined, dispatcher, getState).setCartNewItem(adding);
         };
     };
     RTestModel.prototype.addToCartRandom = function () {
@@ -3066,7 +3106,7 @@ var RTestModel = /** @class */ (function () {
     };
     RTestModel.addToCartRandom = function () {
         return function (dispatcher, getState) {
-            new RTestModel(undefined, dispatcher, getState).addToCartRandom();
+            return new RTestModel(undefined, dispatcher, getState).addToCartRandom();
         };
     };
     RTestModel.prototype.renameLast = function (newName) {
@@ -3084,7 +3124,7 @@ var RTestModel = /** @class */ (function () {
     };
     RTestModel.renameLast = function (newName) {
         return function (dispatcher, getState) {
-            new RTestModel(undefined, dispatcher, getState).renameLast(newName);
+            return new RTestModel(undefined, dispatcher, getState).renameLast(newName);
         };
     };
     // action
@@ -3113,7 +3153,7 @@ var RTestModel = /** @class */ (function () {
     };
     RTestModel.createItem = function (someName) {
         return function (dispatcher, getState) {
-            new RTestModel(undefined, dispatcher, getState).createItem(someName);
+            return new RTestModel(undefined, dispatcher, getState).createItem(someName);
         };
     };
     RTestModel.prototype.addOneFriend = function (name) {
@@ -3126,7 +3166,7 @@ var RTestModel = /** @class */ (function () {
     };
     RTestModel.addOneFriend = function (name) {
         return function (dispatcher, getState) {
-            new RTestModel(undefined, dispatcher, getState).addOneFriend(name);
+            return new RTestModel(undefined, dispatcher, getState).addOneFriend(name);
         };
     };
     RTestModel.prototype.fillSomeFriends = function () {
@@ -3142,7 +3182,7 @@ var RTestModel = /** @class */ (function () {
     };
     RTestModel.fillSomeFriends = function () {
         return function (dispatcher, getState) {
-            new RTestModel(undefined, dispatcher, getState).fillSomeFriends();
+            return new RTestModel(undefined, dispatcher, getState).fillSomeFriends();
         };
     };
     RTestModel.prototype.ChangeLastItem = function () {
@@ -3155,7 +3195,7 @@ var RTestModel = /** @class */ (function () {
     };
     RTestModel.ChangeLastItem = function () {
         return function (dispatcher, getState) {
-            new RTestModel(undefined, dispatcher, getState).ChangeLastItem();
+            return new RTestModel(undefined, dispatcher, getState).ChangeLastItem();
         };
     };
     return RTestModel;
@@ -3419,14 +3459,13 @@ var TestModelProvider = /** @class */ (function (_super) {
         return __awaiter(this, void 0, void 0, function () {
             var _this = this;
             return __generator(this, function (_a) {
-                new RTestModel(undefined, function (action) {
-                    var nextState = exports.TestModelReducer(_this.lastSetState, action);
-                    if (_this.__devTools) {
-                        _this.__devTools.send(action.type, nextState);
-                    }
-                    _this.setStateSync(nextState);
-                }, function () { return ({ TestModel: _this.lastSetState }); }).createItem(someName);
-                return [2 /*return*/];
+                return [2 /*return*/, new RTestModel(undefined, function (action) {
+                        var nextState = exports.TestModelReducer(_this.lastSetState, action);
+                        if (_this.__devTools) {
+                            _this.__devTools.send(action.type, nextState);
+                        }
+                        _this.setStateSync(nextState);
+                    }, function () { return ({ TestModel: _this.lastSetState }); }).createItem(someName)];
             });
         });
     };
@@ -3434,14 +3473,13 @@ var TestModelProvider = /** @class */ (function (_super) {
         return __awaiter(this, void 0, void 0, function () {
             var _this = this;
             return __generator(this, function (_a) {
-                new RTestModel(undefined, function (action) {
-                    var nextState = exports.TestModelReducer(_this.lastSetState, action);
-                    if (_this.__devTools) {
-                        _this.__devTools.send(action.type, nextState);
-                    }
-                    _this.setStateSync(nextState);
-                }, function () { return ({ TestModel: _this.lastSetState }); }).addOneFriend(name);
-                return [2 /*return*/];
+                return [2 /*return*/, new RTestModel(undefined, function (action) {
+                        var nextState = exports.TestModelReducer(_this.lastSetState, action);
+                        if (_this.__devTools) {
+                            _this.__devTools.send(action.type, nextState);
+                        }
+                        _this.setStateSync(nextState);
+                    }, function () { return ({ TestModel: _this.lastSetState }); }).addOneFriend(name)];
             });
         });
     };
@@ -3449,14 +3487,13 @@ var TestModelProvider = /** @class */ (function (_super) {
         return __awaiter(this, void 0, void 0, function () {
             var _this = this;
             return __generator(this, function (_a) {
-                new RTestModel(undefined, function (action) {
-                    var nextState = exports.TestModelReducer(_this.lastSetState, action);
-                    if (_this.__devTools) {
-                        _this.__devTools.send(action.type, nextState);
-                    }
-                    _this.setStateSync(nextState);
-                }, function () { return ({ TestModel: _this.lastSetState }); }).fillSomeFriends();
-                return [2 /*return*/];
+                return [2 /*return*/, new RTestModel(undefined, function (action) {
+                        var nextState = exports.TestModelReducer(_this.lastSetState, action);
+                        if (_this.__devTools) {
+                            _this.__devTools.send(action.type, nextState);
+                        }
+                        _this.setStateSync(nextState);
+                    }, function () { return ({ TestModel: _this.lastSetState }); }).fillSomeFriends()];
             });
         });
     };
@@ -3464,14 +3501,13 @@ var TestModelProvider = /** @class */ (function (_super) {
         return __awaiter(this, void 0, void 0, function () {
             var _this = this;
             return __generator(this, function (_a) {
-                new RTestModel(undefined, function (action) {
-                    var nextState = exports.TestModelReducer(_this.lastSetState, action);
-                    if (_this.__devTools) {
-                        _this.__devTools.send(action.type, nextState);
-                    }
-                    _this.setStateSync(nextState);
-                }, function () { return ({ TestModel: _this.lastSetState }); }).ChangeLastItem();
-                return [2 /*return*/];
+                return [2 /*return*/, new RTestModel(undefined, function (action) {
+                        var nextState = exports.TestModelReducer(_this.lastSetState, action);
+                        if (_this.__devTools) {
+                            _this.__devTools.send(action.type, nextState);
+                        }
+                        _this.setStateSync(nextState);
+                    }, function () { return ({ TestModel: _this.lastSetState }); }).ChangeLastItem()];
             });
         });
     };
@@ -4289,7 +4325,7 @@ var RTetrisModel = /** @class */ (function () {
     };
     RTetrisModel.tick = function () {
         return function (dispatcher, getState) {
-            new RTetrisModel(undefined, dispatcher, getState).tick();
+            return new RTetrisModel(undefined, dispatcher, getState).tick();
         };
     };
     RTetrisModel.prototype.left = function () {
@@ -4306,7 +4342,7 @@ var RTetrisModel = /** @class */ (function () {
     };
     RTetrisModel.left = function () {
         return function (dispatcher, getState) {
-            new RTetrisModel(undefined, dispatcher, getState).left();
+            return new RTetrisModel(undefined, dispatcher, getState).left();
         };
     };
     RTetrisModel.prototype.right = function () {
@@ -4323,7 +4359,7 @@ var RTetrisModel = /** @class */ (function () {
     };
     RTetrisModel.right = function () {
         return function (dispatcher, getState) {
-            new RTetrisModel(undefined, dispatcher, getState).right();
+            return new RTetrisModel(undefined, dispatcher, getState).right();
         };
     };
     RTetrisModel.prototype.rotate = function () {
@@ -4341,7 +4377,7 @@ var RTetrisModel = /** @class */ (function () {
     };
     RTetrisModel.rotate = function () {
         return function (dispatcher, getState) {
-            new RTetrisModel(undefined, dispatcher, getState).rotate();
+            return new RTetrisModel(undefined, dispatcher, getState).rotate();
         };
     };
     // creates a new piece with rotated values
@@ -4392,7 +4428,7 @@ var RTetrisModel = /** @class */ (function () {
     };
     RTetrisModel.step = function () {
         return function (dispatcher, getState) {
-            new RTetrisModel(undefined, dispatcher, getState).step();
+            return new RTetrisModel(undefined, dispatcher, getState).step();
         };
     };
     RTetrisModel.prototype.pickNextColor = function () {
@@ -4424,7 +4460,7 @@ var RTetrisModel = /** @class */ (function () {
     };
     RTetrisModel.masonPiece = function () {
         return function (dispatcher, getState) {
-            new RTetrisModel(undefined, dispatcher, getState).masonPiece();
+            return new RTetrisModel(undefined, dispatcher, getState).masonPiece();
         };
     };
     RTetrisModel.prototype.dropRows = function () {
@@ -4461,7 +4497,7 @@ var RTetrisModel = /** @class */ (function () {
     };
     RTetrisModel.dropRows = function () {
         return function (dispatcher, getState) {
-            new RTetrisModel(undefined, dispatcher, getState).dropRows();
+            return new RTetrisModel(undefined, dispatcher, getState).dropRows();
         };
     };
     RTetrisModel.prototype.clearCells = function () {
@@ -4482,7 +4518,7 @@ var RTetrisModel = /** @class */ (function () {
     };
     RTetrisModel.clearCells = function () {
         return function (dispatcher, getState) {
-            new RTetrisModel(undefined, dispatcher, getState).clearCells();
+            return new RTetrisModel(undefined, dispatcher, getState).clearCells();
         };
     };
     RTetrisModel.prototype.resetGame = function () {
@@ -4500,7 +4536,7 @@ var RTetrisModel = /** @class */ (function () {
     };
     RTetrisModel.resetGame = function () {
         return function (dispatcher, getState) {
-            new RTetrisModel(undefined, dispatcher, getState).resetGame();
+            return new RTetrisModel(undefined, dispatcher, getState).resetGame();
         };
     };
     RTetrisModel.prototype.start = function () {
@@ -4518,7 +4554,7 @@ var RTetrisModel = /** @class */ (function () {
     };
     RTetrisModel.start = function () {
         return function (dispatcher, getState) {
-            new RTetrisModel(undefined, dispatcher, getState).start();
+            return new RTetrisModel(undefined, dispatcher, getState).start();
         };
     };
     return RTetrisModel;
@@ -4842,6 +4878,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var immer = require("immer");
+var reselect_1 = require("reselect");
 var react_redux_1 = require("react-redux");
 var React = require("react");
 var axios_1 = require("axios");
@@ -4866,6 +4903,7 @@ var TodoList = /** @class */ (function () {
         this.listStart = 0;
         this.listPageLength = 10;
         this.listTitle = "Title of TODO -list";
+        this.customMessage = "";
     }
     Object.defineProperty(TodoList.prototype, "listToDisplay", {
         // Example of memoized list using reselect
@@ -4959,10 +4997,25 @@ var TodoList = /** @class */ (function () {
             });
         });
     };
+    TodoList.prototype.getShortList = function (makeError) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                if (makeError) {
+                    this.customMessage = "Custom Exception send this custom message to state";
+                    throw "Custom Exception";
+                }
+                this.customMessage = "";
+                return [2 /*return*/, new Promise(function (resolve) {
+                        setTimeout(function () {
+                            resolve([1, 2, 3, 4, 5]);
+                        }, 1000);
+                    })];
+            });
+        });
+    };
     return TodoList;
 }());
 exports.TodoList = TodoList;
-var reselect_1 = require("reselect");
 exports.itemsSelectorFn = function (state) {
     return state.items;
 };
@@ -4979,6 +5032,9 @@ exports.listPageLengthSelectorFn = function (state) {
 };
 exports.listTitleSelectorFn = function (state) {
     return state.listTitle;
+};
+exports.customMessageSelectorFn = function (state) {
+    return state.customMessage;
 };
 exports.listToDisplaySelectorFnCreator = function () {
     return reselect_1.createSelector([
@@ -5019,6 +5075,7 @@ exports.mapStateToProps = function (state) {
         listStart: state.TodoList.listStart,
         listPageLength: state.TodoList.listPageLength,
         listTitle: state.TodoList.listTitle,
+        customMessage: state.TodoList.customMessage,
         listToDisplay: exports.listToDisplaySelector(state.TodoList)
     };
 };
@@ -5059,6 +5116,9 @@ exports.mapDispatchToProps = function (dispatch) {
         },
         getItems: function () {
             return dispatch(RTodoList.getItems());
+        },
+        getShortList: function (makeError) {
+            return dispatch(RTodoList.getShortList(makeError));
         }
     };
 };
@@ -5076,7 +5136,8 @@ var initTodoList = function () {
         sortOrder: o.sortOrder,
         listStart: o.listStart,
         listPageLength: o.listPageLength,
-        listTitle: o.listTitle
+        listTitle: o.listTitle,
+        customMessage: o.customMessage
     };
 };
 var initWithMethodsTodoList = function () {
@@ -5089,6 +5150,7 @@ var initWithMethodsTodoList = function () {
         listStart: o.listStart,
         listPageLength: o.listPageLength,
         listTitle: o.listTitle,
+        customMessage: o.customMessage,
         nextPage: o.nextPage,
         prevPage: o.prevPage,
         toggleSortOrder: o.toggleSortOrder,
@@ -5100,6 +5162,7 @@ var initWithMethodsTodoList = function () {
         setTitle: o.setTitle,
         addLotOfItems: o.addLotOfItems,
         getItems: o.getItems,
+        getShortList: o.getShortList,
         listToDisplay: o.listToDisplay
     };
 };
@@ -5309,6 +5372,35 @@ var RTodoList = /** @class */ (function () {
         enumerable: true,
         configurable: true
     });
+    Object.defineProperty(RTodoList.prototype, "customMessage", {
+        get: function () {
+            if (this._getState) {
+                return this._getState().TodoList.customMessage;
+            }
+            else {
+                if (this._state) {
+                    return this._state.customMessage;
+                }
+            }
+            throw "Invalid State in TodoList_customMessage";
+        },
+        set: function (value) {
+            if (this._state && typeof value !== "undefined") {
+                this._state.customMessage = value;
+            }
+            else {
+                // dispatch change for item customMessage
+                if (this._dispatch) {
+                    this._dispatch({
+                        type: exports.TodoListEnums.TodoList_customMessage,
+                        payload: value
+                    });
+                }
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
     RTodoList.prototype.findMaxId = function () {
         var max = 0;
         this.items.forEach(function (item) {
@@ -5329,7 +5421,7 @@ var RTodoList = /** @class */ (function () {
     };
     RTodoList.nextPage = function () {
         return function (dispatcher, getState) {
-            new RTodoList(undefined, dispatcher, getState).nextPage();
+            return new RTodoList(undefined, dispatcher, getState).nextPage();
         };
     };
     RTodoList.prototype.prevPage = function () {
@@ -5346,7 +5438,7 @@ var RTodoList = /** @class */ (function () {
     };
     RTodoList.prevPage = function () {
         return function (dispatcher, getState) {
-            new RTodoList(undefined, dispatcher, getState).prevPage();
+            return new RTodoList(undefined, dispatcher, getState).prevPage();
         };
     };
     RTodoList.prototype.toggleSortOrder = function () {
@@ -5362,7 +5454,7 @@ var RTodoList = /** @class */ (function () {
     };
     RTodoList.toggleSortOrder = function () {
         return function (dispatcher, getState) {
-            new RTodoList(undefined, dispatcher, getState).toggleSortOrder();
+            return new RTodoList(undefined, dispatcher, getState).toggleSortOrder();
         };
     };
     RTodoList.prototype.clearTodoList = function () {
@@ -5377,7 +5469,7 @@ var RTodoList = /** @class */ (function () {
     };
     RTodoList.clearTodoList = function () {
         return function (dispatcher, getState) {
-            new RTodoList(undefined, dispatcher, getState).clearTodoList();
+            return new RTodoList(undefined, dispatcher, getState).clearTodoList();
         };
     };
     RTodoList.prototype.reverse = function () {
@@ -5392,7 +5484,7 @@ var RTodoList = /** @class */ (function () {
     };
     RTodoList.reverse = function () {
         return function (dispatcher, getState) {
-            new RTodoList(undefined, dispatcher, getState).reverse();
+            return new RTodoList(undefined, dispatcher, getState).reverse();
         };
     };
     RTodoList.prototype.sortById = function () {
@@ -5407,7 +5499,7 @@ var RTodoList = /** @class */ (function () {
     };
     RTodoList.sortById = function () {
         return function (dispatcher, getState) {
-            new RTodoList(undefined, dispatcher, getState).sortById();
+            return new RTodoList(undefined, dispatcher, getState).sortById();
         };
     };
     RTodoList.prototype.sortByTitle = function () {
@@ -5422,7 +5514,7 @@ var RTodoList = /** @class */ (function () {
     };
     RTodoList.sortByTitle = function () {
         return function (dispatcher, getState) {
-            new RTodoList(undefined, dispatcher, getState).sortByTitle();
+            return new RTodoList(undefined, dispatcher, getState).sortByTitle();
         };
     };
     RTodoList.prototype.sortByCompletion = function () {
@@ -5438,7 +5530,7 @@ var RTodoList = /** @class */ (function () {
     };
     RTodoList.sortByCompletion = function () {
         return function (dispatcher, getState) {
-            new RTodoList(undefined, dispatcher, getState).sortByCompletion();
+            return new RTodoList(undefined, dispatcher, getState).sortByCompletion();
         };
     };
     RTodoList.prototype.setTitle = function (value) {
@@ -5456,7 +5548,7 @@ var RTodoList = /** @class */ (function () {
     };
     RTodoList.setTitle = function (value) {
         return function (dispatcher, getState) {
-            new RTodoList(undefined, dispatcher, getState).setTitle(value);
+            return new RTodoList(undefined, dispatcher, getState).setTitle(value);
         };
     };
     RTodoList.prototype.addLotOfItems = function (cnt) {
@@ -5482,7 +5574,7 @@ var RTodoList = /** @class */ (function () {
     };
     RTodoList.addLotOfItems = function (cnt) {
         return function (dispatcher, getState) {
-            new RTodoList(undefined, dispatcher, getState).addLotOfItems(cnt);
+            return new RTodoList(undefined, dispatcher, getState).addLotOfItems(cnt);
         };
     };
     /**
@@ -5518,7 +5610,28 @@ var RTodoList = /** @class */ (function () {
     };
     RTodoList.getItems = function () {
         return function (dispatcher, getState) {
-            new RTodoList(undefined, dispatcher, getState).getItems();
+            return new RTodoList(undefined, dispatcher, getState).getItems();
+        };
+    };
+    RTodoList.prototype.getShortList = function (makeError) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                if (makeError) {
+                    this.customMessage = "Custom Exception send this custom message to state";
+                    throw "Custom Exception";
+                }
+                this.customMessage = "";
+                return [2 /*return*/, new Promise(function (resolve) {
+                        setTimeout(function () {
+                            resolve([1, 2, 3, 4, 5]);
+                        }, 1000);
+                    })];
+            });
+        });
+    };
+    RTodoList.getShortList = function (makeError) {
+        return function (dispatcher, getState) {
+            return new RTodoList(undefined, dispatcher, getState).getShortList(makeError);
         };
     };
     return RTodoList;
@@ -5532,6 +5645,7 @@ exports.TodoListEnums = {
     TodoList_listStart: "TodoList_listStart",
     TodoList_listPageLength: "TodoList_listPageLength",
     TodoList_listTitle: "TodoList_listTitle",
+    TodoList_customMessage: "TodoList_customMessage",
     TodoList_findMaxId: "TodoList_findMaxId",
     TodoList_nextPage: "TodoList_nextPage",
     TodoList_prevPage: "TodoList_prevPage",
@@ -5568,6 +5682,9 @@ exports.TodoListReducer = function (state, action) {
                 break;
             case exports.TodoListEnums.TodoList_listTitle:
                 new RTodoList(draft).listTitle = action.payload;
+                break;
+            case exports.TodoListEnums.TodoList_customMessage:
+                new RTodoList(draft).customMessage = action.payload;
                 break;
             case exports.TodoListEnums.TodoList_nextPage:
                 new RTodoList(draft).nextPage();
@@ -5627,6 +5744,7 @@ var TodoListProvider = /** @class */ (function (_super) {
         _this.setTitle = _this.setTitle.bind(_this);
         _this.addLotOfItems = _this.addLotOfItems.bind(_this);
         _this.getItems = _this.getItems.bind(_this);
+        _this.getShortList = _this.getShortList.bind(_this);
         _this.__selectorlistToDisplay = exports.listToDisplaySelectorFnCreator();
         var devs = window["__REDUX_DEVTOOLS_EXTENSION__"]
             ? window["__REDUX_DEVTOOLS_EXTENSION__"]
@@ -5748,19 +5866,32 @@ var TodoListProvider = /** @class */ (function (_super) {
         return __awaiter(this, void 0, void 0, function () {
             var _this = this;
             return __generator(this, function (_a) {
-                new RTodoList(undefined, function (action) {
-                    var nextState = exports.TodoListReducer(_this.lastSetState, action);
-                    if (_this.__devTools) {
-                        _this.__devTools.send(action.type, nextState);
-                    }
-                    _this.setStateSync(nextState);
-                }, function () { return ({ TodoList: _this.lastSetState }); }).getItems();
-                return [2 /*return*/];
+                return [2 /*return*/, new RTodoList(undefined, function (action) {
+                        var nextState = exports.TodoListReducer(_this.lastSetState, action);
+                        if (_this.__devTools) {
+                            _this.__devTools.send(action.type, nextState);
+                        }
+                        _this.setStateSync(nextState);
+                    }, function () { return ({ TodoList: _this.lastSetState }); }).getItems()];
+            });
+        });
+    };
+    TodoListProvider.prototype.getShortList = function (makeError) {
+        return __awaiter(this, void 0, void 0, function () {
+            var _this = this;
+            return __generator(this, function (_a) {
+                return [2 /*return*/, new RTodoList(undefined, function (action) {
+                        var nextState = exports.TodoListReducer(_this.lastSetState, action);
+                        if (_this.__devTools) {
+                            _this.__devTools.send(action.type, nextState);
+                        }
+                        _this.setStateSync(nextState);
+                    }, function () { return ({ TodoList: _this.lastSetState }); }).getShortList(makeError)];
             });
         });
     };
     TodoListProvider.prototype.render = function () {
-        return (React.createElement(exports.TodoListContext.Provider, { value: __assign({}, this.state, { nextPage: this.nextPage, prevPage: this.prevPage, toggleSortOrder: this.toggleSortOrder, clearTodoList: this.clearTodoList, reverse: this.reverse, sortById: this.sortById, sortByTitle: this.sortByTitle, sortByCompletion: this.sortByCompletion, setTitle: this.setTitle, addLotOfItems: this.addLotOfItems, getItems: this.getItems, listToDisplay: this.__selectorlistToDisplay(this.state) }) },
+        return (React.createElement(exports.TodoListContext.Provider, { value: __assign({}, this.state, { nextPage: this.nextPage, prevPage: this.prevPage, toggleSortOrder: this.toggleSortOrder, clearTodoList: this.clearTodoList, reverse: this.reverse, sortById: this.sortById, sortByTitle: this.sortByTitle, sortByCompletion: this.sortByCompletion, setTitle: this.setTitle, addLotOfItems: this.addLotOfItems, getItems: this.getItems, getShortList: this.getShortList, listToDisplay: this.__selectorlistToDisplay(this.state) }) },
             " ",
             this.props.children));
     };
@@ -5910,7 +6041,7 @@ var RUIHelperModel = /** @class */ (function () {
     };
     RUIHelperModel.toggle = function () {
         return function (dispatcher, getState) {
-            new RUIHelperModel(undefined, dispatcher, getState).toggle();
+            return new RUIHelperModel(undefined, dispatcher, getState).toggle();
         };
     };
     return RUIHelperModel;
@@ -6313,7 +6444,7 @@ var RUserState = /** @class */ (function () {
     };
     RUserState.login = function (loginInfo) {
         return function (dispatcher, getState) {
-            new RUserState(undefined, dispatcher, getState).login(loginInfo);
+            return new RUserState(undefined, dispatcher, getState).login(loginInfo);
         };
     };
     RUserState.prototype.logout = function () {
@@ -6323,7 +6454,7 @@ var RUserState = /** @class */ (function () {
     };
     RUserState.logout = function () {
         return function (dispatcher, getState) {
-            new RUserState(undefined, dispatcher, getState).logout();
+            return new RUserState(undefined, dispatcher, getState).logout();
         };
     };
     RUserState.prototype.fakeLogin = function () {
@@ -6338,7 +6469,7 @@ var RUserState = /** @class */ (function () {
     };
     RUserState.fakeLogin = function () {
         return function (dispatcher, getState) {
-            new RUserState(undefined, dispatcher, getState).fakeLogin();
+            return new RUserState(undefined, dispatcher, getState).fakeLogin();
         };
     };
     return RUserState;
@@ -6420,14 +6551,13 @@ var UserStateProvider = /** @class */ (function (_super) {
         return __awaiter(this, void 0, void 0, function () {
             var _this = this;
             return __generator(this, function (_a) {
-                new RUserState(undefined, function (action) {
-                    var nextState = exports.UserStateReducer(_this.lastSetState, action);
-                    if (_this.__devTools) {
-                        _this.__devTools.send(action.type, nextState);
-                    }
-                    _this.setStateSync(nextState);
-                }, function () { return ({ UserState: _this.lastSetState }); }).login(loginInfo);
-                return [2 /*return*/];
+                return [2 /*return*/, new RUserState(undefined, function (action) {
+                        var nextState = exports.UserStateReducer(_this.lastSetState, action);
+                        if (_this.__devTools) {
+                            _this.__devTools.send(action.type, nextState);
+                        }
+                        _this.setStateSync(nextState);
+                    }, function () { return ({ UserState: _this.lastSetState }); }).login(loginInfo)];
             });
         });
     };
@@ -6435,14 +6565,13 @@ var UserStateProvider = /** @class */ (function (_super) {
         return __awaiter(this, void 0, void 0, function () {
             var _this = this;
             return __generator(this, function (_a) {
-                new RUserState(undefined, function (action) {
-                    var nextState = exports.UserStateReducer(_this.lastSetState, action);
-                    if (_this.__devTools) {
-                        _this.__devTools.send(action.type, nextState);
-                    }
-                    _this.setStateSync(nextState);
-                }, function () { return ({ UserState: _this.lastSetState }); }).logout();
-                return [2 /*return*/];
+                return [2 /*return*/, new RUserState(undefined, function (action) {
+                        var nextState = exports.UserStateReducer(_this.lastSetState, action);
+                        if (_this.__devTools) {
+                            _this.__devTools.send(action.type, nextState);
+                        }
+                        _this.setStateSync(nextState);
+                    }, function () { return ({ UserState: _this.lastSetState }); }).logout()];
             });
         });
     };
@@ -6745,7 +6874,7 @@ var RWaspModel = /** @class */ (function () {
     };
     RWaspModel.addWasp = function (pos) {
         return function (dispatcher, getState) {
-            new RWaspModel(undefined, dispatcher, getState).addWasp(pos);
+            return new RWaspModel(undefined, dispatcher, getState).addWasp(pos);
         };
     };
     RWaspModel.prototype.incSpeed = function (value) {
@@ -6763,7 +6892,7 @@ var RWaspModel = /** @class */ (function () {
     };
     RWaspModel.incSpeed = function (value) {
         return function (dispatcher, getState) {
-            new RWaspModel(undefined, dispatcher, getState).incSpeed(value);
+            return new RWaspModel(undefined, dispatcher, getState).incSpeed(value);
         };
     };
     RWaspModel.prototype.setColor = function (value) {
@@ -6782,7 +6911,7 @@ var RWaspModel = /** @class */ (function () {
     };
     RWaspModel.setColor = function (value) {
         return function (dispatcher, getState) {
-            new RWaspModel(undefined, dispatcher, getState).setColor(value);
+            return new RWaspModel(undefined, dispatcher, getState).setColor(value);
         };
     };
     RWaspModel.prototype.step = function () {
@@ -6828,7 +6957,7 @@ var RWaspModel = /** @class */ (function () {
     };
     RWaspModel.step = function () {
         return function (dispatcher, getState) {
-            new RWaspModel(undefined, dispatcher, getState).step();
+            return new RWaspModel(undefined, dispatcher, getState).step();
         };
     };
     return RWaspModel;

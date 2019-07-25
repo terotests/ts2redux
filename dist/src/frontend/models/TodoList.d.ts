@@ -15,6 +15,7 @@ export declare class TodoList {
     listStart: number;
     listPageLength: number;
     listTitle: string;
+    customMessage: string;
     readonly listToDisplay: TodoListItem[];
     private findMaxId;
     nextPage(): void;
@@ -31,4 +32,5 @@ export declare class TodoList {
      * Fetch items from json placeholder service
      */
     getItems(): Promise<void>;
+    getShortList(makeError: boolean): Promise<unknown>;
 }

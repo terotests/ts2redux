@@ -46,12 +46,12 @@ export declare class RSimpleModel {
     private _state?;
     private _dispatch?;
     private _getState?;
-    constructor(state?: ISimpleModel, dispatch?: (action: any) => void, getState?: () => any);
+    constructor(state?: ISimpleModel, dispatch?: (action: any) => any, getState?: () => any);
     items: any[];
     SimpleDispatch(action: any): Promise<void>;
-    static SimpleDispatch(action: any): (dispatcher: any, getState: any) => void;
+    static SimpleDispatch(action: any): (dispatcher: any, getState: any) => Promise<void>;
     getItems(): Promise<void>;
-    static getItems(): (dispatcher: any, getState: any) => void;
+    static getItems(): (dispatcher: any, getState: any) => Promise<void>;
 }
 export declare const SimpleModelEnums: {
     SimpleModel_items: string;

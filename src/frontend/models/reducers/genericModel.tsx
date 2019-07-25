@@ -147,11 +147,11 @@ const initWithMethodsGenericModel = () => {
  */
 export class RGenericModel {
   private _state?: IGenericModel;
-  private _dispatch?: (action: any) => void;
+  private _dispatch?: <A extends {}, T extends {}>(action: A) => T;
   private _getState?: () => any;
   constructor(
     state?: IGenericModel,
-    dispatch?: (action: any) => void,
+    dispatch?: (action: any) => any,
     getState?: () => any
   ) {
     this._state = state;
@@ -242,7 +242,7 @@ export class RGenericModel {
 
   public static refreshSum() {
     return (dispatcher: any, getState: any) => {
-      new RGenericModel(undefined, dispatcher, getState).refreshSum();
+      return new RGenericModel(undefined, dispatcher, getState).refreshSum();
     };
   }
   addItems<T extends Summable>(items: T[]) {
@@ -262,7 +262,7 @@ export class RGenericModel {
 
   public static addItems<T extends Summable>(items: T[]) {
     return (dispatcher: any, getState: any) => {
-      new RGenericModel(undefined, dispatcher, getState).addItems(items);
+      return new RGenericModel(undefined, dispatcher, getState).addItems(items);
     };
   }
   inc() {
@@ -277,14 +277,14 @@ export class RGenericModel {
 
   public static inc() {
     return (dispatcher: any, getState: any) => {
-      new RGenericModel(undefined, dispatcher, getState).inc();
+      return new RGenericModel(undefined, dispatcher, getState).inc();
     };
   }
   async testLoading() {}
 
   public static testLoading() {
     return (dispatcher: any, getState: any) => {
-      new RGenericModel(undefined, dispatcher, getState).testLoading();
+      return new RGenericModel(undefined, dispatcher, getState).testLoading();
     };
   }
 }
@@ -302,7 +302,7 @@ export const GenericModelReducer = (
   state: IGenericModel = initGenericModel(),
   action: any
 ) => {
-  return immer.produce(state, draft => {
+  return immer.produce(state, (draft: IGenericModel) => {
     switch (action.type) {
       case GenericModelEnums.GenericModel_sum:
         new RGenericModel(draft).sum = action.payload;
@@ -367,7 +367,7 @@ export class GenericModelProvider extends React.Component {
     this.setState(state);
   }
   refreshSum() {
-    const nextState = immer.produce(this.state, draft =>
+    const nextState = immer.produce(this.state, (draft: IGenericModel) =>
       new RGenericModel(draft).refreshSum()
     );
     if (this.__devTools) {
@@ -376,7 +376,7 @@ export class GenericModelProvider extends React.Component {
     this.setStateSync(nextState);
   }
   addItems<T extends Summable>(items: T[]) {
-    const nextState = immer.produce(this.state, draft =>
+    const nextState = immer.produce(this.state, (draft: IGenericModel) =>
       new RGenericModel(draft).addItems(items)
     );
     if (this.__devTools) {
@@ -385,7 +385,7 @@ export class GenericModelProvider extends React.Component {
     this.setStateSync(nextState);
   }
   inc() {
-    const nextState = immer.produce(this.state, draft =>
+    const nextState = immer.produce(this.state, (draft: IGenericModel) =>
       new RGenericModel(draft).inc()
     );
     if (this.__devTools) {
@@ -394,7 +394,7 @@ export class GenericModelProvider extends React.Component {
     this.setStateSync(nextState);
   }
   async testLoading() {
-    new RGenericModel(
+    return new RGenericModel(
       undefined,
       (action: any) => {
         const nextState = GenericModelReducer(this.lastSetState, action);

@@ -419,11 +419,11 @@ const initWithMethodsTetrisModel = () => {
  */
 export class RTetrisModel {
   private _state?: ITetrisModel;
-  private _dispatch?: (action: any) => void;
+  private _dispatch?: <A extends {}, T extends {}>(action: A) => T;
   private _getState?: () => any;
   constructor(
     state?: ITetrisModel,
-    dispatch?: (action: any) => void,
+    dispatch?: (action: any) => any,
     getState?: () => any
   ) {
     this._state = state;
@@ -774,7 +774,7 @@ export class RTetrisModel {
 
   public static tick() {
     return (dispatcher: any, getState: any) => {
-      new RTetrisModel(undefined, dispatcher, getState).tick();
+      return new RTetrisModel(undefined, dispatcher, getState).tick();
     };
   }
   left() {
@@ -791,7 +791,7 @@ export class RTetrisModel {
 
   public static left() {
     return (dispatcher: any, getState: any) => {
-      new RTetrisModel(undefined, dispatcher, getState).left();
+      return new RTetrisModel(undefined, dispatcher, getState).left();
     };
   }
   right() {
@@ -808,7 +808,7 @@ export class RTetrisModel {
 
   public static right() {
     return (dispatcher: any, getState: any) => {
-      new RTetrisModel(undefined, dispatcher, getState).right();
+      return new RTetrisModel(undefined, dispatcher, getState).right();
     };
   }
   rotate() {
@@ -832,7 +832,7 @@ export class RTetrisModel {
 
   public static rotate() {
     return (dispatcher: any, getState: any) => {
-      new RTetrisModel(undefined, dispatcher, getState).rotate();
+      return new RTetrisModel(undefined, dispatcher, getState).rotate();
     };
   }
   // creates a new piece with rotated values
@@ -881,7 +881,7 @@ export class RTetrisModel {
 
   public static step() {
     return (dispatcher: any, getState: any) => {
-      new RTetrisModel(undefined, dispatcher, getState).step();
+      return new RTetrisModel(undefined, dispatcher, getState).step();
     };
   }
   private pickNextColor(): string {
@@ -911,7 +911,7 @@ export class RTetrisModel {
 
   public static masonPiece() {
     return (dispatcher: any, getState: any) => {
-      new RTetrisModel(undefined, dispatcher, getState).masonPiece();
+      return new RTetrisModel(undefined, dispatcher, getState).masonPiece();
     };
   }
   dropRows() {
@@ -947,7 +947,7 @@ export class RTetrisModel {
 
   public static dropRows() {
     return (dispatcher: any, getState: any) => {
-      new RTetrisModel(undefined, dispatcher, getState).dropRows();
+      return new RTetrisModel(undefined, dispatcher, getState).dropRows();
     };
   }
   clearCells() {
@@ -968,7 +968,7 @@ export class RTetrisModel {
 
   public static clearCells() {
     return (dispatcher: any, getState: any) => {
-      new RTetrisModel(undefined, dispatcher, getState).clearCells();
+      return new RTetrisModel(undefined, dispatcher, getState).clearCells();
     };
   }
   resetGame() {
@@ -986,7 +986,7 @@ export class RTetrisModel {
 
   public static resetGame() {
     return (dispatcher: any, getState: any) => {
-      new RTetrisModel(undefined, dispatcher, getState).resetGame();
+      return new RTetrisModel(undefined, dispatcher, getState).resetGame();
     };
   }
   start() {
@@ -1004,7 +1004,7 @@ export class RTetrisModel {
 
   public static start() {
     return (dispatcher: any, getState: any) => {
-      new RTetrisModel(undefined, dispatcher, getState).start();
+      return new RTetrisModel(undefined, dispatcher, getState).start();
     };
   }
 }
@@ -1042,7 +1042,7 @@ export const TetrisModelReducer = (
   state: ITetrisModel = initTetrisModel(),
   action: any
 ) => {
-  return immer.produce(state, draft => {
+  return immer.produce(state, (draft: ITetrisModel) => {
     switch (action.type) {
       case TetrisModelEnums.TetrisModel_useColors:
         new RTetrisModel(draft).useColors = action.payload;
@@ -1164,7 +1164,7 @@ export class TetrisModelProvider extends React.Component {
     this.setState(state);
   }
   tick() {
-    const nextState = immer.produce(this.state, draft =>
+    const nextState = immer.produce(this.state, (draft: ITetrisModel) =>
       new RTetrisModel(draft).tick()
     );
     if (this.__devTools) {
@@ -1173,7 +1173,7 @@ export class TetrisModelProvider extends React.Component {
     this.setStateSync(nextState);
   }
   left() {
-    const nextState = immer.produce(this.state, draft =>
+    const nextState = immer.produce(this.state, (draft: ITetrisModel) =>
       new RTetrisModel(draft).left()
     );
     if (this.__devTools) {
@@ -1182,7 +1182,7 @@ export class TetrisModelProvider extends React.Component {
     this.setStateSync(nextState);
   }
   right() {
-    const nextState = immer.produce(this.state, draft =>
+    const nextState = immer.produce(this.state, (draft: ITetrisModel) =>
       new RTetrisModel(draft).right()
     );
     if (this.__devTools) {
@@ -1191,7 +1191,7 @@ export class TetrisModelProvider extends React.Component {
     this.setStateSync(nextState);
   }
   rotate() {
-    const nextState = immer.produce(this.state, draft =>
+    const nextState = immer.produce(this.state, (draft: ITetrisModel) =>
       new RTetrisModel(draft).rotate()
     );
     if (this.__devTools) {
@@ -1200,7 +1200,7 @@ export class TetrisModelProvider extends React.Component {
     this.setStateSync(nextState);
   }
   step() {
-    const nextState = immer.produce(this.state, draft =>
+    const nextState = immer.produce(this.state, (draft: ITetrisModel) =>
       new RTetrisModel(draft).step()
     );
     if (this.__devTools) {
@@ -1209,7 +1209,7 @@ export class TetrisModelProvider extends React.Component {
     this.setStateSync(nextState);
   }
   masonPiece() {
-    const nextState = immer.produce(this.state, draft =>
+    const nextState = immer.produce(this.state, (draft: ITetrisModel) =>
       new RTetrisModel(draft).masonPiece()
     );
     if (this.__devTools) {
@@ -1218,7 +1218,7 @@ export class TetrisModelProvider extends React.Component {
     this.setStateSync(nextState);
   }
   dropRows() {
-    const nextState = immer.produce(this.state, draft =>
+    const nextState = immer.produce(this.state, (draft: ITetrisModel) =>
       new RTetrisModel(draft).dropRows()
     );
     if (this.__devTools) {
@@ -1227,7 +1227,7 @@ export class TetrisModelProvider extends React.Component {
     this.setStateSync(nextState);
   }
   clearCells() {
-    const nextState = immer.produce(this.state, draft =>
+    const nextState = immer.produce(this.state, (draft: ITetrisModel) =>
       new RTetrisModel(draft).clearCells()
     );
     if (this.__devTools) {
@@ -1236,7 +1236,7 @@ export class TetrisModelProvider extends React.Component {
     this.setStateSync(nextState);
   }
   resetGame() {
-    const nextState = immer.produce(this.state, draft =>
+    const nextState = immer.produce(this.state, (draft: ITetrisModel) =>
       new RTetrisModel(draft).resetGame()
     );
     if (this.__devTools) {
@@ -1245,7 +1245,7 @@ export class TetrisModelProvider extends React.Component {
     this.setStateSync(nextState);
   }
   start() {
-    const nextState = immer.produce(this.state, draft =>
+    const nextState = immer.produce(this.state, (draft: ITetrisModel) =>
       new RTetrisModel(draft).start()
     );
     if (this.__devTools) {

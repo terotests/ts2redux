@@ -14,11 +14,6 @@ import {
 } from "./models/reducers/TodoList";
 
 import {
-  GenericModelConsumer,
-  GenericModelProvider
-} from "./models/reducers/genericModel";
-
-import {
   UserStateContext,
   UserStateProvider
 } from "./models/reducers/UserState";
@@ -188,6 +183,19 @@ ReactDOM.render(
                     <div>Items loaded {todolist.items.length}</div>
                     <button onClick={() => todolist.getItems()}>Load</button>
                     <button onClick={() => todolist.reverse()}>Revert</button>
+                    <button
+                      onClick={async () => {
+                        console.log(await todolist.getShortList(false));
+                        try {
+                          console.log(await todolist.getShortList(true));
+                        } catch (e) {
+                          console.log(e);
+                        }
+                      }}
+                    >
+                      Test async function
+                    </button>
+                    <div>{todolist.customMessage}</div>
                     <ul>
                       {todolist.items.map(item => (
                         <li key={item.id}>{item.title}</li>

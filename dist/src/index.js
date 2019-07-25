@@ -35,7 +35,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var ts_simple_ast_1 = require("ts-simple-ast");
+var ts_morph_1 = require("ts-morph");
 var R = require("robowr");
 var utils_1 = require("./utils");
 var path = require("path");
@@ -66,7 +66,7 @@ function createProject(settings) {
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    project = new ts_simple_ast_1.default();
+                    project = new ts_morph_1.Project();
                     reducerPath = "/" + settings.reducerPath + "/";
                     project.addExistingSourceFiles([
                         settings.path + "/**/*.ts",
@@ -81,7 +81,7 @@ function createProject(settings) {
                         var res = [];
                         c.getJsDocs().forEach(function (doc) {
                             return doc.getTags().forEach(function (tag) {
-                                if (tag.getName() === name)
+                                if (tag.getTagName() === name)
                                     res.push(tag.getComment());
                             });
                         });
@@ -91,7 +91,7 @@ function createProject(settings) {
                         var has = false;
                         c.getJsDocs().forEach(function (doc) {
                             return doc.getTags().forEach(function (tag) {
-                                if (tag.getName() === name) {
+                                if (tag.getTagName() === name) {
                                     has = true;
                                 }
                             });
@@ -157,7 +157,8 @@ function createProject(settings) {
                             if (c
                                 .getJsDocs()
                                 .filter(function (doc) {
-                                return doc.getTags().filter(function (tag) { return tag.getName() === "redux"; }).length > 0;
+                                return doc.getTags().filter(function (tag) { return tag.getTagName() === "redux"; }).length >
+                                    0;
                             }).length > 0) {
                                 console.log("ts2redux: Transpiling ", sourceFile.getFilePath());
                                 var sourceDir = path.normalize(path.relative(process.cwd(), path.dirname(sourceFile.getFilePath())));
@@ -328,7 +329,7 @@ function createProject(settings) {
                                 ng_1.out("", true);
                                 ng_1.out("export const " + c.getName() + "Reducer = (state:I" + c.getName() + " = init" + c.getName() + "(), action:any ) => {", true);
                                 ng_1.indent(1);
-                                ng_1.out("return immer.produce(state, draft => {", true);
+                                ng_1.out("return immer.produce(state, (draft:I" + c.getName() + ") => {", true);
                                 ng_1.indent(1);
                                 ng_1.out("switch (action.type) {", true);
                                 ng_1.indent(1);
@@ -340,9 +341,9 @@ function createProject(settings) {
                                 ng_1.indent(-1);
                                 ng_1.out("}", true);
                                 body_1.out("private _state?: I" + c.getName(), true);
-                                body_1.out("private _dispatch?: (action:any)=>void", true);
+                                body_1.out("private _dispatch?: <A extends {}, T extends {}>( action:A )=> T", true);
                                 body_1.out("private _getState?: ()=>any", true); // I'+c.getName(), true)
-                                body_1.out("constructor(state?: I" + c.getName() + ", dispatch?:(action:any)=>void, getState?:()=>any) {", true);
+                                body_1.out("constructor(state?: I" + c.getName() + ", dispatch?:(action:any)=>any, getState?:()=>any) {", true);
                                 body_1.indent(1);
                                 body_1.out("this._state = state", true);
                                 body_1.out("this._dispatch = dispatch", true);
@@ -418,9 +419,9 @@ function createProject(settings) {
                                         var inputSet_1 = {};
                                         m.getBody().forEachDescendant(function (node, traversal) {
                                             switch (node.getKind()) {
-                                                case ts_simple_ast_1.SyntaxKind.PropertyAccessExpression:
+                                                case ts_morph_1.SyntaxKind.PropertyAccessExpression:
                                                     // could be this.
-                                                    if (node.getFirstChild().getKind() === ts_simple_ast_1.SyntaxKind.ThisKeyword) {
+                                                    if (node.getFirstChild().getKind() === ts_morph_1.SyntaxKind.ThisKeyword) {
                                                         inputSet_1[node.getChildAtIndex(2).print()] = node;
                                                     }
                                                     break;
@@ -592,7 +593,7 @@ function createProject(settings) {
                                         body_1.indent(1);
                                         body_1.out("return (dispatcher:any, getState:any) => {", true);
                                         body_1.indent(1);
-                                        body_1.out("(new R" + c.getName() + "(undefined, dispatcher, getState))." + m.getName() + "(" + pName + ")", true);
+                                        body_1.out("return (new R" + c.getName() + "(undefined, dispatcher, getState))." + m.getName() + "(" + pName + ")", true);
                                         body_1.indent(-1);
                                         body_1.out("}", true);
                                         body_1.indent(-1);
@@ -693,7 +694,7 @@ function createProject(settings) {
                                             .map(function (mod) { return mod.getName(); })
                                             .join("");
                                         if (m.isAsync()) {
-                                            body.out("(new R" + c.getName() + "(undefined, (action:any) => {", true);
+                                            body.out("return (new R" + c.getName() + "(undefined, (action:any) => {", true);
                                             body.indent(1);
                                             if (!settings.disableDevtoolsFromContext) {
                                                 body.out("const nextState = " + c.getName() + "Reducer( this.lastSetState, action )", true);
@@ -708,12 +709,12 @@ function createProject(settings) {
                                         }
                                         else {
                                             if (!settings.disableDevtoolsFromContext) {
-                                                body.out("const nextState = immer.produce( this.state, draft => ( new R" + c.getName() + "(draft) )." + m.getName() + "(" + firstParam + ") )", true);
+                                                body.out("const nextState = immer.produce( this.state, (draft:I" + c.getName() + ") => ( new R" + c.getName() + "(draft) )." + m.getName() + "(" + firstParam + ") )", true);
                                                 body.out("if(this.__devTools) { this.__devTools.send('" + m.getName() + "', nextState) } ", true);
                                                 body.out("this.setStateSync(nextState)", true);
                                             }
                                             else {
-                                                body.out("this.setStateSync(immer.produce( this.state, draft => ( new R" + c.getName() + "(draft) )." + m.getName() + "(" + firstParam + ") ))", true);
+                                                body.out("this.setStateSync(immer.produce( this.state, (draft:I" + c.getName() + ") => ( new R" + c.getName() + "(draft) )." + m.getName() + "(" + firstParam + ") ))", true);
                                             }
                                         }
                                         body.indent(-1);

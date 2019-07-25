@@ -91,6 +91,7 @@ var TodoList = /** @class */ (function () {
         this.listStart = 0;
         this.listPageLength = 10;
         this.listTitle = "Title of TODO -list";
+        this.customMessage = "";
     }
     Object.defineProperty(TodoList.prototype, "listToDisplay", {
         // Example of memoized list using reselect
@@ -184,6 +185,22 @@ var TodoList = /** @class */ (function () {
             });
         });
     };
+    TodoList.prototype.getShortList = function (makeError) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                if (makeError) {
+                    this.customMessage = "Custom Exception send this custom message to state";
+                    throw "Custom Exception";
+                }
+                this.customMessage = "";
+                return [2 /*return*/, new Promise(function (resolve) {
+                        setTimeout(function () {
+                            resolve([1, 2, 3, 4, 5]);
+                        }, 1000);
+                    })];
+            });
+        });
+    };
     return TodoList;
 }());
 exports.TodoList = TodoList;
@@ -203,6 +220,9 @@ exports.listPageLengthSelectorFn = function (state) {
 };
 exports.listTitleSelectorFn = function (state) {
     return state.listTitle;
+};
+exports.customMessageSelectorFn = function (state) {
+    return state.customMessage;
 };
 exports.listToDisplaySelectorFnCreator = function () {
     return reselect_1.createSelector([
@@ -243,6 +263,7 @@ exports.mapStateToProps = function (state) {
         listStart: state.TodoList.listStart,
         listPageLength: state.TodoList.listPageLength,
         listTitle: state.TodoList.listTitle,
+        customMessage: state.TodoList.customMessage,
         listToDisplay: exports.listToDisplaySelector(state.TodoList)
     };
 };
@@ -283,6 +304,9 @@ exports.mapDispatchToProps = function (dispatch) {
         },
         getItems: function () {
             return dispatch(RTodoList.getItems());
+        },
+        getShortList: function (makeError) {
+            return dispatch(RTodoList.getShortList(makeError));
         }
     };
 };
@@ -300,7 +324,8 @@ var initTodoList = function () {
         sortOrder: o.sortOrder,
         listStart: o.listStart,
         listPageLength: o.listPageLength,
-        listTitle: o.listTitle
+        listTitle: o.listTitle,
+        customMessage: o.customMessage
     };
 };
 var initWithMethodsTodoList = function () {
@@ -313,6 +338,7 @@ var initWithMethodsTodoList = function () {
         listStart: o.listStart,
         listPageLength: o.listPageLength,
         listTitle: o.listTitle,
+        customMessage: o.customMessage,
         nextPage: o.nextPage,
         prevPage: o.prevPage,
         toggleSortOrder: o.toggleSortOrder,
@@ -324,6 +350,7 @@ var initWithMethodsTodoList = function () {
         setTitle: o.setTitle,
         addLotOfItems: o.addLotOfItems,
         getItems: o.getItems,
+        getShortList: o.getShortList,
         listToDisplay: o.listToDisplay
     };
 };
@@ -533,6 +560,35 @@ var RTodoList = /** @class */ (function () {
         enumerable: true,
         configurable: true
     });
+    Object.defineProperty(RTodoList.prototype, "customMessage", {
+        get: function () {
+            if (this._getState) {
+                return this._getState().TodoList.customMessage;
+            }
+            else {
+                if (this._state) {
+                    return this._state.customMessage;
+                }
+            }
+            throw "Invalid State in TodoList_customMessage";
+        },
+        set: function (value) {
+            if (this._state && typeof value !== "undefined") {
+                this._state.customMessage = value;
+            }
+            else {
+                // dispatch change for item customMessage
+                if (this._dispatch) {
+                    this._dispatch({
+                        type: exports.TodoListEnums.TodoList_customMessage,
+                        payload: value
+                    });
+                }
+            }
+        },
+        enumerable: true,
+        configurable: true
+    });
     RTodoList.prototype.findMaxId = function () {
         var max = 0;
         this.items.forEach(function (item) {
@@ -553,7 +609,7 @@ var RTodoList = /** @class */ (function () {
     };
     RTodoList.nextPage = function () {
         return function (dispatcher, getState) {
-            new RTodoList(undefined, dispatcher, getState).nextPage();
+            return new RTodoList(undefined, dispatcher, getState).nextPage();
         };
     };
     RTodoList.prototype.prevPage = function () {
@@ -570,7 +626,7 @@ var RTodoList = /** @class */ (function () {
     };
     RTodoList.prevPage = function () {
         return function (dispatcher, getState) {
-            new RTodoList(undefined, dispatcher, getState).prevPage();
+            return new RTodoList(undefined, dispatcher, getState).prevPage();
         };
     };
     RTodoList.prototype.toggleSortOrder = function () {
@@ -586,7 +642,7 @@ var RTodoList = /** @class */ (function () {
     };
     RTodoList.toggleSortOrder = function () {
         return function (dispatcher, getState) {
-            new RTodoList(undefined, dispatcher, getState).toggleSortOrder();
+            return new RTodoList(undefined, dispatcher, getState).toggleSortOrder();
         };
     };
     RTodoList.prototype.clearTodoList = function () {
@@ -601,7 +657,7 @@ var RTodoList = /** @class */ (function () {
     };
     RTodoList.clearTodoList = function () {
         return function (dispatcher, getState) {
-            new RTodoList(undefined, dispatcher, getState).clearTodoList();
+            return new RTodoList(undefined, dispatcher, getState).clearTodoList();
         };
     };
     RTodoList.prototype.reverse = function () {
@@ -616,7 +672,7 @@ var RTodoList = /** @class */ (function () {
     };
     RTodoList.reverse = function () {
         return function (dispatcher, getState) {
-            new RTodoList(undefined, dispatcher, getState).reverse();
+            return new RTodoList(undefined, dispatcher, getState).reverse();
         };
     };
     RTodoList.prototype.sortById = function () {
@@ -631,7 +687,7 @@ var RTodoList = /** @class */ (function () {
     };
     RTodoList.sortById = function () {
         return function (dispatcher, getState) {
-            new RTodoList(undefined, dispatcher, getState).sortById();
+            return new RTodoList(undefined, dispatcher, getState).sortById();
         };
     };
     RTodoList.prototype.sortByTitle = function () {
@@ -646,7 +702,7 @@ var RTodoList = /** @class */ (function () {
     };
     RTodoList.sortByTitle = function () {
         return function (dispatcher, getState) {
-            new RTodoList(undefined, dispatcher, getState).sortByTitle();
+            return new RTodoList(undefined, dispatcher, getState).sortByTitle();
         };
     };
     RTodoList.prototype.sortByCompletion = function () {
@@ -662,7 +718,7 @@ var RTodoList = /** @class */ (function () {
     };
     RTodoList.sortByCompletion = function () {
         return function (dispatcher, getState) {
-            new RTodoList(undefined, dispatcher, getState).sortByCompletion();
+            return new RTodoList(undefined, dispatcher, getState).sortByCompletion();
         };
     };
     RTodoList.prototype.setTitle = function (value) {
@@ -680,7 +736,7 @@ var RTodoList = /** @class */ (function () {
     };
     RTodoList.setTitle = function (value) {
         return function (dispatcher, getState) {
-            new RTodoList(undefined, dispatcher, getState).setTitle(value);
+            return new RTodoList(undefined, dispatcher, getState).setTitle(value);
         };
     };
     RTodoList.prototype.addLotOfItems = function (cnt) {
@@ -706,7 +762,7 @@ var RTodoList = /** @class */ (function () {
     };
     RTodoList.addLotOfItems = function (cnt) {
         return function (dispatcher, getState) {
-            new RTodoList(undefined, dispatcher, getState).addLotOfItems(cnt);
+            return new RTodoList(undefined, dispatcher, getState).addLotOfItems(cnt);
         };
     };
     /**
@@ -742,7 +798,28 @@ var RTodoList = /** @class */ (function () {
     };
     RTodoList.getItems = function () {
         return function (dispatcher, getState) {
-            new RTodoList(undefined, dispatcher, getState).getItems();
+            return new RTodoList(undefined, dispatcher, getState).getItems();
+        };
+    };
+    RTodoList.prototype.getShortList = function (makeError) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                if (makeError) {
+                    this.customMessage = "Custom Exception send this custom message to state";
+                    throw "Custom Exception";
+                }
+                this.customMessage = "";
+                return [2 /*return*/, new Promise(function (resolve) {
+                        setTimeout(function () {
+                            resolve([1, 2, 3, 4, 5]);
+                        }, 1000);
+                    })];
+            });
+        });
+    };
+    RTodoList.getShortList = function (makeError) {
+        return function (dispatcher, getState) {
+            return new RTodoList(undefined, dispatcher, getState).getShortList(makeError);
         };
     };
     return RTodoList;
@@ -756,6 +833,7 @@ exports.TodoListEnums = {
     TodoList_listStart: "TodoList_listStart",
     TodoList_listPageLength: "TodoList_listPageLength",
     TodoList_listTitle: "TodoList_listTitle",
+    TodoList_customMessage: "TodoList_customMessage",
     TodoList_findMaxId: "TodoList_findMaxId",
     TodoList_nextPage: "TodoList_nextPage",
     TodoList_prevPage: "TodoList_prevPage",
@@ -792,6 +870,9 @@ exports.TodoListReducer = function (state, action) {
                 break;
             case exports.TodoListEnums.TodoList_listTitle:
                 new RTodoList(draft).listTitle = action.payload;
+                break;
+            case exports.TodoListEnums.TodoList_customMessage:
+                new RTodoList(draft).customMessage = action.payload;
                 break;
             case exports.TodoListEnums.TodoList_nextPage:
                 new RTodoList(draft).nextPage();
@@ -851,6 +932,7 @@ var TodoListProvider = /** @class */ (function (_super) {
         _this.setTitle = _this.setTitle.bind(_this);
         _this.addLotOfItems = _this.addLotOfItems.bind(_this);
         _this.getItems = _this.getItems.bind(_this);
+        _this.getShortList = _this.getShortList.bind(_this);
         _this.__selectorlistToDisplay = exports.listToDisplaySelectorFnCreator();
         var devs = window["__REDUX_DEVTOOLS_EXTENSION__"]
             ? window["__REDUX_DEVTOOLS_EXTENSION__"]
@@ -972,19 +1054,32 @@ var TodoListProvider = /** @class */ (function (_super) {
         return __awaiter(this, void 0, void 0, function () {
             var _this = this;
             return __generator(this, function (_a) {
-                new RTodoList(undefined, function (action) {
-                    var nextState = exports.TodoListReducer(_this.lastSetState, action);
-                    if (_this.__devTools) {
-                        _this.__devTools.send(action.type, nextState);
-                    }
-                    _this.setStateSync(nextState);
-                }, function () { return ({ TodoList: _this.lastSetState }); }).getItems();
-                return [2 /*return*/];
+                return [2 /*return*/, new RTodoList(undefined, function (action) {
+                        var nextState = exports.TodoListReducer(_this.lastSetState, action);
+                        if (_this.__devTools) {
+                            _this.__devTools.send(action.type, nextState);
+                        }
+                        _this.setStateSync(nextState);
+                    }, function () { return ({ TodoList: _this.lastSetState }); }).getItems()];
+            });
+        });
+    };
+    TodoListProvider.prototype.getShortList = function (makeError) {
+        return __awaiter(this, void 0, void 0, function () {
+            var _this = this;
+            return __generator(this, function (_a) {
+                return [2 /*return*/, new RTodoList(undefined, function (action) {
+                        var nextState = exports.TodoListReducer(_this.lastSetState, action);
+                        if (_this.__devTools) {
+                            _this.__devTools.send(action.type, nextState);
+                        }
+                        _this.setStateSync(nextState);
+                    }, function () { return ({ TodoList: _this.lastSetState }); }).getShortList(makeError)];
             });
         });
     };
     TodoListProvider.prototype.render = function () {
-        return (React.createElement(exports.TodoListContext.Provider, { value: __assign({}, this.state, { nextPage: this.nextPage, prevPage: this.prevPage, toggleSortOrder: this.toggleSortOrder, clearTodoList: this.clearTodoList, reverse: this.reverse, sortById: this.sortById, sortByTitle: this.sortByTitle, sortByCompletion: this.sortByCompletion, setTitle: this.setTitle, addLotOfItems: this.addLotOfItems, getItems: this.getItems, listToDisplay: this.__selectorlistToDisplay(this.state) }) },
+        return (React.createElement(exports.TodoListContext.Provider, { value: __assign({}, this.state, { nextPage: this.nextPage, prevPage: this.prevPage, toggleSortOrder: this.toggleSortOrder, clearTodoList: this.clearTodoList, reverse: this.reverse, sortById: this.sortById, sortByTitle: this.sortByTitle, sortByCompletion: this.sortByCompletion, setTitle: this.setTitle, addLotOfItems: this.addLotOfItems, getItems: this.getItems, getShortList: this.getShortList, listToDisplay: this.__selectorlistToDisplay(this.state) }) },
             " ",
             this.props.children));
     };

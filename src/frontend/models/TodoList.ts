@@ -23,6 +23,7 @@ export class TodoList {
   listStart = 0;
   listPageLength = 10;
   listTitle = "Title of TODO -list";
+  customMessage = "";
 
   // Example of memoized list using reselect
   get listToDisplay(): TodoListItem[] {
@@ -95,5 +96,18 @@ export class TodoList {
       this.state = "ERROR";
       this.stateError = e;
     }
+  }
+
+  async getShortList(makeError: boolean) {
+    if (makeError) {
+      this.customMessage = "Custom Exception send this custom message to state";
+      throw "Custom Exception";
+    }
+    this.customMessage = "";
+    return new Promise(resolve => {
+      setTimeout(() => {
+        resolve([1, 2, 3, 4, 5]);
+      }, 1000);
+    });
   }
 }

@@ -802,7 +802,7 @@ var RTetrisModel = /** @class */ (function () {
     };
     RTetrisModel.tick = function () {
         return function (dispatcher, getState) {
-            new RTetrisModel(undefined, dispatcher, getState).tick();
+            return new RTetrisModel(undefined, dispatcher, getState).tick();
         };
     };
     RTetrisModel.prototype.left = function () {
@@ -819,7 +819,7 @@ var RTetrisModel = /** @class */ (function () {
     };
     RTetrisModel.left = function () {
         return function (dispatcher, getState) {
-            new RTetrisModel(undefined, dispatcher, getState).left();
+            return new RTetrisModel(undefined, dispatcher, getState).left();
         };
     };
     RTetrisModel.prototype.right = function () {
@@ -836,7 +836,7 @@ var RTetrisModel = /** @class */ (function () {
     };
     RTetrisModel.right = function () {
         return function (dispatcher, getState) {
-            new RTetrisModel(undefined, dispatcher, getState).right();
+            return new RTetrisModel(undefined, dispatcher, getState).right();
         };
     };
     RTetrisModel.prototype.rotate = function () {
@@ -854,7 +854,7 @@ var RTetrisModel = /** @class */ (function () {
     };
     RTetrisModel.rotate = function () {
         return function (dispatcher, getState) {
-            new RTetrisModel(undefined, dispatcher, getState).rotate();
+            return new RTetrisModel(undefined, dispatcher, getState).rotate();
         };
     };
     // creates a new piece with rotated values
@@ -905,7 +905,7 @@ var RTetrisModel = /** @class */ (function () {
     };
     RTetrisModel.step = function () {
         return function (dispatcher, getState) {
-            new RTetrisModel(undefined, dispatcher, getState).step();
+            return new RTetrisModel(undefined, dispatcher, getState).step();
         };
     };
     RTetrisModel.prototype.pickNextColor = function () {
@@ -937,7 +937,7 @@ var RTetrisModel = /** @class */ (function () {
     };
     RTetrisModel.masonPiece = function () {
         return function (dispatcher, getState) {
-            new RTetrisModel(undefined, dispatcher, getState).masonPiece();
+            return new RTetrisModel(undefined, dispatcher, getState).masonPiece();
         };
     };
     RTetrisModel.prototype.dropRows = function () {
@@ -974,7 +974,7 @@ var RTetrisModel = /** @class */ (function () {
     };
     RTetrisModel.dropRows = function () {
         return function (dispatcher, getState) {
-            new RTetrisModel(undefined, dispatcher, getState).dropRows();
+            return new RTetrisModel(undefined, dispatcher, getState).dropRows();
         };
     };
     RTetrisModel.prototype.clearCells = function () {
@@ -995,7 +995,7 @@ var RTetrisModel = /** @class */ (function () {
     };
     RTetrisModel.clearCells = function () {
         return function (dispatcher, getState) {
-            new RTetrisModel(undefined, dispatcher, getState).clearCells();
+            return new RTetrisModel(undefined, dispatcher, getState).clearCells();
         };
     };
     RTetrisModel.prototype.resetGame = function () {
@@ -1013,7 +1013,7 @@ var RTetrisModel = /** @class */ (function () {
     };
     RTetrisModel.resetGame = function () {
         return function (dispatcher, getState) {
-            new RTetrisModel(undefined, dispatcher, getState).resetGame();
+            return new RTetrisModel(undefined, dispatcher, getState).resetGame();
         };
     };
     RTetrisModel.prototype.start = function () {
@@ -1031,7 +1031,7 @@ var RTetrisModel = /** @class */ (function () {
     };
     RTetrisModel.start = function () {
         return function (dispatcher, getState) {
-            new RTetrisModel(undefined, dispatcher, getState).start();
+            return new RTetrisModel(undefined, dispatcher, getState).start();
         };
     };
     return RTetrisModel;

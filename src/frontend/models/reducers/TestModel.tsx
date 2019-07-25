@@ -390,11 +390,11 @@ const initWithMethodsTestModel = () => {
  */
 export class RTestModel {
   private _state?: ITestModel;
-  private _dispatch?: (action: any) => void;
+  private _dispatch?: <A extends {}, T extends {}>(action: A) => T;
   private _getState?: () => any;
   constructor(
     state?: ITestModel,
-    dispatch?: (action: any) => void,
+    dispatch?: (action: any) => any,
     getState?: () => any
   ) {
     this._state = state;
@@ -787,7 +787,9 @@ export class RTestModel {
 
   public static setUserMessage(value: string) {
     return (dispatcher: any, getState: any) => {
-      new RTestModel(undefined, dispatcher, getState).setUserMessage(value);
+      return new RTestModel(undefined, dispatcher, getState).setUserMessage(
+        value
+      );
     };
   }
   add(item: ShopCartItem) {
@@ -806,7 +808,7 @@ export class RTestModel {
 
   public static add(item: ShopCartItem) {
     return (dispatcher: any, getState: any) => {
-      new RTestModel(undefined, dispatcher, getState).add(item);
+      return new RTestModel(undefined, dispatcher, getState).add(item);
     };
   }
   removeFirst() {
@@ -821,7 +823,7 @@ export class RTestModel {
 
   public static removeFirst() {
     return (dispatcher: any, getState: any) => {
-      new RTestModel(undefined, dispatcher, getState).removeFirst();
+      return new RTestModel(undefined, dispatcher, getState).removeFirst();
     };
   }
   sort() {
@@ -838,7 +840,7 @@ export class RTestModel {
 
   public static sort() {
     return (dispatcher: any, getState: any) => {
-      new RTestModel(undefined, dispatcher, getState).sort();
+      return new RTestModel(undefined, dispatcher, getState).sort();
     };
   }
   addCart() {
@@ -856,7 +858,7 @@ export class RTestModel {
 
   public static addCart() {
     return (dispatcher: any, getState: any) => {
-      new RTestModel(undefined, dispatcher, getState).addCart();
+      return new RTestModel(undefined, dispatcher, getState).addCart();
     };
   }
   addCartSync() {
@@ -874,7 +876,7 @@ export class RTestModel {
 
   public static addCartSync() {
     return (dispatcher: any, getState: any) => {
-      new RTestModel(undefined, dispatcher, getState).addCartSync();
+      return new RTestModel(undefined, dispatcher, getState).addCartSync();
     };
   }
   addToCart(adding: { cartId: string; item: ShopCartItem }) {
@@ -895,7 +897,7 @@ export class RTestModel {
 
   public static addToCart(adding: { cartId: string; item: ShopCartItem }) {
     return (dispatcher: any, getState: any) => {
-      new RTestModel(undefined, dispatcher, getState).addToCart(adding);
+      return new RTestModel(undefined, dispatcher, getState).addToCart(adding);
     };
   }
   setCartNewItem(adding: { cartId: string; name: string }) {
@@ -913,7 +915,9 @@ export class RTestModel {
 
   public static setCartNewItem(adding: { cartId: string; name: string }) {
     return (dispatcher: any, getState: any) => {
-      new RTestModel(undefined, dispatcher, getState).setCartNewItem(adding);
+      return new RTestModel(undefined, dispatcher, getState).setCartNewItem(
+        adding
+      );
     };
   }
   addToCartRandom() {
@@ -933,7 +937,7 @@ export class RTestModel {
 
   public static addToCartRandom() {
     return (dispatcher: any, getState: any) => {
-      new RTestModel(undefined, dispatcher, getState).addToCartRandom();
+      return new RTestModel(undefined, dispatcher, getState).addToCartRandom();
     };
   }
   renameLast(newName: string) {
@@ -951,7 +955,9 @@ export class RTestModel {
 
   public static renameLast(newName: string) {
     return (dispatcher: any, getState: any) => {
-      new RTestModel(undefined, dispatcher, getState).renameLast(newName);
+      return new RTestModel(undefined, dispatcher, getState).renameLast(
+        newName
+      );
     };
   }
   // action
@@ -971,7 +977,9 @@ export class RTestModel {
 
   public static createItem(someName: string) {
     return (dispatcher: any, getState: any) => {
-      new RTestModel(undefined, dispatcher, getState).createItem(someName);
+      return new RTestModel(undefined, dispatcher, getState).createItem(
+        someName
+      );
     };
   }
   async addOneFriend(name) {
@@ -980,7 +988,7 @@ export class RTestModel {
 
   public static addOneFriend(name) {
     return (dispatcher: any, getState: any) => {
-      new RTestModel(undefined, dispatcher, getState).addOneFriend(name);
+      return new RTestModel(undefined, dispatcher, getState).addOneFriend(name);
     };
   }
   async fillSomeFriends() {
@@ -991,7 +999,7 @@ export class RTestModel {
 
   public static fillSomeFriends() {
     return (dispatcher: any, getState: any) => {
-      new RTestModel(undefined, dispatcher, getState).fillSomeFriends();
+      return new RTestModel(undefined, dispatcher, getState).fillSomeFriends();
     };
   }
   async ChangeLastItem() {
@@ -1000,7 +1008,7 @@ export class RTestModel {
 
   public static ChangeLastItem() {
     return (dispatcher: any, getState: any) => {
-      new RTestModel(undefined, dispatcher, getState).ChangeLastItem();
+      return new RTestModel(undefined, dispatcher, getState).ChangeLastItem();
     };
   }
 }
@@ -1038,7 +1046,7 @@ export const TestModelReducer = (
   state: ITestModel = initTestModel(),
   action: any
 ) => {
-  return immer.produce(state, draft => {
+  return immer.produce(state, (draft: ITestModel) => {
     switch (action.type) {
       case TestModelEnums.TestModel_items:
         new RTestModel(draft).items = action.payload;
@@ -1173,7 +1181,7 @@ export class TestModelProvider extends React.Component {
     this.setState(state);
   }
   setUserMessage(value: string) {
-    const nextState = immer.produce(this.state, draft =>
+    const nextState = immer.produce(this.state, (draft: ITestModel) =>
       new RTestModel(draft).setUserMessage(value)
     );
     if (this.__devTools) {
@@ -1182,7 +1190,7 @@ export class TestModelProvider extends React.Component {
     this.setStateSync(nextState);
   }
   add(item: ShopCartItem) {
-    const nextState = immer.produce(this.state, draft =>
+    const nextState = immer.produce(this.state, (draft: ITestModel) =>
       new RTestModel(draft).add(item)
     );
     if (this.__devTools) {
@@ -1191,7 +1199,7 @@ export class TestModelProvider extends React.Component {
     this.setStateSync(nextState);
   }
   removeFirst() {
-    const nextState = immer.produce(this.state, draft =>
+    const nextState = immer.produce(this.state, (draft: ITestModel) =>
       new RTestModel(draft).removeFirst()
     );
     if (this.__devTools) {
@@ -1200,7 +1208,7 @@ export class TestModelProvider extends React.Component {
     this.setStateSync(nextState);
   }
   sort() {
-    const nextState = immer.produce(this.state, draft =>
+    const nextState = immer.produce(this.state, (draft: ITestModel) =>
       new RTestModel(draft).sort()
     );
     if (this.__devTools) {
@@ -1209,7 +1217,7 @@ export class TestModelProvider extends React.Component {
     this.setStateSync(nextState);
   }
   addCart() {
-    const nextState = immer.produce(this.state, draft =>
+    const nextState = immer.produce(this.state, (draft: ITestModel) =>
       new RTestModel(draft).addCart()
     );
     if (this.__devTools) {
@@ -1218,7 +1226,7 @@ export class TestModelProvider extends React.Component {
     this.setStateSync(nextState);
   }
   addCartSync() {
-    const nextState = immer.produce(this.state, draft =>
+    const nextState = immer.produce(this.state, (draft: ITestModel) =>
       new RTestModel(draft).addCartSync()
     );
     if (this.__devTools) {
@@ -1227,7 +1235,7 @@ export class TestModelProvider extends React.Component {
     this.setStateSync(nextState);
   }
   addToCart(adding: { cartId: string; item: ShopCartItem }) {
-    const nextState = immer.produce(this.state, draft =>
+    const nextState = immer.produce(this.state, (draft: ITestModel) =>
       new RTestModel(draft).addToCart(adding)
     );
     if (this.__devTools) {
@@ -1236,7 +1244,7 @@ export class TestModelProvider extends React.Component {
     this.setStateSync(nextState);
   }
   setCartNewItem(adding: { cartId: string; name: string }) {
-    const nextState = immer.produce(this.state, draft =>
+    const nextState = immer.produce(this.state, (draft: ITestModel) =>
       new RTestModel(draft).setCartNewItem(adding)
     );
     if (this.__devTools) {
@@ -1245,7 +1253,7 @@ export class TestModelProvider extends React.Component {
     this.setStateSync(nextState);
   }
   addToCartRandom() {
-    const nextState = immer.produce(this.state, draft =>
+    const nextState = immer.produce(this.state, (draft: ITestModel) =>
       new RTestModel(draft).addToCartRandom()
     );
     if (this.__devTools) {
@@ -1254,7 +1262,7 @@ export class TestModelProvider extends React.Component {
     this.setStateSync(nextState);
   }
   renameLast(newName: string) {
-    const nextState = immer.produce(this.state, draft =>
+    const nextState = immer.produce(this.state, (draft: ITestModel) =>
       new RTestModel(draft).renameLast(newName)
     );
     if (this.__devTools) {
@@ -1264,7 +1272,7 @@ export class TestModelProvider extends React.Component {
   }
   // action
   async createItem(someName: string) {
-    new RTestModel(
+    return new RTestModel(
       undefined,
       (action: any) => {
         const nextState = TestModelReducer(this.lastSetState, action);
@@ -1277,7 +1285,7 @@ export class TestModelProvider extends React.Component {
     ).createItem(someName);
   }
   async addOneFriend(name) {
-    new RTestModel(
+    return new RTestModel(
       undefined,
       (action: any) => {
         const nextState = TestModelReducer(this.lastSetState, action);
@@ -1290,7 +1298,7 @@ export class TestModelProvider extends React.Component {
     ).addOneFriend(name);
   }
   async fillSomeFriends() {
-    new RTestModel(
+    return new RTestModel(
       undefined,
       (action: any) => {
         const nextState = TestModelReducer(this.lastSetState, action);
@@ -1303,7 +1311,7 @@ export class TestModelProvider extends React.Component {
     ).fillSomeFriends();
   }
   async ChangeLastItem() {
-    new RTestModel(
+    return new RTestModel(
       undefined,
       (action: any) => {
         const nextState = TestModelReducer(this.lastSetState, action);

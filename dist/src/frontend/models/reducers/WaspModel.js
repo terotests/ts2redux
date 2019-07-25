@@ -278,7 +278,7 @@ var RWaspModel = /** @class */ (function () {
     };
     RWaspModel.addWasp = function (pos) {
         return function (dispatcher, getState) {
-            new RWaspModel(undefined, dispatcher, getState).addWasp(pos);
+            return new RWaspModel(undefined, dispatcher, getState).addWasp(pos);
         };
     };
     RWaspModel.prototype.incSpeed = function (value) {
@@ -296,7 +296,7 @@ var RWaspModel = /** @class */ (function () {
     };
     RWaspModel.incSpeed = function (value) {
         return function (dispatcher, getState) {
-            new RWaspModel(undefined, dispatcher, getState).incSpeed(value);
+            return new RWaspModel(undefined, dispatcher, getState).incSpeed(value);
         };
     };
     RWaspModel.prototype.setColor = function (value) {
@@ -315,7 +315,7 @@ var RWaspModel = /** @class */ (function () {
     };
     RWaspModel.setColor = function (value) {
         return function (dispatcher, getState) {
-            new RWaspModel(undefined, dispatcher, getState).setColor(value);
+            return new RWaspModel(undefined, dispatcher, getState).setColor(value);
         };
     };
     RWaspModel.prototype.step = function () {
@@ -361,7 +361,7 @@ var RWaspModel = /** @class */ (function () {
     };
     RWaspModel.step = function () {
         return function (dispatcher, getState) {
-            new RWaspModel(undefined, dispatcher, getState).step();
+            return new RWaspModel(undefined, dispatcher, getState).step();
         };
     };
     return RWaspModel;

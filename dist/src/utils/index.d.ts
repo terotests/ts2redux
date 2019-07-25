@@ -1,4 +1,4 @@
-import { TypeChecker, Project, FunctionDeclaration, MethodDeclaration, ClassDeclaration, InterfaceDeclaration, PropertyDeclaration } from "ts-simple-ast";
+import { TypeChecker, Project, FunctionDeclaration, MethodDeclaration, ClassDeclaration, InterfaceDeclaration, PropertyDeclaration } from "ts-morph";
 export declare type InterfaceOrClass = ClassDeclaration | InterfaceDeclaration;
 export declare const findModel: (project: Project, className: string) => InterfaceOrClass;
 export declare class JSDocParams {

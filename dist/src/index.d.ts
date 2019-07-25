@@ -1,4 +1,4 @@
-import { InterfaceDeclaration, SourceFile, ClassDeclaration } from "ts-simple-ast";
+import { InterfaceDeclaration, SourceFile, ClassDeclaration } from "ts-morph";
 import * as R from "robowr";
 export interface GenerationOptions {
     path: string;

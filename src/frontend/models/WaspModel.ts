@@ -1,5 +1,3 @@
-import { clearInterval } from "timers";
-
 export interface Wasp {
   id?: number;
   x: number;

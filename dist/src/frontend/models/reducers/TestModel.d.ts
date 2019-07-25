@@ -83,7 +83,7 @@ export declare class RTestModel {
     private _state?;
     private _dispatch?;
     private _getState?;
-    constructor(state?: ITestModel, dispatch?: (action: any) => void, getState?: () => any);
+    constructor(state?: ITestModel, dispatch?: (action: any) => any, getState?: () => any);
     items: ShopCartItem[];
     maxId: number;
     maybeString: string | undefined;
@@ -135,13 +135,13 @@ export declare class RTestModel {
     renameLast(newName: string): void;
     static renameLast(newName: string): (dispatcher: any, getState: any) => void;
     createItem(someName: string): Promise<void>;
-    static createItem(someName: string): (dispatcher: any, getState: any) => void;
+    static createItem(someName: string): (dispatcher: any, getState: any) => Promise<void>;
     addOneFriend(name: any): Promise<void>;
-    static addOneFriend(name: any): (dispatcher: any, getState: any) => void;
+    static addOneFriend(name: any): (dispatcher: any, getState: any) => Promise<void>;
     fillSomeFriends(): Promise<void>;
-    static fillSomeFriends(): (dispatcher: any, getState: any) => void;
+    static fillSomeFriends(): (dispatcher: any, getState: any) => Promise<void>;
     ChangeLastItem(): Promise<void>;
-    static ChangeLastItem(): (dispatcher: any, getState: any) => void;
+    static ChangeLastItem(): (dispatcher: any, getState: any) => Promise<void>;
 }
 export declare const TestModelEnums: {
     TestModel_items: string;

@@ -35,6 +35,7 @@ export class TodoList {
   listStart = 0;
   listPageLength = 10;
   listTitle = "Title of TODO -list";
+  customMessage = "";
 
   // Example of memoized list using reselect
   get listToDisplay(): TodoListItem[] {
@@ -108,6 +109,19 @@ export class TodoList {
       this.stateError = e;
     }
   }
+
+  async getShortList(makeError: boolean) {
+    if (makeError) {
+      this.customMessage = "Custom Exception send this custom message to state";
+      throw "Custom Exception";
+    }
+    this.customMessage = "";
+    return new Promise(resolve => {
+      setTimeout(() => {
+        resolve([1, 2, 3, 4, 5]);
+      }, 1000);
+    });
+  }
 }
 
 export interface IContainerPropsMethods {
@@ -122,6 +136,7 @@ export interface IContainerPropsMethods {
   setTitle: (value: string) => any;
   addLotOfItems: (cnt: number) => any;
   getItems: () => any;
+  getShortList: (makeError: boolean) => any;
 }
 export interface ITodoList {
   items: TodoListItem[];
@@ -131,6 +146,7 @@ export interface ITodoList {
   listStart: number;
   listPageLength: number;
   listTitle: string;
+  customMessage: string;
 }
 export const itemsSelectorFn = (state: ITodoList): TodoListItem[] =>
   state.items;
@@ -144,6 +160,8 @@ export const listPageLengthSelectorFn = (state: ITodoList): number =>
   state.listPageLength;
 export const listTitleSelectorFn = (state: ITodoList): string =>
   state.listTitle;
+export const customMessageSelectorFn = (state: ITodoList): string =>
+  state.customMessage;
 export const listToDisplaySelectorFnCreator = () =>
   createSelector(
     [
@@ -187,6 +205,7 @@ export const mapStateToProps = (state: IState): IContainerPropsState => {
     listStart: state.TodoList.listStart,
     listPageLength: state.TodoList.listPageLength,
     listTitle: state.TodoList.listTitle,
+    customMessage: state.TodoList.customMessage,
     listToDisplay: listToDisplaySelector(state.TodoList)
   };
 };
@@ -232,6 +251,9 @@ export const mapDispatchToProps = (dispatch: any): IContainerPropsMethods => {
     },
     getItems: () => {
       return dispatch(RTodoList.getItems());
+    },
+    getShortList: (makeError: boolean) => {
+      return dispatch(RTodoList.getShortList(makeError));
     }
   };
 };
@@ -260,7 +282,8 @@ const initTodoList = () => {
     sortOrder: o.sortOrder,
     listStart: o.listStart,
     listPageLength: o.listPageLength,
-    listTitle: o.listTitle
+    listTitle: o.listTitle,
+    customMessage: o.customMessage
   };
 };
 const initWithMethodsTodoList = () => {
@@ -273,6 +296,7 @@ const initWithMethodsTodoList = () => {
     listStart: o.listStart,
     listPageLength: o.listPageLength,
     listTitle: o.listTitle,
+    customMessage: o.customMessage,
     nextPage: o.nextPage,
     prevPage: o.prevPage,
     toggleSortOrder: o.toggleSortOrder,
@@ -284,6 +308,7 @@ const initWithMethodsTodoList = () => {
     setTitle: o.setTitle,
     addLotOfItems: o.addLotOfItems,
     getItems: o.getItems,
+    getShortList: o.getShortList,
     listToDisplay: o.listToDisplay
   };
 };
@@ -293,11 +318,11 @@ const initWithMethodsTodoList = () => {
  */
 export class RTodoList {
   private _state?: ITodoList;
-  private _dispatch?: (action: any) => void;
+  private _dispatch?: <A extends {}, T extends {}>(action: A) => T;
   private _getState?: () => any;
   constructor(
     state?: ITodoList,
-    dispatch?: (action: any) => void,
+    dispatch?: (action: any) => any,
     getState?: () => any
   ) {
     this._state = state;
@@ -459,6 +484,29 @@ export class RTodoList {
       }
     }
   }
+  get customMessage(): string {
+    if (this._getState) {
+      return this._getState().TodoList.customMessage;
+    } else {
+      if (this._state) {
+        return this._state.customMessage;
+      }
+    }
+    throw "Invalid State in TodoList_customMessage";
+  }
+  set customMessage(value: string) {
+    if (this._state && typeof value !== "undefined") {
+      this._state.customMessage = value;
+    } else {
+      // dispatch change for item customMessage
+      if (this._dispatch) {
+        this._dispatch({
+          type: TodoListEnums.TodoList_customMessage,
+          payload: value
+        });
+      }
+    }
+  }
 
   private findMaxId(): number {
     let max = 0;
@@ -479,7 +527,7 @@ export class RTodoList {
 
   public static nextPage() {
     return (dispatcher: any, getState: any) => {
-      new RTodoList(undefined, dispatcher, getState).nextPage();
+      return new RTodoList(undefined, dispatcher, getState).nextPage();
     };
   }
   prevPage() {
@@ -495,7 +543,7 @@ export class RTodoList {
 
   public static prevPage() {
     return (dispatcher: any, getState: any) => {
-      new RTodoList(undefined, dispatcher, getState).prevPage();
+      return new RTodoList(undefined, dispatcher, getState).prevPage();
     };
   }
   toggleSortOrder() {
@@ -511,7 +559,7 @@ export class RTodoList {
 
   public static toggleSortOrder() {
     return (dispatcher: any, getState: any) => {
-      new RTodoList(undefined, dispatcher, getState).toggleSortOrder();
+      return new RTodoList(undefined, dispatcher, getState).toggleSortOrder();
     };
   }
   clearTodoList() {
@@ -526,7 +574,7 @@ export class RTodoList {
 
   public static clearTodoList() {
     return (dispatcher: any, getState: any) => {
-      new RTodoList(undefined, dispatcher, getState).clearTodoList();
+      return new RTodoList(undefined, dispatcher, getState).clearTodoList();
     };
   }
   reverse() {
@@ -541,7 +589,7 @@ export class RTodoList {
 
   public static reverse() {
     return (dispatcher: any, getState: any) => {
-      new RTodoList(undefined, dispatcher, getState).reverse();
+      return new RTodoList(undefined, dispatcher, getState).reverse();
     };
   }
   sortById() {
@@ -556,7 +604,7 @@ export class RTodoList {
 
   public static sortById() {
     return (dispatcher: any, getState: any) => {
-      new RTodoList(undefined, dispatcher, getState).sortById();
+      return new RTodoList(undefined, dispatcher, getState).sortById();
     };
   }
   sortByTitle() {
@@ -571,7 +619,7 @@ export class RTodoList {
 
   public static sortByTitle() {
     return (dispatcher: any, getState: any) => {
-      new RTodoList(undefined, dispatcher, getState).sortByTitle();
+      return new RTodoList(undefined, dispatcher, getState).sortByTitle();
     };
   }
   sortByCompletion() {
@@ -587,7 +635,7 @@ export class RTodoList {
 
   public static sortByCompletion() {
     return (dispatcher: any, getState: any) => {
-      new RTodoList(undefined, dispatcher, getState).sortByCompletion();
+      return new RTodoList(undefined, dispatcher, getState).sortByCompletion();
     };
   }
   setTitle(value: string) {
@@ -605,7 +653,7 @@ export class RTodoList {
 
   public static setTitle(value: string) {
     return (dispatcher: any, getState: any) => {
-      new RTodoList(undefined, dispatcher, getState).setTitle(value);
+      return new RTodoList(undefined, dispatcher, getState).setTitle(value);
     };
   }
   addLotOfItems(cnt: number) {
@@ -631,7 +679,7 @@ export class RTodoList {
 
   public static addLotOfItems(cnt: number) {
     return (dispatcher: any, getState: any) => {
-      new RTodoList(undefined, dispatcher, getState).addLotOfItems(cnt);
+      return new RTodoList(undefined, dispatcher, getState).addLotOfItems(cnt);
     };
   }
   /**
@@ -653,7 +701,27 @@ export class RTodoList {
 
   public static getItems() {
     return (dispatcher: any, getState: any) => {
-      new RTodoList(undefined, dispatcher, getState).getItems();
+      return new RTodoList(undefined, dispatcher, getState).getItems();
+    };
+  }
+  async getShortList(makeError: boolean) {
+    if (makeError) {
+      this.customMessage = "Custom Exception send this custom message to state";
+      throw "Custom Exception";
+    }
+    this.customMessage = "";
+    return new Promise(resolve => {
+      setTimeout(() => {
+        resolve([1, 2, 3, 4, 5]);
+      }, 1000);
+    });
+  }
+
+  public static getShortList(makeError: boolean) {
+    return (dispatcher: any, getState: any) => {
+      return new RTodoList(undefined, dispatcher, getState).getShortList(
+        makeError
+      );
     };
   }
 }
@@ -666,6 +734,7 @@ export const TodoListEnums = {
   TodoList_listStart: "TodoList_listStart",
   TodoList_listPageLength: "TodoList_listPageLength",
   TodoList_listTitle: "TodoList_listTitle",
+  TodoList_customMessage: "TodoList_customMessage",
   TodoList_findMaxId: "TodoList_findMaxId",
   TodoList_nextPage: "TodoList_nextPage",
   TodoList_prevPage: "TodoList_prevPage",
@@ -683,7 +752,7 @@ export const TodoListReducer = (
   state: ITodoList = initTodoList(),
   action: any
 ) => {
-  return immer.produce(state, draft => {
+  return immer.produce(state, (draft: ITodoList) => {
     switch (action.type) {
       case TodoListEnums.TodoList_items:
         new RTodoList(draft).items = action.payload;
@@ -705,6 +774,9 @@ export const TodoListReducer = (
         break;
       case TodoListEnums.TodoList_listTitle:
         new RTodoList(draft).listTitle = action.payload;
+        break;
+      case TodoListEnums.TodoList_customMessage:
+        new RTodoList(draft).customMessage = action.payload;
         break;
       case TodoListEnums.TodoList_nextPage:
         new RTodoList(draft).nextPage();
@@ -766,6 +838,7 @@ export class TodoListProvider extends React.Component {
     this.setTitle = this.setTitle.bind(this);
     this.addLotOfItems = this.addLotOfItems.bind(this);
     this.getItems = this.getItems.bind(this);
+    this.getShortList = this.getShortList.bind(this);
     this.__selectorlistToDisplay = listToDisplaySelectorFnCreator();
     const devs = window["__REDUX_DEVTOOLS_EXTENSION__"]
       ? window["__REDUX_DEVTOOLS_EXTENSION__"]
@@ -790,7 +863,7 @@ export class TodoListProvider extends React.Component {
     this.setState(state);
   }
   nextPage() {
-    const nextState = immer.produce(this.state, draft =>
+    const nextState = immer.produce(this.state, (draft: ITodoList) =>
       new RTodoList(draft).nextPage()
     );
     if (this.__devTools) {
@@ -799,7 +872,7 @@ export class TodoListProvider extends React.Component {
     this.setStateSync(nextState);
   }
   prevPage() {
-    const nextState = immer.produce(this.state, draft =>
+    const nextState = immer.produce(this.state, (draft: ITodoList) =>
       new RTodoList(draft).prevPage()
     );
     if (this.__devTools) {
@@ -808,7 +881,7 @@ export class TodoListProvider extends React.Component {
     this.setStateSync(nextState);
   }
   toggleSortOrder() {
-    const nextState = immer.produce(this.state, draft =>
+    const nextState = immer.produce(this.state, (draft: ITodoList) =>
       new RTodoList(draft).toggleSortOrder()
     );
     if (this.__devTools) {
@@ -817,7 +890,7 @@ export class TodoListProvider extends React.Component {
     this.setStateSync(nextState);
   }
   clearTodoList() {
-    const nextState = immer.produce(this.state, draft =>
+    const nextState = immer.produce(this.state, (draft: ITodoList) =>
       new RTodoList(draft).clearTodoList()
     );
     if (this.__devTools) {
@@ -826,7 +899,7 @@ export class TodoListProvider extends React.Component {
     this.setStateSync(nextState);
   }
   reverse() {
-    const nextState = immer.produce(this.state, draft =>
+    const nextState = immer.produce(this.state, (draft: ITodoList) =>
       new RTodoList(draft).reverse()
     );
     if (this.__devTools) {
@@ -835,7 +908,7 @@ export class TodoListProvider extends React.Component {
     this.setStateSync(nextState);
   }
   sortById() {
-    const nextState = immer.produce(this.state, draft =>
+    const nextState = immer.produce(this.state, (draft: ITodoList) =>
       new RTodoList(draft).sortById()
     );
     if (this.__devTools) {
@@ -844,7 +917,7 @@ export class TodoListProvider extends React.Component {
     this.setStateSync(nextState);
   }
   sortByTitle() {
-    const nextState = immer.produce(this.state, draft =>
+    const nextState = immer.produce(this.state, (draft: ITodoList) =>
       new RTodoList(draft).sortByTitle()
     );
     if (this.__devTools) {
@@ -853,7 +926,7 @@ export class TodoListProvider extends React.Component {
     this.setStateSync(nextState);
   }
   sortByCompletion() {
-    const nextState = immer.produce(this.state, draft =>
+    const nextState = immer.produce(this.state, (draft: ITodoList) =>
       new RTodoList(draft).sortByCompletion()
     );
     if (this.__devTools) {
@@ -862,7 +935,7 @@ export class TodoListProvider extends React.Component {
     this.setStateSync(nextState);
   }
   setTitle(value: string) {
-    const nextState = immer.produce(this.state, draft =>
+    const nextState = immer.produce(this.state, (draft: ITodoList) =>
       new RTodoList(draft).setTitle(value)
     );
     if (this.__devTools) {
@@ -871,7 +944,7 @@ export class TodoListProvider extends React.Component {
     this.setStateSync(nextState);
   }
   addLotOfItems(cnt: number) {
-    const nextState = immer.produce(this.state, draft =>
+    const nextState = immer.produce(this.state, (draft: ITodoList) =>
       new RTodoList(draft).addLotOfItems(cnt)
     );
     if (this.__devTools) {
@@ -883,7 +956,7 @@ export class TodoListProvider extends React.Component {
    * Fetch items from json placeholder service
    */
   async getItems() {
-    new RTodoList(
+    return new RTodoList(
       undefined,
       (action: any) => {
         const nextState = TodoListReducer(this.lastSetState, action);
@@ -894,6 +967,19 @@ export class TodoListProvider extends React.Component {
       },
       () => ({ TodoList: this.lastSetState })
     ).getItems();
+  }
+  async getShortList(makeError: boolean) {
+    return new RTodoList(
+      undefined,
+      (action: any) => {
+        const nextState = TodoListReducer(this.lastSetState, action);
+        if (this.__devTools) {
+          this.__devTools.send(action.type, nextState);
+        }
+        this.setStateSync(nextState);
+      },
+      () => ({ TodoList: this.lastSetState })
+    ).getShortList(makeError);
   }
   public render() {
     return (
@@ -911,6 +997,7 @@ export class TodoListProvider extends React.Component {
           setTitle: this.setTitle,
           addLotOfItems: this.addLotOfItems,
           getItems: this.getItems,
+          getShortList: this.getShortList,
           listToDisplay: this.__selectorlistToDisplay(this.state)
         }}
       >

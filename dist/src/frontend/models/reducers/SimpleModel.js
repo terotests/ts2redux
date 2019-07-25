@@ -225,7 +225,7 @@ var RSimpleModel = /** @class */ (function () {
     };
     RSimpleModel.SimpleDispatch = function (action) {
         return function (dispatcher, getState) {
-            new RSimpleModel(undefined, dispatcher, getState).SimpleDispatch(action);
+            return new RSimpleModel(undefined, dispatcher, getState).SimpleDispatch(action);
         };
     };
     RSimpleModel.prototype.getItems = function () {
@@ -245,7 +245,7 @@ var RSimpleModel = /** @class */ (function () {
     };
     RSimpleModel.getItems = function () {
         return function (dispatcher, getState) {
-            new RSimpleModel(undefined, dispatcher, getState).getItems();
+            return new RSimpleModel(undefined, dispatcher, getState).getItems();
         };
     };
     return RSimpleModel;
@@ -312,14 +312,13 @@ var SimpleModelProvider = /** @class */ (function (_super) {
         return __awaiter(this, void 0, void 0, function () {
             var _this = this;
             return __generator(this, function (_a) {
-                new RSimpleModel(undefined, function (action) {
-                    var nextState = exports.SimpleModelReducer(_this.lastSetState, action);
-                    if (_this.__devTools) {
-                        _this.__devTools.send(action.type, nextState);
-                    }
-                    _this.setStateSync(nextState);
-                }, function () { return ({ SimpleModel: _this.lastSetState }); }).SimpleDispatch(action);
-                return [2 /*return*/];
+                return [2 /*return*/, new RSimpleModel(undefined, function (action) {
+                        var nextState = exports.SimpleModelReducer(_this.lastSetState, action);
+                        if (_this.__devTools) {
+                            _this.__devTools.send(action.type, nextState);
+                        }
+                        _this.setStateSync(nextState);
+                    }, function () { return ({ SimpleModel: _this.lastSetState }); }).SimpleDispatch(action)];
             });
         });
     };
@@ -327,14 +326,13 @@ var SimpleModelProvider = /** @class */ (function (_super) {
         return __awaiter(this, void 0, void 0, function () {
             var _this = this;
             return __generator(this, function (_a) {
-                new RSimpleModel(undefined, function (action) {
-                    var nextState = exports.SimpleModelReducer(_this.lastSetState, action);
-                    if (_this.__devTools) {
-                        _this.__devTools.send(action.type, nextState);
-                    }
-                    _this.setStateSync(nextState);
-                }, function () { return ({ SimpleModel: _this.lastSetState }); }).getItems();
-                return [2 /*return*/];
+                return [2 /*return*/, new RSimpleModel(undefined, function (action) {
+                        var nextState = exports.SimpleModelReducer(_this.lastSetState, action);
+                        if (_this.__devTools) {
+                            _this.__devTools.send(action.type, nextState);
+                        }
+                        _this.setStateSync(nextState);
+                    }, function () { return ({ SimpleModel: _this.lastSetState }); }).getItems()];
             });
         });
     };

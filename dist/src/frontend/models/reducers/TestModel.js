@@ -845,7 +845,7 @@ var RTestModel = /** @class */ (function () {
     };
     RTestModel.setUserMessage = function (value) {
         return function (dispatcher, getState) {
-            new RTestModel(undefined, dispatcher, getState).setUserMessage(value);
+            return new RTestModel(undefined, dispatcher, getState).setUserMessage(value);
         };
     };
     RTestModel.prototype.add = function (item) {
@@ -861,7 +861,7 @@ var RTestModel = /** @class */ (function () {
     };
     RTestModel.add = function (item) {
         return function (dispatcher, getState) {
-            new RTestModel(undefined, dispatcher, getState).add(item);
+            return new RTestModel(undefined, dispatcher, getState).add(item);
         };
     };
     RTestModel.prototype.removeFirst = function () {
@@ -876,7 +876,7 @@ var RTestModel = /** @class */ (function () {
     };
     RTestModel.removeFirst = function () {
         return function (dispatcher, getState) {
-            new RTestModel(undefined, dispatcher, getState).removeFirst();
+            return new RTestModel(undefined, dispatcher, getState).removeFirst();
         };
     };
     RTestModel.prototype.sort = function () {
@@ -893,7 +893,7 @@ var RTestModel = /** @class */ (function () {
     };
     RTestModel.sort = function () {
         return function (dispatcher, getState) {
-            new RTestModel(undefined, dispatcher, getState).sort();
+            return new RTestModel(undefined, dispatcher, getState).sort();
         };
     };
     RTestModel.prototype.addCart = function () {
@@ -911,7 +911,7 @@ var RTestModel = /** @class */ (function () {
     };
     RTestModel.addCart = function () {
         return function (dispatcher, getState) {
-            new RTestModel(undefined, dispatcher, getState).addCart();
+            return new RTestModel(undefined, dispatcher, getState).addCart();
         };
     };
     RTestModel.prototype.addCartSync = function () {
@@ -929,7 +929,7 @@ var RTestModel = /** @class */ (function () {
     };
     RTestModel.addCartSync = function () {
         return function (dispatcher, getState) {
-            new RTestModel(undefined, dispatcher, getState).addCartSync();
+            return new RTestModel(undefined, dispatcher, getState).addCartSync();
         };
     };
     RTestModel.prototype.addToCart = function (adding) {
@@ -947,7 +947,7 @@ var RTestModel = /** @class */ (function () {
     };
     RTestModel.addToCart = function (adding) {
         return function (dispatcher, getState) {
-            new RTestModel(undefined, dispatcher, getState).addToCart(adding);
+            return new RTestModel(undefined, dispatcher, getState).addToCart(adding);
         };
     };
     RTestModel.prototype.setCartNewItem = function (adding) {
@@ -965,7 +965,7 @@ var RTestModel = /** @class */ (function () {
     };
     RTestModel.setCartNewItem = function (adding) {
         return function (dispatcher, getState) {
-            new RTestModel(undefined, dispatcher, getState).setCartNewItem(adding);
+            return new RTestModel(undefined, dispatcher, getState).setCartNewItem(adding);
         };
     };
     RTestModel.prototype.addToCartRandom = function () {
@@ -986,7 +986,7 @@ var RTestModel = /** @class */ (function () {
     };
     RTestModel.addToCartRandom = function () {
         return function (dispatcher, getState) {
-            new RTestModel(undefined, dispatcher, getState).addToCartRandom();
+            return new RTestModel(undefined, dispatcher, getState).addToCartRandom();
         };
     };
     RTestModel.prototype.renameLast = function (newName) {
@@ -1004,7 +1004,7 @@ var RTestModel = /** @class */ (function () {
     };
     RTestModel.renameLast = function (newName) {
         return function (dispatcher, getState) {
-            new RTestModel(undefined, dispatcher, getState).renameLast(newName);
+            return new RTestModel(undefined, dispatcher, getState).renameLast(newName);
         };
     };
     // action
@@ -1033,7 +1033,7 @@ var RTestModel = /** @class */ (function () {
     };
     RTestModel.createItem = function (someName) {
         return function (dispatcher, getState) {
-            new RTestModel(undefined, dispatcher, getState).createItem(someName);
+            return new RTestModel(undefined, dispatcher, getState).createItem(someName);
         };
     };
     RTestModel.prototype.addOneFriend = function (name) {
@@ -1046,7 +1046,7 @@ var RTestModel = /** @class */ (function () {
     };
     RTestModel.addOneFriend = function (name) {
         return function (dispatcher, getState) {
-            new RTestModel(undefined, dispatcher, getState).addOneFriend(name);
+            return new RTestModel(undefined, dispatcher, getState).addOneFriend(name);
         };
     };
     RTestModel.prototype.fillSomeFriends = function () {
@@ -1062,7 +1062,7 @@ var RTestModel = /** @class */ (function () {
     };
     RTestModel.fillSomeFriends = function () {
         return function (dispatcher, getState) {
-            new RTestModel(undefined, dispatcher, getState).fillSomeFriends();
+            return new RTestModel(undefined, dispatcher, getState).fillSomeFriends();
         };
     };
     RTestModel.prototype.ChangeLastItem = function () {
@@ -1075,7 +1075,7 @@ var RTestModel = /** @class */ (function () {
     };
     RTestModel.ChangeLastItem = function () {
         return function (dispatcher, getState) {
-            new RTestModel(undefined, dispatcher, getState).ChangeLastItem();
+            return new RTestModel(undefined, dispatcher, getState).ChangeLastItem();
         };
     };
     return RTestModel;
@@ -1339,14 +1339,13 @@ var TestModelProvider = /** @class */ (function (_super) {
         return __awaiter(this, void 0, void 0, function () {
             var _this = this;
             return __generator(this, function (_a) {
-                new RTestModel(undefined, function (action) {
-                    var nextState = exports.TestModelReducer(_this.lastSetState, action);
-                    if (_this.__devTools) {
-                        _this.__devTools.send(action.type, nextState);
-                    }
-                    _this.setStateSync(nextState);
-                }, function () { return ({ TestModel: _this.lastSetState }); }).createItem(someName);
-                return [2 /*return*/];
+                return [2 /*return*/, new RTestModel(undefined, function (action) {
+                        var nextState = exports.TestModelReducer(_this.lastSetState, action);
+                        if (_this.__devTools) {
+                            _this.__devTools.send(action.type, nextState);
+                        }
+                        _this.setStateSync(nextState);
+                    }, function () { return ({ TestModel: _this.lastSetState }); }).createItem(someName)];
             });
         });
     };
@@ -1354,14 +1353,13 @@ var TestModelProvider = /** @class */ (function (_super) {
         return __awaiter(this, void 0, void 0, function () {
             var _this = this;
             return __generator(this, function (_a) {
-                new RTestModel(undefined, function (action) {
-                    var nextState = exports.TestModelReducer(_this.lastSetState, action);
-                    if (_this.__devTools) {
-                        _this.__devTools.send(action.type, nextState);
-                    }
-                    _this.setStateSync(nextState);
-                }, function () { return ({ TestModel: _this.lastSetState }); }).addOneFriend(name);
-                return [2 /*return*/];
+                return [2 /*return*/, new RTestModel(undefined, function (action) {
+                        var nextState = exports.TestModelReducer(_this.lastSetState, action);
+                        if (_this.__devTools) {
+                            _this.__devTools.send(action.type, nextState);
+                        }
+                        _this.setStateSync(nextState);
+                    }, function () { return ({ TestModel: _this.lastSetState }); }).addOneFriend(name)];
             });
         });
     };
@@ -1369,14 +1367,13 @@ var TestModelProvider = /** @class */ (function (_super) {
         return __awaiter(this, void 0, void 0, function () {
             var _this = this;
             return __generator(this, function (_a) {
-                new RTestModel(undefined, function (action) {
-                    var nextState = exports.TestModelReducer(_this.lastSetState, action);
-                    if (_this.__devTools) {
-                        _this.__devTools.send(action.type, nextState);
-                    }
-                    _this.setStateSync(nextState);
-                }, function () { return ({ TestModel: _this.lastSetState }); }).fillSomeFriends();
-                return [2 /*return*/];
+                return [2 /*return*/, new RTestModel(undefined, function (action) {
+                        var nextState = exports.TestModelReducer(_this.lastSetState, action);
+                        if (_this.__devTools) {
+                            _this.__devTools.send(action.type, nextState);
+                        }
+                        _this.setStateSync(nextState);
+                    }, function () { return ({ TestModel: _this.lastSetState }); }).fillSomeFriends()];
             });
         });
     };
@@ -1384,14 +1381,13 @@ var TestModelProvider = /** @class */ (function (_super) {
         return __awaiter(this, void 0, void 0, function () {
             var _this = this;
             return __generator(this, function (_a) {
-                new RTestModel(undefined, function (action) {
-                    var nextState = exports.TestModelReducer(_this.lastSetState, action);
-                    if (_this.__devTools) {
-                        _this.__devTools.send(action.type, nextState);
-                    }
-                    _this.setStateSync(nextState);
-                }, function () { return ({ TestModel: _this.lastSetState }); }).ChangeLastItem();
-                return [2 /*return*/];
+                return [2 /*return*/, new RTestModel(undefined, function (action) {
+                        var nextState = exports.TestModelReducer(_this.lastSetState, action);
+                        if (_this.__devTools) {
+                            _this.__devTools.send(action.type, nextState);
+                        }
+                        _this.setStateSync(nextState);
+                    }, function () { return ({ TestModel: _this.lastSetState }); }).ChangeLastItem()];
             });
         });
     };

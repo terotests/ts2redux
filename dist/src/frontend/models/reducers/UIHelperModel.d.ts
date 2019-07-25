@@ -27,7 +27,7 @@ export declare class RUIHelperModel {
     private _state?;
     private _dispatch?;
     private _getState?;
-    constructor(state?: IUIHelperModel, dispatch?: (action: any) => void, getState?: () => any);
+    constructor(state?: IUIHelperModel, dispatch?: (action: any) => any, getState?: () => any);
     showWasps: boolean;
     toggle(): void;
     static toggle(): (dispatcher: any, getState: any) => void;

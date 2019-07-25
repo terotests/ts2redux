@@ -1,4 +1,5 @@
-import Project, {
+import {
+  Project,
   printNode,
   InterfaceDeclaration,
   PropertyDeclaration,
@@ -10,7 +11,7 @@ import Project, {
   SyntaxKind,
   MethodDeclaration,
   Node
-} from "ts-simple-ast";
+} from "ts-morph";
 import * as R from "robowr";
 import {
   getFunctionDoc,
@@ -107,7 +108,7 @@ export async function createProject(settings: GenerationOptions) {
     const res: string[] = [];
     c.getJsDocs().forEach(doc =>
       doc.getTags().forEach(tag => {
-        if (tag.getName() === name) res.push(tag.getComment());
+        if (tag.getTagName() === name) res.push(tag.getComment());
       })
     );
     return res;
@@ -124,7 +125,7 @@ export async function createProject(settings: GenerationOptions) {
     let has = false;
     c.getJsDocs().forEach(doc =>
       doc.getTags().forEach(tag => {
-        if (tag.getName() === name) {
+        if (tag.getTagName() === name) {
           has = true;
         }
       })
@@ -199,7 +200,8 @@ export async function createProject(settings: GenerationOptions) {
           .getJsDocs()
           .filter(
             doc =>
-              doc.getTags().filter(tag => tag.getName() === "redux").length > 0
+              doc.getTags().filter(tag => tag.getTagName() === "redux").length >
+              0
           ).length > 0
       ) {
         console.log("ts2redux: Transpiling ", sourceFile.getFilePath());
@@ -475,7 +477,10 @@ export async function createProject(settings: GenerationOptions) {
           true
         );
         ng.indent(1);
-        ng.out("return immer.produce(state, draft => {", true);
+        ng.out(
+          `return immer.produce(state, (draft:I${c.getName()}) => {`,
+          true
+        );
         ng.indent(1);
         ng.out(`switch (action.type) {`, true);
         ng.indent(1);
@@ -488,11 +493,14 @@ export async function createProject(settings: GenerationOptions) {
         ng.out("}", true);
 
         body.out("private _state?: I" + c.getName(), true);
-        body.out("private _dispatch?: (action:any)=>void", true);
+        body.out(
+          "private _dispatch?: <A extends {}, T extends {}>( action:A )=> T",
+          true
+        );
         body.out("private _getState?: ()=>any", true); // I'+c.getName(), true)
 
         body.out(
-          `constructor(state?: I${c.getName()}, dispatch?:(action:any)=>void, getState?:()=>any) {`,
+          `constructor(state?: I${c.getName()}, dispatch?:(action:any)=>any, getState?:()=>any) {`,
           true
         );
         body.indent(1);
@@ -833,7 +841,7 @@ async ${m.getName()}(action:any) {
             body.indent(1);
 
             body.out(
-              `(new R${c.getName()}(undefined, dispatcher, getState)).${m.getName()}(${pName})`,
+              `return (new R${c.getName()}(undefined, dispatcher, getState)).${m.getName()}(${pName})`,
               true
             );
             body.indent(-1);
@@ -972,7 +980,7 @@ async ${m.getName()}(action:any) {
               .join("");
             if (m.isAsync()) {
               body.out(
-                `(new R${c.getName()}(undefined, (action:any) => {`,
+                `return (new R${c.getName()}(undefined, (action:any) => {`,
                 true
               );
               body.indent(1);
@@ -1002,7 +1010,7 @@ async ${m.getName()}(action:any) {
             } else {
               if (!settings.disableDevtoolsFromContext) {
                 body.out(
-                  `const nextState = immer.produce( this.state, draft => ( new R${c.getName()}(draft) ).${m.getName()}(${firstParam}) )`,
+                  `const nextState = immer.produce( this.state, (draft:I${c.getName()}) => ( new R${c.getName()}(draft) ).${m.getName()}(${firstParam}) )`,
                   true
                 );
                 body.out(
@@ -1012,7 +1020,7 @@ async ${m.getName()}(action:any) {
                 body.out(`this.setStateSync(nextState)`, true);
               } else {
                 body.out(
-                  `this.setStateSync(immer.produce( this.state, draft => ( new R${c.getName()}(draft) ).${m.getName()}(${firstParam}) ))`,
+                  `this.setStateSync(immer.produce( this.state, (draft:I${c.getName()}) => ( new R${c.getName()}(draft) ).${m.getName()}(${firstParam}) ))`,
                   true
                 );
               }

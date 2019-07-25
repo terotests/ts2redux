@@ -56,7 +56,7 @@ export declare class RGenericModel {
     private _state?;
     private _dispatch?;
     private _getState?;
-    constructor(state?: IGenericModel, dispatch?: (action: any) => void, getState?: () => any);
+    constructor(state?: IGenericModel, dispatch?: (action: any) => any, getState?: () => any);
     sum: number;
     isLoading: {
         [key: string]: boolean;
@@ -69,7 +69,7 @@ export declare class RGenericModel {
     inc(): void;
     static inc(): (dispatcher: any, getState: any) => void;
     testLoading(): Promise<void>;
-    static testLoading(): (dispatcher: any, getState: any) => void;
+    static testLoading(): (dispatcher: any, getState: any) => Promise<void>;
 }
 export declare const GenericModelEnums: {
     GenericModel_sum: string;

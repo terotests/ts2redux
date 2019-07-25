@@ -9,8 +9,6 @@ import * as immer from "immer";
 import { connect } from "react-redux";
 import { IState } from "./index";
 import * as React from "react";
-import { clearInterval } from "timers";
-
 export interface Wasp {
   id?: number;
   x: number;
@@ -194,11 +192,11 @@ const initWithMethodsWaspModel = () => {
  */
 export class RWaspModel {
   private _state?: IWaspModel;
-  private _dispatch?: (action: any) => void;
+  private _dispatch?: <A extends {}, T extends {}>(action: A) => T;
   private _getState?: () => any;
   constructor(
     state?: IWaspModel,
-    dispatch?: (action: any) => void,
+    dispatch?: (action: any) => any,
     getState?: () => any
   ) {
     this._state = state;
@@ -299,7 +297,7 @@ export class RWaspModel {
 
   public static addWasp(pos: { x: number; y: number }) {
     return (dispatcher: any, getState: any) => {
-      new RWaspModel(undefined, dispatcher, getState).addWasp(pos);
+      return new RWaspModel(undefined, dispatcher, getState).addWasp(pos);
     };
   }
   incSpeed(value: number) {
@@ -317,7 +315,7 @@ export class RWaspModel {
 
   public static incSpeed(value: number) {
     return (dispatcher: any, getState: any) => {
-      new RWaspModel(undefined, dispatcher, getState).incSpeed(value);
+      return new RWaspModel(undefined, dispatcher, getState).incSpeed(value);
     };
   }
   setColor(value: { waspId: number; colorValue: string }) {
@@ -336,7 +334,7 @@ export class RWaspModel {
 
   public static setColor(value: { waspId: number; colorValue: string }) {
     return (dispatcher: any, getState: any) => {
-      new RWaspModel(undefined, dispatcher, getState).setColor(value);
+      return new RWaspModel(undefined, dispatcher, getState).setColor(value);
     };
   }
   step() {
@@ -381,7 +379,7 @@ export class RWaspModel {
 
   public static step() {
     return (dispatcher: any, getState: any) => {
-      new RWaspModel(undefined, dispatcher, getState).step();
+      return new RWaspModel(undefined, dispatcher, getState).step();
     };
   }
 }
@@ -400,7 +398,7 @@ export const WaspModelReducer = (
   state: IWaspModel = initWaspModel(),
   action: any
 ) => {
-  return immer.produce(state, draft => {
+  return immer.produce(state, (draft: IWaspModel) => {
     switch (action.type) {
       case WaspModelEnums.WaspModel_speed:
         new RWaspModel(draft).speed = action.payload;
@@ -468,7 +466,7 @@ export class WaspModelProvider extends React.Component {
     this.setState(state);
   }
   addWasp(pos: { x: number; y: number }) {
-    const nextState = immer.produce(this.state, draft =>
+    const nextState = immer.produce(this.state, (draft: IWaspModel) =>
       new RWaspModel(draft).addWasp(pos)
     );
     if (this.__devTools) {
@@ -477,7 +475,7 @@ export class WaspModelProvider extends React.Component {
     this.setStateSync(nextState);
   }
   incSpeed(value: number) {
-    const nextState = immer.produce(this.state, draft =>
+    const nextState = immer.produce(this.state, (draft: IWaspModel) =>
       new RWaspModel(draft).incSpeed(value)
     );
     if (this.__devTools) {
@@ -486,7 +484,7 @@ export class WaspModelProvider extends React.Component {
     this.setStateSync(nextState);
   }
   setColor(value: { waspId: number; colorValue: string }) {
-    const nextState = immer.produce(this.state, draft =>
+    const nextState = immer.produce(this.state, (draft: IWaspModel) =>
       new RWaspModel(draft).setColor(value)
     );
     if (this.__devTools) {
@@ -495,7 +493,7 @@ export class WaspModelProvider extends React.Component {
     this.setStateSync(nextState);
   }
   step() {
-    const nextState = immer.produce(this.state, draft =>
+    const nextState = immer.produce(this.state, (draft: IWaspModel) =>
       new RWaspModel(draft).step()
     );
     if (this.__devTools) {

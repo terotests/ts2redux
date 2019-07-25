@@ -36,7 +36,7 @@ exports.findModel = function (project, className) {
 };
 var JSDocParams = /** @class */ (function () {
     function JSDocParams() {
-        this.comment = '';
+        this.comment = "";
         this.tags = {};
         this.params = {};
         this.errors = {};
@@ -45,68 +45,68 @@ var JSDocParams = /** @class */ (function () {
 }());
 exports.JSDocParams = JSDocParams;
 exports.getFunctionDoc = function (method) {
-    var res = new JSDocParams;
+    var res = new JSDocParams();
     method.getJsDocs().forEach(function (doc) {
         if (doc.getComment()) {
             res.comment = doc.getComment();
         }
         doc.getTags().forEach(function (tag) {
-            if (tag.getName() === 'error') {
+            if (tag.getTagName() === "error") {
                 var str = tag.getComment();
-                var code = str.split(' ')[0];
-                var comment = str.split(' ').pop();
+                var code = str.split(" ")[0];
+                var comment = str.split(" ").pop();
                 res.errors[code] = comment;
                 return;
             }
-            if (tag.getName() === 'param') {
+            if (tag.getTagName() === "param") {
                 var cn = tag.compilerNode;
                 res.params[cn.name.escapedText] = tag.getComment();
             }
             else {
-                res.tags[tag.getName()] = tag.getComment();
+                res.tags[tag.getTagName()] = tag.getComment();
             }
         });
     });
     return res;
 };
 exports.getMethodDoc = function (method) {
-    var res = new JSDocParams;
+    var res = new JSDocParams();
     method.getJsDocs().forEach(function (doc) {
         if (doc.getComment()) {
             res.comment = doc.getComment();
         }
         doc.getTags().forEach(function (tag) {
-            if (tag.getName() === 'error') {
+            if (tag.getTagName() === "error") {
                 var str = tag.getComment();
-                var code = str.split(' ')[0];
-                var comment = str.split(' ').pop();
+                var code = str.split(" ")[0];
+                var comment = str.split(" ").pop();
                 res.errors[code] = comment;
                 return;
             }
-            if (tag.getName() === 'param') {
+            if (tag.getTagName() === "param") {
                 var cn = tag.compilerNode;
                 res.params[cn.name.escapedText] = tag.getComment();
             }
             else {
-                res.tags[tag.getName()] = tag.getComment();
+                res.tags[tag.getTagName()] = tag.getComment();
             }
         });
     });
     return res;
 };
 exports.getClassDoc = function (method) {
-    var res = new JSDocParams;
+    var res = new JSDocParams();
     method.getJsDocs().forEach(function (doc) {
         if (doc.getComment()) {
             res.comment = doc.getComment();
         }
         doc.getTags().forEach(function (tag) {
-            if (tag.getName() === 'param') {
+            if (tag.getTagName() === "param") {
                 var cn = tag.compilerNode;
                 res.params[cn.name.escapedText] = tag.getComment();
             }
             else {
-                res.tags[tag.getName()] = tag.getComment();
+                res.tags[tag.getTagName()] = tag.getComment();
             }
         });
     });
@@ -116,12 +116,15 @@ exports.getSwaggerType = function (name, is_array) {
     if (is_array === void 0) { is_array = false; }
     if (is_array)
         return {
-            type: 'array',
+            type: "array",
             items: __assign({}, exports.getSwaggerType(name))
         };
-    if (name === 'string' || name === 'number' || name === 'boolean' || name === 'any')
+    if (name === "string" ||
+        name === "number" ||
+        name === "boolean" ||
+        name === "any")
         return { type: name };
-    return { '$ref': '#/definitions/' + name };
+    return { $ref: "#/definitions/" + name };
 };
 exports.isSimpleType = function (cType) {
     var tp = cType.compilerType;
@@ -147,13 +150,13 @@ exports.getTypePath = function (cType, current) {
     if (current === void 0) { current = []; }
     var tp = cType.compilerType;
     if (tp.flags & ts.TypeFlags.Number) {
-        return ['number'];
+        return ["number"];
     }
     if (tp.flags & ts.TypeFlags.String) {
-        return ['string'];
+        return ["string"];
     }
     if (tp.flags & ts.TypeFlags.Boolean) {
-        return ['boolean'];
+        return ["boolean"];
     }
     if (tp.symbol) {
         var res = [tp.symbol.escapedName];
@@ -165,61 +168,70 @@ exports.getTypePath = function (cType, current) {
         }
         return res.concat(end_1);
     }
-    return ['any'];
+    return ["any"];
 };
 exports.getPropertyTypeName = function (p) {
     var cType = p.getType();
-    return cType.compilerType.symbol.getEscapedName() + '';
+    return cType.compilerType.symbol.getEscapedName() + "";
 };
 exports.getTypeName = function (cType) {
     var tp = cType.compilerType;
     if (tp.flags & ts.TypeFlags.Number) {
-        return 'number';
+        return "number";
     }
     if (tp.flags & ts.TypeFlags.String) {
-        return 'string';
+        return "string";
     }
     if (tp.flags & ts.TypeFlags.Boolean) {
-        return 'boolean';
+        return "boolean";
     }
     if (tp.symbol) {
-        var typeName = tp.symbol.escapedName + '';
+        var typeName = tp.symbol.escapedName + "";
         if (cType.getTypeArguments().length > 0) {
-            typeName += '<' + cType.getTypeArguments().map(function (arg) {
-                // console.log(arg)
-                return exports.getTypeName(arg);
-            }) + '>';
+            typeName +=
+                "<" +
+                    cType.getTypeArguments().map(function (arg) {
+                        // console.log(arg)
+                        return exports.getTypeName(arg);
+                    }) +
+                    ">";
         }
         return typeName;
     }
-    return 'any';
+    return "any";
 };
 exports.getMethodReturnTypeName = function (checker, m) {
     var cType = m.getReturnType();
     var tp = cType.compilerType;
     if (tp.flags & ts.TypeFlags.Number) {
-        return 'number';
+        return "number";
     }
     if (tp.flags & ts.TypeFlags.String) {
-        return 'string';
+        return "string";
     }
     if (tp.flags & ts.TypeFlags.Boolean) {
-        return 'boolean';
+        return "boolean";
     }
     if (tp.flags & ts.TypeFlags.Union) {
-        console.log('-union type found');
-        return cType.getUnionTypes().map(function (t) { return exports.getTypeName(t); }).join('|');
+        console.log("-union type found");
+        return cType
+            .getUnionTypes()
+            .map(function (t) { return exports.getTypeName(t); })
+            .join("|");
     }
     if (tp.symbol) {
-        var typeName = tp.symbol.escapedName + '';
+        var typeName = tp.symbol.escapedName + "";
         if (cType.getTypeArguments().length > 0) {
-            typeName += '<' + cType.getTypeArguments().map(function (arg) {
-                // console.log(arg)
-                return exports.getTypeName(arg);
-            }) + '>';
+            typeName +=
+                "<" +
+                    cType.getTypeArguments().map(function (arg) {
+                        // console.log(arg)
+                        return exports.getTypeName(arg);
+                    }) +
+                    ">";
         }
         return typeName;
     }
-    return 'any';
+    return "any";
 };
 //# sourceMappingURL=index.js.map

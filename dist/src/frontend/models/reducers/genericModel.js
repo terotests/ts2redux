@@ -285,7 +285,7 @@ var RGenericModel = /** @class */ (function () {
     };
     RGenericModel.refreshSum = function () {
         return function (dispatcher, getState) {
-            new RGenericModel(undefined, dispatcher, getState).refreshSum();
+            return new RGenericModel(undefined, dispatcher, getState).refreshSum();
         };
     };
     RGenericModel.prototype.addItems = function (items) {
@@ -305,7 +305,7 @@ var RGenericModel = /** @class */ (function () {
     };
     RGenericModel.addItems = function (items) {
         return function (dispatcher, getState) {
-            new RGenericModel(undefined, dispatcher, getState).addItems(items);
+            return new RGenericModel(undefined, dispatcher, getState).addItems(items);
         };
     };
     RGenericModel.prototype.inc = function () {
@@ -320,7 +320,7 @@ var RGenericModel = /** @class */ (function () {
     };
     RGenericModel.inc = function () {
         return function (dispatcher, getState) {
-            new RGenericModel(undefined, dispatcher, getState).inc();
+            return new RGenericModel(undefined, dispatcher, getState).inc();
         };
     };
     RGenericModel.prototype.testLoading = function () {
@@ -330,7 +330,7 @@ var RGenericModel = /** @class */ (function () {
     };
     RGenericModel.testLoading = function () {
         return function (dispatcher, getState) {
-            new RGenericModel(undefined, dispatcher, getState).testLoading();
+            return new RGenericModel(undefined, dispatcher, getState).testLoading();
         };
     };
     return RGenericModel;
@@ -440,14 +440,13 @@ var GenericModelProvider = /** @class */ (function (_super) {
         return __awaiter(this, void 0, void 0, function () {
             var _this = this;
             return __generator(this, function (_a) {
-                new RGenericModel(undefined, function (action) {
-                    var nextState = exports.GenericModelReducer(_this.lastSetState, action);
-                    if (_this.__devTools) {
-                        _this.__devTools.send(action.type, nextState);
-                    }
-                    _this.setStateSync(nextState);
-                }, function () { return ({ GenericModel: _this.lastSetState }); }).testLoading();
-                return [2 /*return*/];
+                return [2 /*return*/, new RGenericModel(undefined, function (action) {
+                        var nextState = exports.GenericModelReducer(_this.lastSetState, action);
+                        if (_this.__devTools) {
+                            _this.__devTools.send(action.type, nextState);
+                        }
+                        _this.setStateSync(nextState);
+                    }, function () { return ({ GenericModel: _this.lastSetState }); }).testLoading()];
             });
         });
     };

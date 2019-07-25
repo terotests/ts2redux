@@ -36,7 +36,7 @@ export declare class RUserState {
     private _state?;
     private _dispatch?;
     private _getState?;
-    constructor(state?: IUserState, dispatch?: (action: any) => void, getState?: () => any);
+    constructor(state?: IUserState, dispatch?: (action: any) => any, getState?: () => any);
     logged: boolean;
     username: string;
     firstName: string;
@@ -49,9 +49,9 @@ export declare class RUserState {
     static login(loginInfo: {
         username: string;
         password: string;
-    }): (dispatcher: any, getState: any) => void;
+    }): (dispatcher: any, getState: any) => Promise<void>;
     logout(): Promise<void>;
-    static logout(): (dispatcher: any, getState: any) => void;
+    static logout(): (dispatcher: any, getState: any) => Promise<void>;
     fakeLogin(): void;
     static fakeLogin(): (dispatcher: any, getState: any) => void;
 }

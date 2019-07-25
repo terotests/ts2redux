@@ -104,11 +104,11 @@ const initWithMethodsIncModel = () => {
  */
 export class RIncModel {
   private _state?: IIncModel;
-  private _dispatch?: (action: any) => void;
+  private _dispatch?: <A extends {}, T extends {}>(action: A) => T;
   private _getState?: () => any;
   constructor(
     state?: IIncModel,
-    dispatch?: (action: any) => void,
+    dispatch?: (action: any) => any,
     getState?: () => any
   ) {
     this._state = state;
@@ -148,7 +148,7 @@ export class RIncModel {
 
   public static increment() {
     return (dispatcher: any, getState: any) => {
-      new RIncModel(undefined, dispatcher, getState).increment();
+      return new RIncModel(undefined, dispatcher, getState).increment();
     };
   }
   decrement() {
@@ -163,7 +163,7 @@ export class RIncModel {
 
   public static decrement() {
     return (dispatcher: any, getState: any) => {
-      new RIncModel(undefined, dispatcher, getState).decrement();
+      return new RIncModel(undefined, dispatcher, getState).decrement();
     };
   }
 }
@@ -178,7 +178,7 @@ export const IncModelReducer = (
   state: IIncModel = initIncModel(),
   action: any
 ) => {
-  return immer.produce(state, draft => {
+  return immer.produce(state, (draft: IIncModel) => {
     switch (action.type) {
       case IncModelEnums.IncModel_cnt:
         new RIncModel(draft).cnt = action.payload;
@@ -232,7 +232,7 @@ export class IncModelProvider extends React.Component {
     this.setState(state);
   }
   increment() {
-    const nextState = immer.produce(this.state, draft =>
+    const nextState = immer.produce(this.state, (draft: IIncModel) =>
       new RIncModel(draft).increment()
     );
     if (this.__devTools) {
@@ -241,7 +241,7 @@ export class IncModelProvider extends React.Component {
     this.setStateSync(nextState);
   }
   decrement() {
-    const nextState = immer.produce(this.state, draft =>
+    const nextState = immer.produce(this.state, (draft: IIncModel) =>
       new RIncModel(draft).decrement()
     );
     if (this.__devTools) {

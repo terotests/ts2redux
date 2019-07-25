@@ -57,6 +57,7 @@ var TodoList = /** @class */ (function () {
         this.listStart = 0;
         this.listPageLength = 10;
         this.listTitle = "Title of TODO -list";
+        this.customMessage = "";
     }
     Object.defineProperty(TodoList.prototype, "listToDisplay", {
         // Example of memoized list using reselect
@@ -147,6 +148,22 @@ var TodoList = /** @class */ (function () {
                         return [3 /*break*/, 4];
                     case 4: return [2 /*return*/];
                 }
+            });
+        });
+    };
+    TodoList.prototype.getShortList = function (makeError) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                if (makeError) {
+                    this.customMessage = "Custom Exception send this custom message to state";
+                    throw "Custom Exception";
+                }
+                this.customMessage = "";
+                return [2 /*return*/, new Promise(function (resolve) {
+                        setTimeout(function () {
+                            resolve([1, 2, 3, 4, 5]);
+                        }, 1000);
+                    })];
             });
         });
     };

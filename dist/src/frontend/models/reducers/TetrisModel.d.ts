@@ -98,7 +98,7 @@ export declare class RTetrisModel {
     private _state?;
     private _dispatch?;
     private _getState?;
-    constructor(state?: ITetrisModel, dispatch?: (action: any) => void, getState?: () => any);
+    constructor(state?: ITetrisModel, dispatch?: (action: any) => any, getState?: () => any);
     useColors: Array<string>;
     lastUsedColor: number;
     points: number;

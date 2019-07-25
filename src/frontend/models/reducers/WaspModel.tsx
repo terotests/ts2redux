@@ -83,19 +83,9 @@ class WaspModel {
 }
 
 export interface IContainerPropsMethods {
-  addWasp: (
-    pos: {
-      x: number;
-      y: number;
-    }
-  ) => any;
+  addWasp: (pos: { x: number; y: number }) => any;
   incSpeed: (value: number) => any;
-  setColor: (
-    value: {
-      waspId: number;
-      colorValue: string;
-    }
-  ) => any;
+  setColor: (value: { waspId: number; colorValue: string }) => any;
   step: () => any;
 }
 export interface IWaspModel {

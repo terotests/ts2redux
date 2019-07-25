@@ -555,7 +555,7 @@ export async function createProject(settings: GenerationOptions) {
           if (p.hasQuestionToken()) {
             body.out(`return undefined`, true);
           } else {
-            body.out(`throw 'Invalid State in ${r_name}'`, true);
+            body.out(`throw new Error('Invalid State in ${r_name}')`, true);
           }
           body.indent(-1);
           body.out("}", true);

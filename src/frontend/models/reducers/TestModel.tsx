@@ -181,18 +181,8 @@ export interface IContainerPropsMethods {
   sort: () => any;
   addCart: () => any;
   addCartSync: () => any;
-  addToCart: (
-    adding: {
-      cartId: string;
-      item: ShopCartItem;
-    }
-  ) => any;
-  setCartNewItem: (
-    adding: {
-      cartId: string;
-      name: string;
-    }
-  ) => any;
+  addToCart: (adding: { cartId: string; item: ShopCartItem }) => any;
+  setCartNewItem: (adding: { cartId: string; name: string }) => any;
   addToCartRandom: () => any;
   renameLast: (newName: string) => any;
   createItem: (someName: string) => any;

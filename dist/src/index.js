@@ -380,7 +380,7 @@ function createProject(settings) {
                                         body_1.out("return undefined", true);
                                     }
                                     else {
-                                        body_1.out("throw 'Invalid State in " + r_name + "'", true);
+                                        body_1.out("throw new Error('Invalid State in " + r_name + "')", true);
                                     }
                                     body_1.indent(-1);
                                     body_1.out("}", true);

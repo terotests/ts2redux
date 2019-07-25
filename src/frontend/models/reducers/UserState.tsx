@@ -25,12 +25,7 @@ class UserState {
 }
 
 export interface IContainerPropsMethods {
-  login: (
-    loginInfo: {
-      username: string;
-      password: string;
-    }
-  ) => any;
+  login: (loginInfo: { username: string; password: string }) => any;
   logout: () => any;
   fakeLogin: () => any;
 }

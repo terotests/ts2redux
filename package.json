@@ -44,7 +44,7 @@
     "chai": "^4.2.0",
     "express": "^4.16.4",
     "express-http-context": "^1.2.0",
-    "immer": "^1.7.4",
+    "immer": "^8.0.1",
     "json2yaml": "^1.1.0",
     "mocha": "^5.2.0",
     "nodemon": "^1.18.6",
